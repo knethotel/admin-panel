@@ -13,7 +13,8 @@ import { Input } from './input';
 import { Button } from './button';
 import { ScrollArea, ScrollBar } from './scroll-area';
 import { useState, useRef, useEffect } from 'react';
-import { Plus, ChevronDown } from 'lucide-react';
+import { Plus, ChevronDown, ChevronUp, Triangle } from 'lucide-react';
+// import arrowUp  from '../../public/assets/arrow-up.svg';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent } from './dropdown-menu';
 // import Image from 'next/image';
 // import notFoundImage from '@/public/assets/notFound.gif';
@@ -37,6 +38,8 @@ interface DataTableProps<TData, TValue> {
     updateColumnData: (columnId: string, value: any) => void;
   };
   onFilterChange?: (filterCategory: string | string[], filterValue?: string) => void;
+  sorting?: any;
+  onSortingChange?: (sorting: any) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -48,6 +51,8 @@ export function DataTable<TData, TValue>({
   meta,
   rowNo,
   onFilterChange,
+  sorting,
+  onSortingChange,
 }: DataTableProps<TData, TValue>) {
   const [filterInput, setFilterInput] = useState('');
   const [updatedFilters, setUpdatedFilters] = useState(filters || []);
@@ -58,29 +63,31 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     state: {
+      sorting,
       globalFilter: filterInput,
     },
+    onSortingChange,
     onGlobalFilterChange: setFilterInput,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    manualSorting: true,
+    manualSorting: false,
     meta,
   });
 
-  const [searcterm, setSearchterm]:any = useState();
+  const [searcterm, setSearchterm]: any = useState();
   const handleCitySearchChange = (searchTerm: string, filterLabel: string) => {
     setSearchterm(searchTerm); // Make sure this is correctly tied to `value`
-    
+
     setUpdatedFilters((prevFilters) =>
       prevFilters.map((filter) =>
         filter.label === filterLabel
           ? {
-              ...filter,
-              filteredOptions: filter.subOptions.filter((option) =>
-                option.toLowerCase().includes(searchTerm.toLowerCase())
-              ),
-            }
+            ...filter,
+            filteredOptions: filter.subOptions.filter((option) =>
+              option.toLowerCase().includes(searchTerm.toLowerCase())
+            ),
+          }
           : filter
       )
     );
@@ -107,7 +114,31 @@ export function DataTable<TData, TValue>({
       onFilterChange(filterKeys, ''); // Clear all filters at once
     }
   };
-  // console.log(table.getHeaderGroups()[0].headers.length);
+
+  const getSortIcon = (column: any) => {
+    if (!column.getCanSort()) return null;
+
+    return (
+      <div className="flex flex-col ml-2">
+        {/* Up arrow: Darker when sorted ascending, lighter otherwise */}
+        <Triangle
+          className={`h-3 w-3 ${column.getIsSorted() === 'asc' ? ' text-gray-400 fill-black ' : 'text-black'}`}
+        />
+        {/* Down arrow: Darker when sorted descending, lighter otherwise */}
+        <Triangle
+          className={`h-3 w-3 rotate-180 ${column.getIsSorted() === 'desc' ? ' text-gray-400 fill-black' : 'text-black'}`}
+        />
+      </div>
+    );
+  };
+
+
+
+  const customToggleSorting = (column: any) => {
+    if (!column.getCanSort()) return;
+    const isAscending = column.getIsSorted() === "asc";
+    onSortingChange?.([{ id: column.id, desc: isAscending }]);
+  };
 
   return (
     <>
@@ -120,61 +151,61 @@ export function DataTable<TData, TValue>({
           className="mb-4 max-w-64"
         /> */}
 
-{filters &&(<>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="text-xs md:text-sm ms-4">
-              Filter <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-50">
-            {updatedFilters.map((filter) => (
-              <DropdownMenuSub key={filter.label}>
-                <DropdownMenuSubTrigger>
-                  {filter.label}
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="w-48">
-                  {filter.label === 'City' ? (
-                    <div className="p-2">
-                      <Input
-                      ref={searchRef}
-                      value={searcterm}
-                        onChange={(e) => handleCitySearchChange(e.target.value, filter.label)}
-                        placeholder="Search city..."
-                        className="w-full px-2 py-1 mb-2 border border-gray-300 rounded"
-                      />
-                      <div className="max-h-40 overflow-y-scroll overflow-x-hidden border border-gray-200 rounded">
-                        {(filter.filteredOptions || filter.subOptions).map((subOption) => (
-                          <DropdownMenuItem
-                            key={subOption}
-                            onClick={() => {
-                              if (onFilterChange) onFilterChange(filter.label, subOption);
-                            }}
-                          >
-                            {subOption}
-                          </DropdownMenuItem>
-                        ))}
+        {filters && (<>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="text-xs md:text-sm ms-4">
+                Filter <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-50">
+              {updatedFilters.map((filter) => (
+                <DropdownMenuSub key={filter.label}>
+                  <DropdownMenuSubTrigger>
+                    {filter.label}
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent className="w-48">
+                    {filter.label === 'City' ? (
+                      <div className="p-2">
+                        <Input
+                          ref={searchRef}
+                          value={searcterm}
+                          onChange={(e) => handleCitySearchChange(e.target.value, filter.label)}
+                          placeholder="Search city..."
+                          className="w-full px-2 py-1 mb-2 border border-gray-300 rounded"
+                        />
+                        <div className="max-h-40 overflow-y-scroll overflow-x-hidden border border-gray-200 rounded">
+                          {(filter.filteredOptions || filter.subOptions).map((subOption) => (
+                            <DropdownMenuItem
+                              key={subOption}
+                              onClick={() => {
+                                if (onFilterChange) onFilterChange(filter.label, subOption);
+                              }}
+                            >
+                              {subOption}
+                            </DropdownMenuItem>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    filter.subOptions.map((subOption) => (
-                      <DropdownMenuItem
-                        key={subOption}
-                        onClick={() => {
-                          if (onFilterChange) onFilterChange(filter.label, subOption);
-                        }}
-                      >
-                        {subOption}
-                      </DropdownMenuItem>
-                    ))
-                  )}
-                </DropdownMenuSubContent>
-              </DropdownMenuSub>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                    ) : (
+                      filter.subOptions.map((subOption) => (
+                        <DropdownMenuItem
+                          key={subOption}
+                          onClick={() => {
+                            if (onFilterChange) onFilterChange(filter.label, subOption);
+                          }}
+                        >
+                          {subOption}
+                        </DropdownMenuItem>
+                      ))
+                    )}
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-        {/* <Button onClick={handleClearFilters} className="text-xs md:text-sm">
+          {/* <Button onClick={handleClearFilters} className="text-xs md:text-sm">
           Clear All
         </Button> */}
         </>)}
@@ -186,27 +217,44 @@ export function DataTable<TData, TValue>({
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id} highlightedRow={rowNo}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} className=' py-4'>
+                  {headerGroup.headers.map((header,index) => (
+                    <TableHead key={header.id} className=' py-4 bg-white'
+                    style={
+                      index === table.getHeaderGroups()[0].headers.length - 1
+                        ? { right: "0px", position: "sticky", zIndex: 15 }
+                        :{}
+                    }
+                    >
                       {header.isPlaceholder
                         ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
+                        : (<div className="flex items-center justify-center">
+                          <span>{flexRender(header.column.columnDef.header, header.getContext())}</span>
+                          <button onClick={(e) => {e.stopPropagation(); customToggleSorting(header.column)}}>
+                            {getSortIcon(header.column)}
+                          </button>
+                        </div>)}
                     </TableHead>
                   ))}
                 </TableRow>
               ))}
             </TableHeader>
-            <TableBody className=' '>
+            <TableBody className=''>
               {table.getRowModel().rows.map((row, index) => (
                 <TableRow
                   key={row.id}
                   rowNumber={index}
                   highlightedRow={rowNo}
                   data-state={row.getIsSelected() && 'selected'}
-                  className='bg-[#FAF6EF] '
+                  className='bg-[#FAF6EF]'
                 >
-                  {row.getVisibleCells().map((cell,index) => (
-                    <TableCell key={cell.id} className={`py-4 ${index===0 ?'rounded-tl-xl rounded-bl-xl':''} ${index===(table.getHeaderGroups()[0].headers.length-1)?'rounded-tr-xl rounded-br-xl':''} `} >
+                  {row.getVisibleCells().map((cell, index) => (
+                    <TableCell key={cell.id} className={`py-4 bg-[#FAF6EF] ${index === 0 ? 'rounded-tl-xl rounded-bl-xl' : ''} ${index === (table.getHeaderGroups()[0].headers.length - 1) ? 'rounded-tr-xl rounded-br-xl' : ''} `}
+                    style={
+                      index === table.getHeaderGroups()[0].headers.length - 1
+                        ? { right: "0px", position: "sticky", zIndex: 15,paddingRight:"1rem" }
+                        :{}
+                    }
+                    >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
