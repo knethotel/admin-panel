@@ -1,6 +1,6 @@
 import Navbar from '@/components/Navbar';
 import { EmployeeClient } from '@/components/tables/emp-table/client';
-import { GuestClient } from '@/components/tables/emp-table/guest-table/client';
+import { GuestClient } from '@/components/tables/guest-table/client';
 import React from 'react';
 
 const GuestManagementPage = () => {
