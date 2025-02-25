@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 
 import { dummydata } from 'app/static/userData';
+import { SortingState } from '@tanstack/react-table';
 
 
 
@@ -23,6 +24,8 @@ export const EmployeeClient: React.FC = () => {
     const [limit, setLimit] = useState(10);
     const [loading, setLoading] = useState<boolean>();
     const [totalRecords, setTotalRecords] = useState(data.length || 0);
+
+    const [sorting, setSorting] = useState<SortingState>([]);
 
     // const filters = [
     //     {
@@ -81,7 +84,7 @@ export const EmployeeClient: React.FC = () => {
             {loading ? (
                 <span>Loading...</span>
             ) : (
-                
+
                 <DataTable
                     searchKey="firstName"
                     columns={columns}
@@ -93,7 +96,10 @@ export const EmployeeClient: React.FC = () => {
                     //     setData(filtered);
                     // }}
                     // filters={filters}
-                //   onFilterChange={handleFilterChange}
+                    //   onFilterChange={handleFilterChange}
+
+                    onSortingChange={setSorting}
+                    sorting={sorting}
                 />
             )}
             <div className="flex justify-end space-x-2 py-2">

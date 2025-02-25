@@ -1,5 +1,4 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { MapPin } from "lucide-react";
 import CellAction from "./cell-action";
 
 export const columns: ColumnDef<any>[] = [
@@ -44,6 +43,7 @@ export const columns: ColumnDef<any>[] = [
     {
         accessorKey: 'actions',
         id: 'actions',
+        enableSorting: false,
         header: 'Actions',
         cell: ({ row }) =>(<div className="flex items-center justify-center"> <CellAction data={row.original} /></div>)
     },
