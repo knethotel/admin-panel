@@ -1,4 +1,5 @@
 import { z } from 'zod';
+// *****************Login and resetpassword form schema and type*******************
 
 // Login Schema and type
 export const loginSchema = z.object({
@@ -30,3 +31,34 @@ export const setNewPasswordSchema = z.object({
 });
 
 export type setNewPasswordSchemaType = z.infer<typeof setNewPasswordSchema>;
+
+// *****************Add guest and Add booking form schema and type*******************
+
+// Add guest schema and type
+
+export const guestSchema = z.object({
+  firstName: z.string().min(1, 'First Name is required'),
+  lastName: z.string().min(1, 'Last Name is required'),
+  phoneNo: z.string().min(1, 'Phone Number is required'),
+  address: z.string().min(1, 'Address is required'),
+  city: z.string().min(1, 'City is required'),
+  email: z.string().email().min(1, 'Email is required'),
+  state: z.string().min(1, 'State is required'),
+  pinCode: z.string().min(1, 'Pin Code is required')
+});
+
+export type guestSchemaType = z.infer<typeof guestSchema>;
+
+// Add booking schema and type
+export const bookingSchema = z.object({
+  firstName: z.string().min(1, 'First Name is required'),
+  lastName: z.string().min(1, 'Last Name is required'),
+  phoneNo: z.string().min(1, 'Phone Number is required'),
+  idProof: z.string().min(1, 'ID Proof is required'),
+  roomType: z.string().min(1, 'Room Type is required'),
+  email: z.string().email().min(1, 'Email is required'),
+  roomNo: z.string().min(1, 'Room Number is required'),
+  paymentStatus: z.string().min(1, 'Payment Status is required')
+});
+
+export type bookingSchemaType = z.infer<typeof bookingSchema>;
