@@ -20,8 +20,9 @@ const CellAction = (props: any) => {
             setOpen(false);
         }
     };
+    console.log(data);
 
-    const handleEditUser = () => router.push(`profile/edit/${data._id}`);
+    const handleEditUser = () => router.push(`/employee-management/edit/${data.employeeId}`);
     return (
         <>
             {/* Deactivate Confirmation Modal */}
@@ -37,7 +38,7 @@ const CellAction = (props: any) => {
             <div className="flex space-x-2">
 
                 {/* Edit User */}
-                <Button onClick={() => handleEditUser} className="p-3 rounded-md group bg-[#A07D3D1A] cursor-pointer hover:bg-[#a07d3d5e]">
+                <Button onClick={() => handleEditUser()} className="p-3 rounded-md group bg-[#A07D3D1A] cursor-pointer hover:bg-[#a07d3d5e]">
                     <Edit className=" w-4 text-button-dark group-hover:text-white" />
                 </Button>
 
