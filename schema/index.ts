@@ -35,7 +35,6 @@ export type setNewPasswordSchemaType = z.infer<typeof setNewPasswordSchema>;
 // *****************Add guest and Add booking form schema and type*******************
 
 // Add guest schema and type
-
 export const guestSchema = z.object({
   firstName: z.string().min(1, 'First Name is required'),
   lastName: z.string().min(1, 'Last Name is required'),

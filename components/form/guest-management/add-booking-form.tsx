@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import CardWrapper from './card-wrapper';
+import CardWrapper from './form-wrapper';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { bookingSchema, bookingSchemaType } from 'schema';
@@ -15,6 +15,12 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 const AddBookingForm = () => {
   const router = useRouter();
   const addBookingForm = useForm<bookingSchemaType>({
@@ -59,7 +65,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="First Name"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-40 pr-10"
+                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-40 pr-10"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -82,7 +88,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="Last Name"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -108,7 +114,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="Phone Number"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -131,7 +137,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="ID Proof"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -154,7 +160,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="Room Type"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -180,7 +186,7 @@ const AddBookingForm = () => {
                           type="email"
                           placeholder="Email ID"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -203,7 +209,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="Room Number"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -221,15 +227,30 @@ const AddBookingForm = () => {
                       Payment Status
                     </FormLabel>
                     <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="text"
-                          placeholder="Payment Status"
-                          {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
-                        />
-                        <span className="text-red-500">*</span>
-                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <div className='flex gap-1'>
+                            <Button
+                              variant="outline"
+                              className="w-full text-left bg-[#F6EEE0] hover:text-black text-opacity-45 border-opacity-45 text-black"
+                            >
+                              {field.value || 'Select Payment Status'}
+                            </Button> <span className='text-red-500'>*</span>
+                          </div>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem
+                            onClick={() => field.onChange('Pending')}
+                          >
+                            Pending
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => field.onChange('Paid')}
+                          >
+                            Paid
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
