@@ -28,7 +28,7 @@ export type GuestDataType = {
 };
 
 // Dummy guest data
-export const GuestData = [
+export const GuestData: GuestDataType[] = [
   {
     guestId: 'GD17823450',
     checkInCheckOutDetails: {
