@@ -2,7 +2,7 @@ import React from 'react';
 import {
   serviceManagementHomePageData,
   ServiceManagementHomePageDataType
-} from 'app/static/serviceManagementHomePageData';
+} from 'app/static/ServiceManagementData';
 import Image from 'next/image';
 import ToggleButton from '@/components/ui/toggleButton';
 const ServiceManagementPage = () => {

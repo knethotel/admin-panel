@@ -9,7 +9,7 @@ export default function ToggleButton() {
     <button
       onClick={() => setEnabled(!enabled)}
       className={`relative w-12 h-5 py-2 flex items-center bg-gray-300 rounded-full p-1 transition duration-300 ${
-        enabled ? 'bg-[#281F0F]' : 'bg-gray-300'
+        enabled ? 'bg-yellow-950' : 'bg-gray-300'
       }`}
     >
       <div

@@ -61,3 +61,18 @@ export const bookingSchema = z.object({
 });
 
 export type bookingSchemaType = z.infer<typeof bookingSchema>;
+
+// *****************Notification Details form schema and type*******************
+
+export const notificationSchema = z.object({
+  notificationID: z.string().min(1, 'Notification ID is required'),
+  date: z.string().min(1, 'Date is required'),
+  time: z.string().min(1, 'Time is required'),
+  name: z.string().min(1, 'Name is required'),
+  phoneNo: z.string().min(10, 'Phone number must be at least 10 digits'),
+  roomNo: z.string().min(1, 'Room number is required'),
+  notificationType: z.literal('Email'),
+  Status: z.enum(['Received', 'Sent'])
+});
+
+export type notificationSchemaType = z.infer<typeof notificationSchema>;
