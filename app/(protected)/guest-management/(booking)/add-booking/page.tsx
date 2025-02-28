@@ -1,4 +1,4 @@
-import AddBookingForm from '@/components/form/user-management/add-booking-form';
+import AddBookingForm from '@/components/form/guest-management/add-booking-form';
 import React from 'react';
 
 const AddBookingPage = () => {

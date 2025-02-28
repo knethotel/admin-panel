@@ -1,10 +1,17 @@
 'use client';
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import CardWrapper from './card-wrapper';
+import FormWrapper from './form-wrapper';
 import { guestSchema, guestSchemaType } from 'schema';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { GuestData, GuestDataType } from 'app/static/GuestData';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem
+} from '@/components/ui/dropdown-menu';
 import {
   Form,
   FormControl,
@@ -16,29 +23,57 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
-const AddGuestForm = () => {
+type Props = {
+  guestId?: string;
+  isEnabled?: boolean;
+  mode: string;
+};
+
+const GuestForm = ({ guestId, isEnabled, mode }: Props) => {
   const router = useRouter();
+
+  // Get guest details using id
+  const getGuestDetails = (guestId: string | undefined) => {
+    if (guestId) {
+      return GuestData.find((guest) => guest.guestId === guestId);
+    } else {
+      return null;
+    }
+  };
+  const guest = getGuestDetails(guestId);
+
   const addGuestForm = useForm<guestSchemaType>({
     resolver: zodResolver(guestSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      phoneNo: '',
-      address: '',
-      city: '',
-      email: '',
-      state: '',
-      pinCode: ''
+      firstName: guest?.guestDetails?.name?.split(' ')[0] || '',
+      lastName: guest?.guestDetails?.name?.split(' ')[1] || '',
+      phoneNo: guest?.guestDetails?.phoneNo || '',
+      address: guest?.guestDetails?.address || '',
+      city: guest?.guestDetails?.city || '',
+      state: guest?.guestDetails?.state || '',
+      pinCode: guest?.guestDetails?.pinCode || '',
+      email: guest?.contactDetails?.email || ''
     }
   });
 
   const onSubmit = (data: any) => {
     console.log(data);
-    addGuestForm.reset();
+    addGuestForm.reset({
+      firstName: '',
+      lastName: '',
+      phoneNo: '',
+      address: '',
+      city: '',
+      state: '',
+      pinCode: '',
+      email: ''
+    });
   };
 
   return (
-    <CardWrapper title="Guest Detail">
+    <FormWrapper
+      title={mode === 'edit' ? 'Edit Guest Details' : 'Guest Details'}
+    >
       <Form {...addGuestForm}>
         <form
           onSubmit={addGuestForm.handleSubmit(onSubmit)}
@@ -58,12 +93,13 @@ const AddGuestForm = () => {
                     <FormControl>
                       <div className="flex gap-1">
                         <Input
+                          disabled={!isEnabled}
                           type="text"
                           placeholder="First Name"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-40 pr-10"
+                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />{' '}
-                        <span className="text-red-500">*</span>
+                        {isEnabled && <span className="text-red-500">*</span>}
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -81,12 +117,13 @@ const AddGuestForm = () => {
                     <FormControl>
                       <div className="flex gap-1">
                         <Input
+                          disabled={!isEnabled}
                           type="text"
                           placeholder="Last Name"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />{' '}
-                        <span className="text-red-500">*</span>
+                        {isEnabled && <span className="text-red-500">*</span>}
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -107,12 +144,13 @@ const AddGuestForm = () => {
                     <FormControl>
                       <div className="flex gap-1">
                         <Input
+                          disabled={!isEnabled}
                           type="text"
                           placeholder="Phone Number"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />{' '}
-                        <span className="text-red-500">*</span>
+                        {isEnabled && <span className="text-red-500">*</span>}
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -130,12 +168,13 @@ const AddGuestForm = () => {
                     <FormControl>
                       <div className="flex gap-1">
                         <Input
+                          disabled={!isEnabled}
                           type="text"
                           placeholder="Address"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />{' '}
-                        <span className="text-red-500">*</span>
+                        {isEnabled && <span className="text-red-500">*</span>}
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -153,12 +192,13 @@ const AddGuestForm = () => {
                     <FormControl>
                       <div className="flex gap-1">
                         <Input
+                          disabled={!isEnabled}
                           type="text"
                           placeholder="City"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />{' '}
-                        <span className="text-red-500">*</span>
+                        {isEnabled && <span className="text-red-500">*</span>}
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -178,12 +218,13 @@ const AddGuestForm = () => {
                     <FormControl>
                       <div className="flex gap-1">
                         <Input
+                          disabled={!isEnabled}
                           type="email"
                           placeholder="Email ID"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        <span className="text-red-500">*</span>
+                        {isEnabled && <span className="text-red-500">*</span>}
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -201,12 +242,13 @@ const AddGuestForm = () => {
                     <FormControl>
                       <div className="flex gap-1">
                         <Input
+                          disabled={!isEnabled}
                           type="text"
                           placeholder="State"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        <span className="text-red-500">*</span>
+                        {isEnabled && <span className="text-red-500">*</span>}
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -224,12 +266,13 @@ const AddGuestForm = () => {
                     <FormControl>
                       <div className="flex gap-1">
                         <Input
+                          disabled={!isEnabled}
                           type="text"
                           placeholder="Pin Code"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        <span className="text-red-500">*</span>
+                        {isEnabled && <span className="text-red-500">*</span>}
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -239,25 +282,27 @@ const AddGuestForm = () => {
             </div>
           </div>
           {/* Buttons */}
-          <div className="flex items-center gap-3">
-            <Button
-              type="button"
-              onClick={() => router.back()}
-              className="bg-[#EFE9DF] hover:outline hover:outline-black"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="bg-[#A07D3D] text-white hover:text-black hover:outline hover:outline-black"
-            >
-              Save Changes
-            </Button>
-          </div>
+          {isEnabled && (
+            <div className="flex items-center gap-3">
+              <Button
+                type="button"
+                onClick={() => router.back()}
+                className="bg-[#EFE9DF] hover:outline hover:outline-black"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="bg-[#A07D3D] text-white hover:text-black hover:outline hover:outline-black"
+              >
+                Save Changes
+              </Button>
+            </div>
+          )}
         </form>
       </Form>
-    </CardWrapper>
+    </FormWrapper>
   );
 };
 
-export default AddGuestForm;
+export default GuestForm;

@@ -1,12 +1,12 @@
 import { AlertModal } from '@/components/modal/alert-modal';
 import { Button } from '@/components/ui/button';
-import { Edit, Trash } from 'lucide-react';
+import { Eye, Edit, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { Eye } from 'lucide-react';
 
 const CellAction = (props: any) => {
   const { data } = props;
+  console.log(data.guestId);
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,15 @@ const CellAction = (props: any) => {
     }
   };
 
-  const handleEditUser = () => router.push(`profile/edit/${data._id}`);
+  const handleEditUser = () => {
+    router.push(`guest-management/edit/${data.guestId}`);
+    console.log('success');
+  };
+
+  const handleViewUser = () => {
+    router.push(`guest-management/view/${data.guestId}`);
+  };
+
   return (
     <>
       {/* Deactivate Confirmation Modal */}
@@ -38,7 +46,7 @@ const CellAction = (props: any) => {
       <div className="flex space-x-2">
         {/* View user details */}
         <button
-          onClick={() => setOpen(true)}
+          onClick={() => handleViewUser()}
           className="p-1 rounded-md group hover:bg-[#a07d3d5e]"
         >
           <Eye className=" w-4 text-button-dark group-hover:text-white" />
@@ -54,7 +62,7 @@ const CellAction = (props: any) => {
 
         {/* Edit User */}
         <Button
-          onClick={() => handleEditUser}
+          onClick={() => handleEditUser()}
           className="p-3 rounded-md group cursor-pointer hover:bg-[#a07d3d5e]"
         >
           <Edit className=" w-4 text-button-dark group-hover:text-white" />

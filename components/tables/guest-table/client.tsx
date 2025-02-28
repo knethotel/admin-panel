@@ -68,7 +68,7 @@ export const GuestClient: React.FC = () => {
   const handleOnClick = (actionName: string) => {
     if (actionName === 'add guest') {
       setMode('add_guest');
-      router.push(`/guest-management/add-guest`);
+      router.push(`/guest-management/add`);
     }
     if (actionName === 'add booking') {
       setMode('add_booking');
@@ -92,7 +92,7 @@ export const GuestClient: React.FC = () => {
             onClick={() => handleOnClick('add booking')}
           >
             <Plus className="mr-2 h-4 w-4" />{' '}
-            <span className="text-white hover:text-black"> Add Booking</span>
+            <span className="text-white group-hover:text-black"> Add Booking</span>
           </Button>
         </div>
       </div>

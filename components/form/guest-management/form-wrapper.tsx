@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Heading } from '@/components/ui/heading';
 import React from 'react';
 
 type Props = {
@@ -6,15 +7,15 @@ type Props = {
   children: React.ReactNode;
 };
 
-const CardWrapper = ({ title, children }: Props) => {
+const FormWrapper = ({ title, children }: Props) => {
   return (
-    <Card title={title} className="bg-transparent">
+    <Card title={title} className="bg-[#FAF6EF] border-none shadow-md ">
       <CardHeader>
-        <h2 className="text-xl font-semibold"> {title}</h2>
+        <Heading title={title} />
       </CardHeader>
       <CardContent>{children}</CardContent>
     </Card>
   );
 };
 
-export default CardWrapper;
+export default FormWrapper;
