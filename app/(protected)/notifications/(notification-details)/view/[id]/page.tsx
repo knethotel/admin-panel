@@ -3,12 +3,13 @@ import React from 'react';
 type Params = {
   id: string;
 };
-const page = ({ params }: { params: Params }) => {
+const page = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const id = (await params).id;
   return (
     <div className="flex justify-center items-center w-full py-10">
       <NotificationDetailsForm
         isEnabled={false}
-        notificationId={params.id}
+        notificationId={id}
         mode="view"
       />
     </div>
