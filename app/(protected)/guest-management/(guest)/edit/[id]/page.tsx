@@ -5,10 +5,15 @@ type Params = {
   id: string;
 };
 
-const EditGuestPage = ({ params }: { params: Params }) => {
+const EditGuestPage = async ({
+  params
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const id = (await params).id;
   return (
     <div className="flex justify-center items-center w-full py-10">
-      <GuestForm isEnabled={true} guestId={params.id} mode='edit' />
+      <GuestForm isEnabled={true} guestId={id} mode="edit" />
     </div>
   );
 };
