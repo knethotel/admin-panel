@@ -222,3 +222,44 @@ export const hotelSchema = z.object({
 
 // TypeScript type inferred from the schema
 export type HotelSchemaType = z.infer<typeof hotelSchema>;
+
+// **********Change password schema************ //
+
+export const changePasswordSchema = z
+  .object({
+    oldPassword: z
+      .string()
+      .min(6, { message: 'Old password must be at least 6 characters' })
+      .nonempty({ message: 'Old password is required' }),
+
+    newPassword: z
+      .string()
+      .min(6, { message: 'New password must be at least 6 characters' })
+      .max(18, { message: 'New password must not exceed 18 characters' })
+      .regex(/[A-Z]/, {
+        message: 'New password must contain at least one uppercase letter'
+      })
+      .regex(/[a-z]/, {
+        message: 'New password must contain at least one lowercase letter'
+      })
+      .regex(/\d/, { message: 'New password must contain at least one number' })
+      .regex(/[!@#$%^&*(),.?":{}|<>]/, {
+        message: 'New password must contain at least one special character'
+      })
+      .nonempty({ message: 'New password is required' }),
+
+    confirmNewPassword: z
+      .string()
+      .min(8, { message: 'Confirm password must be at least 6 characters' })
+      .nonempty({ message: 'Confirm password is required' })
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmNewPassword']
+  })
+  .refine((data) => data.newPassword !== data.oldPassword, {
+    message: 'New password must be different from old password',
+    path: ['newPassword']
+  });
+
+export type ChangePasswordSchemaType = z.infer<typeof changePasswordSchema>;
