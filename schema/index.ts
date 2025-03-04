@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 // *****************Login and resetpassword form schema and type*******************
 
 // Login Schema and type
@@ -103,3 +104,121 @@ export const paymentSchema = z.object({
 });
 
 export type paymentSchemaType = z.infer<typeof paymentSchema>;
+
+// **********Hotel Profile schema***************
+export const hotelSchema = z.object({
+  logoImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional()
+    .refine((file) => file !== '', {
+      message: 'Logo image must not be an empty value'
+    }),
+
+  hotelName: z.string().min(1, 'Hotel name is required'),
+  number: z
+    .string()
+    .length(10, 'Phone number must be exactly 10 digits')
+    .regex(/^\d+$/, 'Phone number must contain only digits'),
+  email: z.string().email('Invalid email address').min(1, 'Email is required'),
+  completeAddress: z.string().min(1, 'Complete address is required'),
+
+  hotelCategory: z.enum(['Budget', 'Luxury', 'Mid-range', 'Boutique'], {
+    errorMap: () => ({ message: 'Invalid hotel category' })
+  }),
+
+  city: z.enum(['Delhi', 'Mumbai', 'Bangalore', 'Chennai'], {
+    errorMap: () => ({ message: 'Please select a valid city' })
+  }),
+  country: z.enum(['India', 'USA', 'UK', 'Canada'], {
+    errorMap: () => ({ message: 'Please select a valid country' })
+  }),
+  state: z.enum(['Maharashtra', 'Karnataka', 'Tamil Nadu', 'Delhi'], {
+    errorMap: () => ({ message: 'Please select a valid state' })
+  }),
+
+  pinCode: z
+    .string()
+    .length(6, 'Pincode must be exactly 6 digits')
+    .regex(/^\d+$/, 'Pincode must contain only digits'),
+
+  roomTypes: z.enum(['Single', 'Double', 'Suite'], {
+    errorMap: () => ({ message: 'Please select a valid room type' })
+  }),
+  roomImage: z.union([z.instanceof(File), z.string().url()]).optional(),
+
+  features: z.enum(['WIFI', 'Pool', 'Gym'], {
+    errorMap: () => ({ message: 'Please select a valid feature' })
+  }),
+
+  numberOfRooms: z
+    .number()
+    .int('Number of rooms must be an integer')
+    .positive('Number of rooms must be positive')
+    .min(1, 'At least one room is required'),
+
+  checkInTime: z
+    .string()
+    .regex(
+      /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]\s?(AM|PM)$/i,
+      'Invalid time format (e.g., 12:00 PM)'
+    ),
+
+  checkOutTime: z
+    .string()
+    .regex(
+      /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]\s?(AM|PM)$/i,
+      'Invalid time format (e.g., 12:00 PM)'
+    ),
+
+  servingDepartments: z.enum(['Housekeeping', 'Reception', 'Dining'], {
+    errorMap: () => ({ message: 'Please select a valid serving department' })
+  }),
+
+  totalStaff: z
+    .number()
+    .int('Total staff must be an integer')
+    .nonnegative('Total staff cannot be negative')
+    .min(1, 'At least one staff member is required'),
+
+  hotelLicenseCertifications: z
+    .string()
+    .min(1, 'Hotel license & certifications are required'),
+
+  hotelLicenseImage: z.union([z.instanceof(File), z.string().url()]).optional(),
+
+  legalBusinessLicense: z
+    .string()
+    .min(1, 'Legal and business license is required'),
+
+  legalBusinessLicenseImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional(),
+
+  touristLicense: z.string().min(1, 'Tourist license is required'),
+  touristLicenseImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional(),
+
+  tanNumber: z
+    .string()
+    .regex(
+      /^[A-Z]{4}\d{5}[A-Z]$/,
+      'Invalid TAN number format (e.g., ABCD12345E)'
+    ),
+
+  tanNumberImage: z.union([z.instanceof(File), z.string().url()]).optional(),
+
+  dataPrivacyGdprCompliances: z
+    .string()
+    .min(1, 'Data privacy & GDPR compliances are required'),
+
+  dataPrivacyGdprImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional(),
+
+  internetConnectivity: z.boolean().default(false),
+  softwareCompatibility: z.boolean().default(false)
+});
+
+// TypeScript type inferred from the schema
+export type HotelSchemaType = z.infer<typeof hotelSchema>;
