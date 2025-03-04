@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 // *****************Login and resetpassword form schema and type*******************
 
 // Login Schema and type
@@ -103,3 +104,127 @@ export const paymentSchema = z.object({
 });
 
 export type paymentSchemaType = z.infer<typeof paymentSchema>;
+
+// **********Payment management schema***************
+export const hotelSchema = z.object({
+  logoImage: z
+    .any()
+    .refine(
+      (file) =>
+        file instanceof File || typeof file === 'string' || file === undefined,
+      'logo image must be a file or URL'
+    )
+    .optional(),
+  hotelName: z.string().min(1, 'Hotel name is required'),
+  number: z
+    .string()
+    .min(10, 'Phone number must be at least 10 digits')
+    .max(15, 'Phone number cannot exceed 15 digits')
+    .regex(/^\d+$/, 'Phone number must contain only digits'),
+  email: z.string().email('Invalid email address').min(1, 'Email is required'),
+  completeAddress: z.string().min(1, 'Complete address is required'),
+  hotelCategory: z.string().min(1, 'Hotel category is required'),
+  city: z.string().min(1, 'City is required'),
+  country: z.string().min(1, 'Country is required'),
+  state: z.string().min(1, 'State is required'),
+  pinCode: z
+    .string()
+    .min(5, 'Pincode must be at least 5 digits')
+    .max(10, 'Pincode cannot exceed 10 digits')
+    .regex(/^\d+$/, 'Pincode must contain only digits'),
+  roomTypes: z.string().min(1, 'Room type is required'),
+  roomImage: z
+    .any()
+    .refine(
+      (file) =>
+        file instanceof File || typeof file === 'string' || file === undefined,
+      'Room image must be a file or URL'
+    )
+    .optional(),
+  features: z.string().min(1, 'Feature selection is required'),
+  numberOfRooms: z
+    .number()
+    .int('Number of rooms must be an integer')
+    .positive('Number of rooms must be positive')
+    .min(1, 'At least one room is required'),
+  checkInTime: z
+    .string()
+    .min(1, 'Check-in time is required')
+    .regex(
+      /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]\s?(AM|PM)$/i,
+      'Invalid time format (e.g., 12:00 PM)'
+    ),
+  checkOutTime: z
+    .string()
+    .min(1, 'Check-out time is required')
+    .regex(
+      /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]\s?(AM|PM)$/i,
+      'Invalid time format (e.g., 12:00 PM)'
+    ),
+  servingDepartments: z.string().min(1, 'Serving department is required'),
+  totalStaff: z
+    .number()
+    .int('Total staff must be an integer')
+    .nonnegative('Total staff cannot be negative')
+    .min(1, 'At least one staff member is required'),
+  hotelLicenseCertifications: z
+    .string()
+    .min(1, 'Hotel license & certifications are required'),
+  hotelLicenseImage: z
+    .any()
+    .refine(
+      (file) =>
+        file instanceof File || typeof file === 'string' || file === undefined,
+      'Hotel license image must be a file or URL'
+    )
+    .optional(),
+  legalBusinessLicense: z
+    .string()
+    .min(1, 'Legal and business license is required'),
+  legalBusinessLicenseImage: z
+    .any()
+    .refine(
+      (file) =>
+        file instanceof File || typeof file === 'string' || file === undefined,
+      'Legal business license image must be a file or URL'
+    )
+    .optional(),
+  touristLicense: z.string().min(1, 'Tourist license is required'),
+  touristLicenseImage: z
+    .any()
+    .refine(
+      (file) =>
+        file instanceof File || typeof file === 'string' || file === undefined,
+      'Tourist license image must be a file or URL'
+    )
+    .optional(),
+  tanNumber: z.string().min(1, 'TAN number is required'),
+  tanNumberImage: z
+    .any()
+    .refine(
+      (file) =>
+        file instanceof File || typeof file === 'string' || file === undefined,
+      'TAN number image must be a file or URL'
+    )
+    .optional(),
+  dataPrivacyGdprCompliances: z
+    .string()
+    .min(1, 'Data privacy & GDPR compliances are required'),
+  dataPrivacyGdprImage: z
+    .any()
+    .refine(
+      (file) =>
+        file instanceof File || typeof file === 'string' || file === undefined,
+      'Data privacy & GDPR image must be a file or URL'
+    )
+    .optional(),
+  internetConnectivity: z.boolean({
+    required_error: 'Internet connectivity selection is required'
+  }),
+  softwareCompatibility: z.boolean({
+    required_error: 'Software compatibility selection is required'
+  })
+});
+
+// TypeScript type inferred from the schema
+export type HotelSchemaType = z.infer<typeof hotelSchema>;
