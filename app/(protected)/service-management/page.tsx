@@ -5,6 +5,7 @@ import {
 } from 'app/static/ServiceManagementData';
 import Image from 'next/image';
 import ToggleButton from '@/components/ui/toggleButton';
+import Link from 'next/link';
 const ServiceManagementPage = () => {
   return (
     <div className="overflow-hidden flex flex-col justify-evenly py-4 gap-10">
@@ -20,20 +21,24 @@ const ServiceManagementPage = () => {
               className="flex flex-col gap-2 group cursor-pointer"
             >
               {/* image */}
-              <div>
-                <Image
-                  src={item.imgSrc}
-                  alt={`${item.name} image`}
-                  height={1000}
-                  width={1000}
-                  quality={100}
-                />
-              </div>
+              <Link href={item.href}>
+                <div>
+                  <Image
+                    src={item.imgSrc}
+                    alt={`${item.name} image`}
+                    height={1000}
+                    width={1000}
+                    quality={100}
+                  />
+                </div>
+              </Link>
               {/* title and toggle button*/}
               <div className="w-full flex justify-between items-center">
-                <h2 className="bg-[#EFE9DF] px-2 py-1 text-sm rounded-lg group-hover:bg-[#453519] group-hover:text-white transition-all duration-300">
-                  {item.name}
-                </h2>
+                <Link href={item.href}>
+                  <h2 className="bg-[#EFE9DF] px-2 py-1 text-sm rounded-lg group-hover:bg-[#453519] group-hover:text-white transition-all duration-300">
+                    {item.name}
+                  </h2>
+                </Link>
                 <ToggleButton />
               </div>
             </div>
