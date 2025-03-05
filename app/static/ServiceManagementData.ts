@@ -16,6 +16,7 @@ export type ServiceManagementHomePageDataType = {
   id: number;
   name: string;
   imgSrc: StaticImageData;
+  href: string;
 };
 
 export const serviceManagementHomePageData: ServiceManagementHomePageDataType[] =
@@ -23,57 +24,68 @@ export const serviceManagementHomePageData: ServiceManagementHomePageDataType[] 
     {
       id: 1,
       name: 'RECEPTION',
-      imgSrc: img1
+      imgSrc: img1,
+      href: '/service-management/reception'
     },
     {
       id: 2,
       name: 'HOUSEKEEPING',
-      imgSrc: img2
+      imgSrc: img2,
+      href: '/service-management/housekeeping'
     },
     {
       id: 3,
       name: 'IN-ROOM DINNING',
-      imgSrc: img3
+      imgSrc: img3,
+      href: '/service-management/inroomdining'
     },
     {
       id: 4,
       name: 'GYM',
-      imgSrc: img4
+      imgSrc: img4,
+      href: '/service-management/gym'
     },
     {
       id: 5,
       name: 'SPA',
-      imgSrc: img5
+      imgSrc: img5,
+      href: '/service-management/spa'
     },
     {
       id: 6,
       name: 'SWIMMING POOL',
-      imgSrc: img6
+      imgSrc: img6,
+      href: '/service-management/swimmingpool'
     },
     {
       id: 7,
       name: 'CONCIERGE SERVICE',
-      imgSrc: img7
+      imgSrc: img7,
+      href: '/service-management/conciergeservice'
     },
     {
       id: 8,
       name: 'IN-ROOM CONTROL',
-      imgSrc: img8
+      imgSrc: img8,
+      href: '/service-management/inroomcontrol'
     },
     {
       id: 9,
       name: 'ORDER MANAGEMENT',
-      imgSrc: img9
+      imgSrc: img9,
+      href: '/service-management/ordermanagement'
     },
     {
       id: 10,
       name: 'SOS MANAGEMENT',
-      imgSrc: img10
+      imgSrc: img10,
+      href: '/service-management/sosmanagement'
     },
     {
       id: 11,
       name: 'CHAT WITH STAFF',
-      imgSrc: img11
+      imgSrc: img11,
+      href: '/service-management/chatwithstaff'
     }
   ];
 

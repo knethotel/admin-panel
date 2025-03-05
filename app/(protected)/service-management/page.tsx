@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import {
   serviceManagementHomePageData,
@@ -5,7 +6,13 @@ import {
 } from 'app/static/ServiceManagementData';
 import Image from 'next/image';
 import ToggleButton from '@/components/ui/toggleButton';
+import { useRouter } from 'next/navigation';
 const ServiceManagementPage = () => {
+  const router = useRouter();
+
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
   return (
     <div className="overflow-hidden flex flex-col justify-evenly py-4 gap-10">
       <h1 className="lg:text-3xl xl:text-4xl font-bold text-[#281F0F] px-6">
@@ -20,7 +27,7 @@ const ServiceManagementPage = () => {
               className="flex flex-col gap-2 group cursor-pointer"
             >
               {/* image */}
-              <div>
+              <div onClick={() => handleNavigation(item.href)}>
                 <Image
                   src={item.imgSrc}
                   alt={`${item.name} image`}
@@ -31,7 +38,10 @@ const ServiceManagementPage = () => {
               </div>
               {/* title and toggle button*/}
               <div className="w-full flex justify-between items-center">
-                <h2 className="bg-[#EFE9DF] px-2 py-1 text-sm rounded-lg group-hover:bg-[#453519] group-hover:text-white transition-all duration-300">
+                <h2
+                  onClick={() => handleNavigation(item.href)}
+                  className="bg-[#EFE9DF] px-2 py-1 text-sm rounded-lg group-hover:bg-[#453519] group-hover:text-white transition-all duration-300"
+                >
                   {item.name}
                 </h2>
                 <ToggleButton />
