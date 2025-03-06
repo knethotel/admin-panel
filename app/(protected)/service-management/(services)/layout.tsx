@@ -6,9 +6,6 @@ const ServicesLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="w-full flex flex-col">
       <Navbar active={true} search={true} />
-
-      {/* Blockage:: This Auto Accept Requests section's positioning is being affected because of the fixed positioning of the Navbar */}
-
       {children}
     </div>
   );
