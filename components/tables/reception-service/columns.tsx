@@ -28,7 +28,9 @@ export const columns: ColumnDef<ReceptionDataType>[] = [
       return (
         <div className="flex flex-col justify-center">
           <p className="text-start pl-5 text-sm opacity-50">{details.name}</p>
-          <p className="text-start pl-5 text-xs opacity-50">{details.guetID}</p>
+          <p className="text-start pl-5 text-xs opacity-50">
+            {details.guestID}
+          </p>
           <p className="text-start pl-5 text-xs opacity-50">{details.roomNo}</p>
         </div>
       );
