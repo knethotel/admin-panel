@@ -17,8 +17,8 @@ export const AlertModal: React.FC<AlertModalProps> = ({
   onClose,
   onConfirm,
   loading,
-  title = "Are you sure?", // Default value for title
-  description = "This action cannot be undone." // Default value for description
+  title = 'Are you sure?', // Default value for title
+  description = 'This action cannot be undone.' // Default value for description
 }) => {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -38,7 +38,12 @@ export const AlertModal: React.FC<AlertModalProps> = ({
       onClose={onClose}
     >
       <div className="flex w-full items-center justify-end space-x-2 pt-6">
-        <Button disabled={loading} variant="outline" onClick={onClose} className='text-white'>
+        <Button
+          disabled={loading}
+          variant="outline"
+          onClick={onClose}
+          className="text-white"
+        >
           Cancel
         </Button>
         <Button disabled={loading} variant="destructive" onClick={onConfirm}>

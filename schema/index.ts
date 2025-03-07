@@ -263,3 +263,73 @@ export const changePasswordSchema = z
   });
 
 export type ChangePasswordSchemaType = z.infer<typeof changePasswordSchema>;
+
+// ***********************PriceTimeSetting Modal Form Schema
+
+export const PriceTimeSettingSchema = z.object({
+  priceType: z.enum(['Free', 'Paid'], {
+    errorMap: () => ({
+      message: 'Invalid Price Category'
+    })
+  }),
+  price: z
+    .string()
+    .refine((val) => val === '' || /^\d+(\.\d{1,2})?$/.test(val), {
+      message: 'Invalid price format (e.g., 10 or 10.99)'
+    })
+    .transform((val) => (val === '' ? 0 : parseFloat(val)))
+    .refine((val) => val > 0, { message: 'Price must be greater than 0' })
+    .or(z.number().min(1, { message: 'Price must be greater than 0' })),
+  timeSlot: z.enum(
+    ['5:00AM-12:00PM', '12:00PM-10:00PM', '10:00PM-1:00AM', '11:00PM-12:00AM'],
+    {
+      errorMap: () => ({ message: 'Please select valid time slot' })
+    }
+  ),
+  availability: z.enum(
+    ['Monday-Friday', 'Monday-saturday', 'Monday-Sunday', 'only Weekends'],
+    {
+      errorMap: () => ({ message: 'Please select valid slot' })
+    }
+  )
+});
+
+export type PriceTimeSettingSchemaType = z.infer<typeof PriceTimeSettingSchema>;
+
+// ***********Reception Details Form Schema************//
+
+const requestTypeEnum = z.enum([
+  'Service',
+  'Complaint',
+  'Wake-up call',
+  'Pre check-in',
+  'Pre check-out',
+  'Wake up call schedule',
+  'Feedback',
+  'Service feedback'
+]);
+
+const statusEnum = z.enum(['Pending', 'In-Progress', 'Completed']);
+
+export const ReceptionDataSchema = z.object({
+  requestID: z.string(),
+  requestDetail: z.string(),
+  responseDetail: z.string(),
+  requestAssignedTo: z.string(),
+  requestTime: z.object({
+    date: z.string(), // Consider using `z.date()` if you work with actual Date objects
+    time: z.string()
+  }),
+  guestDetails: z.object({
+    guetID: z.string(),
+    name: z.string(),
+    roomNo: z.string(),
+    mobileNumber: z.string().min(10).max(15), // Adjust min/max length as needed
+    email: z.string().email()
+  }),
+  requestType: requestTypeEnum,
+  status: statusEnum,
+  assignedTo: z.string()
+});
+
+export type ReceptionDataSchemaType = z.infer<typeof ReceptionDataSchema>;

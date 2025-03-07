@@ -52,9 +52,9 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
         },
-        button:{
-          dark:'var(--btn-dark)',
-          light:'var(--btn-light)',
+        button: {
+          dark: 'var(--btn-dark)',
+          light: 'var(--btn-light)'
         }
       },
       borderRadius: {
@@ -78,7 +78,8 @@ export default {
       },
       boxShadow: {
         table: 'var(--table-shadow)',
-      },
+        custom: '0px 0px 5px rgba(0, 0, 0, 0.35)'
+      }
     }
   },
   plugins: [require('tailwindcss-animate')]
