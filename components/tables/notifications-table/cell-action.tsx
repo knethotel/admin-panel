@@ -1,5 +1,4 @@
 import { AlertModal } from '@/components/modal/alert-modal';
-import { Button } from '@/components/ui/button';
 import { Eye, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';

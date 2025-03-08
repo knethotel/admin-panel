@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 import { ConciergeServiceData } from 'app/static/services-management/Concierge';
 import ToggleButton from '@/components/ui/toggleButton';
-import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
+import PriceTimeSetting from '@/components/modal/order-management/ManageProductsModal';
 
 export const ConciergeServiceTable: React.FC = () => {
   const router = useRouter();

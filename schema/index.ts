@@ -333,3 +333,12 @@ export const ReceptionDataSchema = z.object({
 });
 
 export type ReceptionDataSchemaType = z.infer<typeof ReceptionDataSchema>;
+
+// *************Order Management schema***************
+//manage products modal form schema
+
+export const ManageProductsSchema = z.object({
+  productType: z.string().min(1, 'Invalid input')
+});
+
+export type ManageProductsSchemaType = z.infer<typeof ManageProductsSchema>;

@@ -10,7 +10,7 @@ import { columns } from './columns';
 
 import { GymServiceData } from 'app/static/services-management/Gym';
 import ToggleButton from '@/components/ui/toggleButton';
-import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
+import PriceTimeSetting from '@/components/modal/order-management/ManageProductsModal';
 
 export const GymServiceTable: React.FC = () => {
   const router = useRouter();

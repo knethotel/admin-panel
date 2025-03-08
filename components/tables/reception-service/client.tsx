@@ -10,7 +10,7 @@ import { columns } from './columns';
 
 import { ReceptionData } from 'app/static/services-management/Reception';
 import ToggleButton from '@/components/ui/toggleButton';
-import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
+import PriceTimeSetting from '@/components/modal/order-management/ManageProductsModal';
 
 export const ReceptionServiceTable: React.FC = () => {
   const router = useRouter();
