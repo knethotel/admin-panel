@@ -1,4 +1,3 @@
-import { ConciergeServiceTable } from '@/components/tables/concierge/client';
 import { InRoomControlDataTable } from '@/components/tables/In_Room_Control-Service/client';
 import React from 'react';
 
