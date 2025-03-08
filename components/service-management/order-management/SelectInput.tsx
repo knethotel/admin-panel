@@ -38,7 +38,7 @@ const SelectInput = () => {
           <ChevronDown className="w-5 h-5 text-black" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-44 border-none p-0">
+      <PopoverContent className="w-44 rounded-2xl border-none p-0">
         <ul className="bg-[#362913] rounded-2xl shadow-lg border-2 border-white">
           {options.map((option) => (
             <li
