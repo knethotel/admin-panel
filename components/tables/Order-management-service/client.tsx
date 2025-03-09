@@ -9,7 +9,7 @@ import { columns } from './columns';
 import { OrderManagementData } from 'app/static/services-management/OrderManagement';
 import ToggleButton from '@/components/ui/toggleButton';
 import SelectInput from '@/components/service-management/order-management/SelectInput';
-import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
+import ManageProductsModal from '@/components/modal/order-management/ManageProductsModal';
 
 export const OrderManagementDataTable: React.FC = () => {
   const [data, setData] = useState(OrderManagementData || []);
@@ -73,7 +73,7 @@ export const OrderManagementDataTable: React.FC = () => {
         <div>
           <SelectInput />
         </div>
-        <PriceTimeSetting
+        <ManageProductsModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />

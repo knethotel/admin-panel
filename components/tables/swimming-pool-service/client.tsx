@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 import { SwimmingpoolServiceData } from 'app/static/services-management/SwimmingPool';
 import ToggleButton from '@/components/ui/toggleButton';
-import PriceTimeSetting from '@/components/modal/order-management/ManageProductsModal';
+import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
 
 export const SwimmingpoolServiceDataTable: React.FC = () => {
   const router = useRouter();

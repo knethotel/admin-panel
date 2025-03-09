@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 import { InRoomDiningData } from 'app/static/services-management/InRoomDining';
 import ToggleButton from '@/components/ui/toggleButton';
-import PriceTimeSetting from '@/components/modal/order-management/ManageProductsModal';
+import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
 
 export const InRoomDiningDataTable: React.FC = () => {
   const router = useRouter();

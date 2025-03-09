@@ -27,17 +27,10 @@ const ManageProductsModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       productType: ''
     }
   });
-
-  // Watch the value of priceType
-
-  const onSubmit = async (data: ManageProductsSchemaType) => {
-    try {
-      console.log('Price settings submitted:', data);
-      manageProductsForm.reset();
-      onClose();
-    } catch (error) {
-      console.error('Error setting price:', error);
-    }
+  const onSubmit = (data: ManageProductsSchemaType) => {
+    console.log('Price settings submitted:', data);
+    manageProductsForm.reset();
+    onClose();
   };
 
   return (

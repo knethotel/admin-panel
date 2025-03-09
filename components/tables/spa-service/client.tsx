@@ -10,7 +10,7 @@ import { columns } from './columns';
 
 import { SpaServiceData } from 'app/static/services-management/Spa';
 import ToggleButton from '@/components/ui/toggleButton';
-import PriceTimeSetting from '@/components/modal/order-management/ManageProductsModal';
+import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
 
 export const SpaServiceDataTable: React.FC = () => {
   const router = useRouter();
