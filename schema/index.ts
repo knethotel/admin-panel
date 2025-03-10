@@ -342,3 +342,27 @@ export const ManageProductsSchema = z.object({
 });
 
 export type ManageProductsSchemaType = z.infer<typeof ManageProductsSchema>;
+
+// *******************Employee management*********************
+// Add employee form schema
+export const employeeSchema = z.object({
+  firstName: z.string().min(1, 'First Name is required'),
+  lastName: z.string().min(1, 'Last Name is required'),
+  email: z.string().email().min(1, 'Email is required'),
+  password: z
+    .string()
+    .min(6, { message: 'Password must be at least 6 characters' })
+    .nonempty({ message: 'Password is required' }),
+  phoneNo: z.string().min(1, 'Phone Number is required'),
+  role: z.string().min(1, 'Role is required'),
+  status: z.enum(['Active', 'Inactive'], {
+    
+  }),
+  priceType: z.enum(['ACTIVE', 'INACTIVE'], {
+    errorMap: () => ({
+      message: 'Invalid status Category'
+    })
+  })
+});
+
+export type employeeSchemaType = z.infer<typeof employeeSchema>;
