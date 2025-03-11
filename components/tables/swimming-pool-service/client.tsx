@@ -68,9 +68,12 @@ export const SwimmingpoolServiceDataTable: React.FC = () => {
   return (
     <>
       <div className="w-full pt-20 flex gap-2 justify-end px-4 py-2 bg-white">
-        <div className="flex items-center gap-2">
-          <h2 className="text-[0.8rem]">AUTO ACCEPT REQUESTS</h2>
-          <ToggleButton />
+        <div className="flex w-full justify-between">
+          <h2 className='text-lg font-medium'>Swimming Pool</h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-[0.8rem]">AUTO ACCEPT REQUESTS</h2>
+            <ToggleButton />
+          </div>
         </div>
         <Settings onClick={() => setIsModalOpen(true)} />
         <PriceTimeSetting
