@@ -19,9 +19,9 @@ const RequestDetail = <T extends Record<string, any>>({
   const request = getDetails(requestId);
 
   return (
-    <div className="mt-24 bg-[#FAF6EF] rounded-md shadow-custom px-6 py-8 flex font-medium flex-col gap-14 w-full">
+    <div className="mt-24 bg-[#FAF6EF] rounded-md shadow-custom px-6 pb-8 pt-4 flex font-medium flex-col gap-14 w-full">
       {/* Header */}
-      <div className="flex gap-12 text-xs opacity-75">
+      <div className="flex gap-12 text-xs opacity-55">
         <p>Guest ID: {request?.guestDetails?.guestID}</p>
         <p>Request ID: {request?.requestID}</p>
       </div>

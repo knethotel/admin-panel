@@ -400,3 +400,11 @@ export const employeeSchema = z.object({
 });
 
 export type employeeSchemaType = z.infer<typeof employeeSchema>;
+
+// **************SPA/Salon service schema**************//
+
+export const spaSalonServiceSchema = z.object({
+  additionalService: z.string().min(1, 'Invalid input')
+});
+
+export type SpaSalonServiceSchemaType = z.infer<typeof spaSalonServiceSchema>;
