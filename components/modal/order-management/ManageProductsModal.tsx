@@ -8,6 +8,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage
 } from '../../ui/form';
 import { Input } from '../../ui/input';
@@ -43,7 +44,7 @@ const ManageProductsModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
-      <div className="bg-[#FAF6EF] rounded-lg shadow-lg flex flex-col gap-6 p-6 w-full max-w-md relative animate-fadeIn">
+      <div className="bg-[#FAF6EF] rounded-lg shadow-lg flex flex-col gap-6 p-6 w-full max-w-xl relative animate-fadeIn">
         <div>
           <h5 className="font-medium absolute top-4 left-6">Manage Products</h5>
           <button
@@ -62,12 +63,12 @@ const ManageProductsModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             className="w-full flex justify-between gap-8 pt-7 items-center"
           >
             <div className="flex items-center gap-2">
-              <span className="text-sm pb-6 font-semibold">Product Type</span>
               <FormField
                 control={manageProductsForm.control}
                 name="productType"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
+                  <FormItem className="flex gap-2 items-center">
+                    <FormLabel className="w-full">Product Type</FormLabel>
                     <FormControl>
                       <Input
                         type="text"
@@ -83,7 +84,7 @@ const ManageProductsModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 )}
               />
             </div>
-            <div className="pb-6">
+            <div className="">
               <Button
                 type="submit"
                 className="bg-[#362913] text-white hover:text-black hover:outline px-5 h-8 rounded-lg text-xs"

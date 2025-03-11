@@ -65,54 +65,50 @@ const AddMenuModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           >
             {/* Upper part of the form */}
             <div className="flex justify-between w-full md:w-[80%] lg:w-[75%] 2xl:w-[70%] gap-6 px-10">
-              <FormItem className="flex items-center gap-2">
-                <FormLabel className="pt-2">New Product Type</FormLabel>
-                <FormField
-                  control={addMenuForm.control}
-                  name="productName"
-                  render={({ field }) => (
-                    <FormItem className="flex items-center gap-2">
-                      <FormControl>
-                        <Input
-                          placeholder="Enter product name"
-                          {...field}
-                          className="bg-[#F6EEE0] h-8 text-gray-700 placeholder:opacity-55 p-2 rounded-lg border-none outline-none focus:ring-0 text-sm"
-                        />
-                      </FormControl>
-                      {/* Reserve height to prevent layout shift */}
-                      <FormMessage className="min-h-[16px]" />
-                    </FormItem>
-                  )}
-                />
-              </FormItem>
-
-              <FormItem className="flex items-center gap-2">
-                <FormLabel className="pt-2">Select Type</FormLabel>
-                <FormField
-                  control={addMenuForm.control}
-                  name="selectType"
-                  render={({ field }) => (
-                    <FormItem className="relative">
-                      <FormControl>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
-                          <SelectTrigger className="bg-[#F6EEE0] h-8 text-gray-700 placeholder:opacity-55 p-2 rounded-lg w-44 border-none outline-none focus:ring-0 text-sm">
-                            <SelectValue placeholder="" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-[#453519] text-white border-2 border-white rounded-lg shadow-lg">
-                            <SelectItem value="American">American</SelectItem>
-                            <SelectItem value="Starter">Starter</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                      <ChevronDown className="text-black absolute w-4 h-4 right-2 top-0" />
-                    </FormItem>
-                  )}
-                />
-              </FormItem>
+              <FormField
+                control={addMenuForm.control}
+                name="productName"
+                render={({ field }) => (
+                  <FormItem className="flex items-center">
+                    <FormLabel className="pt-2 w-4/5">
+                      New Product Type
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter product name"
+                        {...field}
+                        className="bg-[#F6EEE0] h-8 text-gray-700 placeholder:opacity-55 p-2 rounded-lg border-none outline-none focus:ring-0 text-sm"
+                      />
+                    </FormControl>
+                    <FormMessage className="min-h-[16px]" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={addMenuForm.control}
+                name="selectType"
+                render={({ field }) => (
+                  <FormItem className="relative flex items-center gap-4">
+                    <FormLabel className="pt-2">Select Type</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger className="bg-[#F6EEE0] h-8 text-gray-700 placeholder:opacity-55 p-2 rounded-lg w-44 border-none outline-none focus:ring-0 text-sm">
+                          <SelectValue placeholder="" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-[#453519] text-white border-2 border-white rounded-lg shadow-lg">
+                          <SelectItem value="American">American</SelectItem>
+                          <SelectItem value="Starter">Starter</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                    <ChevronDown className="text-black absolute w-4 h-4 right-2 top-2" />
+                  </FormItem>
+                )}
+              />
             </div>
             {/* line */}
             <div className="w-full h-[1px] bg-black opacity-20"></div>
@@ -216,20 +212,22 @@ const AddMenuModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 <FormField
                   control={addMenuForm.control}
                   name="productImage"
-                  render={({ field: { onChange, value, ...field } }) => (
+                  render={({ field }) => (
                     <FormItem className="w-44">
                       <FormControl>
                         <div className="relative flex items-center">
                           <Input
                             placeholder=""
-                            value={value?.name || ''}
+                            value={field.value?.name || ''}
                             readOnly
                             className="h-44 rounded-lg text-gray-700 bg-[#F6EEE0] p-2 border-none outline-none focus:ring-0 text-sm cursor-default"
                           />
                           <input
                             type="file"
                             accept="image/*"
-                            onChange={(e) => onChange(e.target.files?.[0])}
+                            onChange={(e) =>
+                              field.onChange(e.target.files?.[0])
+                            }
                             className="hidden"
                             id="fileUpload"
                           />
@@ -237,10 +235,7 @@ const AddMenuModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                             htmlFor="fileUpload"
                             className="absolute inset-0 right-2 rounded-lg h-24 top-1/2 -translate-y-1/2 bg-[#F6EEE0] w-full px-3 py-1 cursor-pointer"
                           >
-                            <span>
-                              {' '}
-                              <PiCameraThin className="text-black w-full h-full opacity-30" />{' '}
-                            </span>
+                            <PiCameraThin className="text-black w-full h-full opacity-30" />
                           </label>
                         </div>
                       </FormControl>

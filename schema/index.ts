@@ -344,6 +344,7 @@ export const ManageProductsSchema = z.object({
 export type ManageProductsSchemaType = z.infer<typeof ManageProductsSchema>;
 
 //Add Menu modal form schema
+
 export const AddMenuSchema = z.object({
   newProductType: z.string().min(1, 'Invalid input'),
   selectType: z
