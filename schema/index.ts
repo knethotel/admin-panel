@@ -343,6 +343,42 @@ export const ManageProductsSchema = z.object({
 
 export type ManageProductsSchemaType = z.infer<typeof ManageProductsSchema>;
 
+//Add Menu modal form schema
+
+export const AddMenuSchema = z.object({
+  newProductType: z.string().min(1, 'Invalid input'),
+  selectType: z
+    .enum(['American', 'Starter'], {
+      errorMap: () => ({
+        message: 'Invalid status category'
+      })
+    })
+    .optional(),
+  productName: z.string().min(1, 'Invalid input'),
+  description: z.string().min(1, 'Invalid input'),
+  barcode: z.string().min(1, 'Invalid input'),
+  salesPrice: z.number().min(0, 'Sales price must be a positive number'),
+  salesTaxes: z.number().min(0, 'Sales tax must be a positive number'),
+  productImage: z
+    .custom<File | undefined>(
+      (file) => file instanceof File || typeof file === 'undefined',
+      { message: 'Invalid file format' }
+    )
+    .refine(
+      (file) =>
+        !file ||
+        ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(
+          file.type
+        ),
+      { message: 'Only JPG, PNG, GIF, and WEBP formats are allowed.' }
+    )
+    .refine((file) => !file || file.size <= 5 * 1024 * 1024, {
+      message: 'Image size must be 5MB or less.'
+    })
+});
+
+export type AddMenuSchemaType = z.infer<typeof AddMenuSchema>;
+
 // *******************Employee management*********************
 // Add employee form schema
 export const employeeSchema = z.object({
@@ -355,9 +391,7 @@ export const employeeSchema = z.object({
     .nonempty({ message: 'Password is required' }),
   phoneNo: z.string().min(1, 'Phone Number is required'),
   role: z.string().min(1, 'Role is required'),
-  status: z.enum(['Active', 'Inactive'], {
-    
-  }),
+  status: z.enum(['Active', 'Inactive'], {}),
   priceType: z.enum(['ACTIVE', 'INACTIVE'], {
     errorMap: () => ({
       message: 'Invalid status Category'

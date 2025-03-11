@@ -1,6 +1,6 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ManageProductsSchema, ManageProductsSchemaType } from 'schema';
 import {
@@ -8,6 +8,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage
 } from '../../ui/form';
 import { Input } from '../../ui/input';
@@ -21,51 +22,59 @@ interface ModalProps {
 const ManageProductsModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
+  const [productList, setProductList] = useState<string[]>([]);
+
   const manageProductsForm = useForm<ManageProductsSchemaType>({
     resolver: zodResolver(ManageProductsSchema),
     defaultValues: {
       productType: ''
     }
   });
+
   const onSubmit = (data: ManageProductsSchemaType) => {
-    console.log('Price settings submitted:', data);
-    manageProductsForm.reset();
-    onClose();
+    if (data.productType.trim()) {
+      setProductList([...productList, data.productType.trim()]);
+      manageProductsForm.reset();
+    }
+  };
+
+  const handleDelete = (index: number) => {
+    setProductList(productList.filter((_, i) => i !== index));
   };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
-      <div className="bg-white rounded-lg shadow-lg flex flex-col gap-6 p-6 w-full max-w-md relative animate-fadeIn">
+      <div className="bg-[#FAF6EF] rounded-lg shadow-lg flex flex-col gap-6 p-6 w-full max-w-xl relative animate-fadeIn">
         <div>
-          <h5 className="font-medium absolute top-2 left-2">Manage Products</h5>
+          <h5 className="font-medium absolute top-4 left-6">Manage Products</h5>
           <button
             onClick={onClose}
             className="absolute top-2 right-2 text-gray-600 hover:text-black"
           >
             ✖
           </button>
-          <p className="absolute top-8 left-2 opacity-50 text-sm">
+          <p className="absolute top-10 left-6 opacity-50 text-sm">
             Add or Delete product category
           </p>
         </div>
         <Form {...manageProductsForm}>
           <form
             onSubmit={manageProductsForm.handleSubmit(onSubmit)}
-            className="w-full"
+            className="w-full flex justify-between gap-8 pt-7 items-center"
           >
-            <div className="flex gap-2">
-              <span className="text-sm pb-6 font-semibold">Product Type</span>
+            <div className="flex items-center gap-2">
               <FormField
                 control={manageProductsForm.control}
                 name="productType"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
+                  <FormItem className="flex gap-2 items-center">
+                    <FormLabel className="w-full">Product Type</FormLabel>
                     <FormControl>
                       <Input
                         type="text"
-                        placeholder="Enter Amount"
+                        placeholder="Enter type"
                         {...field}
-                        className="w-32 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none"
+                        className="w-32 bg-[#F6EEE0] text-gray-700 rounded-md border-none"
                       />
                     </FormControl>
                     <div className="h-4">
@@ -75,14 +84,39 @@ const ManageProductsModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 )}
               />
             </div>
-            <Button
-              type="submit"
-              className="mt-6 bg-[#8c6b33] text-white hover:bg-[#362913] px-6 h-7 rounded-lg text-xs"
-            >
-              Save
-            </Button>
+            <div className="">
+              <Button
+                type="submit"
+                className="bg-[#362913] text-white hover:text-black hover:outline px-5 h-8 rounded-lg text-xs"
+              >
+                ADD
+              </Button>
+            </div>
           </form>
         </Form>
+        {/* Product List */}
+        {productList.length > 0 && (
+          <div className="border-t pt-4">
+            <h6 className="font-medium mb-2">Product List</h6>
+            <ul className="space-y-2">
+              {productList.map((product, index) => (
+                <li
+                  key={index}
+                  className="flex justify-between items-center text-sm font-medium rounded-md"
+                >
+                  <span className="text-gray-700">{product}</span>
+                  <span className="text-gray-700">50</span>
+                  <Button
+                    onClick={() => handleDelete(index)}
+                    className="bg-red-500 text-white hover:bg-red-600 px-2 h-7 rounded-lg text-xs"
+                  >
+                    DELETE
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );
