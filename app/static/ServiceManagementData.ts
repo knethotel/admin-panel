@@ -67,7 +67,7 @@ export const serviceManagementHomePageData: ServiceManagementHomePageDataType[] 
       id: 8,
       name: 'IN-ROOM CONTROL',
       imgSrc: img8,
-      href: '/service-management/inroomcontrol'
+      href: '/service-management/in_room_control'
     },
     {
       id: 9,
