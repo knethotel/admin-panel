@@ -1,4 +1,4 @@
-import { GymServiceTable } from '@/components/tables/gum-service/client';
+import { GymServiceTable } from '@/components/tables/gym-service/client';
 import React from 'react';
 
 const GymServicePage = () => {
