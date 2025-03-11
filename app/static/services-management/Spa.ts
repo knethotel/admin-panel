@@ -1,4 +1,4 @@
-type RequestTypeType = 'Spa' | 'Salon';
+type ServiceCategoryType = 'Spa' | 'Salon';
 
 type StatusType = 'Pending' | 'In-Progress' | 'Completed';
 
@@ -19,9 +19,8 @@ export type SpaServiceDataType = {
     mobileNumber: string;
     email: string;
   };
-  serviceCategory: string;
+  serviceCategory: ServiceCategoryType;
   duration: string;
-  requestType: RequestTypeType;
   status: StatusType;
   assignedTo: string;
 };
@@ -44,9 +43,8 @@ export const SpaServiceData: SpaServiceDataType[] = [
       mobileNumber: '7302884521',
       email: 'janesmith@gmail.com'
     },
-    serviceCategory: 'Therapy',
+    serviceCategory: 'Spa',
     duration: '60 mins',
-    requestType: 'Spa',
     status: 'In-Progress',
     assignedTo: 'Employee 2'
   },
@@ -67,9 +65,8 @@ export const SpaServiceData: SpaServiceDataType[] = [
       mobileNumber: '8103672914',
       email: 'michaelbrown@gmail.com'
     },
-    serviceCategory: 'Haircare',
+    serviceCategory: 'Salon',
     duration: '45 mins',
-    requestType: 'Salon',
     status: 'Pending',
     assignedTo: 'Employee 3'
   }
