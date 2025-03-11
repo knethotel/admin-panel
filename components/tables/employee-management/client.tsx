@@ -3,24 +3,26 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
-import { Settings } from 'lucide-react';
+import { Heading } from '@/components/ui/heading';
 
+import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { columns } from './columns';
-import { InRoomControlData } from 'app/static/services-management/InRoomControl';
-import ToggleButton from '@/components/ui/toggleButton';
-import PriceTimeSetting from '@/components/modal//PriceTimeSetting';
 
-export const InRoomControlDataTable: React.FC = () => {
+import { EmployeeData } from 'app/static/EmployeeManagement';
+
+type ModeType = 'add_employee';
+
+export const EmployeeTable: React.FC = () => {
   const router = useRouter();
-  const [data, setData] = useState(InRoomControlData || []);
-  const [filteredData, setFilteredData] = useState(InRoomControlData || []);
+  const [data, setData] = useState(EmployeeData || []);
+  const [filteredData, setFilteredData] = useState(EmployeeData || []);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>();
   const [totalRecords, setTotalRecords] = useState(data.length || 0);
+  const [mode, setMode] = useState<ModeType>();
 
-  // **********Search Filter and pagination logic************
   // const filters = [
   //     {
   //         label: 'Account Status',
@@ -45,8 +47,6 @@ export const InRoomControlDataTable: React.FC = () => {
     }
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const handleLimitChange = (newLimit: number) => {
     setLimit(newLimit);
     setPageNo(1); // Reset to the first page when the limit changes
@@ -58,23 +58,36 @@ export const InRoomControlDataTable: React.FC = () => {
       setFilteredData(data); // Reset if empty
     } else {
       const filtered = data.filter((item) =>
-        item.guestDetails.name.toLowerCase().includes(searchValue.toLowerCase())
+        item.employeeDetails.name
+          .toLowerCase()
+          .includes(searchValue.toLowerCase())
       );
       setFilteredData(filtered);
     }
   };
+
+  //   Onclick event handler functions
+  const handleOnClick = (actionName: string) => {
+    if (actionName === 'add employee') {
+      setMode('add_employee');
+      router.push(`/employee-management/add`);
+    }
+  };
   return (
     <>
-      <div className="w-full pt-20 flex gap-2 justify-end px-4 py-2 bg-white">
-        <div className="flex items-center gap-2">
-          <h2 className="text-[0.8rem]">AUTO ACCEPT REQUESTS</h2>
-          <ToggleButton />
+      <div className="flex items-start justify-between">
+        <Heading title={`Employees (${totalRecords})`} />
+        <div>
+          <Button
+            className="text-xs md:text-sm bg-button-light group hover:outline"
+            onClick={() => handleOnClick('add employee')}
+          >
+            <Plus className="mr-2 h-4 w-4" />{' '}
+            <span className="text-white group-hover:text-black">
+              Add Employee
+            </span>
+          </Button>
         </div>
-        <Settings onClick={() => setIsModalOpen(true)} />
-        <PriceTimeSetting
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
       </div>
       {loading ? (
         <span>Loading...</span>

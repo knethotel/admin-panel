@@ -5,16 +5,15 @@ import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Settings } from 'lucide-react';
 
-import { useRouter } from 'next/navigation';
 import { columns } from './columns';
-import { InRoomControlData } from 'app/static/services-management/InRoomControl';
+import { OrderManagementData } from 'app/static/services-management/OrderManagement';
 import ToggleButton from '@/components/ui/toggleButton';
-import PriceTimeSetting from '@/components/modal//PriceTimeSetting';
+import SelectInput from '@/components/service-management/order-management/SelectInput';
+import ManageProductsModal from '@/components/modal/order-management/ManageProductsModal';
 
-export const InRoomControlDataTable: React.FC = () => {
-  const router = useRouter();
-  const [data, setData] = useState(InRoomControlData || []);
-  const [filteredData, setFilteredData] = useState(InRoomControlData || []);
+export const OrderManagementDataTable: React.FC = () => {
+  const [data, setData] = useState(OrderManagementData || []);
+  const [filteredData, setFilteredData] = useState(OrderManagementData || []);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>();
@@ -65,13 +64,16 @@ export const InRoomControlDataTable: React.FC = () => {
   };
   return (
     <>
-      <div className="w-full pt-20 flex gap-2 justify-end px-4 py-2 bg-white">
-        <div className="flex items-center gap-2">
+      <div className="w-full pt-20 flex flex-col items-end gap-2 justify-end px-4 py-2 bg-white">
+        <div className="flex w-full justify-end py-4 items-center gap-2">
           <h2 className="text-[0.8rem]">AUTO ACCEPT REQUESTS</h2>
           <ToggleButton />
+          <Settings onClick={() => setIsModalOpen(true)} />
         </div>
-        <Settings onClick={() => setIsModalOpen(true)} />
-        <PriceTimeSetting
+        <div>
+          <SelectInput />
+        </div>
+        <ManageProductsModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />
