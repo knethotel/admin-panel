@@ -11,6 +11,7 @@ import pic3 from '../../public/assets/payment_management/pic3.png';
 import pic4 from '../../public/assets/payment_management/pic4.png';
 import pic5 from '../../public/assets/payment_management/pic5.png';
 
+// ***************Coupon details data************//
 export type CouponsDataType = {
   title: string;
   subtitle: string;
@@ -75,5 +76,193 @@ export const FixedAmountCouponsData: CouponsDataType[] = [
     title: 'Up to 1000 off',
     subtitle: 'cashback on first payment ',
     image: pic5
+  }
+];
+
+// *************Refund details data**************//
+type StatusType = 'REJECTED' | 'IN-PROGRESS' | 'COMPLETED' | 'INITIATED';
+export type RefundDataType = {
+  refundID: string;
+  userID: string;
+  orderID: string;
+  hotelDetails: {
+    hotelID: string;
+    hotelName: string;
+  };
+  amount: string;
+  statusDetails: {
+    status: StatusType;
+    processedAt: string;
+  };
+};
+
+export const RefundData: RefundDataType[] = [
+  {
+    refundID: 'AD123452',
+    userID: 'UI8623416',
+    orderID: 'OI7356852',
+    hotelDetails: {
+      hotelID: 'HD2345618',
+      hotelName: 'Namaste Village'
+    },
+    amount: 'INR1000',
+    statusDetails: {
+      status: 'REJECTED',
+      processedAt: 'Processed at : 10:00AM'
+    }
+  },
+  {
+    refundID: 'AD123452',
+    userID: 'UI8623416',
+    orderID: 'OI7356852',
+    hotelDetails: {
+      hotelID: 'HD2345618',
+      hotelName: 'Namaste Village'
+    },
+    amount: 'INR1000',
+    statusDetails: {
+      status: 'REJECTED',
+      processedAt: 'Processed at : 10:00AM'
+    }
+  },
+  {
+    refundID: 'AD123452',
+    userID: 'UI8623416',
+    orderID: 'OI7356852',
+    hotelDetails: {
+      hotelID: 'HD2345618',
+      hotelName: 'Namaste Village'
+    },
+    amount: 'INR1000',
+    statusDetails: {
+      status: 'REJECTED',
+      processedAt: 'Processed at : 10:00AM'
+    }
+  },
+  {
+    refundID: 'AD123452',
+    userID: 'UI8623416',
+    orderID: 'OI7356852',
+    hotelDetails: {
+      hotelID: 'HD2345618',
+      hotelName: 'Namaste Village'
+    },
+    amount: 'INR1000',
+    statusDetails: {
+      status: 'REJECTED',
+      processedAt: 'Processed at : 10:00AM'
+    }
+  },
+  {
+    refundID: 'AD123452',
+    userID: 'UI8623416',
+    orderID: 'OI7356852',
+    hotelDetails: {
+      hotelID: 'HD2345618',
+      hotelName: 'Namaste Village'
+    },
+    amount: 'INR1000',
+    statusDetails: {
+      status: 'REJECTED',
+      processedAt: 'Processed at : 10:00AM'
+    }
+  },
+  {
+    refundID: 'AD123452',
+    userID: 'UI8623416',
+    orderID: 'OI7356852',
+    hotelDetails: {
+      hotelID: 'HD2345618',
+      hotelName: 'Namaste Village'
+    },
+    amount: 'INR1000',
+    statusDetails: {
+      status: 'REJECTED',
+      processedAt: 'Processed at : 10:00AM'
+    }
+  },
+  {
+    refundID: 'AD123452',
+    userID: 'UI8623416',
+    orderID: 'OI7356852',
+    hotelDetails: {
+      hotelID: 'HD2345618',
+      hotelName: 'Namaste Village'
+    },
+    amount: 'INR1000',
+    statusDetails: {
+      status: 'REJECTED',
+      processedAt: 'Processed at : 10:00AM'
+    }
+  },
+  {
+    refundID: 'AD123452',
+    userID: 'UI8623416',
+    orderID: 'OI7356852',
+    hotelDetails: {
+      hotelID: 'HD2345618',
+      hotelName: 'Namaste Village'
+    },
+    amount: 'INR1000',
+    statusDetails: {
+      status: 'REJECTED',
+      processedAt: 'Processed at : 10:00AM'
+    }
+  },
+  {
+    refundID: 'AD123452',
+    userID: 'UI8623416',
+    orderID: 'OI7356852',
+    hotelDetails: {
+      hotelID: 'HD2345618',
+      hotelName: 'Namaste Village'
+    },
+    amount: 'INR1000',
+    statusDetails: {
+      status: 'REJECTED',
+      processedAt: 'Processed at : 10:00AM'
+    }
+  },
+  {
+    refundID: 'AD123452',
+    userID: 'UI8623416',
+    orderID: 'OI7356852',
+    hotelDetails: {
+      hotelID: 'HD2345618',
+      hotelName: 'Namaste Village'
+    },
+    amount: 'INR1000',
+    statusDetails: {
+      status: 'REJECTED',
+      processedAt: 'Processed at : 10:00AM'
+    }
+  },
+  {
+    refundID: 'AD123452',
+    userID: 'UI8623416',
+    orderID: 'OI7356852',
+    hotelDetails: {
+      hotelID: 'HD2345618',
+      hotelName: 'Namaste Village'
+    },
+    amount: 'INR1000',
+    statusDetails: {
+      status: 'REJECTED',
+      processedAt: 'Processed at : 10:00AM'
+    }
+  },
+  {
+    refundID: 'AD123452',
+    userID: 'UI8623416',
+    orderID: 'OI7356852',
+    hotelDetails: {
+      hotelID: 'HD2345618',
+      hotelName: 'Namaste Village'
+    },
+    amount: 'INR1000',
+    statusDetails: {
+      status: 'REJECTED',
+      processedAt: 'Processed at : 10:00AM'
+    }
   }
 ];
