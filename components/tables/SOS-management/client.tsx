@@ -44,10 +44,6 @@ export const SOSManagementDataTable: React.FC = () => {
       setPageNo(newPage);
     }
   };
-  const [isPriceTimeSettingModalOpen, setIsPriceTimeSettingModalOpen] =
-    useState(false);
-  const [isManageProductsModalOpen, setManageProductsModal] = useState(false);
-  const [isAddMenuModalOpen, setIsAddMenuModalOpen] = useState(false);
 
   const handleLimitChange = (newLimit: number) => {
     setLimit(newLimit);
@@ -67,42 +63,10 @@ export const SOSManagementDataTable: React.FC = () => {
   };
   return (
     <>
-      <div className="w-full pt-20 flex flex-col items-end gap-2 justify-end px-4 py-2">
-        <div className="flex w-full justify-end py-4 items-center gap-2">
-          <h2 className="text-[0.8rem]">AUTO ACCEPT REQUESTS</h2>
-          <ToggleButton />
-          <Settings onClick={() => setIsPriceTimeSettingModalOpen(true)} />
-        </div>
-        <div>
-          <div className="flex gap-2">
-            <Button
-              onClick={() => setIsAddMenuModalOpen(true)}
-              className="bg-[#A07D3D] text-white hover:text-black hover:outline"
-            >
-              {' '}
-              <Plus className="w-5 h-5 text-black" />
-              Add Menu
-            </Button>
-            <Button
-              onClick={() => setManageProductsModal(true)}
-              className="bg-[#A07D3D] text-white hover:text-black hover:outline"
-            >
-              Manage Products
-            </Button>
-          </div>
-        </div>
-        <PriceTimeSetting
-          isOpen={isPriceTimeSettingModalOpen}
-          onClose={() => setIsPriceTimeSettingModalOpen(false)}
-        />
-        <ManageProductsModal
-          isOpen={isManageProductsModalOpen}
-          onClose={() => setManageProductsModal(false)}
-        />
-        <AddMenuModal
-          isOpen={isAddMenuModalOpen}
-          onClose={() => setIsAddMenuModalOpen(false)}
-        />
+      <div className="w-full flex justify-start px-4 mt-20">
+        <h2 className="text-[#281F0F] text-lg xl:text-xl font-medium">
+          SOS Management
+        </h2>
       </div>
       {loading ? (
         <span>Loading...</span>
