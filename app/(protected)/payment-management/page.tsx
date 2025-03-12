@@ -13,7 +13,7 @@ const HomePage = () => {
       <div className="flex flex-col gap-2">
         <div className="flex justify-end">
           {' '}
-          <Button className="bg-[#A07D3D] px-2 h-8 text-white rounded-sm">
+          <Button className="bg-[#A07D3D] px-2 h-8 hover:outline hover:text-black text-white rounded-sm">
             Create Coupon
           </Button>
         </div>
