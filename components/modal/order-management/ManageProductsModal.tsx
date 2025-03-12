@@ -20,8 +20,6 @@ interface ModalProps {
 }
 
 const ManageProductsModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
-
   const [productList, setProductList] = useState<string[]>([]);
 
   const manageProductsForm = useForm<ManageProductsSchemaType>({
@@ -42,6 +40,8 @@ const ManageProductsModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     setProductList(productList.filter((_, i) => i !== index));
   };
 
+  // When conditionally rendering hooks always do it below everything else
+  if (!isOpen) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
       <div className="bg-[#FAF6EF] rounded-lg shadow-lg flex flex-col gap-6 p-6 w-full max-w-xl relative animate-fadeIn">
