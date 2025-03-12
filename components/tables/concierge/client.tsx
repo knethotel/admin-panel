@@ -65,17 +65,18 @@ export const ConciergeServiceTable: React.FC = () => {
   };
   return (
     <>
-      <div className="w-full pt-20 flex gap-2 justify-end px-4 py-2 bg-white">
+      <div className="w-full pt-20 flex gap-2 justify-between px-4 py-2 bg-white">
+        <h2 className="text-lg font-medium">Concierge Service</h2>
         <div className="flex items-center gap-2">
           <h2 className="text-[0.8rem]">AUTO ACCEPT REQUESTS</h2>
           <ToggleButton />
+          <Settings onClick={() => setIsModalOpen(true)} />
         </div>
-        <Settings onClick={() => setIsModalOpen(true)} />
-        <PriceTimeSetting
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
       </div>
+      <PriceTimeSetting
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
       {loading ? (
         <span>Loading...</span>
       ) : (
