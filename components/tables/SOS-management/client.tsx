@@ -6,16 +6,15 @@ import { DataTable } from '@/components/ui/data-table';
 import { Plus, Settings } from 'lucide-react';
 
 import { columns } from './columns';
-import { OrderManagementData } from 'app/static/services-management/OrderManagement';
+import { SOSManagementData } from 'app/static/services-management/SOS';
 import ToggleButton from '@/components/ui/toggleButton';
 import ManageProductsModal from '@/components/modal/order-management/ManageProductsModal';
-import { AlertModal } from '@/components/modal/alert-modal';
 import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
 import AddMenuModal from '@/components/modal/order-management/AddMenuModal';
 
-export const OrderManagementDataTable: React.FC = () => {
-  const [data, setData] = useState(OrderManagementData || []);
-  const [filteredData, setFilteredData] = useState(OrderManagementData || []);
+export const SOSManagementDataTable: React.FC = () => {
+  const [data, setData] = useState(SOSManagementData || []);
+  const [filteredData, setFilteredData] = useState(SOSManagementData || []);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>();

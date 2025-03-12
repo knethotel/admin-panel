@@ -1,12 +1,12 @@
-import { ReceptionServiceTable } from '@/components/tables/reception-service/client';
+import { SOSManagementDataTable } from '@/components/tables/SOS-management/client';
 import React from 'react';
 
-const ReceptionPage = () => {
+const SOSManagementServicePage = () => {
   return (
     <div className="w-full">
-      <ReceptionServiceTable />
+      <SOSManagementDataTable />
     </div>
   );
 };
 
-export default ReceptionPage;
+export default SOSManagementServicePage;
