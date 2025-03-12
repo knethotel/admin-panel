@@ -32,7 +32,7 @@ import {
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 
-const PaymentForm = () => {
+const CreateCouponForm = () => {
   const router = useRouter();
 
   const form = useForm<paymentSchemaType>({
@@ -444,4 +444,4 @@ const PaymentForm = () => {
   );
 };
 
-export default PaymentForm;
+export default CreateCouponForm;

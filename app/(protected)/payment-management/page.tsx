@@ -1,66 +1,86 @@
-'use client';
-import PaymentForm from '@/components/form/payment-management/payment-form';
-import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import React from 'react';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
-import { ChevronDown } from 'lucide-react'; // Import ChevronDown from lucide-react
+  PercentageCouponsData,
+  FixedAmountCouponsData
+} from 'app/static/PaymentManagement';
+import { SquarePen, Trash2 } from 'lucide-react';
 
-const PaymentManagementPage = () => {
-  const [activeButton, setActiveButton] = useState<'coupons' | 'refund' | null>(
-    'coupons'
-  ); // Default to 'coupons'
-  const [selectedOption, setSelectedOption] = useState<string>('create-coupon'); // Default to 'create-coupon'
-
-  const handleButtonClick = (button: 'coupons' | 'refund') => {
-    setActiveButton(button);
-  };
-
+const HomePage = () => {
   return (
-    <div className="h-screen w-full space-y-6 relative">
-      <div className="flex flex-col items-center gap-2">
-        <div className="w-[50%] h-12 text-sm flex justify-evenly rounded-b-xl items-center px-2 bg-[#EFE9DF]">
-          <button
-            className={`border px-3 rounded-md ${
-              activeButton === 'coupons'
-                ? 'bg-[#281F0F] text-white'
-                : 'bg-transparent text-[#281F0F]'
-            }`}
-            onClick={() => handleButtonClick('coupons')}
-          >
-            Coupons
-          </button>
-          <button
-            className={`border px-3 rounded-md ${
-              activeButton === 'refund'
-                ? 'bg-[#281F0F] text-white'
-                : 'bg-transparent text-[#281F0F]'
-            }`}
-            onClick={() => handleButtonClick('refund')}
-          >
-            Refund
-          </button>
+    <div className="min-h-screen w-full flex justify-center items-center">
+      <div className="flex flex-col gap-2">
+        <div className="flex justify-end">
+          {' '}
+          <Button className="bg-[#A07D3D] px-2 h-8 text-white rounded-sm">
+            Create Coupon
+          </Button>
         </div>
-        <div className="w-full flex justify-end px-4">
-          <Select value={selectedOption} onValueChange={setSelectedOption}>
-            <SelectTrigger className="w-[180px] bg-[#A07D3D] text-white border-none text-xs flex items-center justify-between">
-              <SelectValue />
-              <ChevronDown className="h-4 w-4 ml-2 text-black" />
-            </SelectTrigger>
-            <SelectContent className="bg-[#FAF6EF]">
-              <SelectItem value="create-coupon">Create Coupon</SelectItem>
-              <SelectItem value="manage-coupons">Manage Coupons</SelectItem>
-            </SelectContent>
-          </Select>
+        {/* Coupon Carousel Container */}
+        <div className="bg-[#FAF6EF] shadow-custom p-6 pb-10 flex flex-col gap-12">
+          {/* Percentage coupons list */}
+          <div className="space-y-2">
+            <p className="inline-block font-medium">Percentage Coupons</p>
+            <div className="flex gap-4">
+              {/* Coupon Card */}
+              {PercentageCouponsData.map((coupon, index) => (
+                <div key={index} className="relative w-32 h-36 rounded-lg">
+                  <Image
+                    src={coupon.image}
+                    alt="coupon image"
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute overflow-hidden bottom-0 bg-[#281F0F] text-white rounded-b-lg">
+                    <div className="p-2 pb-4 flex-col gap-1">
+                      <h4 className="text-sm">{coupon.title}</h4>
+                      <p className="text-[0.6rem] opacity-70">
+                        {coupon.subtitle}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="absolute w-full -bottom-6 flex justify-between">
+                    <SquarePen className="h-4 w-4" />
+                    <Trash2 className="h-4 w-4" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Fixed amount coupons list */}
+          <div className="space-y-2">
+            <p className="inline-block font-medium">Fixed Amount Coupons</p>
+            <div className="flex gap-4">
+              {/* Coupon Card */}
+              {FixedAmountCouponsData.map((coupon, index) => (
+                <div key={index} className="relative w-32 h-36 rounded-lg">
+                  <Image
+                    src={coupon.image}
+                    alt="coupon image"
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute overflow-hidden bottom-0 bg-[#281F0F] text-white rounded-b-lg">
+                    <div className="p-2 pb-4 flex-col gap-1">
+                      <h4 className="text-sm">{coupon.title}</h4>
+                      <p className="text-[0.6rem] opacity-70">
+                        {coupon.subtitle}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="absolute w-full -bottom-6 flex justify-between">
+                    <SquarePen className="h-4 w-4" />
+                    <Trash2 className="h-4 w-4" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-        <PaymentForm />
       </div>
     </div>
   );
 };
 
-export default PaymentManagementPage;
+export default HomePage;
