@@ -15,7 +15,7 @@ const PaymentManagementPage = ({ children }: { children: React.ReactNode }) => {
     setActiveButton(value);
 
     if (value === 'coupons') {
-      router.push('/payment-management/coupons'); // Redirect to coupons page
+      router.push('/payment-management'); // Redirect to coupons page
     } else {
       router.push('/payment-management/refund'); // Redirect to refund page
     }
