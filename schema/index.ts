@@ -78,8 +78,9 @@ export const notificationSchema = z.object({
 
 export type notificationSchemaType = z.infer<typeof notificationSchema>;
 
-// **********Payment management schema***************
+// ****************************Payment management schema*******************************************
 
+// ***********Create coupon schema and type************
 export const paymentSchema = z.object({
   category: z.enum(
     ['category1', 'category2', 'category3', 'category4', 'category5'],
@@ -90,7 +91,8 @@ export const paymentSchema = z.object({
   validityFrom: z.string().min(1, 'Validity From is required'),
   validityTo: z.string().min(1, 'Validity To is required'),
   usageLimit: z.string().min(1, 'Usage Limit is required'),
-  perUserLimit: z.string().min(1, 'Per User Limit is required'),
+  discountPercentage: z.string().min(1, 'Per User Limit is required'),
+  discountAmount: z.number().min(1, 'Per User Limit is required'),
   minimumSpent: z.string().min(1, 'Minimum Spent is required'),
   couponStatus: z.enum(['active', 'expired', 'disabled'], {
     errorMap: () => ({ message: 'Please select a valid coupon status' })
