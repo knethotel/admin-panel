@@ -99,7 +99,23 @@ export const createCouponSchema = z.object({
   }),
   stackable: z.boolean().default(false),
   createCode: z.string().min(1, 'Create Code is required'),
-  termsAndConditions: z.string().min(1, 'Terms and Conditions is required')
+  termsAndConditions: z.string().min(1, 'Terms and Conditions is required'),
+  couponImage: z
+    .custom<File | undefined>(
+      (file) => file instanceof File || typeof file === 'undefined',
+      { message: 'Invalid file format' }
+    )
+    .refine(
+      (file) =>
+        !file ||
+        ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(
+          file.type
+        ),
+      { message: 'Only JPG, PNG, GIF, and WEBP formats are allowed.' }
+    )
+    .refine((file) => !file || file.size <= 5 * 1024 * 1024, {
+      message: 'Image size must be 5MB or less.'
+    })
 });
 
 export type createCouponSchemaType = z.infer<typeof createCouponSchema>;

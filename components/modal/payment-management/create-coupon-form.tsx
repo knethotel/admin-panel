@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
+import { PiCameraThin } from 'react-icons/pi';
 
 const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
   const form = useForm<createCouponSchemaType>({
@@ -46,7 +47,8 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
       redemption: 'automatic',
       stackable: false,
       createCode: '',
-      termsAndConditions: ''
+      termsAndConditions: '',
+      couponImage: undefined
     }
   });
 
@@ -63,7 +65,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full relative h-full max-w-4xl mx-auto hide-scrollbar p-4 sm:px-6 md:px-8 rounded-lg"
+          className="w-full relative h-full max-w-4xl mx-auto p-4 sm:px-6 md:px-8 rounded-lg"
         >
           {/* Main Grid: Two Sides */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
@@ -396,7 +398,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
             </div>
 
             {/* Right Side */}
-            <div className="space-y-28">
+            <div className="flex flex-col items-center md:items-start space-y-8">
               {/* Create Code */}
               <FormField
                 control={form.control}
@@ -415,6 +417,45 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="couponImage"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
+                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                      Coupon Image
+                    </FormLabel>
+                    <div className="flex items-center w-full">
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            placeholder=""
+                            value={field.value?.name || ''}
+                            readOnly
+                            className="h-44 w-full rounded-lg text-gray-700 bg-[#F6EEE0] p-2 border-none outline-none focus:ring-0 text-sm cursor-default"
+                          />
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) =>
+                              field.onChange(e.target.files?.[0])
+                            }
+                            className="hidden"
+                            id="fileUpload"
+                          />
+                          <label
+                            htmlFor="fileUpload"
+                            className="absolute inset-0 right-2 rounded-lg h-44 top-1/2 -translate-y-1/2 bg-[#F6EEE0] w-full cursor-pointer flex justify-center items-center"
+                          >
+                            <PiCameraThin className="text-black w-1/2 h-1/2 opacity-30" />
+                          </label>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
                     </div>
                   </FormItem>
                 )}
@@ -441,18 +482,17 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                   </FormItem>
                 )}
               />
+              <Button
+                type="submit"
+                className="w-28 md:ml-24 sm:w-auto bg-[#A07D3D] text-white hover:bg-[#8c6b33] px-6 py-2 rounded-md text-xs"
+              >
+                Save Changes
+              </Button>
             </div>
           </div>
 
           {/* Buttons */}
-          <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3">
-            <Button
-              type="submit"
-              className="w-full sm:w-auto bg-[#A07D3D] text-white hover:bg-[#8c6b33] px-6 py-2 rounded-md text-xs"
-            >
-              Save Changes
-            </Button>
-          </div>
+          <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3"></div>
         </form>
       </Form>
     </FormWrapper>
