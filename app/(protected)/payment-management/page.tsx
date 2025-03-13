@@ -1,3 +1,4 @@
+'use client';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import React from 'react';
@@ -6,17 +7,23 @@ import {
   FixedAmountCouponsData
 } from 'app/static/PaymentManagement';
 import { SquarePen, Trash2 } from 'lucide-react';
+import CreateCouponModal from '@/components/modal/payment-management/create-coupon-modal';
 
 const HomePage = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
   return (
     <div className="min-h-screen w-full flex justify-center items-center">
       <div className="flex flex-col gap-2">
         <div className="flex justify-end">
           {' '}
-          <Button className="bg-[#A07D3D] px-2 h-8 hover:outline hover:text-black text-white rounded-sm">
+          <Button
+            onClick={() => setIsOpen(true)}
+            className="bg-[#A07D3D] px-2 h-8 hover:outline hover:text-black text-white rounded-sm"
+          >
             Create Coupon
           </Button>
         </div>
+        <CreateCouponModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
         {/* Coupon Carousel Container */}
         <div className="bg-[#FAF6EF] shadow-custom p-6 pb-10 flex flex-col gap-12">
           {/* Percentage coupons list */}
