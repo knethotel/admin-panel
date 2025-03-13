@@ -120,8 +120,25 @@ export const createCouponSchema = z.object({
       message: 'Image size must be 5MB or less.'
     })
 });
-
 export type createCouponSchemaType = z.infer<typeof createCouponSchema>;
+
+//***********Create refund schema and type*************
+export const createRefundSchema = z.object({
+  refundID: z.string(),
+  userID: z.string().min(1, 'Invalid UserID'),
+  hotelID: z.string().min(1, 'Invalid HotelID'),
+  amount: z.number().min(1, 'Enter valid amount'),
+  refundReason: z.string().min(1, 'Enter valid input'),
+  refundStatus: z.enum(['Initiated', 'In-Progress', 'Completed', 'Rejected'], {
+    errorMap: () => ({ message: 'Please select a valid Refund status' })
+  }),
+  message: z.string().min(1, 'Enter a valid input').optional(),
+  assignedStaff: z.string().min(1, 'Enter valid input'),
+  serviceDepartment: z.string().min(1, 'Enter valid input'),
+  dateAndTime: z.string().min(1, 'Enter valid value')
+});
+
+export type createRefundSchemaType = z.infer<typeof createRefundSchema>;
 
 // **********Hotel Profile schema***************
 export const hotelSchema = z.object({

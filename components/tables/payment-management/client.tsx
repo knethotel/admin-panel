@@ -9,10 +9,12 @@ import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 
 import { RefundData } from 'app/static/PaymentManagement';
+import CreateRefundModal from '@/components/modal/payment-management/create_refund_modal';
 
 type ModeType = 'add_employee';
 
 export const RefundDetailsTable: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const [data, setData] = useState(RefundData || []);
   const [filteredData, setFilteredData] = useState(RefundData || []);
@@ -70,9 +72,15 @@ export const RefundDetailsTable: React.FC = () => {
       <div className="flex items-start justify-start">
         <div className="w-full flex justify-between items-center px-4">
           <Heading title={`Payment Management`} />
-          <Button className='bg-[#A07D3D] text-white hover:text-black hover:outline'>Create Refund</Button>
+          <Button
+            onClick={() => setIsOpen(true)}
+            className="bg-[#A07D3D] text-white hover:text-black hover:outline"
+          >
+            Create Refund
+          </Button>
         </div>
       </div>
+      <CreateRefundModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
       {loading ? (
         <span>Loading...</span>
       ) : (
