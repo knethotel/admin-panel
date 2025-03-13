@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createCouponSchema, createCouponSchemaType } from 'schema';
@@ -33,6 +33,13 @@ import { format } from 'date-fns';
 import { PiCameraThin } from 'react-icons/pi';
 
 const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
+  const [preview, setPreview] = useState<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
   const form = useForm<createCouponSchemaType>({
     resolver: zodResolver(createCouponSchema),
     defaultValues: {
@@ -263,6 +270,10 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                             <Input
                               type="number"
                               {...field}
+                              value={field.value ?? ''} // Handle undefined/null
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              } // Convert string to number
                               className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                             />
                           </FormControl>
@@ -431,28 +442,62 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                     </FormLabel>
                     <div className="flex items-center w-full">
                       <FormControl>
-                        <div className="relative">
-                          <Input
-                            placeholder=""
-                            value={field.value?.name || ''}
-                            readOnly
-                            className="h-44 w-full rounded-lg text-gray-700 bg-[#F6EEE0] p-2 border-none outline-none focus:ring-0 text-sm cursor-default"
-                          />
+                        <div
+                          className="relative h-44 w-44 rounded-lg bg-[#F6EEE0] p-2"
+                          onDrop={(e) => {
+                            e.preventDefault();
+                            const file = e.dataTransfer.files?.[0];
+                            if (file) {
+                              field.onChange(file);
+                              if (preview) URL.revokeObjectURL(preview);
+                              setPreview(URL.createObjectURL(file));
+                            }
+                          }}
+                          onDragOver={(e) => e.preventDefault()}
+                        >
+                          <div className="h-full w-full flex items-center justify-center">
+                            {preview && (
+                              <img
+                                src={preview}
+                                alt="Coupon preview"
+                                className="h-full w-full object-cover rounded-lg"
+                              />
+                            )}
+                          </div>
+                          {!preview && (
+                            <label
+                              htmlFor="fileUpload"
+                              className="absolute inset-0 flex justify-center items-center cursor-pointer"
+                              aria-label="Upload coupon image"
+                            >
+                              <PiCameraThin className="text-black w-12 h-44 opacity-30" />
+                            </label>
+                          )}
                           <input
                             type="file"
                             accept="image/*"
-                            onChange={(e) =>
-                              field.onChange(e.target.files?.[0])
-                            }
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                if (!file.type.startsWith('image/')) {
+                                  alert('Please upload an image file.');
+                                  return;
+                                }
+                                if (file.size > 5 * 1024 * 1024) {
+                                  alert('File size exceeds 5MB.');
+                                  return;
+                                }
+                                if (preview) URL.revokeObjectURL(preview);
+                                const imageUrl = URL.createObjectURL(file);
+                                setPreview(imageUrl);
+                              } else {
+                                setPreview(null);
+                              }
+                              field.onChange(file);
+                            }}
                             className="hidden"
                             id="fileUpload"
                           />
-                          <label
-                            htmlFor="fileUpload"
-                            className="absolute inset-0 right-2 rounded-lg h-44 top-1/2 -translate-y-1/2 bg-[#F6EEE0] w-full cursor-pointer flex justify-center items-center"
-                          >
-                            <PiCameraThin className="text-black w-1/2 h-1/2 opacity-30" />
-                          </label>
                         </div>
                       </FormControl>
                       <FormMessage />

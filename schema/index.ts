@@ -89,7 +89,10 @@ export const createCouponSchema = z.object({
   validityTo: z.string().min(1, 'Validity To is required'),
   usageLimit: z.string().min(1, 'Usage Limit is required'),
   discountPercentage: z.string().min(1, 'Per User Limit is required'),
-  discountAmount: z.number().min(1, 'Per User Limit is required'),
+  discountAmount: z
+    .number()
+    .min(0, 'Discount amount cannot be negative')
+    .or(z.literal(0)),
   minimumSpent: z.string().min(1, 'Minimum Spent is required'),
   couponStatus: z.enum(['active', 'expired', 'disabled'], {
     errorMap: () => ({ message: 'Please select a valid coupon status' })
