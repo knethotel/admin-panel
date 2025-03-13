@@ -5,18 +5,17 @@ import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Heading } from '@/components/ui/heading';
 
-import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 
-import { EmployeeData } from 'app/static/EmployeeManagement';
+import { RefundData } from 'app/static/PaymentManagement';
 
 type ModeType = 'add_employee';
 
-export const EmployeeTable: React.FC = () => {
+export const RefundDetailsTable: React.FC = () => {
   const router = useRouter();
-  const [data, setData] = useState(EmployeeData || []);
-  const [filteredData, setFilteredData] = useState(EmployeeData || []);
+  const [data, setData] = useState(RefundData || []);
+  const [filteredData, setFilteredData] = useState(RefundData || []);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>();
@@ -58,7 +57,7 @@ export const EmployeeTable: React.FC = () => {
       setFilteredData(data); // Reset if empty
     } else {
       const filtered = data.filter((item) =>
-        item.employeeDetails.name
+        item.hotelDetails.hotelName
           .toLowerCase()
           .includes(searchValue.toLowerCase())
       );
@@ -66,27 +65,12 @@ export const EmployeeTable: React.FC = () => {
     }
   };
 
-  //   Onclick event handler functions
-  const handleOnClick = (actionName: string) => {
-    if (actionName === 'add employee') {
-      setMode('add_employee');
-      router.push(`/employee-management/add`);
-    }
-  };
   return (
     <>
-      <div className="flex items-start justify-between">
-        <Heading title={`Employees (${totalRecords})`} />
-        <div>
-          <Button
-            className="text-xs md:text-sm bg-button-light group hover:outline"
-            onClick={() => handleOnClick('add employee')}
-          >
-            <Plus className="mr-2 h-4 w-4" />{' '}
-            <span className="text-white group-hover:text-black">
-              Add Employee
-            </span>
-          </Button>
+      <div className="flex items-start justify-start">
+        <div className="w-full flex justify-between items-center px-4">
+          <Heading title={`Payment Management`} />
+          <Button className='bg-[#A07D3D] text-white hover:text-black hover:outline'>Create Refund</Button>
         </div>
       </div>
       {loading ? (

@@ -12,11 +12,13 @@ const PaymentManagementPage = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const handleButtonClick = (value: 'coupons' | 'refund') => {
     setSelectedOption(value);
-    if (value === 'coupons') {
-      router.back();
-    }
-    router.push('/payment-management/refund');
     setActiveButton(value);
+
+    if (value === 'coupons') {
+      router.push('/payment-management/coupons'); // Redirect to coupons page
+    } else {
+      router.push('/payment-management/refund'); // Redirect to refund page
+    }
   };
 
   return (

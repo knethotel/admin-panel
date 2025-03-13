@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import ToggleButton from '@/components/ui/toggleButton';
 import { Edit } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React from 'react';
 
 const CellAction = (props: any) => {
   const { data } = props;
@@ -18,7 +18,7 @@ const CellAction = (props: any) => {
   return (
     <>
       {/* Action Buttons */}
-      <div className="flex space-x-2">
+      <div className="flex items-center space-x-2">
         {/* Edit User */}
         <Button
           onClick={() => handleEditUser()}

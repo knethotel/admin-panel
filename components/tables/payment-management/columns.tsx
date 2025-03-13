@@ -1,46 +1,84 @@
 import { ColumnDef } from '@tanstack/react-table';
 import CellAction from './cell-action';
-import { EmployeeDataType } from 'app/static/EmployeeManagement';
+import { RefundDataType } from 'app/static/PaymentManagement';
 
 // Update type to match guestDataType for better type safety
-export const columns: ColumnDef<EmployeeDataType>[] = [
+export const columns: ColumnDef<RefundDataType>[] = [
   {
-    accessorKey: 'employeeID',
-    header: 'Employee ID'
+    accessorKey: 'refundID',
+    header: 'Refund ID'
   },
   {
-    accessorKey: 'employeeDetails.name',
-    header: 'Employee Name'
+    accessorKey: 'userID',
+    header: 'User ID'
   },
   {
-    accessorKey: 'employeeDetails.mobileNo',
-    header: 'Mobile no.'
+    accessorKey: 'orderID',
+    header: 'Order ID'
   },
   {
-    accessorKey: 'employeeDetails.emailID',
-    header: 'Email ID'
-  },
-  {
-    accessorKey: 'role',
-    header: 'Role',
+    accessorKey: 'hotelDetails',
+    header: 'Hotel ID',
     cell: ({ row }) => {
-      const role = row.original.role || 'N/A';
-      if (role === 'SOS') {
-        return <div className=" font-medium text-red-400">{role}</div>;
-      } else {
-        return <div className="text-black">{role}</div>;
-      }
+      const hotelDetails = row.original.hotelDetails;
+      return (
+        <div className="flex flex-col items-start">
+          <span className="text-sm">{hotelDetails.hotelID}</span>
+          <span className="text-xs opacity-55">{hotelDetails.hotelName}</span>
+        </div>
+      );
     }
   },
   {
-    accessorKey: 'status',
+    accessorKey: 'amount',
+    header: 'Amount'
+  },
+  {
+    accessorKey: 'statusDetails',
     header: 'Status',
     cell: ({ row }) => {
-      const status = row.original.status || 'N/A';
-      if (status === 'ACTIVE') {
-        return <div className=" font-medium text-[#78B150]">{status}</div>;
-      } else {
-        return <div className="text-[#E5252A]">{status}</div>;
+      const status = row.original.statusDetails.status;
+      const processedAt = row.original.statusDetails.processedAt;
+      switch (status) {
+        case 'INITIATED':
+          return (
+            <div className="flex flex-col items-start">
+              {' '}
+              <span className="text-[#FC690E]">{status}</span>
+              <span className="text-xs opacity-70">{processedAt}</span>
+            </div>
+          );
+        case 'REJECTED':
+          return (
+            <div className="flex flex-col items-start">
+              {' '}
+              <span className="text-[#E5252A]">{status}</span>
+              <span className="text-xs opacity-70">{processedAt}</span>
+            </div>
+          );
+        case 'IN-PROGRESS':
+          return (
+            <div className="flex flex-col items-start">
+              {' '}
+              <span className="text-[#3787E3]">{status}</span>
+              <span className="text-xs opacity-70">{processedAt}</span>
+            </div>
+          );
+        case 'COMPLETED':
+          return (
+            <div className="flex flex-col items-start">
+              {' '}
+              <span className="text-[#78B150]">{status}</span>
+              <span className="text-xs opacity-70">{processedAt}</span>
+            </div>
+          );
+        default:
+          return (
+            <div className="flex flex-col items-start">
+              <span className="text-gray-500">{status}</span>
+              <span className="text-xs opacity-70">{processedAt}</span>
+            </div>
+          );
       }
     }
   },
