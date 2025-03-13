@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { paymentSchema, paymentSchemaType } from 'schema';
@@ -32,9 +31,7 @@ import {
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 
-const CreateCouponForm = () => {
-  const router = useRouter();
-
+const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
   const form = useForm<paymentSchemaType>({
     resolver: zodResolver(paymentSchema),
     defaultValues: {
@@ -55,6 +52,7 @@ const CreateCouponForm = () => {
   const onSubmit = (data: paymentSchemaType) => {
     console.log(data);
     form.reset();
+    onClose();
   };
 
   return (
@@ -62,7 +60,7 @@ const CreateCouponForm = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full h-auto max-w-4xl mx-auto hide-scrollbar p-4 sm:px-6 md:px-8 rounded-lg"
+          className="w-full relative h-full max-w-4xl mx-auto hide-scrollbar p-4 sm:px-6 md:px-8 rounded-lg"
         >
           {/* Main Grid: Two Sides */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
@@ -424,13 +422,6 @@ const CreateCouponForm = () => {
 
           {/* Buttons */}
           <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3">
-            <Button
-              type="button"
-              onClick={() => router.back()}
-              className="w-full sm:w-auto bg-[#EFE9DF] text-gray-700 hover:bg-gray-200 px-6 py-2 rounded-md text-xs"
-            >
-              Cancel
-            </Button>
             <Button
               type="submit"
               className="w-full sm:w-auto bg-[#A07D3D] text-white hover:bg-[#8c6b33] px-6 py-2 rounded-md text-xs"
