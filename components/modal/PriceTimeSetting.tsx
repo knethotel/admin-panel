@@ -29,8 +29,6 @@ interface ModalProps {
 }
 
 const PriceTimeSetting: React.FC<ModalProps> = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
-
   const priceTimeSettingForm = useForm<PriceTimeSettingSchemaType>({
     resolver: zodResolver(PriceTimeSettingSchema),
     defaultValues: {
@@ -43,6 +41,7 @@ const PriceTimeSetting: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   // Watch the value of priceType
   const priceType = priceTimeSettingForm.watch('priceType');
+  if (!isOpen) return null;
 
   const onSubmit = async (data: PriceTimeSettingSchemaType) => {
     try {
