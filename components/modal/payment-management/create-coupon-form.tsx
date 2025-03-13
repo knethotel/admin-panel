@@ -2,7 +2,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { paymentSchema, paymentSchemaType } from 'schema';
+import { createCouponSchema, createCouponSchemaType } from 'schema';
 import {
   Form,
   FormControl,
@@ -32,14 +32,15 @@ import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 
 const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
-  const form = useForm<paymentSchemaType>({
-    resolver: zodResolver(paymentSchema),
+  const form = useForm<createCouponSchemaType>({
+    resolver: zodResolver(createCouponSchema),
     defaultValues: {
-      category: 'category1',
+      category: 'Percentage Coupons',
       validityFrom: '',
       validityTo: '',
       usageLimit: '',
-      perUserLimit: '',
+      discountPercentage: '',
+      discountAmount: 0,
       minimumSpent: '',
       couponStatus: 'active',
       redemption: 'automatic',
@@ -49,7 +50,9 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
     }
   });
 
-  const onSubmit = (data: paymentSchemaType) => {
+  const selectedCouponCategory = form.watch('category');
+
+  const onSubmit = (data: createCouponSchemaType) => {
     console.log(data);
     form.reset();
     onClose();
@@ -82,22 +85,18 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                           defaultValue={field.value}
                         >
                           <FormControl>
-                            <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs">
+                            <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 py-2 rounded-md border-none outline-none focus:ring-0 text-xs">
                               <SelectValue />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="bg-[#FAF6EF]">
-                            {[
-                              'category1',
-                              'category2',
-                              'category3',
-                              'category4',
-                              'category5'
-                            ].map((value) => (
-                              <SelectItem key={value} value={value}>
-                                {value}
-                              </SelectItem>
-                            ))}
+                            {['Percentage Coupons', 'Fixed Amount Coupons'].map(
+                              (value) => (
+                                <SelectItem key={value} value={value}>
+                                  {value}
+                                </SelectItem>
+                              )
+                            )}
                           </SelectContent>
                         </Select>
                         <FormMessage className="text-[10px] mt-1" />
@@ -225,27 +224,52 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="perUserLimit"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                      <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                        Per User Limit
-                      </FormLabel>
-                      <div className="w-full">
-                        <FormControl>
-                          <Input
-                            type="text"
-                            {...field}
-                            className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
-                          />
-                        </FormControl>
-                        <FormMessage className="text-[10px] mt-1" />
-                      </div>
-                    </FormItem>
-                  )}
-                />
+                {selectedCouponCategory === 'Percentage Coupons' && (
+                  <FormField
+                    control={form.control}
+                    name="discountPercentage"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
+                        <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                          Discount (%)
+                        </FormLabel>
+                        <div className="w-full">
+                          <FormControl>
+                            <Input
+                              type="text"
+                              {...field}
+                              className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[10px] mt-1" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                )}
+                {selectedCouponCategory === 'Fixed Amount Coupons' && (
+                  <FormField
+                    control={form.control}
+                    name="discountAmount"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
+                        <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                          Discount in Amount
+                        </FormLabel>
+                        <div className="w-full">
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...field}
+                              className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[10px] mt-1" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                )}
                 <FormField
                   control={form.control}
                   name="minimumSpent"

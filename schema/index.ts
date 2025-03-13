@@ -81,13 +81,10 @@ export type notificationSchemaType = z.infer<typeof notificationSchema>;
 // ****************************Payment management schema*******************************************
 
 // ***********Create coupon schema and type************
-export const paymentSchema = z.object({
-  category: z.enum(
-    ['category1', 'category2', 'category3', 'category4', 'category5'],
-    {
-      errorMap: () => ({ message: 'Please select a valid category status' })
-    }
-  ),
+export const createCouponSchema = z.object({
+  category: z.enum(['Percentage Coupons', 'Fixed Amount Coupons'], {
+    errorMap: () => ({ message: 'Please select a valid category status' })
+  }),
   validityFrom: z.string().min(1, 'Validity From is required'),
   validityTo: z.string().min(1, 'Validity To is required'),
   usageLimit: z.string().min(1, 'Usage Limit is required'),
@@ -105,7 +102,7 @@ export const paymentSchema = z.object({
   termsAndConditions: z.string().min(1, 'Terms and Conditions is required')
 });
 
-export type paymentSchemaType = z.infer<typeof paymentSchema>;
+export type createCouponSchemaType = z.infer<typeof createCouponSchema>;
 
 // **********Hotel Profile schema***************
 export const hotelSchema = z.object({
