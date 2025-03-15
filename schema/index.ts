@@ -443,3 +443,37 @@ export const spaSalonServiceSchema = z.object({
 });
 
 export type SpaSalonServiceSchemaType = z.infer<typeof spaSalonServiceSchema>;
+
+// *************In-room dining shema*****************//
+//Add item schema
+
+export const AddItemsSchema = z.object({
+  newProductType: z.string().min(1, 'Enter valid input'),
+  productName: z.string().min(1, 'Enter valid input'),
+  description: z.string().min(1, 'Enter valid input'),
+  cost: z.number().positive('Cost must be a positive value'),
+  type: z.enum(['Vegetarian', 'Non-Vegeterian'], {
+    errorMap: () => ({
+      message: 'Not a valid type'
+    })
+  }),
+  visibility: z.boolean(),
+  itemImage: z
+    .custom<File | undefined>(
+      (file) => file instanceof File || typeof file === 'undefined',
+      { message: 'Invalid file format' }
+    )
+    .refine(
+      (file) =>
+        !file ||
+        ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(
+          file.type
+        ),
+      { message: 'Only JPG, PNG, GIF, and WEBP formats are allowed.' }
+    )
+    .refine((file) => !file || file.size <= 5 * 1024 * 1024, {
+      message: 'Image size must be 5MB or less.'
+    })
+});
+
+export type AddItemsSchemaType = z.infer<typeof AddItemsSchema>;

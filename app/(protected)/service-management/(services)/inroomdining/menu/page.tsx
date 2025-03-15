@@ -1,23 +1,35 @@
+'use client';
 import { Button } from '@/components/ui/button';
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { inRoomDiningMenuData } from 'app/static/services-management/InRoomDining';
 import Image from 'next/image';
 import { Bookmark, Send } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import AddItemModal from '@/components/modal/in-rrom_dining/add-item';
 const MenuPage = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleClick = () => {};
   return (
     <div className="mt-20">
       <div className="flex items-center justify-between px-4 py-2">
         <h2 className="font-bold text-lg">Menu</h2>
-        <Button className="bg-[#A07D3D] group text-white hover:text-black hover:outline h-8">
+        <Button
+          onClick={() => setIsOpen(true)}
+          className="bg-[#A07D3D] group text-white hover:text-black hover:outline h-8"
+        >
           <Plus className="w-4 h-4 text-white group-hover:text-black" />
           Add Items
         </Button>
       </div>
+      <AddItemModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
       {/* Menu section */}
       <div className="h-auto w-full pt-8 px-4 space-y-12">
         {inRoomDiningMenuData.map((item, index) => (
-          <div className="flex w-full flex-col gap-2 items-center justify-center">
+          <div
+            key={index}
+            className="flex w-full flex-col gap-2 items-center justify-center"
+          >
             <div
               key={index}
               className="w-full flex justify-between items-center"
