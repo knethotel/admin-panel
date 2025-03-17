@@ -97,7 +97,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
             {roles.map((role, index) => (
               <div
                 key={index}
-                className="bg-brown w-auto rounded-md px-2 py-[0.4px] text-white text-center"
+                className="bg-coffee w-auto rounded-md px-2 py-[0.4px] text-white text-center"
               >
                 <span className="text-sm font-light">{role}</span>
               </div>
