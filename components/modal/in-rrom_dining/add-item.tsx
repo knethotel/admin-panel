@@ -1,6 +1,6 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { AddItemsSchema, AddItemsSchemaType } from 'schema';
 import { PiCameraThin } from 'react-icons/pi';
@@ -24,6 +24,13 @@ interface ModalProps {
 }
 
 const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
+  const [preview, setPreview] = useState<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
   const addItemForm = useForm<AddItemsSchemaType>({
     resolver: zodResolver(AddItemsSchema),
     defaultValues: {
@@ -197,7 +204,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
                 {/* Visibility */}
                 <div className="flex gap-14">
-                  <label>Visibility</label>
+                  <span>Visibility</span>
                   <ToggleButton />
                 </div>
               </div>
@@ -208,33 +215,69 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                   control={addItemForm.control}
                   name="itemImage"
                   render={({ field }) => (
-                    <FormItem className="w-44 flex flex-col">
-                      <FormControl>
-                        <div className="relative flex items-center">
-                          <Input
-                            placeholder=""
-                            value={field.value?.name || ''}
-                            readOnly
-                            className="h-44 rounded-lg text-gray-700 bg-[#F6EEE0] p-2 border-none outline-none focus:ring-0 text-sm cursor-default"
-                          />
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) =>
-                              field.onChange(e.target.files?.[0])
-                            }
-                            className="hidden"
-                            id="fileUpload"
-                          />
-                          <label
-                            htmlFor="fileUpload"
-                            className="absolute inset-0 right-2 rounded-lg h-24 top-1/2 -translate-y-1/2 bg-[#F6EEE0] w-full px-3 py-1 cursor-pointer"
+                    <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
+                      <div className="flex items-center w-full">
+                        <FormControl>
+                          <div
+                            className="relative h-44 w-44 rounded-lg bg-[#F6EEE0] p-2"
+                            onDrop={(e) => {
+                              e.preventDefault();
+                              const file = e.dataTransfer.files?.[0];
+                              if (file) {
+                                field.onChange(file);
+                                if (preview) URL.revokeObjectURL(preview);
+                                setPreview(URL.createObjectURL(file));
+                              }
+                            }}
+                            onDragOver={(e) => e.preventDefault()}
                           >
-                            <PiCameraThin className="text-black w-full h-full opacity-30" />
-                          </label>
-                        </div>
-                      </FormControl>
-                      <FormMessage className="mt-1 text-xs" />
+                            <div className="h-full w-full flex items-center justify-center">
+                              {preview && (
+                                <img
+                                  src={preview}
+                                  alt="Coupon preview"
+                                  className="h-full w-full object-cover rounded-lg"
+                                />
+                              )}
+                            </div>
+                            {!preview && (
+                              <label
+                                htmlFor="fileUpload"
+                                className="absolute inset-0 flex justify-center items-center cursor-pointer"
+                                aria-label="Upload coupon image"
+                              >
+                                <PiCameraThin className="text-black w-12 h-44 opacity-30" />
+                              </label>
+                            )}
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  if (!file.type.startsWith('image/')) {
+                                    alert('Please upload an image file.');
+                                    return;
+                                  }
+                                  if (file.size > 5 * 1024 * 1024) {
+                                    alert('File size exceeds 5MB.');
+                                    return;
+                                  }
+                                  if (preview) URL.revokeObjectURL(preview);
+                                  const imageUrl = URL.createObjectURL(file);
+                                  setPreview(imageUrl);
+                                } else {
+                                  setPreview(null);
+                                }
+                                field.onChange(file);
+                              }}
+                              className="hidden"
+                              id="fileUpload"
+                            />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </div>
                     </FormItem>
                   )}
                 />
