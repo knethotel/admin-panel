@@ -1,11 +1,14 @@
+'use client';
 import Navbar from '@/components/Navbar';
 import Image from 'next/image';
-import React from 'react';
+import React, { useState } from 'react';
 import plusIcon from '../../../public/assets/plus.png';
 import { RiEditBoxLine } from 'react-icons/ri';
 import { FaTrashAlt } from 'react-icons/fa';
+import RolesAndPermissionsModal from '@/components/modal/role-and-permission/role-permission';
 
 const RolesAndPermissionsPage = () => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="flex flex-col w-full">
       {' '}
@@ -14,8 +17,14 @@ const RolesAndPermissionsPage = () => {
       <div className="flex flex-col pt-4 gap-8 items-center px-4 py-2 text-coffee">
         <div className="w-full flex justify-between mt-20">
           <h2 className="text-lg font-bold">Manage Roles</h2>
-          <Image src={plusIcon} height={30} width={30} alt="plus icon" />
+          <button onClick={() => setIsOpen(true)}>
+            <Image src={plusIcon} height={30} width={30} alt="plus icon" />
+          </button>
         </div>
+        <RolesAndPermissionsModal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+        />
 
         <div className="flex justify-between w-full">
           {/* Role | Permission */}
