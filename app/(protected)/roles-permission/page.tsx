@@ -1,0 +1,97 @@
+import Navbar from '@/components/Navbar';
+import Image from 'next/image';
+import React from 'react';
+import plusIcon from '../../../public/assets/plus.png';
+import { RiEditBoxLine } from 'react-icons/ri';
+import { FaTrashAlt } from 'react-icons/fa';
+
+const RolesAndPermissionsPage = () => {
+  return (
+    <div className="flex flex-col w-full">
+      {' '}
+      {/*------ Manadatory class for each page that have navbar -------*/}
+      <Navbar active={true} search={true} />
+      <div className="flex flex-col pt-4 gap-8 items-center px-4 py-2 text-coffee">
+        <div className="w-full flex justify-between mt-20">
+          <h2 className="text-lg font-bold">Manage Roles</h2>
+          <Image src={plusIcon} height={30} width={30} alt="plus icon" />
+        </div>
+
+        <div className="flex justify-between w-full">
+          {/* Role | Permission */}
+          <div className="flex gap-6">
+            <div className="flex flex-col gap-3">
+              <h3 className="font-bold">Role</h3>
+              <div className="grid grid-cols-2 gap-1">
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Staff
+                </span>
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Staff
+                </span>
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Staff
+                </span>
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Staff
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-col gap-3">
+              <h3 className="font-bold">Permission</h3>
+              <div className="grid grid-cols-5 gap-1">
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Reception
+                </span>
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Housekeeping
+                </span>
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Laundry service
+                </span>
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Reception
+                </span>
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Housekeeping
+                </span>
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Laundry service
+                </span>
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Reception
+                </span>
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Housekeeping
+                </span>
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Laundry service
+                </span>
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Reception
+                </span>
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Housekeeping
+                </span>
+                <span className="bg-brown text-center text-sm rounded-lg text-white px-3 py-1 font-medium">
+                  Laundry service
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Action */}
+          <div className="flex flex-col gap-3">
+            <h3 className="font-bold">Action</h3>
+            <div className="flex gap-3">
+              <RiEditBoxLine className="text-brown h-5 w-5" />
+              <FaTrashAlt className="text-brown h-[18px] w-[18px]" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default RolesAndPermissionsPage;
