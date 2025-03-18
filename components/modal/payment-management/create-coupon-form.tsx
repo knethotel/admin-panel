@@ -1,9 +1,8 @@
 'use client';
-import React from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { paymentSchema, paymentSchemaType } from 'schema';
+import { createCouponSchema, createCouponSchemaType } from 'schema';
 import {
   Form,
   FormControl,
@@ -31,30 +30,41 @@ import {
 } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
+import { PiCameraThin } from 'react-icons/pi';
 
-const PaymentForm = () => {
-  const router = useRouter();
+const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
+  const [preview, setPreview] = useState<string | null>(null);
 
-  const form = useForm<paymentSchemaType>({
-    resolver: zodResolver(paymentSchema),
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+  const form = useForm<createCouponSchemaType>({
+    resolver: zodResolver(createCouponSchema),
     defaultValues: {
-      category: 'category1',
+      category: 'Percentage Coupons',
       validityFrom: '',
       validityTo: '',
       usageLimit: '',
-      perUserLimit: '',
+      discountPercentage: '',
+      discountAmount: 0,
       minimumSpent: '',
       couponStatus: 'active',
       redemption: 'automatic',
       stackable: false,
       createCode: '',
-      termsAndConditions: ''
+      termsAndConditions: '',
+      couponImage: undefined
     }
   });
 
-  const onSubmit = (data: paymentSchemaType) => {
+  const selectedCouponCategory = form.watch('category');
+
+  const onSubmit = (data: createCouponSchemaType) => {
     console.log(data);
     form.reset();
+    onClose();
   };
 
   return (
@@ -62,7 +72,7 @@ const PaymentForm = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full h-auto max-w-4xl mx-auto hide-scrollbar p-4 sm:px-6 md:px-8 rounded-lg"
+          className="w-full relative h-full max-w-4xl mx-auto p-4 sm:px-6 md:px-8 rounded-lg"
         >
           {/* Main Grid: Two Sides */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
@@ -84,22 +94,18 @@ const PaymentForm = () => {
                           defaultValue={field.value}
                         >
                           <FormControl>
-                            <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs">
+                            <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 py-2 rounded-md border-none outline-none focus:ring-0 text-xs">
                               <SelectValue />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="bg-[#FAF6EF]">
-                            {[
-                              'category1',
-                              'category2',
-                              'category3',
-                              'category4',
-                              'category5'
-                            ].map((value) => (
-                              <SelectItem key={value} value={value}>
-                                {value}
-                              </SelectItem>
-                            ))}
+                            {['Percentage Coupons', 'Fixed Amount Coupons'].map(
+                              (value) => (
+                                <SelectItem key={value} value={value}>
+                                  {value}
+                                </SelectItem>
+                              )
+                            )}
                           </SelectContent>
                         </Select>
                         <FormMessage className="text-[10px] mt-1" />
@@ -227,27 +233,56 @@ const PaymentForm = () => {
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="perUserLimit"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                      <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                        Per User Limit
-                      </FormLabel>
-                      <div className="w-full">
-                        <FormControl>
-                          <Input
-                            type="text"
-                            {...field}
-                            className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
-                          />
-                        </FormControl>
-                        <FormMessage className="text-[10px] mt-1" />
-                      </div>
-                    </FormItem>
-                  )}
-                />
+                {selectedCouponCategory === 'Percentage Coupons' && (
+                  <FormField
+                    control={form.control}
+                    name="discountPercentage"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
+                        <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                          Discount (%)
+                        </FormLabel>
+                        <div className="w-full">
+                          <FormControl>
+                            <Input
+                              type="text"
+                              {...field}
+                              className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[10px] mt-1" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                )}
+                {selectedCouponCategory === 'Fixed Amount Coupons' && (
+                  <FormField
+                    control={form.control}
+                    name="discountAmount"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
+                        <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                          Discount in Amount
+                        </FormLabel>
+                        <div className="w-full">
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...field}
+                              value={field.value ?? ''} // Handle undefined/null
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              } // Convert string to number
+                              className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[10px] mt-1" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                )}
                 <FormField
                   control={form.control}
                   name="minimumSpent"
@@ -374,7 +409,7 @@ const PaymentForm = () => {
             </div>
 
             {/* Right Side */}
-            <div className="space-y-28">
+            <div className="flex flex-col items-center md:items-start space-y-8">
               {/* Create Code */}
               <FormField
                 control={form.control}
@@ -393,6 +428,79 @@ const PaymentForm = () => {
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="couponImage"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
+                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                      Coupon Image
+                    </FormLabel>
+                    <div className="flex items-center w-full">
+                      <FormControl>
+                        <div
+                          className="relative h-44 w-44 rounded-lg bg-[#F6EEE0] p-2"
+                          onDrop={(e) => {
+                            e.preventDefault();
+                            const file = e.dataTransfer.files?.[0];
+                            if (file) {
+                              field.onChange(file);
+                              if (preview) URL.revokeObjectURL(preview);
+                              setPreview(URL.createObjectURL(file));
+                            }
+                          }}
+                          onDragOver={(e) => e.preventDefault()}
+                        >
+                          <div className="h-full w-full flex items-center justify-center">
+                            {preview && (
+                              <img
+                                src={preview}
+                                alt="Coupon preview"
+                                className="h-full w-full object-cover rounded-lg"
+                              />
+                            )}
+                          </div>
+                          {!preview && (
+                            <label
+                              htmlFor="fileUpload"
+                              className="absolute inset-0 flex justify-center items-center cursor-pointer"
+                              aria-label="Upload coupon image"
+                            >
+                              <PiCameraThin className="text-black w-12 h-44 opacity-30" />
+                            </label>
+                          )}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                if (!file.type.startsWith('image/')) {
+                                  alert('Please upload an image file.');
+                                  return;
+                                }
+                                if (file.size > 5 * 1024 * 1024) {
+                                  alert('File size exceeds 5MB.');
+                                  return;
+                                }
+                                if (preview) URL.revokeObjectURL(preview);
+                                const imageUrl = URL.createObjectURL(file);
+                                setPreview(imageUrl);
+                              } else {
+                                setPreview(null);
+                              }
+                              field.onChange(file);
+                            }}
+                            className="hidden"
+                            id="fileUpload"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
                     </div>
                   </FormItem>
                 )}
@@ -419,29 +527,21 @@ const PaymentForm = () => {
                   </FormItem>
                 )}
               />
+              <Button
+                type="submit"
+                className="w-28 md:ml-24 sm:w-auto bg-[#A07D3D] text-white hover:bg-[#8c6b33] px-6 py-2 rounded-md text-xs"
+              >
+                Save Changes
+              </Button>
             </div>
           </div>
 
           {/* Buttons */}
-          <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3">
-            <Button
-              type="button"
-              onClick={() => router.back()}
-              className="w-full sm:w-auto bg-[#EFE9DF] text-gray-700 hover:bg-gray-200 px-6 py-2 rounded-md text-xs"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="w-full sm:w-auto bg-[#A07D3D] text-white hover:bg-[#8c6b33] px-6 py-2 rounded-md text-xs"
-            >
-              Save Changes
-            </Button>
-          </div>
+          <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3"></div>
         </form>
       </Form>
     </FormWrapper>
   );
 };
 
-export default PaymentForm;
+export default CreateCouponForm;

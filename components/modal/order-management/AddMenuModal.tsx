@@ -29,8 +29,6 @@ interface ModalProps {
 }
 
 const AddMenuModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
-
   const addMenuForm = useForm<AddMenuSchemaType>({
     resolver: zodResolver(AddMenuSchema),
     defaultValues: {
@@ -49,6 +47,8 @@ const AddMenuModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     console.log('Submitted Data:', data);
     addMenuForm.reset();
   };
+  // When conditionally rendering hooks always do it below everything else
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">

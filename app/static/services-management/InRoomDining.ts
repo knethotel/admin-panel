@@ -1,3 +1,11 @@
+import cocacola from '../../../public/assets/cocacola.jpg';
+import vegSymbol from '../../../public/assets/veg.png';
+import nonVegSymbol from '../../../public/assets/non-veg.png';
+
+// **************** In room dining Table data *********************
+
+import { StaticImageData } from 'next/image';
+
 type OrderStatusType =
   | 'Order in Transit'
   | 'Order is Preparing'
@@ -126,5 +134,137 @@ export const InRoomDiningData: InRoomDiningDataType[] = [
     serviceID: 'SD1234566',
     orderStatus: 'Order Delivered',
     assignedTo: 'Employee 6'
+  }
+];
+
+// ****************** In room dining Menu page data *****************
+
+type ProductType = 'Vegetarian' | 'Non-Vegetarian';
+export type InRoomDiningMenuDataType = {
+  productType: string;
+  productName: string;
+  description: string;
+  cost: number;
+  discount: number;
+  type: ProductType;
+  visibility: boolean;
+  image: StaticImageData;
+  vegIcon: StaticImageData;
+  nonVegIcon: StaticImageData;
+  serves: number;
+};
+
+export const inRoomDiningMenuData: InRoomDiningMenuDataType[] = [
+  {
+    productType: 'Beverages',
+    productName: 'Coca-Cola',
+    description:
+      'Our signature Whopper with Flame Grilled Chicken patty, onions, lettuce, tomatoes(seasonal), gherkins, cream and smoky sauce with xxl buns',
+    cost: 299,
+    discount: 60,
+    type: 'Non-Vegetarian',
+    visibility: true,
+    image: cocacola,
+    vegIcon: vegSymbol,
+    nonVegIcon: nonVegSymbol,
+    serves: 1
+  },
+  {
+    productType: 'Beverages',
+    productName: 'Coca-Cola',
+    description:
+      'Our signature Whopper with Flame Grilled Chicken patty, onions, lettuce, tomatoes(seasonal), gherkins, cream and smoky sauce with xxl buns',
+    cost: 299,
+    discount: 60,
+    type: 'Vegetarian',
+    visibility: true,
+    image: cocacola,
+    vegIcon: vegSymbol,
+    nonVegIcon: nonVegSymbol,
+    serves: 1
+  },
+  {
+    productType: 'Beverages',
+    productName: 'Coca-Cola',
+    description:
+      'Our signature Whopper with Flame Grilled Chicken patty, onions, lettuce, tomatoes(seasonal), gherkins, cream and smoky sauce with xxl buns',
+    cost: 299,
+    discount: 60,
+    type: 'Vegetarian',
+    visibility: true,
+    image: cocacola,
+    vegIcon: vegSymbol,
+    nonVegIcon: nonVegSymbol,
+    serves: 1
+  },
+  {
+    productType: 'Beverages',
+    productName: 'Coca-Cola',
+    description:
+      'Our signature Whopper with Flame Grilled Chicken patty, onions, lettuce, tomatoes(seasonal), gherkins, cream and smoky sauce with xxl buns',
+    cost: 299,
+    discount: 60,
+    type: 'Vegetarian',
+    visibility: true,
+    image: cocacola,
+    vegIcon: vegSymbol,
+    nonVegIcon: nonVegSymbol,
+    serves: 1
+  },
+  {
+    productType: 'Beverages',
+    productName: 'Coca-Cola',
+    description:
+      'Our signature Whopper with Flame Grilled Chicken patty, onions, lettuce, tomatoes(seasonal), gherkins, cream and smoky sauce with xxl buns',
+    cost: 299,
+    discount: 60,
+    type: 'Vegetarian',
+    visibility: true,
+    image: cocacola,
+    vegIcon: vegSymbol,
+    nonVegIcon: nonVegSymbol,
+    serves: 1
+  },
+  {
+    productType: 'Beverages',
+    productName: 'Coca-Cola',
+    description:
+      'Our signature Whopper with Flame Grilled Chicken patty, onions, lettuce, tomatoes(seasonal), gherkins, cream and smoky sauce with xxl buns',
+    cost: 299,
+    discount: 60,
+    type: 'Vegetarian',
+    visibility: true,
+    image: cocacola,
+    vegIcon: vegSymbol,
+    nonVegIcon: nonVegSymbol,
+    serves: 1
+  },
+  {
+    productType: 'Beverages',
+    productName: 'Coca-Cola',
+    description:
+      'Our signature Whopper with Flame Grilled Chicken patty, onions, lettuce, tomatoes(seasonal), gherkins, cream and smoky sauce with xxl buns',
+    cost: 299,
+    discount: 60,
+    type: 'Vegetarian',
+    visibility: true,
+    image: cocacola,
+    vegIcon: vegSymbol,
+    nonVegIcon: nonVegSymbol,
+    serves: 1
+  },
+  {
+    productType: 'Beverages',
+    productName: 'Coca-Cola',
+    description:
+      'Our signature Whopper with Flame Grilled Chicken patty, onions, lettuce, tomatoes(seasonal), gherkins, cream and smoky sauce with xxl buns',
+    cost: 299,
+    discount: 60,
+    type: 'Vegetarian',
+    visibility: true,
+    image: cocacola,
+    vegIcon: vegSymbol,
+    nonVegIcon: nonVegSymbol,
+    serves: 1
   }
 ];

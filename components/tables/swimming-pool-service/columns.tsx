@@ -8,16 +8,7 @@ export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
   },
   {
     accessorKey: 'requestTime',
-    header: 'Request Time',
-    cell: ({ row }) => {
-      const { date, time } = row.original.requestTime;
-      return (
-        <div className="flex flex-col justify-center">
-          <p className="text-xs opacity-50">{date}</p>
-          <p className="text-xs opacity-50">{time}</p>
-        </div>
-      );
-    }
+    header: 'Request Time'
   },
   {
     accessorKey: 'guestDetails',

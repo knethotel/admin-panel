@@ -1,4 +1,4 @@
-import RequestDetail from '@/components/service-management/RequestDetail';
+import SpaServiceRequestDetail from '@/components/service-management/spa/RequestDetail';
 import React from 'react';
 import { SpaServiceData } from 'app/static/services-management/Spa';
 type Params = {
@@ -8,7 +8,7 @@ const ViewDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
   return (
     <div className="px-5 h-screen">
-      <RequestDetail requestDetails={SpaServiceData} requestId={id} />
+      <SpaServiceRequestDetail requestDetails={SpaServiceData} serviceID={id} />
     </div>
   );
 };

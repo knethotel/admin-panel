@@ -78,19 +78,21 @@ export const notificationSchema = z.object({
 
 export type notificationSchemaType = z.infer<typeof notificationSchema>;
 
-// **********Payment management schema***************
+// ****************************Payment management schema*******************************************
 
-export const paymentSchema = z.object({
-  category: z.enum(
-    ['category1', 'category2', 'category3', 'category4', 'category5'],
-    {
-      errorMap: () => ({ message: 'Please select a valid category status' })
-    }
-  ),
+// ***********Create coupon schema and type************
+export const createCouponSchema = z.object({
+  category: z.enum(['Percentage Coupons', 'Fixed Amount Coupons'], {
+    errorMap: () => ({ message: 'Please select a valid category status' })
+  }),
   validityFrom: z.string().min(1, 'Validity From is required'),
   validityTo: z.string().min(1, 'Validity To is required'),
   usageLimit: z.string().min(1, 'Usage Limit is required'),
-  perUserLimit: z.string().min(1, 'Per User Limit is required'),
+  discountPercentage: z.string().min(1, 'Per User Limit is required'),
+  discountAmount: z
+    .number()
+    .min(0, 'Discount amount cannot be negative')
+    .or(z.literal(0)),
   minimumSpent: z.string().min(1, 'Minimum Spent is required'),
   couponStatus: z.enum(['active', 'expired', 'disabled'], {
     errorMap: () => ({ message: 'Please select a valid coupon status' })
@@ -100,10 +102,43 @@ export const paymentSchema = z.object({
   }),
   stackable: z.boolean().default(false),
   createCode: z.string().min(1, 'Create Code is required'),
-  termsAndConditions: z.string().min(1, 'Terms and Conditions is required')
+  termsAndConditions: z.string().min(1, 'Terms and Conditions is required'),
+  couponImage: z
+    .custom<File | undefined>(
+      (file) => file instanceof File || typeof file === 'undefined',
+      { message: 'Invalid file format' }
+    )
+    .refine(
+      (file) =>
+        !file ||
+        ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(
+          file.type
+        ),
+      { message: 'Only JPG, PNG, GIF, and WEBP formats are allowed.' }
+    )
+    .refine((file) => !file || file.size <= 5 * 1024 * 1024, {
+      message: 'Image size must be 5MB or less.'
+    })
+});
+export type createCouponSchemaType = z.infer<typeof createCouponSchema>;
+
+//***********Create refund schema and type*************
+export const createRefundSchema = z.object({
+  refundID: z.string(),
+  userID: z.string().min(1, 'Invalid UserID'),
+  hotelID: z.string().min(1, 'Invalid HotelID'),
+  amount: z.number().min(1, 'Enter valid amount'),
+  refundReason: z.string().min(1, 'Enter valid input'),
+  refundStatus: z.enum(['Initiated', 'In-Progress', 'Completed', 'Rejected'], {
+    errorMap: () => ({ message: 'Please select a valid Refund status' })
+  }),
+  message: z.string().min(1, 'Enter a valid input').optional(),
+  assignedStaff: z.string().min(1, 'Enter valid input'),
+  serviceDepartment: z.string().min(1, 'Enter valid input'),
+  dateAndTime: z.string().min(1, 'Enter valid value')
 });
 
-export type paymentSchemaType = z.infer<typeof paymentSchema>;
+export type createRefundSchemaType = z.infer<typeof createRefundSchema>;
 
 // **********Hotel Profile schema***************
 export const hotelSchema = z.object({
@@ -400,3 +435,45 @@ export const employeeSchema = z.object({
 });
 
 export type employeeSchemaType = z.infer<typeof employeeSchema>;
+
+// **************SPA/Salon service schema**************//
+
+export const spaSalonServiceSchema = z.object({
+  additionalService: z.string().min(1, 'Invalid input')
+});
+
+export type SpaSalonServiceSchemaType = z.infer<typeof spaSalonServiceSchema>;
+
+// *************In-room dining shema*****************//
+//Add item schema
+
+export const AddItemsSchema = z.object({
+  newProductType: z.string().min(1, 'Enter valid input'),
+  productName: z.string().min(1, 'Enter valid input'),
+  description: z.string().min(1, 'Enter valid input'),
+  cost: z.number().positive('Cost must be a positive value'),
+  type: z.enum(['Vegetarian', 'Non-Vegeterian'], {
+    errorMap: () => ({
+      message: 'Not a valid type'
+    })
+  }),
+  visibility: z.boolean(),
+  itemImage: z
+    .custom<File | undefined>(
+      (file) => file instanceof File || typeof file === 'undefined',
+      { message: 'Invalid file format' }
+    )
+    .refine(
+      (file) =>
+        !file ||
+        ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(
+          file.type
+        ),
+      { message: 'Only JPG, PNG, GIF, and WEBP formats are allowed.' }
+    )
+    .refine((file) => !file || file.size <= 5 * 1024 * 1024, {
+      message: 'Image size must be 5MB or less.'
+    })
+});
+
+export type AddItemsSchemaType = z.infer<typeof AddItemsSchema>;

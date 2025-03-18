@@ -4,21 +4,12 @@ import { SpaServiceDataType } from 'app/static/services-management/Spa'; // Corr
 // Updated columns to match ReceptionDataType
 export const columns: ColumnDef<SpaServiceDataType>[] = [
   {
-    accessorKey: 'requestID',
+    accessorKey: 'serviceID',
     header: 'Request ID'
   },
   {
-    accessorKey: 'requestTime',
-    header: 'Request Time',
-    cell: ({ row }) => {
-      const { date, time } = row.original.requestTime;
-      return (
-        <div className="flex flex-col justify-center">
-          <p className="text-xs opacity-50">{date}</p>
-          <p className="text-xs opacity-50">{time}</p>
-        </div>
-      );
-    }
+    accessorKey: 'serviceType',
+    header: 'Service Type'
   },
   {
     accessorKey: 'guestDetails',
@@ -37,12 +28,16 @@ export const columns: ColumnDef<SpaServiceDataType>[] = [
     }
   },
   {
-    accessorKey: 'requestType',
-    header: 'Request Type',
+    accessorKey: 'serviceCategory',
+    header: 'Service Category',
     cell: ({ row }) => {
-      const type = row.original.requestType;
+      const type = row.original.serviceCategory;
       return <div className="text-sm">{type}</div>;
     }
+  },
+  {
+    accessorKey: 'duration',
+    header: 'Duration'
   },
   {
     accessorKey: 'status',
