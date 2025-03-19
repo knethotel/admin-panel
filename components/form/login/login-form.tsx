@@ -149,7 +149,7 @@ const LoginForm = () => {
                   name="rememberMe"
                   render={({ field }) => (
                     <FormItem className="flex justify-center">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center w-full">
                         <FormControl>
                           <Input
                             type="checkbox"
@@ -161,7 +161,7 @@ const LoginForm = () => {
                         </FormControl>
                         <FormLabel
                           htmlFor="rememberMe"
-                          className="text-xs text-black"
+                          className="text-xs text-nowrap ml-2 text-black"
                         >
                           Remember me
                         </FormLabel>
