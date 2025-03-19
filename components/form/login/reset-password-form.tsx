@@ -38,7 +38,7 @@ enum Mode {
 const inputClassName =
   'bg-transparent text-black border-black border-opacity-10 placeholder:text-black placeholder:text-xs placeholder:opacity-25';
 const buttonClassName =
-  'w-full text-white bg-[#A07D3D] hover:opacity-80 hover:text-black hover:border hover:border-black';
+  'w-full text-white text-sm font-[400] bg-[#A07D3D] hover:opacity-80 hover:text-black hover:border hover:border-black';
 
 // Email Form Component
 const EmailForm = ({
@@ -100,8 +100,10 @@ const OTPForm = ({
           control={form.control}
           name="otp"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-black">Enter OTP</FormLabel>
+            <FormItem className="flex flex-col justify-center items-start">
+              <FormLabel className="text-black text-start w-full ">
+                Enter OTP
+              </FormLabel>
               <FormControl>
                 <InputOTP
                   maxLength={6}
@@ -146,7 +148,9 @@ const NewPasswordForm = ({
           name="newPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-black">New Password</FormLabel>
+              <FormLabel className="text-black font-[400]">
+                New Password
+              </FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -165,7 +169,9 @@ const NewPasswordForm = ({
           name="confirmNewPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-black">Confirm New Password</FormLabel>
+              <FormLabel className="text-black font-[400]">
+                Confirm Password
+              </FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -213,7 +219,7 @@ const ResetPasswordForm = () => {
           mode === Mode.EnterEmail
             ? 'Reset Password'
             : mode === Mode.EnterOTP
-              ? 'Verify OTP'
+              ? 'Reset Password'
               : 'Set New Password'
         }
         label=""
