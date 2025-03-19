@@ -482,9 +482,24 @@ export const hotelSchema = z.object({
       'Invalid time format (e.g., 12:00 PM)'
     ),
 
-  servingDepartments: z.enum(['Housekeeping', 'Reception', 'Dining'], {
-    errorMap: () => ({ message: 'Please select a valid serving department' })
-  }),
+  servingDepartments: z.enum(
+    [
+      'Reception',
+      'Housekeeping',
+      'In-Room Dining',
+      'Gym',
+      'Spa',
+      'Swimming Pool',
+      'Concierge Service',
+      'In-Room Control',
+      'Order Management',
+      'SOS Management',
+      'Chat With Staff'
+    ],
+    {
+      errorMap: () => ({ message: 'Please select a valid serving department' })
+    }
+  ),
 
   totalStaff: z
     .number()
