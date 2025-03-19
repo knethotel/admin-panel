@@ -101,7 +101,7 @@ const OTPForm = ({
           name="otp"
           render={({ field }) => (
             <FormItem className="flex flex-col justify-center items-start">
-              <FormLabel className="text-black text-start w-full ">
+              <FormLabel className="text-black text-start font-[400]">
                 Enter OTP
               </FormLabel>
               <FormControl>
