@@ -26,7 +26,7 @@ const CardWrapper = ({
   children
 }: Props) => {
   return (
-    <Card className="border-none shadow-none w-full lg:w-[80%] xl:w-[60%]">
+    <Card className="border-none bg-offWhite shadow-none w-full lg:w-[80%] xl:w-[60%]">
       <CardHeader>
         <CardWrapperHeader
           title={title}
