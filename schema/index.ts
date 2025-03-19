@@ -20,7 +20,7 @@ export type resetPasswordSchemaType = z.infer<typeof resetPasswordSchema>;
 
 // Email verification Schema and type
 export const otpVerificationSchema = z.object({
-  otp: z.string().min(6, 'Enter 6 digits')
+  otp: z.string()
 });
 
 export type otpVerificationSchemaType = z.infer<typeof otpVerificationSchema>;
