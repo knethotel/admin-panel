@@ -45,7 +45,7 @@ const HotelForm = () => {
       number: '',
       email: '',
       completeAddress: '',
-      hotelCategory: 'Budget',
+      hotelCategory: '5 Star',
       city: 'Delhi',
       country: 'India',
       state: 'Maharashtra',
@@ -231,10 +231,14 @@ const HotelForm = () => {
                           <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs">
                             <SelectValue placeholder="Select category" />
                           </SelectTrigger>
-                          <SelectContent className="bg-[#FAF6EF]">
-                            {['Budget', 'Luxury', 'Mid-range', 'Boutique'].map(
+                          <SelectContent className="bg-coffee">
+                            {['3 Starr', '4 Star', '5 Star', '7 Star'].map(
                               (value) => (
-                                <SelectItem key={value} value={value}>
+                                <SelectItem
+                                  key={value}
+                                  value={value}
+                                  className="text-white"
+                                >
                                   {value}
                                 </SelectItem>
                               )
@@ -271,7 +275,7 @@ const HotelForm = () => {
                           <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs">
                             <SelectValue placeholder="Select city" />
                           </SelectTrigger>
-                          <SelectContent className="bg-[#FAF6EF]">
+                          <SelectContent>
                             {['Los Angeles', 'New York', 'Chicago'].map(
                               (value) => (
                                 <SelectItem key={value} value={value}>
@@ -308,7 +312,7 @@ const HotelForm = () => {
                           <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs">
                             <SelectValue placeholder="Select country" />
                           </SelectTrigger>
-                          <SelectContent className="bg-[#FAF6EF]">
+                          <SelectContent>
                             {['USA', 'Canada', 'India'].map((value) => (
                               <SelectItem key={value} value={value}>
                                 {value}
@@ -343,7 +347,7 @@ const HotelForm = () => {
                           <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs">
                             <SelectValue placeholder="Select state" />
                           </SelectTrigger>
-                          <SelectContent className="bg-[#FAF6EF]">
+                          <SelectContent>
                             {['California', 'New York', 'Illinois'].map(
                               (value) => (
                                 <SelectItem key={value} value={value}>
@@ -409,7 +413,7 @@ const HotelForm = () => {
                           <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs">
                             <SelectValue placeholder="Select room type" />
                           </SelectTrigger>
-                          <SelectContent className="bg-[#FAF6EF]">
+                          <SelectContent>
                             {['Single', 'Double', 'Suite'].map((value) => (
                               <SelectItem key={value} value={value}>
                                 {value}
@@ -476,7 +480,7 @@ const HotelForm = () => {
                           <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs">
                             <SelectValue placeholder="Select feature" />
                           </SelectTrigger>
-                          <SelectContent className="bg-[#FAF6EF]">
+                          <SelectContent>
                             {['WiFi', 'Pool', 'Gym'].map((value) => (
                               <SelectItem key={value} value={value}>
                                 {value}
@@ -588,7 +592,7 @@ const HotelForm = () => {
                           <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs">
                             <SelectValue placeholder="Select department" />
                           </SelectTrigger>
-                          <SelectContent className="bg-[#FAF6EF]">
+                          <SelectContent>
                             {['Housekeeping', 'Reception', 'Dining'].map(
                               (value) => (
                                 <SelectItem key={value} value={value}>

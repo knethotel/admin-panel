@@ -157,7 +157,7 @@ export const hotelSchema = z.object({
   email: z.string().email('Invalid email address').min(1, 'Email is required'),
   completeAddress: z.string().min(1, 'Complete address is required'),
 
-  hotelCategory: z.enum(['Budget', 'Luxury', 'Mid-range', 'Boutique'], {
+  hotelCategory: z.enum(['3 Starr', '4 Star', '5 Star', '7 Star'], {
     errorMap: () => ({ message: 'Invalid hotel category' })
   }),
 

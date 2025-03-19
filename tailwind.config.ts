@@ -23,6 +23,7 @@ export default {
         lightbrown: '#F6EEE0',
         brown: '#A07D3D',
         coffee: '#281F0F',
+        coffeeLight: '#4A391B',
         orangeLight: '#F5F1EB',
         offWhite: '#FAF8F5',
         fadedCream: '#EFE9DF',
