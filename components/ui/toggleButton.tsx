@@ -8,13 +8,13 @@ export default function ToggleButton() {
   return (
     <button
       onClick={() => setEnabled(!enabled)}
-      className={`relative h-[19.5px] w-[46px] py-2 flex items-center rounded-full p-1 transition duration-300 ${
+      className={`relative h-[19.5px] shadow-sm w-[46px] py-2 flex items-center rounded-full p-1 transition duration-300 ${
         enabled ? 'bg-coffee' : 'bg-brown'
       }`}
     >
       <div
-        className={`h-[15px] w-[15px] bg-white rounded-full shadow-md transform transition duration-300 ${
-          enabled ? 'translate-x-[24.5px]' : '-translate-x-[0.5px]'
+        className={`h-[17px] w-[17px] rounded-full shadow-md transform transition duration-300 ${
+          enabled ? 'translate-x-[25px] bg-brown' : '-translate-x-[3px] bg-coffee'
         }`}
       />
       <span className="absolute left-2 text-xs"></span>
