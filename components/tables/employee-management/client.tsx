@@ -75,19 +75,17 @@ export const EmployeeTable: React.FC = () => {
 
   return (
     <>
-      <div className="flex items-start justify-between">
+      <div className="flex items-center justify-between">
         <Heading title={`Employees (${totalRecords})`} />
-        <div>
-          <Button
-            className="text-xs md:text-sm bg-button-light group hover:outline"
-            onClick={() => handleOnClick('add employee')}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            <span className="text-white group-hover:text-black">
-              Add Employee
-            </span>
-          </Button>
-        </div>
+        <Button
+          className="text-xs md:text-sm bg-button-light group hover:outline"
+          onClick={() => handleOnClick('add employee')}
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          <span className="text-white group-hover:text-black">
+            Add Employee
+          </span>
+        </Button>
       </div>
       {loading ? (
         <span>Loading...</span>
