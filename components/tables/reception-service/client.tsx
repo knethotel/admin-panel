@@ -83,7 +83,7 @@ export const ReceptionServiceTable: React.FC = () => {
         <DataTable
           searchKey="firstName"
           columns={columns}
-          data={data} // Use filteredData instead of data while api integration
+          data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)} // Use filteredData instead of data while api integration
           // onSearch={(searchValue) => {
           //     const filtered = data.filter((item) =>
           //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())

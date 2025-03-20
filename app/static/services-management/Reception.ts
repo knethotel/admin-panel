@@ -193,5 +193,85 @@ export const ReceptionData: ReceptionDataType[] = [
     requestType: 'Service feedback',
     status: 'Pending',
     assignedTo: 'Employee 8'
+  },
+  {
+    requestID: 'RQ17823455',
+    requestDetail: 'Schedule a recurring wake-up call at 7 AM.',
+    responseDetail: 'Wake-up call scheduled for 7 AM daily.',
+    requestAssignedTo: 'Reception',
+    requestTime: {
+      date: '10-02-2025',
+      time: '25 mins ago'
+    },
+    guestDetails: {
+      guestID: '01953273',
+      name: 'Sophia Martinez',
+      roomNo: '608',
+      mobileNumber: '7219087654',
+      email: 'sophiam@gmail.com'
+    },
+    requestType: 'Wake up call schedule',
+    status: 'In-Progress',
+    assignedTo: 'Employee 6'
+  },
+  {
+    requestID: 'RQ17823455',
+    requestDetail: 'Schedule a recurring wake-up call at 7 AM.',
+    responseDetail: 'Wake-up call scheduled for 7 AM daily.',
+    requestAssignedTo: 'Reception',
+    requestTime: {
+      date: '10-02-2025',
+      time: '25 mins ago'
+    },
+    guestDetails: {
+      guestID: '01953273',
+      name: 'Sophia Martinez',
+      roomNo: '608',
+      mobileNumber: '7219087654',
+      email: 'sophiam@gmail.com'
+    },
+    requestType: 'Wake up call schedule',
+    status: 'In-Progress',
+    assignedTo: 'Employee 6'
+  },
+  {
+    requestID: 'RQ17823455',
+    requestDetail: 'Schedule a recurring wake-up call at 7 AM.',
+    responseDetail: 'Wake-up call scheduled for 7 AM daily.',
+    requestAssignedTo: 'Reception',
+    requestTime: {
+      date: '10-02-2025',
+      time: '25 mins ago'
+    },
+    guestDetails: {
+      guestID: '01953273',
+      name: 'Sophia Martinez',
+      roomNo: '608',
+      mobileNumber: '7219087654',
+      email: 'sophiam@gmail.com'
+    },
+    requestType: 'Wake up call schedule',
+    status: 'In-Progress',
+    assignedTo: 'Employee 6'
+  },
+  {
+    requestID: 'RQ17823455',
+    requestDetail: 'Schedule a recurring wake-up call at 7 AM.',
+    responseDetail: 'Wake-up call scheduled for 7 AM daily.',
+    requestAssignedTo: 'Reception',
+    requestTime: {
+      date: '10-02-2025',
+      time: '25 mins ago'
+    },
+    guestDetails: {
+      guestID: '01953273',
+      name: 'Sophia Martinez',
+      roomNo: '608',
+      mobileNumber: '7219087654',
+      email: 'sophiam@gmail.com'
+    },
+    requestType: 'Wake up call schedule',
+    status: 'In-Progress',
+    assignedTo: 'Employee 6'
   }
 ];
