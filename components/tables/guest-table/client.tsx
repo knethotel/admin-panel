@@ -77,7 +77,7 @@ export const GuestClient: React.FC = () => {
   };
   return (
     <>
-      <div className="flex items-start justify-between">
+      <div className="flex items-center justify-between">
         <Heading title={`Guests (${totalRecords})`} />
         <div className="flex gap-3">
           <Button
