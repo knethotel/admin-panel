@@ -141,7 +141,7 @@ const HotelForm = () => {
                   <div className="flex relative items-center gap-1">
                     {' '}
                     <div
-                      className="w-32 h-12 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-300"
+                      className="w-32 h-12 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-100"
                       onClick={() => logoImageRef.current?.click()}
                     >
                       {imagePreviews.logoImage ? (
@@ -772,7 +772,7 @@ const HotelForm = () => {
                       <FormItem className="inline-block relative mt-2">
                         <div className="flex relative items-center gap-2">
                           <div
-                            className="w-32 h-12 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-300"
+                            className="w-32 h-12 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-100"
                             onClick={() => roomImageRef.current?.click()}
                           >
                             {imagePreviews.roomImage ? (
@@ -1038,7 +1038,7 @@ const HotelForm = () => {
                   <FormItem className="relative inline-block">
                     <div className="flex relative items-center gap-2">
                       <div
-                        className="w-[79px] h-12 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-300"
+                        className="w-[79px] h-12 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-100"
                         onClick={() => hotelLicenseImageRef.current?.click()}
                       >
                         {imagePreviews.hotelLicenseImage ? (
@@ -1109,7 +1109,7 @@ const HotelForm = () => {
                   <FormItem className="relative inline-block">
                     <div className="flex relative items-center gap-2">
                       <div
-                        className="w-[79px] h-12 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-300"
+                        className="w-[79px] h-12 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-100"
                         onClick={() =>
                           legalBusinessLicenseImageRef.current?.click()
                         }
@@ -1182,7 +1182,7 @@ const HotelForm = () => {
                   <FormItem className="relative inline-block">
                     <div className="flex relative items-center gap-2">
                       <div
-                        className="w-[79px] h-12 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-300"
+                        className="w-[79px] h-12 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-100"
                         onClick={() => touristLicenseImageRef.current?.click()}
                       >
                         {imagePreviews.touristLicenseImage ? (
@@ -1253,7 +1253,7 @@ const HotelForm = () => {
                   <FormItem className="relative inline-block">
                     <div className="flex relative items-center gap-2">
                       <div
-                        className="w-[79px] h-12 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-300"
+                        className="w-[79px] h-12 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-100"
                         onClick={() => tanNumberImageRef.current?.click()}
                       >
                         {imagePreviews.tanNumberImage ? (
@@ -1324,7 +1324,7 @@ const HotelForm = () => {
                   <FormItem className="relative inline-block">
                     <div className="flex items-center gap-2">
                       <div
-                        className="w-[79px] h-12 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-300"
+                        className="w-[79px] h-12 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-100"
                         onClick={() => dataPrivacyGdprImageRef.current?.click()}
                       >
                         {imagePreviews.dataPrivacyGdprImage ? (
