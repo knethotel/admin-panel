@@ -16,11 +16,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 const AddBookingForm = () => {
   const router = useRouter();
   const addBookingForm = useForm<bookingSchemaType>({
@@ -63,7 +64,7 @@ const AddBookingForm = () => {
                       <div className="flex gap-1">
                         <Input
                           type="text"
-                          placeholder="First Name"
+                          placeholder="Enter First Name"
                           {...field}
                           className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
@@ -86,7 +87,7 @@ const AddBookingForm = () => {
                       <div className="flex gap-1">
                         <Input
                           type="text"
-                          placeholder="Last Name"
+                          placeholder="Enter Last Name"
                           {...field}
                           className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
@@ -112,7 +113,7 @@ const AddBookingForm = () => {
                       <div className="flex gap-1">
                         <Input
                           type="text"
-                          placeholder="Phone Number"
+                          placeholder="Enter Phone Number"
                           {...field}
                           className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
@@ -135,7 +136,7 @@ const AddBookingForm = () => {
                       <div className="flex gap-1">
                         <Input
                           type="text"
-                          placeholder="ID Proof"
+                          placeholder="Enter ID Proof"
                           {...field}
                           className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
@@ -158,7 +159,7 @@ const AddBookingForm = () => {
                       <div className="flex gap-1">
                         <Input
                           type="text"
-                          placeholder="Room Type"
+                          placeholder="Enter Room Type"
                           {...field}
                           className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
@@ -184,7 +185,7 @@ const AddBookingForm = () => {
                       <div className="flex gap-1">
                         <Input
                           type="email"
-                          placeholder="Email ID"
+                          placeholder="Enter Email ID"
                           {...field}
                           className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
@@ -207,7 +208,7 @@ const AddBookingForm = () => {
                       <div className="flex gap-1">
                         <Input
                           type="text"
-                          placeholder="Room Number"
+                          placeholder="Enter Room Number"
                           {...field}
                           className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
@@ -227,31 +228,21 @@ const AddBookingForm = () => {
                       Payment Status
                     </FormLabel>
                     <FormControl>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <div className="flex gap-1">
-                            <Button
-                              variant="outline"
-                              className="w-full text-left bg-[#F6EEE0] hover:text-black text-opacity-45 border-opacity-45 text-black"
-                            >
-                              {field.value || 'Select Payment Status'}
-                            </Button>{' '}
-                            <span className="text-red-500">*</span>
-                          </div>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem
-                            onClick={() => field.onChange('Pending')}
-                          >
-                            Pending
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => field.onChange('Paid')}
-                          >
-                            Paid
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <div className="flex gap-1">
+                        <Select
+                          onValueChange={field.onChange} // Updates the form field value
+                          value={field.value} // Controlled value from the form
+                        >
+                          <SelectTrigger className="w-full text-left bg-[#F6EEE0] hover:text-black border-opacity-45 text-black">
+                            <SelectValue placeholder="Select Payment Status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Pending">Pending</SelectItem>
+                            <SelectItem value="Paid">Paid</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <span className="text-red-500">*</span>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
