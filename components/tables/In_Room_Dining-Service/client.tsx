@@ -68,7 +68,7 @@ export const InRoomDiningDataTable: React.FC = () => {
       <div className="flex flex-col gap-4">
         <div className="w-full pt-20 flex items-center gap-2 justify-end px-4 py-2 bg-white">
           <div className="flex w-full justify-between items-center">
-            <h2 className="text-coffee text-xl font-bold">In-room Control</h2>
+            <h2 className="text-coffee text-xl font-bold">In-room Dining</h2>
             <div className="flex items-center gap-2">
               <h2 className="text-[0.8rem] font-semibold">
                 AUTO ACCEPT REQUESTS
