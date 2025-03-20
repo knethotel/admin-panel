@@ -65,7 +65,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="First Name"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-40 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -88,7 +88,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="Last Name"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -114,7 +114,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="Phone Number"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -137,7 +137,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="ID Proof"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -160,7 +160,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="Room Type"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -186,7 +186,7 @@ const AddBookingForm = () => {
                           type="email"
                           placeholder="Email ID"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -209,7 +209,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="Room Number"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -229,13 +229,14 @@ const AddBookingForm = () => {
                     <FormControl>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <div className='flex gap-1'>
+                          <div className="flex gap-1">
                             <Button
                               variant="outline"
                               className="w-full text-left bg-[#F6EEE0] hover:text-black text-opacity-45 border-opacity-45 text-black"
                             >
                               {field.value || 'Select Payment Status'}
-                            </Button> <span className='text-red-500'>*</span>
+                            </Button>{' '}
+                            <span className="text-red-500">*</span>
                           </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
