@@ -60,6 +60,91 @@ export const OrderManagementData: OrderManagementDataType[] = [
     assignedTo: 'Employee 2'
   },
   {
+    orderID: 'OD17823452',
+    requestTime: {
+      date: '2025-02-10',
+      time: '15 mins ago'
+    },
+    guestDetails: {
+      guestID: '01953270',
+      name: 'John Doe',
+      roomNo: '306',
+      mobileNumber: '7302884522',
+      email: 'johndoe@gmail.com'
+    },
+    serviceID: 'SD1234562',
+    orderStatus: 'Order is Preparing',
+    assignedTo: 'Employee 2'
+  },
+  {
+    orderID: 'OD17823452',
+    requestTime: {
+      date: '2025-02-10',
+      time: '15 mins ago'
+    },
+    guestDetails: {
+      guestID: '01953270',
+      name: 'John Doe',
+      roomNo: '306',
+      mobileNumber: '7302884522',
+      email: 'johndoe@gmail.com'
+    },
+    serviceID: 'SD1234562',
+    orderStatus: 'Order is Preparing',
+    assignedTo: 'Employee 2'
+  },
+  {
+    orderID: 'OD17823452',
+    requestTime: {
+      date: '2025-02-10',
+      time: '15 mins ago'
+    },
+    guestDetails: {
+      guestID: '01953270',
+      name: 'John Doe',
+      roomNo: '306',
+      mobileNumber: '7302884522',
+      email: 'johndoe@gmail.com'
+    },
+    serviceID: 'SD1234562',
+    orderStatus: 'Order is Preparing',
+    assignedTo: 'Employee 2'
+  },
+  {
+    orderID: 'OD17823452',
+    requestTime: {
+      date: '2025-02-10',
+      time: '15 mins ago'
+    },
+    guestDetails: {
+      guestID: '01953270',
+      name: 'John Doe',
+      roomNo: '306',
+      mobileNumber: '7302884522',
+      email: 'johndoe@gmail.com'
+    },
+    serviceID: 'SD1234562',
+    orderStatus: 'Order is Preparing',
+    assignedTo: 'Employee 2'
+  },
+  {
+    orderID: 'OD17823452',
+    requestTime: {
+      date: '2025-02-10',
+      time: '15 mins ago'
+    },
+    guestDetails: {
+      guestID: '01953270',
+      name: 'John Doe',
+      roomNo: '306',
+      mobileNumber: '7302884522',
+      email: 'johndoe@gmail.com'
+    },
+    serviceID: 'SD1234562',
+    orderStatus: 'Order is Preparing',
+    assignedTo: 'Employee 2'
+  },
+  {
     orderID: 'OD17823453',
     requestTime: {
       date: '2025-02-11',
@@ -124,7 +209,7 @@ export const OrderManagementData: OrderManagementDataType[] = [
       email: 'davidlee@gmail.com'
     },
     serviceID: 'SD1234566',
-    orderStatus: 'Order Delivered',
+    orderStatus: 'Order placed',
     assignedTo: 'Employee 6'
   }
 ];

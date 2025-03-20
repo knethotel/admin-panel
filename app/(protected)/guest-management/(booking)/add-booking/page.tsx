@@ -3,7 +3,7 @@ import React from 'react';
 
 const AddBookingPage = () => {
   return (
-    <div className="flex justify-center items-center w-full py-10">
+    <div className="flex justify-center items-center w-full py-10 px-14">
       <AddBookingForm />
     </div>
   );

@@ -67,11 +67,13 @@ export const SwimmingpoolServiceDataTable: React.FC = () => {
   };
   return (
     <>
-      <div className="w-full pt-20 flex gap-2 justify-end px-4 py-2 bg-white">
-        <div className="flex w-full justify-between">
-          <h2 className='text-lg font-medium'>Swimming Pool</h2>
+      <div className="w-full pt-20 flex items-center gap-2 justify-end px-4 py-2 bg-white">
+        <div className="flex w-full justify-between items-center">
+          <h2 className="text-coffee text-xl font-bold">Swimming Pool</h2>
           <div className="flex items-center gap-2">
-            <h2 className="text-[0.8rem]">AUTO ACCEPT REQUESTS</h2>
+            <h2 className="text-[0.8rem] font-semibold">
+              AUTO ACCEPT REQUESTS
+            </h2>
             <ToggleButton />
           </div>
         </div>
@@ -87,7 +89,7 @@ export const SwimmingpoolServiceDataTable: React.FC = () => {
         <DataTable
           searchKey="firstName"
           columns={columns}
-          data={data} // Use filteredData instead of data while api integration
+          data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)} // Use filteredData instead of data while api integration
           // onSearch={(searchValue) => {
           //     const filtered = data.filter((item) =>
           //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())

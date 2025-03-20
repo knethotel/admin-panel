@@ -9,7 +9,6 @@ import { columns } from './columns';
 import { OrderManagementData } from 'app/static/services-management/OrderManagement';
 import ToggleButton from '@/components/ui/toggleButton';
 import ManageProductsModal from '@/components/modal/order-management/ManageProductsModal';
-import { AlertModal } from '@/components/modal/alert-modal';
 import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
 import AddMenuModal from '@/components/modal/order-management/AddMenuModal';
 
@@ -69,10 +68,14 @@ export const OrderManagementDataTable: React.FC = () => {
   return (
     <>
       <div className="w-full pt-20 flex flex-col items-end gap-2 justify-end px-4 py-2">
-        <div className="flex w-full justify-end py-4 items-center gap-2">
-          <h2 className="text-[0.8rem]">AUTO ACCEPT REQUESTS</h2>
-          <ToggleButton />
-          <Settings onClick={() => setIsPriceTimeSettingModalOpen(true)} />
+        <div className="flex w-full justify-between items-center">
+          <h2 className="text-coffee text-xl font-bold">Order management</h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-[0.8rem] font-semibold">
+              AUTO ACCEPT REQUESTS
+            </h2>
+            <ToggleButton />
+          </div>
         </div>
         <div>
           <div className="flex gap-2">
@@ -111,7 +114,7 @@ export const OrderManagementDataTable: React.FC = () => {
         <DataTable
           searchKey="firstName"
           columns={columns}
-          data={data} // Use filteredData instead of data while api integration
+          data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)} // Use filteredData instead of data while api integration
           // onSearch={(searchValue) => {
           //     const filtered = data.filter((item) =>
           //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())

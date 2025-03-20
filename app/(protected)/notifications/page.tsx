@@ -2,7 +2,7 @@ import { NotificationsTable } from '@/components/tables/notifications-table/clie
 import React from 'react';
 
 const NotificationsPage = () => {
-  return <div>
+  return <div className="w-full py-4">
     <NotificationsTable />
   </div>;
 };

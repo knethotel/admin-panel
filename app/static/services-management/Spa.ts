@@ -291,7 +291,7 @@ export const SpaServiceData: SpaServiceDataType[] = [
     assignedTo: 'Employee 3'
   },
   {
-    serviceID: 'SRV17823452',
+    serviceID: 'SBV17823452',
     serviceType: 'Hair Spa',
     requestDetail: 'Looking for a hair spa session.',
     responseDetail: 'Appointment confirmed at 5 PM.',

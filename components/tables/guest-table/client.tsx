@@ -77,7 +77,7 @@ export const GuestClient: React.FC = () => {
   };
   return (
     <>
-      <div className="flex items-start justify-between">
+      <div className="flex items-center justify-between">
         <Heading title={`Guests (${totalRecords})`} />
         <div className="flex gap-3">
           <Button
@@ -92,7 +92,10 @@ export const GuestClient: React.FC = () => {
             onClick={() => handleOnClick('add booking')}
           >
             <Plus className="mr-2 h-4 w-4" />{' '}
-            <span className="text-white group-hover:text-black"> Add Booking</span>
+            <span className="text-white group-hover:text-black">
+              {' '}
+              Add Booking
+            </span>
           </Button>
         </div>
       </div>
@@ -102,7 +105,7 @@ export const GuestClient: React.FC = () => {
         <DataTable
           searchKey="firstName"
           columns={columns}
-          data={data} // Use filteredData instead of data while api integration
+          data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)} // Use filteredData instead of data while api integration
           // onSearch={(searchValue) => {
           //     const filtered = data.filter((item) =>
           //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())

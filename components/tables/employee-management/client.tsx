@@ -19,7 +19,7 @@ export const EmployeeTable: React.FC = () => {
   const [filteredData, setFilteredData] = useState(EmployeeData || []);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [loading, setLoading] = useState<boolean>();
+  const [loading, setLoading] = useState<boolean>(false);
   const [totalRecords, setTotalRecords] = useState(data.length || 0);
   const [mode, setMode] = useState<ModeType>();
 
@@ -49,13 +49,13 @@ export const EmployeeTable: React.FC = () => {
 
   const handleLimitChange = (newLimit: number) => {
     setLimit(newLimit);
-    setPageNo(1); // Reset to the first page when the limit changes
+    setPageNo(1);
   };
 
-  // Function to handle search input
   const handleSearchChange = (searchValue: string) => {
+    setPageNo(1);
     if (searchValue.trim() === '') {
-      setFilteredData(data); // Reset if empty
+      setFilteredData(data);
     } else {
       const filtered = data.filter((item) =>
         item.employeeDetails.name
@@ -66,28 +66,26 @@ export const EmployeeTable: React.FC = () => {
     }
   };
 
-  //   Onclick event handler functions
   const handleOnClick = (actionName: string) => {
     if (actionName === 'add employee') {
       setMode('add_employee');
       router.push(`/employee-management/add`);
     }
   };
+
   return (
     <>
-      <div className="flex items-start justify-between">
+      <div className="flex items-center justify-between">
         <Heading title={`Employees (${totalRecords})`} />
-        <div>
-          <Button
-            className="text-xs md:text-sm bg-button-light group hover:outline"
-            onClick={() => handleOnClick('add employee')}
-          >
-            <Plus className="mr-2 h-4 w-4" />{' '}
-            <span className="text-white group-hover:text-black">
-              Add Employee
-            </span>
-          </Button>
-        </div>
+        <Button
+          className="text-xs md:text-sm bg-button-light group hover:outline"
+          onClick={() => handleOnClick('add employee')}
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          <span className="text-white group-hover:text-black">
+            Add Employee
+          </span>
+        </Button>
       </div>
       {loading ? (
         <span>Loading...</span>
@@ -95,7 +93,7 @@ export const EmployeeTable: React.FC = () => {
         <DataTable
           searchKey="firstName"
           columns={columns}
-          data={data} // Use filteredData instead of data while api integration
+          data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)}
           // onSearch={(searchValue) => {
           //     const filtered = data.filter((item) =>
           //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())
@@ -103,7 +101,7 @@ export const EmployeeTable: React.FC = () => {
           //     setData(filtered);
           // }}
           // filters={filters}
-          //   onFilterChange={handleFilterChange}
+          // onFilterChange={handleFilterChange}
         />
       )}
       <div className="flex justify-end space-x-2 py-2">

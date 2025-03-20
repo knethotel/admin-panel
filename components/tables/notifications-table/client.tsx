@@ -9,6 +9,8 @@ import { columns } from './columns';
 
 import { notificationsData } from 'app/static/ServiceManagementData';
 import ToggleButton from '@/components/ui/toggleButton';
+import { Settings } from 'lucide-react';
+import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
 
 export const NotificationsTable: React.FC = () => {
   const router = useRouter();
@@ -43,6 +45,7 @@ export const NotificationsTable: React.FC = () => {
       setPageNo(newPage);
     }
   };
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleLimitChange = (newLimit: number) => {
     setLimit(newLimit);
@@ -62,11 +65,21 @@ export const NotificationsTable: React.FC = () => {
   };
   return (
     <>
-      <div className="px-2 py-6 flex items-center justify-end">
-        <div className="flex items-center gap-2 tracking-normal text-black font-semibold">
-          <h2 className='text-[0.8rem]'>AUTO ACCEPT REQUESTS</h2>
-          <ToggleButton />
+      <div className="w-full flex items-center gap-2 justify-end px-4 py-2 bg-white">
+        <div className="flex w-full justify-between items-center">
+          <h2 className="text-coffee text-xl font-bold">Notifications</h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-[0.8rem] font-semibold">
+              AUTO ACCEPT REQUESTS
+            </h2>
+            <ToggleButton />
+          </div>
         </div>
+        <Settings onClick={() => setIsModalOpen(true)} />
+        <PriceTimeSetting
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
       </div>
       {loading ? (
         <span>Loading...</span>
@@ -74,7 +87,7 @@ export const NotificationsTable: React.FC = () => {
         <DataTable
           searchKey="firstName"
           columns={columns}
-          data={data} // Use filteredData instead of data while api integration
+          data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)} // Use filteredData instead of data while api integration
           // onSearch={(searchValue) => {
           //     const filtered = data.filter((item) =>
           //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())

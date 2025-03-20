@@ -244,7 +244,7 @@ export const EmployeeData: EmployeeDataType[] = [
       mobileNo: '8796543201',
       emailID: 'gracewalker@gmail.com'
     },
-    role: 'Chat',
+    role: 'SOS',
     status: 'ACTIVE'
   }
 ];

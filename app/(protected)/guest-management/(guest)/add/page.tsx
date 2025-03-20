@@ -3,8 +3,8 @@ import React from 'react';
 
 const AddGuestPage = () => {
   return (
-    <div className="flex justify-center items-center w-full py-10">
-      <GuestForm isEnabled={true} mode='add' />
+    <div className="flex justify-center items-center w-full px-14 py-10">
+      <GuestForm isEnabled={true} mode="add" />
     </div>
   );
 };

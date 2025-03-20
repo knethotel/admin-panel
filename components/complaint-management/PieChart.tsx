@@ -35,8 +35,8 @@ const CustomPieChart = ({ value1, value2, value3 }: PieChartProps) => {
           ))}
         </Pie>
       </PieChart>
-      <div className="absolute text-center w-16 h-16 flex items-center justify-center bg-white shadow-inner rounded-full font-bold text-lg">
-        {total}
+      <div className="absolute text-center w-20 h-20 flex items-center justify-center bg-white shadow-inner rounded-full font-bold text-lg">
+        <div className='flex flex-col items-center justify-center'><span>{total}</span> <span className='text-sm text-black/20'>Cases</span></div>
       </div>
     </div>
   );
