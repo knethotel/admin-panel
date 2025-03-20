@@ -97,7 +97,7 @@ const GuestForm = ({ guestId, isEnabled, mode }: Props) => {
                           type="text"
                           placeholder="First Name"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />{' '}
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -121,7 +121,7 @@ const GuestForm = ({ guestId, isEnabled, mode }: Props) => {
                           type="text"
                           placeholder="Last Name"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />{' '}
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -148,7 +148,7 @@ const GuestForm = ({ guestId, isEnabled, mode }: Props) => {
                           type="text"
                           placeholder="Phone Number"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />{' '}
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -172,7 +172,7 @@ const GuestForm = ({ guestId, isEnabled, mode }: Props) => {
                           type="text"
                           placeholder="Address"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />{' '}
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -196,7 +196,7 @@ const GuestForm = ({ guestId, isEnabled, mode }: Props) => {
                           type="text"
                           placeholder="City"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />{' '}
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -222,7 +222,7 @@ const GuestForm = ({ guestId, isEnabled, mode }: Props) => {
                           type="email"
                           placeholder="Email ID"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -246,7 +246,7 @@ const GuestForm = ({ guestId, isEnabled, mode }: Props) => {
                           type="text"
                           placeholder="State"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -270,7 +270,7 @@ const GuestForm = ({ guestId, isEnabled, mode }: Props) => {
                           type="text"
                           placeholder="Pin Code"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
