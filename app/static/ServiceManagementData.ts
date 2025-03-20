@@ -138,6 +138,62 @@ export const notificationsData: NotificationsDataType[] = [
     Status: 'Sent'
   },
   {
+    notificationID: 'ND27893412',
+    dateAndTime: {
+      date: '2025-02-11',
+      time: '5 mins ago'
+    },
+    guestDetails: {
+      name: 'Ms. Emily Watson',
+      phoneNo: '234-567-8901',
+      roomNo: '302'
+    },
+    notificationType: 'Email',
+    Status: 'Sent'
+  },
+  {
+    notificationID: 'ND27893412',
+    dateAndTime: {
+      date: '2025-02-11',
+      time: '5 mins ago'
+    },
+    guestDetails: {
+      name: 'Ms. Emily Watson',
+      phoneNo: '234-567-8901',
+      roomNo: '302'
+    },
+    notificationType: 'Email',
+    Status: 'Sent'
+  },
+  {
+    notificationID: 'ND27893412',
+    dateAndTime: {
+      date: '2025-02-11',
+      time: '5 mins ago'
+    },
+    guestDetails: {
+      name: 'Ms. Emily Watson',
+      phoneNo: '234-567-8901',
+      roomNo: '302'
+    },
+    notificationType: 'Email',
+    Status: 'Sent'
+  },
+  {
+    notificationID: 'ND27893412',
+    dateAndTime: {
+      date: '2025-02-11',
+      time: '5 mins ago'
+    },
+    guestDetails: {
+      name: 'Ms. Emily Watson',
+      phoneNo: '234-567-8901',
+      roomNo: '302'
+    },
+    notificationType: 'Email',
+    Status: 'Sent'
+  },
+  {
     notificationID: 'ND34567123',
     dateAndTime: {
       date: '2025-02-12',
