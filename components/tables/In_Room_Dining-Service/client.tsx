@@ -66,13 +66,17 @@ export const InRoomDiningDataTable: React.FC = () => {
   return (
     <>
       <div className="flex flex-col gap-4">
-        <div className="w-full pt-20 flex gap-2 justify-between px-4 py-2 bg-white">
-          <h2>In-room Dinning</h2>
-          <div className="flex items-center gap-2">
-            <h2 className="text-[0.8rem]">AUTO ACCEPT REQUESTS</h2>
-            <ToggleButton />
-            <Settings onClick={() => setIsModalOpen(true)} />
+        <div className="w-full pt-20 flex items-center gap-2 justify-end px-4 py-2 bg-white">
+          <div className="flex w-full justify-between items-center">
+            <h2 className="text-coffee text-xl font-bold">In-room Control</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-[0.8rem] font-semibold">
+                AUTO ACCEPT REQUESTS
+              </h2>
+              <ToggleButton />
+            </div>
           </div>
+          <Settings onClick={() => setIsModalOpen(true)} />
           <PriceTimeSetting
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
@@ -93,7 +97,7 @@ export const InRoomDiningDataTable: React.FC = () => {
         <DataTable
           searchKey="firstName"
           columns={columns}
-          data={data} // Use filteredData instead of data while api integration
+          data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)} // Use filteredData instead of data while api integration
           // onSearch={(searchValue) => {
           //     const filtered = data.filter((item) =>
           //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())
