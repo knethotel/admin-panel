@@ -8,10 +8,9 @@ import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 
 import { ComplaintData } from 'app/static/ComplaintData';
-import ToggleButton from '@/components/ui/toggleButton';
 
 export const ComplaintTable: React.FC = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const [data, setData] = useState(ComplaintData || []);
   const [filteredData, setFilteredData] = useState(ComplaintData || []);
   const [pageNo, setPageNo] = useState(1);
@@ -66,7 +65,7 @@ export const ComplaintTable: React.FC = () => {
     <DataTable
       searchKey="complaintType"
       columns={columns}
-      data={ComplaintData} // Using the exact ComplaintData from your latest share
+      data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)} // Using the exact ComplaintData from your latest share
     />
   );
 
