@@ -3,14 +3,9 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
-import { Plus, Settings } from 'lucide-react';
 
 import { columns } from './columns';
 import { SOSManagementData } from 'app/static/services-management/SOS';
-import ToggleButton from '@/components/ui/toggleButton';
-import ManageProductsModal from '@/components/modal/order-management/ManageProductsModal';
-import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
-import AddMenuModal from '@/components/modal/order-management/AddMenuModal';
 
 export const SOSManagementDataTable: React.FC = () => {
   const [data, setData] = useState(SOSManagementData || []);
@@ -74,7 +69,7 @@ export const SOSManagementDataTable: React.FC = () => {
         <DataTable
           searchKey="firstName"
           columns={columns}
-          data={data} // Use filteredData instead of data while api integration
+          data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)} // Use filteredData instead of data while api integration
           // onSearch={(searchValue) => {
           //     const filtered = data.filter((item) =>
           //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())
