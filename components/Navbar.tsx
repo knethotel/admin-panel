@@ -68,8 +68,8 @@ export default function Navbar({ active, search, searchKey }: navProps) {
               value={filterInput}
               onChange={(e) => setFilterInput(e.target.value)}
               placeholder={'Search '}
-              className=" w-[40rem] rounded-2xl"
-              icon={<Search width={20} height={20} />}
+              className="w-[40rem] rounded-xl pl-9"
+              icon={<Search width={17} height={17} />}
             />
           </>)}
         </div>
