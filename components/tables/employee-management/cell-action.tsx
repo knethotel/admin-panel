@@ -18,7 +18,7 @@ const CellAction = (props: any) => {
   return (
     <>
       {/* Action Buttons */}
-      <div className="flex space-x-2">
+      <div className="flex items-center space-x-2">
         {/* Edit User */}
         <Button
           onClick={() => handleEditUser()}
