@@ -981,7 +981,7 @@ const HotelForm = () => {
                 name="totalStaff"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2 relative">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-[115px] text-xs font-medium text-gray-700">
                       Total Staff
                     </FormLabel>
                     <div className="w-full">
@@ -994,7 +994,7 @@ const HotelForm = () => {
                           onChange={(e) =>
                             field.onChange(parseInt(e.target.value, 10))
                           }
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-12 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                       </FormControl>
                       <span className="text-red-500 absolute -top-0 -right-2">
@@ -1366,44 +1366,44 @@ const HotelForm = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="internetConnectivity"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center gap-2 relative">
-                    <FormLabel className="w-32 text-xs font-medium text-gray-700">
-                      Internet Connectivity
-                    </FormLabel>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        className="bg-[#F6EEE0] data-[state=checked]:bg-[#A07D3D]"
-                      />
-                    </FormControl>
-                    <FormMessage className="text-[10px]" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="softwareCompatibility"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center gap-2 relative">
-                    <FormLabel className="w-32 text-xs font-medium text-gray-700">
-                      Software Compatibility
-                    </FormLabel>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        className="bg-[#F6EEE0] data-[state=checked]:bg-[#A07D3D]"
-                      />
-                    </FormControl>
-                    <FormMessage className="text-[10px]" />
-                  </FormItem>
-                )}
-              />
+              <div className="flex flex-col justify-center gap-4">
+                <FormField
+                  control={form.control}
+                  name="internetConnectivity"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center gap-2 relative">
+                      <FormLabel className="w-32 text-xs font-medium text-gray-700">
+                        Internet Connectivity
+                      </FormLabel>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px]" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="softwareCompatibility"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center gap-2 relative">
+                      <FormLabel className="w-32 text-xs font-medium text-gray-700">
+                        Software Compatibility
+                      </FormLabel>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px]" />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
           </div>
           {/* Buttons */}
