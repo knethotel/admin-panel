@@ -21,6 +21,8 @@ export default {
       colors: {
         background2: '#F7F7F7',
         lightbrown: '#F6EEE0',
+        yellowBrown: '#DBB766',
+        goldenYellow: '#E0C815',
         brown: '#A07D3D',
         coffee: '#281F0F',
         coffeeLight: '#4A391B',
