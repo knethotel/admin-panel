@@ -6,12 +6,14 @@ export const metadata = {
     'A user admin dashboard configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, and Prettier.'
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <body className=" w-full bg-background">
-                {children}
-      </body>
+      <body className="w-full bg-background">{children}</body>
     </html>
   );
 }

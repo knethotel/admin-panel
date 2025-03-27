@@ -3,7 +3,7 @@ import React from 'react';
 
 const SOSDetailsPage = () => {
   return (
-    <div className="h-screen w-full overflow-x-hidden hide-scrollbar">
+    <div className="w-full hide-scrollbar">
       <SOSManagementDataTable />
     </div>
   );

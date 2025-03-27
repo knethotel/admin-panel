@@ -63,6 +63,7 @@ export const SOSManagementDataTable: React.FC = () => {
           SOS Management
         </h2>
       </div>
+
       {loading ? (
         <span>Loading...</span>
       ) : (
@@ -80,6 +81,7 @@ export const SOSManagementDataTable: React.FC = () => {
           //   onFilterChange={handleFilterChange}
         />
       )}
+
       <div className="flex justify-end space-x-2 py-2">
         <div className="space-x-2">
           <Button
