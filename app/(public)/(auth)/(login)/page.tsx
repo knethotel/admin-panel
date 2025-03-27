@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import React from 'react';
-import loginPageImage from '../../../public/assets/loginPageImage.png';
+import loginPageImage from '../../../../public/assets/loginPageImage.png';
 import LoginForm from '@/components/form/login/login-form';
 
 const LoginPage = () => {

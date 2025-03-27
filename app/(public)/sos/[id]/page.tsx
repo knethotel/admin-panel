@@ -3,9 +3,9 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import fireIcon from '../../../public/assets/fire.svg';
-import shieldIcon from '../../../public/assets/shield.svg';
-import plusIcon from '../../../public/assets/plus.svg';
+import fireIcon from '../../../../public/assets/fire.svg';
+import shieldIcon from '../../../../public/assets/shield.svg';
+import plusIcon from '../../../../public/assets/plus.svg';
 
 type Params = {
   id: string;
