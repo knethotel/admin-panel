@@ -1,6 +1,6 @@
 'use client';
 import '../globals.css';
-import { Analytics } from '@vercel/analytics/react';
+// import { Analytics } from '@vercel/analytics/react';
 import Link from 'next/link';
 import {
   Home,
@@ -8,7 +8,7 @@ import {
   LineChart,
   LogOut,
   Package,
-  Package2,
+  // Package2,
   PanelLeft,
   Settings,
   ShoppingCart,
@@ -66,7 +66,7 @@ function DesktopNav() {
           <Image loading="lazy" className="" src={logo} alt="HandyMan" />
         </Link>
         {/* ------ Sidebar Menu Links ------ */}
-        <div className="sidebar-menu h-screen p-4 mb-2 rounded-2xl flex flex-col gap-4">
+        <div className="sidebar-menu h-screen p-4 mb-2 rounded-2xl flex flex-col gap-3">
           <NavItem href="/dashboard" label="Dashboard">
             <LayoutDashboard className="h-5 w-5" />
           </NavItem>
@@ -102,8 +102,9 @@ function DesktopNav() {
               <Settings className="h-5 w-5" />
             </NavItem>
             <div
-              className={`pl-4 mt-1 overflow-hidden transition-[max-height] duration-300 ease-in-out ${
-                openNotificationsSubMenu ? 'max-h-[200px]' : 'max-h-0'
+              onClick={(e) => e.stopPropagation()}
+              className={`pl-4 mt-1 overflow-hidden transition-all duration-300 ease-in-out ${
+                openNotificationsSubMenu ? 'h-auto max-h-screen' : 'max-h-0'
               }`}
             >
               <NavItem href="/notifications/sos-details" label="SOS Service">
