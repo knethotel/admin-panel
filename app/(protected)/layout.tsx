@@ -94,10 +94,23 @@ function DesktopNav() {
           <NavItem href="/payment-management" label="Payment Management">
             <Settings className="h-5 w-5" />
           </NavItem>
-
-          <NavItem href="/notifications" label="Notifications">
-            <Settings className="h-5 w-5" />
-          </NavItem>
+          <div
+            className="rounded-lg"
+            onClick={() => setOpenNotificationsSubMenu((prev) => !prev)}
+          >
+            <NavItem href="/notifications" label="Notifications">
+              <Settings className="h-5 w-5" />
+            </NavItem>
+            <div
+              className={`pl-4 mt-1 overflow-hidden transition-[max-height] duration-300 ease-in-out ${
+                openNotificationsSubMenu ? 'max-h-[200px]' : 'max-h-0'
+              }`}
+            >
+              <NavItem href="/notifications/sos-details" label="SOS Service">
+                <div className="h-2 w-2 bg-brown rounded-full"></div>
+              </NavItem>
+            </div>
+          </div>
 
           <NavItem href="/change-password" label="Change Password">
             <Settings className="h-5 w-5" />
