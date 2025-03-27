@@ -1,3 +1,4 @@
+'use client';
 import '../globals.css';
 import { Analytics } from '@vercel/analytics/react';
 import Link from 'next/link';
@@ -25,13 +26,7 @@ import Providers from '../providers';
 import { NavItem } from '../nav-item';
 import logo from '../../public/assets/logo.svg';
 import Image from 'next/image';
-
-export const metadata = {
-  title: 'Next.js App Router + NextAuth + Tailwind CSS',
-  description:
-    'A user admin dashboard configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, and Prettier.'
-};
-
+import { useState } from 'react';
 export default function RootLayout({
   children
 }: {
@@ -58,6 +53,8 @@ export default function RootLayout({
 }
 
 function DesktopNav() {
+  const [openNotificationsSubMenu, setOpenNotificationsSubMenu] =
+    useState(false);
   return (
     <aside className=" flex flex-col  h-screen p-4 pb-0 bg-[#453519]">
       <nav className="flex flex-col gap-4 items-center overflow-y-auto hide-scrollbar">
