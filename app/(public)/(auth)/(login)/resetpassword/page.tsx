@@ -1,8 +1,7 @@
 import ResetPasswordForm from '@/components/form/login/reset-password-form';
 import Image from 'next/image';
 import React from 'react';
-import loginPageImage from '../../../../public/assets/loginPageImage.png';
-
+import loginPageImage from '../../../../../public/assets/loginPageImage.png';
 
 const ResetPasswordPage = () => {
   return (
