@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import plusIcon from '../../../../public/assets/plus.png';
 import { RiEditBoxLine } from 'react-icons/ri';
 import { FaTrashAlt } from 'react-icons/fa';
-import RolesAndPermissionsModal from '@/components/modal/role-and-permission/role-permission';
+import RolesAndPermissionsModal from '@/components/shared/role-and-permission/role-permission';
 
 const RolesAndPermissionsPage = () => {
   const [isOpen, setIsOpen] = useState(false);
