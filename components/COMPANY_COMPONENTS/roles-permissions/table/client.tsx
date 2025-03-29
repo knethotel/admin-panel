@@ -9,14 +9,14 @@ import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 
-import { GuestData } from 'app/static/GuestData';
+import { UsersDummyData } from 'app/static/company-panel/RolesAndPermissions';
 
 type ModeType = 'add_guest' | 'add_booking';
 
-export const GuestClient: React.FC = () => {
+export const RolesAndPermissionHome: React.FC = () => {
   const router = useRouter();
-  const [data, setData] = useState(GuestData || []);
-  const [filteredData, setFilteredData] = useState(GuestData || []);
+  const [data, setData] = useState(UsersDummyData || []);
+  const [filteredData, setFilteredData] = useState(UsersDummyData || []);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>();
@@ -52,17 +52,17 @@ export const GuestClient: React.FC = () => {
     setPageNo(1); // Reset to the first page when the limit changes
   };
 
-  // Function to handle search input
-  const handleSearchChange = (searchValue: string) => {
-    if (searchValue.trim() === '') {
-      setFilteredData(data); // Reset if empty
-    } else {
-      const filtered = data.filter((item) =>
-        item.guestDetails.name.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      setFilteredData(filtered);
-    }
-  };
+  // // Function to handle search input
+  // const handleSearchChange = (searchValue: string) => {
+  //   if (searchValue.trim() === '') {
+  //     setFilteredData(data); // Reset if empty
+  //   } else {
+  //     const filtered = data.filter((item) =>
+  //       item.guestDetails.name.toLowerCase().includes(searchValue.toLowerCase())
+  //     );
+  //     setFilteredData(filtered);
+  //   }
+  // };
 
   //   Onclick event handler functions
   const handleOnClick = (actionName: string) => {
