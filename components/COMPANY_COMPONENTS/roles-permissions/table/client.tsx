@@ -77,28 +77,6 @@ export const RolesAndPermissionHome: React.FC = () => {
   };
   return (
     <>
-      <div className="flex items-center justify-between">
-        <Heading title={`Guests (${totalRecords})`} />
-        <div className="flex gap-3">
-          <Button
-            className="text-xs md:text-sm bg-button-light group hover:outline"
-            onClick={() => handleOnClick('add guest')}
-          >
-            <Plus className="mr-2 h-4 w-4" />{' '}
-            <span className="text-white group-hover:text-black">Add Guest</span>
-          </Button>
-          <Button
-            className="text-xs md:text-sm bg-button-light group hover:outline"
-            onClick={() => handleOnClick('add booking')}
-          >
-            <Plus className="mr-2 h-4 w-4" />{' '}
-            <span className="text-white group-hover:text-black">
-              {' '}
-              Add Booking
-            </span>
-          </Button>
-        </div>
-      </div>
       {loading ? (
         <span>Loading...</span>
       ) : (
