@@ -64,17 +64,6 @@ export const RolesAndPermissionHome: React.FC = () => {
   //   }
   // };
 
-  //   Onclick event handler functions
-  const handleOnClick = (actionName: string) => {
-    if (actionName === 'add guest') {
-      setMode('add_guest');
-      router.push(`/guest-management/add`);
-    }
-    if (actionName === 'add booking') {
-      setMode('add_booking');
-      router.push(`/guest-management/add-booking`);
-    }
-  };
   return (
     <>
       {loading ? (
