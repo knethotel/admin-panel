@@ -19,6 +19,9 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     [key: string]: string[];
   }>({});
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [finalRolesAndPermissions, setFinalRolesAndPermissions] = useState<{
+    [key: string]: string[];
+  }>({});
 
   const permissions = [
     'Create',
@@ -56,6 +59,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
       const updatedPermissions = rolePermissions.includes(permission)
         ? rolePermissions.filter((p) => p !== permission)
         : [...rolePermissions, permission];
+
       return { ...prev, [selectedRole]: updatedPermissions };
     });
   };
@@ -66,7 +70,17 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Roles and Permissions:', selectedPermissions);
+
+    // Store submitted roles and permissions
+    setFinalRolesAndPermissions(selectedPermissions);
+
+    // Reset temporary states
+    setRoles([]);
+    setSelectedPermissions({});
+    setSelectedRole(null);
+    setRole('');
+
+    console.log('Submitted Roles and Permissions:', selectedPermissions);
   };
 
   useEffect(() => {
@@ -75,19 +89,25 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     }
   }, [roles, selectedRole]);
 
+  useEffect(() => {
+    console.log(
+      'Updated Final Roles and Permissions:',
+      finalRolesAndPermissions
+    );
+  }, [finalRolesAndPermissions]);
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
-      <div className="bg-[#FAF6EF] rounded-lg shadow-lg px-6 pb-6 flex flex-col gap-6 w-full max-w-3xl relative animate-fadeIn">
-        <div>
-          <button
-            onClick={onClose}
-            className="absolute top-2 right-2 text-gray-600 hover:text-black"
-          >
-            ✖
-          </button>
-        </div>
+      <div className="bg-[#FAF6EF] rounded-lg shadow-lg px-6 pb-6 pt-4 flex flex-col gap-6 w-full max-w-3xl relative animate-fadeIn">
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 text-gray-600 hover:text-black"
+        >
+          ✖
+        </button>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex gap-2 justify-start items-center w-64">
             <Input
@@ -113,7 +133,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
                 key={index}
                 type="button"
                 onClick={() => handleRoleClick(role)}
-                className={`relative w-auto rounded-md px-2 py-1 text-white text-center ${
+                className={`relative w-auto rounded-md px-2 py-1 hover:text-goldenYellow hover:bg-coffee text-white text-center ${
                   selectedRole === role ? 'bg-coffee' : 'bg-[#8c6b33]'
                 } hover:bg-[#362913] transition-colors`}
               >
@@ -121,8 +141,8 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
                 {selectedRole === role && (
                   <span
                     className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0 
-          border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent 
-          border-t-coffee"
+                    border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent 
+                    border-t-coffee"
                   />
                 )}
               </button>
