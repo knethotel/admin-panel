@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -18,6 +18,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
   const [selectedPermissions, setSelectedPermissions] = useState<{
     [key: string]: string[];
   }>({});
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
   const permissions = [
     'Create',
@@ -42,18 +43,25 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     if (role.trim() !== '') {
       setRoles([...roles, role]);
       setSelectedPermissions((prev) => ({ ...prev, [role]: [] }));
+      setSelectedRole(role);
       setRole('');
     }
   };
 
-  const handlePermissionChange = (role: string, permission: string) => {
+  const handlePermissionChange = (permission: string) => {
+    if (!selectedRole) return;
+
     setSelectedPermissions((prev) => {
-      const rolePermissions = prev[role] || [];
+      const rolePermissions = prev[selectedRole] || [];
       const updatedPermissions = rolePermissions.includes(permission)
         ? rolePermissions.filter((p) => p !== permission)
         : [...rolePermissions, permission];
-      return { ...prev, [role]: updatedPermissions };
+      return { ...prev, [selectedRole]: updatedPermissions };
     });
+  };
+
+  const handleRoleClick = (role: string) => {
+    setSelectedRole(role === selectedRole ? null : role);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -61,11 +69,17 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     console.log('Roles and Permissions:', selectedPermissions);
   };
 
+  useEffect(() => {
+    if (roles.length > 0 && !selectedRole) {
+      setSelectedRole(roles[roles.length - 1]);
+    }
+  }, [roles, selectedRole]);
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
-      <div className="bg-[#FAF6EF]  rounded-lg shadow-lg px-6 pb-6 flex flex-col gap-6  w-full max-w-3xl relative animate-fadeIn">
+      <div className="bg-[#FAF6EF] rounded-lg shadow-lg px-6 pb-6 flex flex-col gap-6 w-full max-w-3xl relative animate-fadeIn">
         <div>
           <button
             onClick={onClose}
@@ -93,14 +107,25 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
             </Button>
           </div>
 
-          <div className="flex gap-1 py-2 overflow-x-auto hide-scrollbar">
+          <div className="flex gap-2 py-4 overflow-x-auto hide-scrollbar">
             {roles.map((role, index) => (
-              <div
+              <button
                 key={index}
-                className="bg-coffee w-auto rounded-md px-2 py-[0.4px] text-white text-center"
+                type="button"
+                onClick={() => handleRoleClick(role)}
+                className={`relative w-auto rounded-md px-2 py-1 text-white text-center ${
+                  selectedRole === role ? 'bg-coffee' : 'bg-[#8c6b33]'
+                } hover:bg-[#362913] transition-colors`}
               >
-                <span className="text-sm font-light">{role}</span>
-              </div>
+                <span className="text-sm">{role}</span>
+                {selectedRole === role && (
+                  <span
+                    className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0 
+          border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent 
+          border-t-coffee"
+                  />
+                )}
+              </button>
             ))}
           </div>
 
@@ -109,14 +134,14 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
               <div key={index} className="flex items-center space-x-2">
                 <Checkbox
                   id={`permission-${index}`}
-                  checked={roles.some((role) =>
-                    (selectedPermissions[role] || []).includes(permission)
-                  )}
-                  onCheckedChange={() => {
-                    roles.forEach((role) =>
-                      handlePermissionChange(role, permission)
-                    );
-                  }}
+                  checked={
+                    selectedRole
+                      ? (selectedPermissions[selectedRole] || []).includes(
+                          permission
+                        )
+                      : false
+                  }
+                  onCheckedChange={() => handlePermissionChange(permission)}
                 />
                 <label
                   htmlFor={`permission-${index}`}
