@@ -1,81 +1,24 @@
 import { ColumnDef } from '@tanstack/react-table';
 import CellAction from './cell-action';
-import { GuestDataType } from 'app/static/GuestData';
+import { UsersDataType } from 'app/static/company-panel/RolesAndPermissions';
 
 // Update type to match guestDataType for better type safety
-export const columns: ColumnDef<GuestDataType>[] = [
+export const columns: ColumnDef<UsersDataType>[] = [
   {
-    accessorKey: 'guestId',
-    header: 'Guest ID'
+    accessorKey: 'snNo',
+    header: 'sn no.'
   },
   {
-    accessorKey: 'checkInCheckOutDetails',
-    header: 'Check-In & Check-Out Details',
-    cell: ({ row }) => {
-      const details = row.original.checkInCheckOutDetails;
-      return (
-        <div>
-          {details.checkInDate} {details.checkInTime} - {details.checkOutDate}{' '}
-          {details.CheckOutTime}
-        </div>
-      );
-    }
+    accessorKey: 'role',
+    header: 'Role'
   },
   {
-    accessorKey: 'guestDetails',
-    header: 'Guest Details',
-    cell: ({ row }) => {
-      const details = row.original.guestDetails;
-      return (
-        <div>
-          {details.name}, Room {details.roomNo}
-        </div>
-      );
-    }
+    accessorKey: 'permissions',
+    header: 'Permissions'
   },
   {
-    accessorKey: 'contactDetails',
-    header: 'Contact Details',
-    cell: ({ row }) => {
-      const details = row.original.contactDetails;
-      return (
-        <div>
-          {details.email} / {details.mobileNo}
-        </div>
-      );
-    }
-  },
-  {
-    accessorKey: 'trackingStatus',
-    header: 'Tracking Status',
-    cell: ({ row }) => {
-      const status = row.original.trackingStatus || 'N/A';
-      switch (status) {
-        case 'under review':
-          return <div className="text-orange-500">{status}</div>;
-        case 'pending':
-          return <div className="text-blue-500">{status}</div>;
-        case 'submitted':
-          return <div className="text-green-500">{status}</div>;
-        default:
-          return <div className="text-gray-500">{status}</div>;
-      }
-    }
-  },
-  {
-    accessorKey: 'paymentStatus',
-    header: 'Payment Status',
-    cell: ({ row }) => {
-      const status = row.original.paymentStatus || 'N/A';
-      switch (status) {
-        case 'pending':
-          return <div className="text-blue-500">{status}</div>;
-        case 'paid':
-          return <div className="text-green-500">{status}</div>;
-        default:
-          return <div className="text-gray-500">{status}</div>;
-      }
-    }
+    accessorKey: 'taggedUsers',
+    header: 'Tagged Users'
   },
   {
     accessorKey: 'actions',
@@ -88,28 +31,3 @@ export const columns: ColumnDef<GuestDataType>[] = [
     )
   }
 ];
-
-// Assuming guestDataType is imported or defined elsewhere
-type TrackingStatusType = 'underReview' | 'pending' | 'submitted';
-type PaymentStatusType = 'pending' | 'paid';
-
-type guestDataType = {
-  guestId: string;
-  checkInCheckOutDetails: {
-    checkInDate: string;
-    checkInTime: string;
-    CheckOutTime: string;
-    checkOutDate: string;
-  };
-  guestDetails: {
-    name: string;
-    phoneNo: string;
-    roomNo: string;
-  };
-  contactDetails: {
-    email: string;
-    mobileNo: string;
-  };
-  trackingStatus: TrackingStatusType;
-  paymentStatus: PaymentStatusType;
-};
