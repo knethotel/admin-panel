@@ -22,14 +22,11 @@ const CellAction = (props: any) => {
     }
   };
 
-  const handleEditUser = () => {
-    router.push(`guest-management/edit/${data.guestId}`);
-    console.log('success');
-  };
+  const handleEditUser = () => {};
 
-  const handleViewUser = () => {
-    router.push(`guest-management/view/${data.guestId}`);
-  };
+  const handleViewUser = () => {};
+
+  const handleDeleteUser = () => {};
 
   return (
     <>
@@ -57,7 +54,7 @@ const CellAction = (props: any) => {
           onClick={() => setOpen(true)}
           className="p-1 rounded-md group hover:bg-[#a07d3d5e]"
         >
-          <Trash className=" w-4 text-button-dark group-hover:text-white" />
+          <Trash className="w-4 text-button-dark group-hover:text-white" />
         </button>
 
         {/* Edit User */}
