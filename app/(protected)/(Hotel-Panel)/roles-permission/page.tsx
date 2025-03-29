@@ -76,7 +76,7 @@ const RolesAndPermissionsPage = () => {
           <div className="flex gap-6">
             <div className="flex flex-col gap-3">
               <h3 className="font-bold">Role</h3>
-              <div className="grid grid-cols-1 gap-1">
+              <div className="grid grid-cols-1 gap-3">
                 {Object.keys(rolesAndPermissions).map((role) => (
                   <span
                     key={role}
@@ -89,7 +89,7 @@ const RolesAndPermissionsPage = () => {
             </div>
             <div className="flex flex-col gap-3">
               <h3 className="font-bold">Permission</h3>
-              <div className="grid grid-cols-1 gap-1">
+              <div className="grid grid-cols-1 gap-3">
                 {Object.entries(rolesAndPermissions).map(
                   ([role, permissions]) => (
                     <div key={role} className="flex flex-wrap gap-1">
