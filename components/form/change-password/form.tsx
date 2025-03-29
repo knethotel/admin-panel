@@ -46,7 +46,7 @@ export default function ChangePasswordForm() {
       <Form {...changePasswordForm}>
         <form
           onSubmit={changePasswordForm.handleSubmit(onChangePasswordSubmit)}
-          className="lg:flex flex-col justify-center items-start space-y-6 bg-[#FAF6EF] p-8 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3)] border-none outline-none rounded-md"
+          className="lg:flex flex-col justify-center items-start space-y-6 bg-[#FAF6EF] shadow-custom p-8 border-none outline-none rounded-md"
         >
           <div className="flex justify-between items-center w-full text-sm">
             {/* Old Password Field */}
