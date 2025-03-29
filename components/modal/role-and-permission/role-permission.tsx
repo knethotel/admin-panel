@@ -65,7 +65,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
-      <div className="bg-[#FAF6EF] rounded-lg shadow-lg px-6 pb-6 flex flex-col gap-6  w-full max-w-3xl relative animate-fadeIn">
+      <div className="bg-[#FAF6EF]  rounded-lg shadow-lg px-6 pb-6 flex flex-col gap-6  w-full max-w-3xl relative animate-fadeIn">
         <div>
           <button
             onClick={onClose}
@@ -93,7 +93,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
             </Button>
           </div>
 
-          <div className="flex gap-1">
+          <div className="flex gap-1 py-2 overflow-x-auto hide-scrollbar">
             {roles.map((role, index) => (
               <div
                 key={index}
