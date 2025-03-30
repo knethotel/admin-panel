@@ -10,7 +10,7 @@ import { columns } from './columns';
 
 import { GuestDetailsDummyData } from 'app/static/company-panel/GuestManagement';
 
-export const GuestClient: React.FC = () => {
+export const GuestManagementHome: React.FC = () => {
   const router = useRouter();
   const [data, setData] = useState(GuestDetailsDummyData || []);
   const [filteredData, setFilteredData] = useState(GuestDetailsDummyData || []);
