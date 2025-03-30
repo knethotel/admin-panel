@@ -113,7 +113,7 @@ export default function ChangePasswordForm() {
           {/* Submit Button */}
           <Button
             type="submit"
-            className="w-[130px] text-xs text-white bg-[#A07D3D] hover:opacity-80 hover:text-black hover:border hover:border-black"
+            className="w-[130px] text-xs text-white bg-[#A07D3D] hover:text-black hover:bg-transparent hover:outline hover:outline-black"
           >
             Save Changes
           </Button>
