@@ -1,5 +1,4 @@
 import { AlertModal } from '@/components/modal/alert-modal';
-import { Button } from '@/components/ui/button';
 import { Eye, Edit, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -22,13 +21,8 @@ const CellAction = (props: any) => {
     }
   };
 
-  const handleEditUser = () => {
-    router.push(`guest-management/edit/${data.guestId}`);
-    console.log('success');
-  };
-
   const handleViewUser = () => {
-    router.push(`guest-management/view/${data.guestId}`);
+    router.push(`company/guest-management/view/${data.guestId}`);
   };
 
   return (
@@ -51,22 +45,6 @@ const CellAction = (props: any) => {
         >
           <Eye className=" w-4 text-button-dark group-hover:text-white" />
         </button>
-
-        {/* Delete User */}
-        <button
-          onClick={() => setOpen(true)}
-          className="p-1 rounded-md group hover:bg-[#a07d3d5e]"
-        >
-          <Trash className=" w-4 text-button-dark group-hover:text-white" />
-        </button>
-
-        {/* Edit User */}
-        <Button
-          onClick={() => handleEditUser()}
-          className="p-3 rounded-md group cursor-pointer hover:bg-[#a07d3d5e]"
-        >
-          <Edit className=" w-4 text-button-dark group-hover:text-white" />
-        </Button>
       </div>
     </>
   );
