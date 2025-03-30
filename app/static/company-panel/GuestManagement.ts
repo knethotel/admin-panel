@@ -1,4 +1,4 @@
-import img from '../../../../public/placeholder-user.jpg';
+import img from '../../../public/placeholder-user.jpg';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 // Guest Data for homepage table
 
