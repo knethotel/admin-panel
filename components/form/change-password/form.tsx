@@ -32,9 +32,7 @@ export default function ChangePasswordForm() {
   // Submit handler
   const onChangePasswordSubmit = async (data: ChangePasswordSchemaType) => {
     try {
-      // Here you would typically make an API call
       console.log('Form submitted with data:', data);
-      // Add your password change logic here
       changePasswordForm.reset();
     } catch (error) {
       console.error('Error changing password:', error);
@@ -64,7 +62,7 @@ export default function ChangePasswordForm() {
                       className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs placeholder:opacity-25"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="min-h-[20px] text-xs" />
                 </FormItem>
               )}
             />
@@ -84,7 +82,7 @@ export default function ChangePasswordForm() {
                       className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs placeholder:opacity-25"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="min-h-[20px] text-xs" />
                 </FormItem>
               )}
             />
@@ -106,7 +104,7 @@ export default function ChangePasswordForm() {
                       className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs placeholder:opacity-25"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="min-h-[20px] text-xs" />
                 </FormItem>
               )}
             />
