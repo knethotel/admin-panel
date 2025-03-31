@@ -45,3 +45,24 @@ export const SubscriptionManagementFormSchema = z.object({
 export type SubscriptionManagementFormSchemaType = z.infer<
   typeof SubscriptionManagementFormSchema
 >;
+
+//Complaint management form schema--------------------------------------------------------------------------------
+export const complaintFormSchema = z.object({
+  complaintID: z.string(),
+  userID: z.string().min(1, 'Invalid UserID'),
+  complaintCategory: z.enum(
+    ['Category 1', 'Category 2', 'Category 3', 'Category 4'],
+    {
+      errorMap: () => ({ message: 'Please select a valid complaint category' })
+    }
+  ),
+  description: z.string().min(1, 'Enter valid input'),
+  feedback: z.string().min(1, 'Enter valid input'),
+  status: z.enum(['Open', 'In-Progress', 'Resolved', 'Closed'], {
+    errorMap: () => ({ message: 'Please select a valid Refund status' })
+  }),
+  assignedStaff: z.string().min(1, 'Enter valid input'),
+  dateAndTime: z.string().min(1, 'Enter valid value')
+});
+
+export type ComplaintFormSchemaType = z.infer<typeof complaintFormSchema>;
