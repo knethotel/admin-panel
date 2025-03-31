@@ -3,17 +3,15 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
-import { Heading } from '@/components/ui/heading';
 
-import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 
-import { GuestDetailsDummyData } from 'app/static/company-panel/GuestManagement';
+import { subscriptionData } from 'app/static/company-panel/SubscriptionManagement';
 
 export const CompanyPanelGuestManagementHome: React.FC = () => {
-  const router = useRouter();
-  const [data, setData] = useState(GuestDetailsDummyData || []);
-  const [filteredData, setFilteredData] = useState(GuestDetailsDummyData || []);
+  // const router = useRouter();
+  const [data, setData] = useState(subscriptionData || []);
+  const [filteredData, setFilteredData] = useState(subscriptionData || []);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>();
@@ -54,7 +52,9 @@ export const CompanyPanelGuestManagementHome: React.FC = () => {
       setFilteredData(data); // Reset if empty
     } else {
       const filtered = data.filter((item) =>
-        item.guestName.toLowerCase().includes(searchValue.toLowerCase())
+        item.planDetails.planName
+          .toLowerCase()
+          .includes(searchValue.toLowerCase())
       );
       setFilteredData(filtered);
     }

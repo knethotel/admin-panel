@@ -1,51 +1,115 @@
 import { ColumnDef } from '@tanstack/react-table';
 import CellAction from './cell-action';
-import { GuestDetailsDataType } from 'app/static/company-panel/GuestManagement';
+import { Subscription } from 'app/static/company-panel/SubscriptionManagement';
+import { Switch } from '@/components/ui/switch';
 
 // Update type to match guestDataType for better type safety
-export const columns: ColumnDef<GuestDetailsDataType>[] = [
+export const columns: ColumnDef<Subscription>[] = [
   {
-    accessorKey: 'guestID',
-    header: 'Guest ID'
+    accessorKey: 'subscriptionID',
+    header: 'Subscription ID'
   },
   {
-    accessorKey: 'hotelName',
-    header: 'Hotel Name'
-  },
-  {
-    accessorKey: 'guestName',
-    header: 'Guest Name'
-  },
-  {
-    accessorKey: 'moblieNo',
-    header: 'Contact Details'
-  },
-  {
-    accessorKey: 'roomCategory',
-    header: 'Room Category'
-  },
-  {
-    accessorKey: 'checkInDetails',
-    header: 'Check-In Details',
+    accessorKey: 'planDetails',
+    header: 'Plan Details',
     cell: ({ row }) => {
-      const details = row.original.checkInDetails;
+      const planDetails = row.original.planDetails;
+      let planTypeElement;
+
+      switch (planDetails.planType) {
+        case 'PAID':
+          planTypeElement = (
+            <span className="text-sm text-success">{planDetails.planType}</span>
+          );
+          break;
+        case 'CANCELED':
+          planTypeElement = (
+            <span className="text-sm text-danger">{planDetails.planType}</span>
+          );
+          break;
+        case 'EXPIRED':
+          planTypeElement = (
+            <span className="text-sm text-gray-500">
+              {planDetails.planType}
+            </span>
+          );
+          break;
+        case 'TRIAL':
+          planTypeElement = (
+            <span className="text-sm text-primary2">
+              {planDetails.planType}
+            </span>
+          );
+        default:
+          planTypeElement = <span>{planDetails.planType}</span>;
+          break;
+      }
+
       return (
-        <div className="flex flex-row items-start justify-center text-xs text-success">
-          <span>{details.date}</span>
-          <span>{details.time}</span>
+        <div className="flex justify-center items-start">
+          <span>{planDetails.planName}</span>
+          {planTypeElement}
         </div>
       );
     }
   },
   {
-    accessorKey: 'checkOutDetails',
-    header: 'Check-Out Details',
+    accessorKey: 'planDuration',
+    header: 'Plan Duration'
+  },
+  {
+    accessorKey: 'planDurationType',
+    header: 'Plan Type'
+  },
+  {
+    accessorKey: 'costDetails',
+    header: 'Cost',
     cell: ({ row }) => {
-      const details = row.original.checkOutDetails;
+      const costDetails = row.original.costDetails;
+
       return (
-        <div className="flex flex-row items-start justify-center text-xs text-warning">
-          <span>{details.date}</span>
-          <span>{details.time}</span>
+        <div className="flex justify-center items-start">
+          <span>{costDetails.planName}</span>
+          <span className="text-sm opacity-60">{costDetails.planCost}</span>
+        </div>
+      );
+    }
+  },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => {
+      const status = row.original.status;
+      let statusElement;
+
+      switch (status) {
+        case 'ACTIVE':
+          statusElement = (
+            <span className="text-sm text-success">{status}</span>
+          );
+          break;
+        case 'CANCELED':
+          statusElement = <span className="text-sm text-danger">{status}</span>;
+          break;
+        case 'EXPIRED':
+          statusElement = (
+            <span className="text-sm text-gray-500">{status}</span>
+          );
+          break;
+        case 'INACTIVE':
+          statusElement = (
+            <span className="text-sm text-primary2">{status}</span>
+          );
+        default:
+          statusElement = (
+            <span className="text-sm text-gray-500"> {status}</span>
+          );
+          break;
+      }
+
+      return (
+        <div className="flex justify-center items-center">
+          <span>{status}</span>
         </div>
       );
     }
@@ -56,7 +120,7 @@ export const columns: ColumnDef<GuestDetailsDataType>[] = [
     header: 'Actions',
     cell: ({ row }) => (
       <div className="flex items-center justify-center">
-        <CellAction data={row.original} />
+        <Switch />
       </div>
     )
   }
