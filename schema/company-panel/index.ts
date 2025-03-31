@@ -51,7 +51,7 @@ export const complaintFormSchema = z.object({
   complaintID: z.string(),
   userID: z.string().min(1, 'Invalid UserID'),
   complaintCategory: z.enum(
-    ['Category 1, Category 2, Category 3, Category 4'],
+    ['Category 1', 'Category 2', 'Category 3', 'Category 4'],
     {
       errorMap: () => ({ message: 'Please select a valid complaint category' })
     }

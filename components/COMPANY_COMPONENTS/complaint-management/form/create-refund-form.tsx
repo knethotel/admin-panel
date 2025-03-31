@@ -1,7 +1,10 @@
 'use client';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createRefundSchema, createRefundSchemaType } from 'schema';
+import {
+  complaintFormSchema,
+  ComplaintFormSchemaType
+} from 'schema/company-panel';
 import {
   Form,
   FormControl,
@@ -16,12 +19,12 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import FormWrapper from './form-wrapper';
 
 const CreateRefundForm = () => {
-  const form = useForm<createRefundSchemaType>({
-    resolver: zodResolver(createRefundSchema),
+  const form = useForm<ComplaintFormSchemaType>({
+    resolver: zodResolver(complaintFormSchema),
     defaultValues: {
-      refundID: '',
+      complaintID: '',
       userID: '',
-      hotelID: '',
+      complaintCategory: 'Category 1',
       amount: 0,
       refundReason: '',
       refundStatus: 'Initiated', // Default status can be any of the enum values
