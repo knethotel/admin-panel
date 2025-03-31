@@ -1,3 +1,5 @@
+// Table dummy data
+
 export type Subscription = {
   subscriptionID: string;
   planDetails: {
@@ -29,3 +31,30 @@ export const subscriptionData: Subscription[] = [
     status: 'ACTIVE'
   }
 ];
+//Form Dummy data
+
+type status = 'Active' | 'Inactive' | 'Cancelled' | 'Expired';
+export type SubscriptionManagementDummyData = {
+  subscriptionID: string;
+  planName: string;
+  planDuration: string;
+  planType: string;
+  description: string;
+  status: string;
+  cost: number;
+  paymentType: string;
+};
+
+export const SubscriptionManagementDummyData: SubscriptionManagementDummyData[] =
+  [
+    {
+      subscriptionID: 'SD123452',
+      planName: 'Basic Stay Plan',
+      planDuration: '6 Months',
+      planType: 'Half yearly',
+      description: 'Plan 1 description',
+      status: 'Active',
+      cost: 100, // Replace with actual cost
+      paymentType: 'Auto Renewal'
+    }
+  ];
