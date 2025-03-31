@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import FormWrapper from './form-wrapper';
 
-const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
+const CreateRefundForm = () => {
   const form = useForm<createRefundSchemaType>({
     resolver: zodResolver(createRefundSchema),
     defaultValues: {
@@ -35,7 +35,6 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
   const onSubmit = (data: createRefundSchemaType) => {
     console.log(data);
     form.reset();
-    onClose();
   };
 
   return (
