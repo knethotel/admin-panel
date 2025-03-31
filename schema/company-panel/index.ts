@@ -47,7 +47,7 @@ export type SubscriptionManagementFormSchemaType = z.infer<
 >;
 
 //Complaint management form schema--------------------------------------------------------------------------------
-export const complaintForm = z.object({
+export const complaintFormSchema = z.object({
   complaintID: z.string(),
   userID: z.string().min(1, 'Invalid UserID'),
   complaintCategory: z.enum(
@@ -65,4 +65,4 @@ export const complaintForm = z.object({
   dateAndTime: z.string().min(1, 'Enter valid value')
 });
 
-export type createRefundSchemaType = z.infer<typeof complaintForm>;
+export type ComplaintFormSchemaType = z.infer<typeof complaintFormSchema>;
