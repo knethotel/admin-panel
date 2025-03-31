@@ -4,16 +4,49 @@ import DetailsCard from '../../../../../components/COMPANY_COMPONENTS/dashboard/
 import { StackedBarChart } from '../../../../../components/COMPANY_COMPONENTS/dashboard/StackedBarChart';
 import { DonutChart } from '../../../../../components/COMPANY_COMPONENTS/dashboard/DonutChart';
 import { MultipleLineChart } from '../../../../../components/COMPANY_COMPONENTS/dashboard/MultipleLineChart';
-// import { Value } from '@radix-ui/react-select';
 import Header from '../../../../../components/COMPANY_COMPONENTS/dashboard/Header';
 
-const OverviewCardDummyData = {
+// Type definitions
+type OverviewCardData = {
+  position: string;
+  increment: string;
+  progress: number;
+};
+
+type DetailsCardItem = {
+  title: string;
+  value: number;
+  increment: number;
+};
+
+type StackedBarChartData = {
+  service: string;
+  totalRevenue: number;
+  profit: number;
+  losses: number;
+}[];
+
+type DonutChartData = {
+  label: string;
+  visitors: number;
+  fill: string;
+}[];
+
+type LineChartData = {
+  month: string;
+  newOrders: number;
+  repeatOrders: number;
+  averageOrderValue: number;
+}[];
+
+// Dummy data
+const OverviewCardDummyData: OverviewCardData = {
   position: '24.5',
   increment: '28.1',
   progress: 78
 };
 
-const DetailsCardDummyData = [
+const DetailsCardDummyData: DetailsCardItem[] = [
   {
     title: 'Service Request',
     value: 74122,
@@ -31,7 +64,7 @@ const DetailsCardDummyData = [
   }
 ];
 
-const StackedBarChartDummyData = [
+const StackedBarChartDummyData: StackedBarChartData = [
   {
     service: 'Reception',
     totalRevenue: 45000,
@@ -106,7 +139,7 @@ const StackedBarChartDummyData = [
   }
 ];
 
-const DonutChartDummyData = [
+const DonutChartDummyData: DonutChartData = [
   { label: 'New Customers', visitors: 3475, fill: 'var(--color-newCustomers)' },
   {
     label: 'Returning Customers',
@@ -120,7 +153,7 @@ const DonutChartDummyData = [
   }
 ];
 
-const MultipleLineChartDummyData = [
+const MultipleLineChartDummyData: LineChartData = [
   {
     month: 'January',
     newOrders: 344,
@@ -129,58 +162,72 @@ const MultipleLineChartDummyData = [
   },
   {
     month: 'February',
-    newOrders: 387, // Small dip before rise
+    newOrders: 387,
     repeatOrders: 602,
-    averageOrderValue: 221 // Temporary decrease
+    averageOrderValue: 221
   },
   {
     month: 'March',
     newOrders: 523,
-    repeatOrders: 577, // Slight drop
+    repeatOrders: 577,
     averageOrderValue: 265
   },
   {
     month: 'April',
     newOrders: 478,
-    repeatOrders: 658, // Stronger increase
-    averageOrderValue: 253 // Recovery bounce
+    repeatOrders: 658,
+    averageOrderValue: 253
   },
   {
     month: 'May',
-    newOrders: 542, // Small pullback
-    repeatOrders: 683, // Slower growth
-    averageOrderValue: 271 // Gentle rise
+    newOrders: 542,
+    repeatOrders: 683,
+    averageOrderValue: 271
   },
   {
     month: 'June',
-    newOrders: 615, // Strong finish
+    newOrders: 615,
     repeatOrders: 721,
     averageOrderValue: 292
   }
 ];
 
-const DBPage = () => {
-  //Change the component page name
+const DBPage: React.FC = () => {
   return (
-    <div className="min-h-screen w-full overflow-hidden hide-scrollbar bg-coffee">
+    <div className="min-h-screen w-full bg-coffee overflow-x-hidden">
       <Header />
-      {/* Upper part */}
-      <div className="w-full h-full flex pr-2">
-        <StackedBarChart chartData={StackedBarChartDummyData} />
-        <DonutChart chartData={DonutChartDummyData} />
-      </div>
-      {/* Lower part */}
-      <div className="flex justify-between items-center">
-        <OverviewCard
-          position={OverviewCardDummyData.position}
-          increment={OverviewCardDummyData.increment}
-          progress={OverviewCardDummyData.progress}
-        />
-        <MultipleLineChart
-          chartData={MultipleLineChartDummyData}
-          mode={'Weekly'} //Make this dynamic
-        />
-        <DetailsCard data={DetailsCardDummyData} />
+
+      {/* Main content container */}
+      <div className="p-4 space-y-6 w-full flex flex-col justify-center items-center">
+        {/* Upper part - StackedBarChart and DonutChart */}
+        <div className="flex flex-col lg:flex-row justify-center items-center gap-6 w-full">
+          <div className="flex-1 flex justify-center">
+            <StackedBarChart chartData={StackedBarChartDummyData} />
+          </div>
+          <div className="flex-2 flex justify-center">
+            <DonutChart chartData={DonutChartDummyData} />
+          </div>
+        </div>
+
+        {/* Lower part - Overview, LineChart, and Details cards */}
+        <div className="flex flex-col md:flex-row md:justify-between items-center gap-6 w-full">
+          <div className="w-full md:w-1/6">
+            <OverviewCard
+              position={OverviewCardDummyData.position}
+              increment={OverviewCardDummyData.increment}
+              progress={OverviewCardDummyData.progress}
+            />
+          </div>
+          <div className="w-full md:w-4/6">
+            <MultipleLineChart
+              chartData={MultipleLineChartDummyData}
+              mode="Weekly"
+            />
+          </div>
+          <div className="w-full md:w-1/6">
+            <DetailsCard data={DetailsCardDummyData} />
+          </div>
+        </div>
       </div>
     </div>
   );

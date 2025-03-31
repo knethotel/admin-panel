@@ -92,7 +92,7 @@ export function MultipleLineChart({
         <div className="h-[1px] mx-auto bg-brown/50"></div>
       </div>
       <CardContent>
-        <ChartContainer className="h-72 min-w-52" config={chartConfig}>
+        <ChartContainer className="h-72 w-full" config={chartConfig}>
           <LineChart
             accessibilityLayer
             data={chartData}
