@@ -1,9 +1,11 @@
 'use client';
 import React, { useState } from 'react';
+
 import {
   SubscriptionManagementFormSchema,
   SubscriptionManagementFormSchemaType
-} from '../schema';
+} from 'schema/company-panel';
+
 import {
   Form,
   FormControl,
