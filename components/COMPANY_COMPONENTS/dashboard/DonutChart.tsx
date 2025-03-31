@@ -38,11 +38,11 @@ export function DonutChart({ chartData }: { chartData: ChartDataType[] }) {
   }, []);
 
   return (
-    <Card className="flex flex-col w-[18rem] h-[18rem] py-2 mt-2 bg-[#3B2E16] border border-[#6E511D]">
+    <Card className="flex flex-col w-auto max-w-[16rem] min-w-[15rem] min-h-[16rem] max-h-[20rem]: py-2 mt-2 bg-[#3B2E16] border border-[#6E511D]">
       <CardContent className="flex-1">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[230px]"
+          className="mx-auto aspect-square max-h-[200px]"
         >
           <PieChart>
             <ChartTooltip
@@ -90,18 +90,26 @@ export function DonutChart({ chartData }: { chartData: ChartDataType[] }) {
           </PieChart>
         </ChartContainer>
         {/*Chart's Legend section*/}
-        <div className="flex flex-wrap justify-start items-center gap-4 mt-4">
-          <div className={`flex items-center gap-2 `}>
-            <div className="w-2 h-2 rounded-full bg-[#E5C67E]" />
-            <span className="text-xs text-white/60">{chartData[0].label}</span>
-          </div>
-          <div className={`flex items-center gap-2 `}>
-            <div className="w-2 h-2 rounded-full bg-[#4A391B]" />
-            <span className="text-xs text-white/60">{chartData[1].label}</span>
-          </div>
-          <div className={`flex items-center gap-2 `}>
-            <div className="w-2 h-2 rounded-full bg-[#A89A7E]" />
-            <span className="text-xs text-white/60">{chartData[2].label}</span>
+        <div className="flex flex-wrap justify-center items-center gap-4 mt-4">
+          <div className="flex flex-col items-start gap-3">
+            <div className={`flex items-center gap-2 `}>
+              <div className="w-2 h-2 rounded-full bg-[#E5C67E]" />
+              <span className="text-xs text-white/60">
+                {chartData[0].label}
+              </span>
+            </div>
+            <div className={`flex items-center gap-2 `}>
+              <div className="w-2 h-2 rounded-full bg-[#4A391B]" />
+              <span className="text-xs text-white/60">
+                {chartData[1].label}
+              </span>
+            </div>
+            <div className={`flex items-center gap-2 `}>
+              <div className="w-2 h-2 rounded-full bg-[#A89A7E]" />
+              <span className="text-xs text-white/60">
+                {chartData[2].label}
+              </span>
+            </div>
           </div>
         </div>
       </CardContent>

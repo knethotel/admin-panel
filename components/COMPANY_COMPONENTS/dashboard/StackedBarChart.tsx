@@ -63,7 +63,7 @@ export function StackedBarChart({ chartData }: { chartData: chartDataType[] }) {
     <Card className="w-full bg-transparent">
       <CardContent>
         <ChartContainer
-          className="bg-transparent h-72 w-full"
+          className="bg-transparent max-h-[18rem] w-full"
           config={chartConfig}
         >
           <BarChart
