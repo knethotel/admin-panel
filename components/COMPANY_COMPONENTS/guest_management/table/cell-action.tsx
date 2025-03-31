@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 
 const CellAction = (props: any) => {
   const { data } = props;
-  console.log(data.guestId);
+  // console.log(data.guestID);
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ const CellAction = (props: any) => {
   };
 
   const handleViewUser = () => {
-    router.push(`company/guest-management/view/${data.guestId}`);
+    router.push(`guest-management/view/${data.guestID}`);
   };
 
   return (
