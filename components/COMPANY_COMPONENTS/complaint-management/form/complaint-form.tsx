@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/select';
 import { ChevronDown } from 'lucide-react';
 
-const CreateRefundForm = ({ mode }: { mode: string }) => {
+const ComplaintForm = ({ mode }: { mode: string }) => {
   const form = useForm<ComplaintFormSchemaType>({
     resolver: zodResolver(complaintFormSchema),
     defaultValues: {
@@ -290,4 +290,4 @@ const CreateRefundForm = ({ mode }: { mode: string }) => {
   );
 };
 
-export default CreateRefundForm;
+export default ComplaintForm;
