@@ -51,7 +51,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full relative h-full max-w-4xl mx-auto p-4 sm:px-6 md:px-8 rounded-lg"
+          className="w-full h-full rounded-lg"
         >
           {/* Main Grid: Two Sides */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
