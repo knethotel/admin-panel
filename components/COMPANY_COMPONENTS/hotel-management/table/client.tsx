@@ -10,7 +10,7 @@ import { HotelData } from 'app/static/company-panel/HotelManagement';
 
 // type ModeType = 'add_guest' | 'add_booking';
 
-export const GuestClient: React.FC = () => {
+export const HotelManagementHome: React.FC = () => {
   const router = useRouter();
   const [data, setData] = useState(HotelData || []);
   const [filteredData, setFilteredData] = useState(HotelData || []);
