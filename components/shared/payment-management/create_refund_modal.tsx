@@ -1,5 +1,4 @@
 import React from 'react';
-import CreateCouponForm from './create-coupon-form';
 import { X } from 'lucide-react';
 import CreateRefundForm from './create-refund-form';
 interface ModalProps {
