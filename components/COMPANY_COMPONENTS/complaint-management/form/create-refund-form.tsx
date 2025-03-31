@@ -17,8 +17,16 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import FormWrapper from './form-wrapper';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { ChevronDown } from 'lucide-react';
 
-const CreateRefundForm = () => {
+const CreateRefundForm = ({ mode }: { mode: string }) => {
   const form = useForm<ComplaintFormSchemaType>({
     resolver: zodResolver(complaintFormSchema),
     defaultValues: {
@@ -27,15 +35,13 @@ const CreateRefundForm = () => {
       complaintCategory: 'Category 1',
       description: '',
       feedback: '',
-      refundStatus: 'Open', // Default status can be any of the enum values
-      message: '',
+      status: 'Open', // Default status can be any of the enum values
       assignedStaff: '',
-      serviceDepartment: '',
       dateAndTime: '' // You might want to set a default date-time string if needed
     }
   });
 
-  const onSubmit = (data: createRefundSchemaType) => {
+  const onSubmit = (data: ComplaintFormSchemaType) => {
     console.log(data);
     form.reset();
   };
@@ -53,17 +59,18 @@ const CreateRefundForm = () => {
             <div className="flex flex-col gap-3">
               <FormField
                 control={form.control}
-                name="refundID"
+                name="complaintID"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
                     <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                      Refund ID
+                      Complaint ID
                     </FormLabel>
                     <div className="w-full">
                       <FormControl>
                         <Input
                           type="text"
                           {...field}
+                          disabled={mode === 'view'}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                       </FormControl>
@@ -85,6 +92,7 @@ const CreateRefundForm = () => {
                         <Input
                           type="text"
                           {...field}
+                          disabled={mode === 'view'}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                       </FormControl>
@@ -95,17 +103,52 @@ const CreateRefundForm = () => {
               />
               <FormField
                 control={form.control}
-                name="hotelID"
+                name="complaintCategory"
+                render={({ field }) => (
+                  <FormItem className="relative">
+                    <FormLabel>Complaint Category</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        disabled={mode === 'view'}
+                      >
+                        <SelectTrigger className="min-w-32 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-[#362913] rounded-2xl text-white border-2 shadow-md border-white">
+                          {[
+                            'Category 1',
+                            'Category 2',
+                            'Category 3',
+                            'Category 4'
+                          ].map((value) => (
+                            <SelectItem key={value} value={value}>
+                              {value}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                    <ChevronDown className="absolute right-1 top-[2.2rem] text-black w-4 h-4" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
                     <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                      Hotel ID
+                      Description
                     </FormLabel>
                     <div className="w-full">
                       <FormControl>
                         <Input
                           type="text"
                           {...field}
+                          disabled={mode === 'view'}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                       </FormControl>
@@ -116,38 +159,18 @@ const CreateRefundForm = () => {
               />
               <FormField
                 control={form.control}
-                name="amount"
+                name="feedback"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
                     <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                      Amount
-                    </FormLabel>
-                    <div className="w-full">
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="refundReason"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                      REfund Reason
+                      Feedback
                     </FormLabel>
                     <div className="w-full">
                       <FormControl>
                         <Input
                           type="text"
                           {...field}
+                          disabled={mode === 'view'}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                       </FormControl>
@@ -160,38 +183,36 @@ const CreateRefundForm = () => {
               {/* Refund Status */}
               <FormField
                 control={form.control}
-                name="refundStatus"
+                name="status"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row gap-2">
                     <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700 pt-1">
-                      Refund Status
+                      Status
                     </FormLabel>
                     <div className="w-full">
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
                           defaultValue={field.value}
+                          disabled={mode === 'view'}
                           className="flex flex-col space-y-2"
                         >
-                          {[
-                            'Initiated',
-                            'In-Progress',
-                            'Completed',
-                            'Rejected'
-                          ].map((value) => (
-                            <div
-                              key={value}
-                              className="flex items-center space-x-2"
-                            >
-                              <RadioGroupItem value={value} id={value} />
-                              <label
-                                htmlFor={value}
-                                className="text-xs text-gray-700 capitalize"
+                          {['Open', 'Resolved', 'Closed', 'In-Progress'].map(
+                            (value) => (
+                              <div
+                                key={value}
+                                className="flex items-center space-x-2"
                               >
-                                {value}
-                              </label>
-                            </div>
-                          ))}
+                                <RadioGroupItem value={value} id={value} />
+                                <label
+                                  htmlFor={value}
+                                  className="text-xs text-gray-700 capitalize"
+                                >
+                                  {value}
+                                </label>
+                              </div>
+                            )
+                          )}
                         </RadioGroup>
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -217,6 +238,7 @@ const CreateRefundForm = () => {
                         <Input
                           type="text"
                           {...field}
+                          disabled={mode === 'view'}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                       </FormControl>
@@ -227,28 +249,7 @@ const CreateRefundForm = () => {
               />
               <FormField
                 control={form.control}
-                name="serviceDepartment"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                      Service Department
-                    </FormLabel>
-                    <div className="w-full">
-                      <FormControl>
-                        <Input
-                          type="text"
-                          {...field}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="serviceDepartment"
+                name="dateAndTime"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
                     <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
@@ -259,6 +260,7 @@ const CreateRefundForm = () => {
                         <Input
                           type="text"
                           {...field}
+                          disabled={mode === 'view'}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                       </FormControl>
@@ -271,15 +273,17 @@ const CreateRefundForm = () => {
           </div>
 
           {/* Buttons */}
-          <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3">
-            {' '}
-            <Button
-              type="submit"
-              className="w-28 md:ml-24 sm:w-auto bg-[#A07D3D] text-white hover:bg-[#8c6b33] px-6 py-2 rounded-md text-xs"
-            >
-              Save Changes
-            </Button>
-          </div>
+          {mode === 'edit' && (
+            <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3">
+              {' '}
+              <Button
+                type="submit"
+                className="w-28 md:ml-24 sm:w-auto bg-[#A07D3D] text-white hover:bg-[#8c6b33] px-6 py-2 rounded-md text-xs"
+              >
+                Save Changes
+              </Button>
+            </div>
+          )}
         </form>
       </Form>
     </FormWrapper>
