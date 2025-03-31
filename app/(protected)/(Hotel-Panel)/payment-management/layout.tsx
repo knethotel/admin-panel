@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import CreateCouponModal from '@/components/modal/payment-management/create-coupon-modal';
+import CreateCouponModal from '@/components/shared/payment-management/create-coupon-modal';
 import { useRouter } from 'next/navigation';
 
 const PaymentManagementPage = ({ children }: { children: React.ReactNode }) => {

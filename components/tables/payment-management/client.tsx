@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 
 import { RefundData } from 'app/static/PaymentManagement';
-import CreateRefundModal from '@/components/modal/payment-management/create_refund_modal';
+import CreateRefundModal from '@/components/shared/payment-management/create_refund_modal';
 
 type ModeType = 'add_employee';
 

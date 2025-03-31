@@ -7,7 +7,7 @@ import {
   FixedAmountCouponsData
 } from 'app/static/PaymentManagement';
 import { SquarePen, Trash2 } from 'lucide-react';
-import CreateCouponModal from '@/components/modal/payment-management/create-coupon-modal';
+import CreateCouponModal from '@/components/shared/payment-management/create-coupon-modal';
 
 const HomePage = () => {
   const [isOpen, setIsOpen] = React.useState(false);
