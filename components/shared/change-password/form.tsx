@@ -12,7 +12,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import FormWrapper from '@/components/form/change-password/form-wrapper'; // Adjust path as needed
+import FormWrapper from '@/components/shared/change-password/form-wrapper'; // Adjust path as needed
 import {
   changePasswordSchema,
   ChangePasswordSchemaType
@@ -44,7 +44,7 @@ export default function ChangePasswordForm() {
       <Form {...changePasswordForm}>
         <form
           onSubmit={changePasswordForm.handleSubmit(onChangePasswordSubmit)}
-          className="lg:flex flex-col justify-center items-start space-y-6 bg-[#FAF6EF] shadow-custom p-8 border-none outline-none rounded-md"
+          className="lg:flex flex-col w-full h-full justify-center items-start space-y-6 bg-[AF6EF] shadow-custom p-8 border-none outline-none rounded-md"
         >
           <div className="flex justify-between items-center w-full text-sm">
             {/* Old Password Field */}
