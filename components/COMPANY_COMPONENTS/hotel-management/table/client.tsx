@@ -3,25 +3,21 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
-import { Heading } from '@/components/ui/heading';
-
-import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 
-import { GuestData } from 'app/static/GuestData';
+import { HotelData } from 'app/static/company-panel/HotelManagement';
 
-type ModeType = 'add_guest' | 'add_booking';
+// type ModeType = 'add_guest' | 'add_booking';
 
 export const GuestClient: React.FC = () => {
   const router = useRouter();
-  const [data, setData] = useState(GuestData || []);
-  const [filteredData, setFilteredData] = useState(GuestData || []);
+  const [data, setData] = useState(HotelData || []);
+  const [filteredData, setFilteredData] = useState(HotelData || []);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>();
   const [totalRecords, setTotalRecords] = useState(data.length || 0);
-  const [mode, setMode] = useState<ModeType>();
 
   // const filters = [
   //     {
@@ -58,47 +54,14 @@ export const GuestClient: React.FC = () => {
       setFilteredData(data); // Reset if empty
     } else {
       const filtered = data.filter((item) =>
-        item.guestDetails.name.toLowerCase().includes(searchValue.toLowerCase())
+        item.hotelName.toLowerCase().includes(searchValue.toLowerCase())
       );
       setFilteredData(filtered);
     }
   };
 
-  //   Onclick event handler functions
-  const handleOnClick = (actionName: string) => {
-    if (actionName === 'add guest') {
-      setMode('add_guest');
-      router.push(`/guest-management/add`);
-    }
-    if (actionName === 'add booking') {
-      setMode('add_booking');
-      router.push(`/guest-management/add-booking`);
-    }
-  };
   return (
     <>
-      <div className="flex items-center justify-between">
-        <Heading title={`Guests (${totalRecords})`} />
-        <div className="flex gap-3">
-          <Button
-            className="text-xs md:text-sm bg-button-light group hover:outline"
-            onClick={() => handleOnClick('add guest')}
-          >
-            <Plus className="mr-2 h-4 w-4" />{' '}
-            <span className="text-white group-hover:text-black">Add Guest</span>
-          </Button>
-          <Button
-            className="text-xs md:text-sm bg-button-light group hover:outline"
-            onClick={() => handleOnClick('add booking')}
-          >
-            <Plus className="mr-2 h-4 w-4" />{' '}
-            <span className="text-white group-hover:text-black">
-              {' '}
-              Add Booking
-            </span>
-          </Button>
-        </div>
-      </div>
       {loading ? (
         <span>Loading...</span>
       ) : (
