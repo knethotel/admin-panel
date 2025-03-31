@@ -8,7 +8,7 @@ import { columns } from './columns';
 
 import { subscriptionData } from 'app/static/company-panel/SubscriptionManagement';
 
-export const CompanyPanelGuestManagementHome: React.FC = () => {
+export const SubscriptionManagementHomePage: React.FC = () => {
   // const router = useRouter();
   const [data, setData] = useState(subscriptionData || []);
   const [filteredData, setFilteredData] = useState(subscriptionData || []);
