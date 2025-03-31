@@ -1,5 +1,5 @@
-import ComplaintDashboard from '@/components/complaint-management/ComplaintDashboard';
-import { ComplaintTable } from '@/components/tables/complaint-table/client';
+import ComplaintDashboard from '@/components/shared/complaint-dashboard/ComplaintDashboard';
+import { ComplaintTable } from '@/components/shared/complaint-table/client';
 import React from 'react';
 
 const ComplaintManagementPage = () => {
