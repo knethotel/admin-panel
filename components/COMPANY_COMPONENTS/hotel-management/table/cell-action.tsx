@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 
 const CellAction = (props: any) => {
   const { data } = props;
-  console.log(data.guestId);
+  console.log(data.hotelID);
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -23,12 +23,12 @@ const CellAction = (props: any) => {
   };
 
   const handleEditUser = () => {
-    router.push(`guest-management/edit/${data.guestId}`);
+    router.push(`/company/guest-management/edit/${data.hotelID}`);
     console.log('success');
   };
 
   const handleViewUser = () => {
-    router.push(`guest-management/view/${data.guestId}`);
+    router.push(`/company/guest-management/view/${data.hotelID}`);
   };
 
   return (
