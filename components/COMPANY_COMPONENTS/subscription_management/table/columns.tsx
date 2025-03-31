@@ -1,5 +1,4 @@
 import { ColumnDef } from '@tanstack/react-table';
-import CellAction from './cell-action';
 import { Subscription } from 'app/static/company-panel/SubscriptionManagement';
 import { Switch } from '@/components/ui/switch';
 
@@ -46,9 +45,9 @@ export const columns: ColumnDef<Subscription>[] = [
       }
 
       return (
-        <div className="flex justify-center items-start">
+        <div className="flex flex-col items-start justify-center">
           <span>{planDetails.planName}</span>
-          {planTypeElement}
+          <span className="text-sm">{planTypeElement}</span>
         </div>
       );
     }
