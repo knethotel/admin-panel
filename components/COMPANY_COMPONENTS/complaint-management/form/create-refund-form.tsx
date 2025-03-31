@@ -25,9 +25,9 @@ const CreateRefundForm = () => {
       complaintID: '',
       userID: '',
       complaintCategory: 'Category 1',
-      amount: 0,
-      refundReason: '',
-      refundStatus: 'Initiated', // Default status can be any of the enum values
+      description: '',
+      feedback: '',
+      refundStatus: 'Open', // Default status can be any of the enum values
       message: '',
       assignedStaff: '',
       serviceDepartment: '',

@@ -58,7 +58,7 @@ export const complaintFormSchema = z.object({
   ),
   description: z.string().min(1, 'Enter valid input'),
   feedback: z.string().min(1, 'Enter valid input'),
-  refundStatus: z.enum(['Open', 'In-Progress', 'Resolved', 'Closed'], {
+  status: z.enum(['Open', 'In-Progress', 'Resolved', 'Closed'], {
     errorMap: () => ({ message: 'Please select a valid Refund status' })
   }),
   assignedStaff: z.string().min(1, 'Enter valid input'),
