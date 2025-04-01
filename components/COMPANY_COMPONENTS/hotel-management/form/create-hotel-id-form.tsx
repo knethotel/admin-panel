@@ -1,14 +1,14 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import dummyHotelData from '../static/HotelDetails';
+import dummyHotelData from '../../../../app/static/company-panel/HotelManagement';
 import { useForm } from 'react-hook-form';
 import {
   CreateHotelIdFormSchema,
   CreateHotelIdFormSchemaType,
   serviceOptions,
   ServiceType
-} from '../schema';
+} from '../../../../schema/company-panel';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormWrapper from './form-wrapper';
 import {

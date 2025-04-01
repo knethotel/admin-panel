@@ -1,5 +1,5 @@
 import React from 'react';
-import CreateHotelIdForm from '../../components/create-hotel-id-form';
+import CreateHotelIdForm from '@/components/COMPANY_COMPONENTS/hotel-management/form/create-hotel-id-form';
 const ViewHotelDetailsPage = async ({
   params
 }: {
