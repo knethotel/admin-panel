@@ -122,3 +122,45 @@ export const CreateHotelIdFormSchema = z.object({
 export type CreateHotelIdFormSchemaType = z.infer<
   typeof CreateHotelIdFormSchema
 >;
+
+// Sub Hotel management form schema----------------------------------------------------------------------------
+
+export const CreateSubHotelIdFormSchema = z.object({
+  subHotelImageUrl: z.string(),
+  subHotelImageFile: z
+    .custom<File | undefined>(
+      (file) => file instanceof File || typeof file === 'undefined',
+      { message: 'Invalid file format' }
+    )
+    .refine(
+      (file) =>
+        !file ||
+        ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(
+          file.type
+        ),
+      { message: 'Only JPG, PNG, GIF, and WEBP formats are allowed.' }
+    )
+    .refine((file) => !file || file.size <= 5 * 1024 * 1024, {
+      message: 'Image size must be 5MB or less.'
+    }),
+  parentHotelID: z.string().min(1, 'Parent Hotel ID cannot be empty'),
+  subHotelName: z.string().min(1, 'Sub Hotel Name cannot be empty'), // Typo: "enmtpy" -> "empty"
+  address: z.string().min(1, 'Address field is required'),
+  services: z.array(z.enum(serviceOptions)),
+  subscriptionPlan: z.string().min(1, 'Subscription plan name is required.'),
+  subscriptionPrice: z.number().min(1, 'Price is required.'),
+  subHotelID: z.string().min(1, 'Hotel ID cannot be empty'),
+  contactNo: z
+    .string()
+    .length(10, 'Contact number must be exactly 10 digits')
+    .regex(/^\d+$/, 'Contact number must contain only digits'),
+  email: z
+    .string()
+    .email('Invalid email address')
+    .min(1, 'Email address is required'),
+  gstDetails: z.string().min(1, 'GST Details field cannot be empty')
+});
+
+export type CreateSubHotelIdFormSchemaType = z.infer<
+  typeof CreateSubHotelIdFormSchema
+>;
