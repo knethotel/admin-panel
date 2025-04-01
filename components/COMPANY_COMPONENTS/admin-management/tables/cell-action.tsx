@@ -6,11 +6,11 @@ import React from 'react';
 
 const CellAction = (props: any) => {
   const { data } = props;
-  console.log(data.employeeID);
+  console.log(data.adminID);
   const router = useRouter();
 
   const handleEditUser = () => {
-    router.push(`admin-management/edit/${data.employeeID}`);
+    router.push(`admin-management/edit/${data.adminID}`);
     console.log('success');
   };
 
@@ -23,7 +23,7 @@ const CellAction = (props: any) => {
           onClick={() => handleEditUser()}
           className="p-3 rounded-md group cursor-pointer hover:bg-[#a07d3d5e]"
         >
-          <Edit className=" w-4 text-button-dark group-hover:text-white" />
+          <Edit className="w-4 text-button-dark group-hover:text-white" />
         </Button>
         <ToggleButton />
       </div>
