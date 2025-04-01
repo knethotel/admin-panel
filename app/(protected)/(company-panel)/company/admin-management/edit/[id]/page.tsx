@@ -11,7 +11,7 @@ const EditAdminPage = async ({
   const id = (await params).id;
   return (
     <div className="flex justify-center items-center w-full py-10 px-6">
-      <AdminForm adminID={id} mode="view" />
+      <AdminForm adminID={id} mode="edit" />
     </div>
   );
 };

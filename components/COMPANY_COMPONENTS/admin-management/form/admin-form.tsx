@@ -66,7 +66,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
   };
 
   return (
-    <FormWrapper title={'Employee Profile'}>
+    <FormWrapper title={'Admin Profile'}>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -92,7 +92,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           disabled={mode === 'view'}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'view' && (
+                        {mode === 'add' && (
                           <span className="text-red-500">*</span>
                         )}
                       </div>
@@ -118,7 +118,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           disabled={mode === 'view'}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'view' && (
+                        {mode === 'add' && (
                           <span className="text-red-500">*</span>
                         )}
                       </div>
@@ -144,7 +144,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           disabled={mode === 'view'}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'view' && (
+                        {mode === 'add' && (
                           <span className="text-red-500">*</span>
                         )}
                       </div>
@@ -170,7 +170,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           disabled={mode === 'view'}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'view' && (
+                        {mode === 'add' && (
                           <span className="text-red-500">*</span>
                         )}
                       </div>
@@ -200,7 +200,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           disabled={mode === 'view'}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'view' && (
+                        {mode === 'add' && (
                           <span className="text-red-500">*</span>
                         )}
                       </div>
@@ -226,7 +226,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           disabled={mode === 'view'}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'view' && (
+                        {mode === 'add' && (
                           <span className="text-red-500">*</span>
                         )}
                       </div>
@@ -242,25 +242,30 @@ const AdminForm = ({ adminID, mode }: Props) => {
                   <FormItem className="relative">
                     <FormLabel>Status</FormLabel>
                     <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        disabled={mode === 'view'}
-                      >
-                        <SelectTrigger className="min-w-32 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent className="bg-[#362913] rounded-2xl text-white border-2 shadow-md border-white">
-                          {['Active', 'Inactive'].map((value) => (
-                            <SelectItem key={value} value={value}>
-                              {value}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <div className="flex gap-1">
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          disabled={mode === 'view'}
+                        >
+                          <SelectTrigger className="min-w-32 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-[#362913] rounded-2xl text-white border-2 shadow-md border-white">
+                            {['Active', 'Inactive'].map((value) => (
+                              <SelectItem key={value} value={value}>
+                                {value}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {mode === 'add' && (
+                          <span className="text-red-500">*</span>
+                        )}
+                      </div>
                     </FormControl>
                     <FormMessage />
-                    <ChevronDown className="absolute right-1 top-[2.2rem] text-black w-4 h-4" />
+                    <ChevronDown className="absolute right-4 top-[2.2rem] text-black w-4 h-4" />
                   </FormItem>
                 )}
               />
@@ -283,7 +288,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           disabled={mode === 'view'}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'view' && (
+                        {mode === 'add' && (
                           <span className="text-red-500">*</span>
                         )}
                       </div>
@@ -309,7 +314,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           disabled={mode === 'view'}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'view' && (
+                        {mode === 'add' && (
                           <span className="text-red-500">*</span>
                         )}
                       </div>
