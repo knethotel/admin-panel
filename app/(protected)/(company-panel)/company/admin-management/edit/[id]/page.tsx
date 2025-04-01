@@ -3,7 +3,7 @@ import React from 'react';
 type Params = {
   id: string;
 };
-const ViewAdminPage = async ({
+const EditAdminPage = async ({
   params
 }: {
   params: Promise<{ id: string }>;
@@ -16,4 +16,4 @@ const ViewAdminPage = async ({
   );
 };
 
-export default ViewAdminPage;
+export default EditAdminPage;
