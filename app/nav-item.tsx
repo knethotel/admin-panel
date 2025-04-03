@@ -19,7 +19,7 @@ export function NavItem({
     <Link
       href={href}
       className={clsx(
-        'flex items-center gap-4 p-2 rounded-lg transition-colors text-white ',
+        'flex items-center gap-4 p-2 2xl:my-2 rounded-lg transition-colors text-white ',
         {
           'bg-[#ffffff3b] text-[#EEA720]': pathname === href, // Active state
           'hover:bg-[#ffffff3b] hover:text-[#EEA720]': pathname !== href // Hover effect only if not active
@@ -27,7 +27,7 @@ export function NavItem({
       )}
     >
       {children}
-      <span className="text-sm font-medium">{label}</span>
+      <span className="text-sm 2xl:text-base font-medium">{label}</span>
     </Link>
   );
 }
