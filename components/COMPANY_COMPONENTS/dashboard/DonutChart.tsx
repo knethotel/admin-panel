@@ -38,7 +38,7 @@ export function DonutChart({ chartData }: { chartData: ChartDataType[] }) {
   }, []);
 
   return (
-    <Card className="flex flex-col w-auto max-w-[16rem] min-w-[15rem] min-h-[16rem] max-h-[20rem]: py-2 mt-2 bg-[#3B2E16] border border-[#6E511D]">
+    <Card className="flex flex-col w-auto max-w-[16rem] min-w-[15rem] py-2 mt-2 bg-[#3B2E16] border border-[#6E511D]">
       <CardContent className="flex-1">
         <ChartContainer
           config={chartConfig}
