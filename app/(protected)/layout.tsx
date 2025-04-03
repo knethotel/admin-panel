@@ -55,18 +55,64 @@ export default function RootLayout({
 function DesktopNav() {
   const [openNotificationsSubMenu, setOpenNotificationsSubMenu] =
     useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
-    <aside className=" flex flex-col  h-screen p-4 pb-0 bg-[#453519]">
-      <nav className="flex flex-col gap-4 items-center overflow-y-auto hide-scrollbar">
-        <Link
-          href="/dashboard"
-          className="flex items-center gap-4 p-2 text-lg font-semibold"
+    <>
+      {/* Mobile menu button (only shown on small screens) */}
+      <div className="lg:hidden fixed top-4 left-4 z-50">
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="p-2 rounded-md bg-coffeeLight text-white"
         >
-          {/* ------Logo------ */}
-          <Image loading="lazy" className="" src={logo} alt="HandyMan" />
-        </Link>
-        {/* ------ Sidebar Menu Links Original (Hotel panel) ------ */}
-        {/* <div className="sidebar-menu h-screen p-4 mb-2 rounded-2xl flex flex-col gap-3">
+          {isMobileMenuOpen ? (
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          ) : (
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          )}
+        </button>
+      </div>
+
+      {/* Sidebar - responsive version */}
+      <aside
+        className={`fixed lg:relative flex flex-col py-14 lg:py-2 2xl:py-4 h-screen p-4 pb-0 bg-coffeeLight z-40 transition-all duration-300 ease-in-out 
+        ${isMobileMenuOpen ? 'left-0' : '-left-full'} lg:left-0`}
+      >
+        <nav className="flex flex-col gap-4 items-center overflow-y-auto hide-scrollbar">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-4 p-2 text-lg lg:text-xl font-semibold"
+          >
+            {/* ------Logo------ */}
+            <Image loading="lazy" className="" src={logo} alt="HandyMan" />
+          </Link>
+
+          {/* ------ Sidebar Menu Links Original (Hotel panel) ------ */}
+          {/* <div className="sidebar-menu h-screen p-4 mb-2 rounded-2xl flex flex-col gap-3">
           <NavItem href="/dashboard" label="Dashboard">
             <LayoutDashboard className="h-5 w-5" />
           </NavItem>
@@ -126,90 +172,94 @@ function DesktopNav() {
           </NavItem>
         </div> */}
 
-        {/* Sidebar temporary */}
-        <div className="sidebar-menu h-screen p-4 mb-2 rounded-2xl flex flex-col gap-3">
-          <NavItem href="/super-admin/dashboard" label="Dashboard">
-            <LayoutDashboard className="h-5 w-5" />
-          </NavItem>
-
-          <NavItem
-            href="/super-admin/admin-management"
-            label="Admin Management"
-          >
-            <Users2 className="h-5 w-5" />
-          </NavItem>
-
-          <NavItem
-            href="/super-admin/roles-and-permissions"
-            label="Roles & Permission"
-          >
-            <Users className="h-5 w-5" />
-          </NavItem>
-
-          <NavItem
-            href="/super-admin/guest-management"
-            label="Guest Management"
-          >
-            <Users className="h-5 w-5" />
-          </NavItem>
-
-          {/* <NavItem href="/service-management" label="Service Management">
-            <Settings className="h-5 w-5" />
-          </NavItem> */}
-
-          <NavItem
-            href="/super-admin/complaint-management"
-            label="Complaint Management"
-          >
-            <Settings className="h-5 w-5" />
-          </NavItem>
-
-          <NavItem
-            href="/super-admin/payment-management"
-            label="Payment Management"
-          >
-            <Settings className="h-5 w-5" />
-          </NavItem>
-
-          <NavItem href="/super-admin/change-password" label="Change Password">
-            <Settings className="h-5 w-5" />
-          </NavItem>
-          {/* 
-          <NavItem href="/hotel-profile" label="Hotel Profile">
-            <Settings className="h-5 w-5" />
-          </NavItem> */}
-
-          <div
-            className="rounded-lg"
-            onClick={() => setOpenNotificationsSubMenu((prev) => !prev)}
-          >
-            <NavItem
-              href="/super-admin/hotel-management"
-              label="Hotel Management"
-            >
-              <Settings className="h-5 w-5" />
+          {/* Sidebar temporary - Added lg:text-lg to increase size on large screens */}
+          <div className="sidebar-menu h-screen w-full p-4 mb-2 rounded-2xl flex flex-col gap-3">
+            <NavItem href="/super-admin/dashboard" label="Dashboard">
+              <LayoutDashboard className="h-5 w-5 lg:h-6 lg:w-6" />
             </NavItem>
+
+            <NavItem
+              href="/super-admin/admin-management"
+              label="Admin Management"
+            >
+              <Users2 className="h-5 w-5 lg:h-6 lg:w-6" />
+            </NavItem>
+
+            <NavItem
+              href="/super-admin/roles-and-permissions"
+              label="Roles & Permission"
+            >
+              <Users className="h-5 w-5 lg:h-6 lg:w-6" />
+            </NavItem>
+
+            <NavItem
+              href="/super-admin/guest-management"
+              label="Guest Management"
+            >
+              <Users className="h-5 w-5 lg:h-6 lg:w-6" />
+            </NavItem>
+
+            <NavItem
+              href="/super-admin/complaint-management"
+              label="Complaint Management"
+            >
+              <Settings className="h-5 w-5 lg:h-6 lg:w-6" />
+            </NavItem>
+
+            <NavItem
+              href="/super-admin/payment-management"
+              label="Payment Management"
+            >
+              <Settings className="h-5 w-5 lg:h-6 lg:w-6" />
+            </NavItem>
+
+            <NavItem
+              href="/super-admin/change-password"
+              label="Change Password"
+            >
+              <Settings className="h-5 w-5 lg:h-6 lg:w-6" />
+            </NavItem>
+
             <div
-              onClick={(e) => e.stopPropagation()}
-              className={`pl-4 mt-1 overflow-hidden transition-all duration-300 ease-in-out ${
-                openNotificationsSubMenu ? 'h-auto max-h-screen' : 'max-h-0'
-              }`}
+              className="rounded-lg"
+              onClick={() => setOpenNotificationsSubMenu((prev) => !prev)}
             >
               <NavItem
-                href="/super-admin/sub_hotel-management"
-                label="Sub-Hotel Management"
+                href="/super-admin/hotel-management"
+                label="Hotel Management"
               >
-                <div className="h-2 w-2 bg-brown rounded-full"></div>
+                <Settings className="h-5 w-5 lg:h-6 lg:w-6" />
               </NavItem>
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className={`pl-4 mt-1 overflow-hidden transition-all duration-300 ease-in-out ${
+                  openNotificationsSubMenu ? 'h-auto max-h-screen' : 'max-h-0'
+                }`}
+              >
+                <NavItem
+                  href="/super-admin/sub_hotel-management"
+                  label="Sub-Hotel Management"
+                >
+                  <div className="h-2 w-2 lg:h-3 lg:w-3 bg-brown rounded-full"></div>
+                </NavItem>
+              </div>
             </div>
-          </div>
 
-          <NavItem href="/logout" label="Logout">
-            <LogOut className="h-5 w-5" />
-          </NavItem>
-        </div>
-      </nav>
-    </aside>
+            <NavItem href="/logout" label="Logout">
+              <LogOut className="h-5 w-5 lg:h-6 lg:w-6" />
+            </NavItem>
+          </div>
+        </nav>
+      </aside>
+
+      {/* Overlay for mobile (only shown when menu is open) */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        ></div>
+      )}
+    </>
   );
 }
 
