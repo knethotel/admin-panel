@@ -3,15 +3,11 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
-import { Heading } from '@/components/ui/heading';
 
-import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 
 import { UsersDummyData } from 'app/static/company-panel/RolesAndPermissions';
-
-type ModeType = 'add_guest' | 'add_booking';
 
 export const RolesAndPermissionHome: React.FC = () => {
   const router = useRouter();
@@ -21,7 +17,6 @@ export const RolesAndPermissionHome: React.FC = () => {
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>();
   const [totalRecords, setTotalRecords] = useState(data.length || 0);
-  const [mode, setMode] = useState<ModeType>();
 
   // const filters = [
   //     {
@@ -65,16 +60,6 @@ export const RolesAndPermissionHome: React.FC = () => {
   // };
 
   //   Onclick event handler functions
-  const handleOnClick = (actionName: string) => {
-    if (actionName === 'add guest') {
-      setMode('add_guest');
-      router.push(`/guest-management/add`);
-    }
-    if (actionName === 'add booking') {
-      setMode('add_booking');
-      router.push(`/guest-management/add-booking`);
-    }
-  };
   return (
     <>
       {loading ? (

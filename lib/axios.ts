@@ -6,9 +6,9 @@ import { getSessionStorageItem } from 'utils/localstorage';
 function authRequestInterceptor(config: any) {
   config.headers = config.headers ?? {};
   const adminData: any = getSessionStorageItem('admin');
-  config.headers.authorization = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2E1ZjY0MWQ0NTllODE0ZTg2N2RmYTEiLCJuYW1lIjoiRGlieWFuc2h1IEFkbWluIiwiZW1haWwiOiJkaWJ5YW5zaHVhZG1pbkBleGFtcGxlLmNvbSIsImlhdCI6MTczOTk3NDIxMCwiZXhwIjoxLjY0NTE1NDg0Mjc1NzYzMjVlKzI4fQ.-KqHokFzh2Bx60KmPUQoXY6W4re4TC9AND1rNS7WSYU';
-//   if (adminData && adminData.token) {
-//   }
+  if (adminData && adminData.token) {
+    config.headers.authorization = adminData.token;
+  }
   config.headers.Accept = 'application/json';
   return config;
 }
