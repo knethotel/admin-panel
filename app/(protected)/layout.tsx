@@ -65,8 +65,8 @@ function DesktopNav() {
           {/* ------Logo------ */}
           <Image loading="lazy" className="" src={logo} alt="HandyMan" />
         </Link>
-        {/* ------ Sidebar Menu Links ------ */}
-        <div className="sidebar-menu h-screen p-4 mb-2 rounded-2xl flex flex-col gap-3">
+        {/* ------ Sidebar Menu Links Original (Hotel panel) ------ */}
+        {/* <div className="sidebar-menu h-screen p-4 mb-2 rounded-2xl flex flex-col gap-3">
           <NavItem href="/dashboard" label="Dashboard">
             <LayoutDashboard className="h-5 w-5" />
           </NavItem>
@@ -120,6 +120,89 @@ function DesktopNav() {
           <NavItem href="/hotel-profile" label="Hotel Profile">
             <Settings className="h-5 w-5" />
           </NavItem>
+
+          <NavItem href="/logout" label="Logout">
+            <LogOut className="h-5 w-5" />
+          </NavItem>
+        </div> */}
+
+        {/* Sidebar temporary */}
+        <div className="sidebar-menu h-screen p-4 mb-2 rounded-2xl flex flex-col gap-3">
+          <NavItem href="/super-admin/dashboard" label="Dashboard">
+            <LayoutDashboard className="h-5 w-5" />
+          </NavItem>
+
+          <NavItem
+            href="/super-admin/admin-management"
+            label="Admin Management"
+          >
+            <Users2 className="h-5 w-5" />
+          </NavItem>
+
+          <NavItem
+            href="/super-admin/roles-and-permissions"
+            label="Roles & Permission"
+          >
+            <Users className="h-5 w-5" />
+          </NavItem>
+
+          <NavItem
+            href="/super-admin/guest-management"
+            label="Guest Management"
+          >
+            <Users className="h-5 w-5" />
+          </NavItem>
+
+          {/* <NavItem href="/service-management" label="Service Management">
+            <Settings className="h-5 w-5" />
+          </NavItem> */}
+
+          <NavItem
+            href="/super-admin/complaint-management"
+            label="Complaint Management"
+          >
+            <Settings className="h-5 w-5" />
+          </NavItem>
+
+          <NavItem
+            href="/super-admin/payment-management"
+            label="Payment Management"
+          >
+            <Settings className="h-5 w-5" />
+          </NavItem>
+
+          <NavItem href="/super-admin/change-password" label="Change Password">
+            <Settings className="h-5 w-5" />
+          </NavItem>
+          {/* 
+          <NavItem href="/hotel-profile" label="Hotel Profile">
+            <Settings className="h-5 w-5" />
+          </NavItem> */}
+
+          <div
+            className="rounded-lg"
+            onClick={() => setOpenNotificationsSubMenu((prev) => !prev)}
+          >
+            <NavItem
+              href="/super-admin/hotel-management"
+              label="Hotel Management"
+            >
+              <Settings className="h-5 w-5" />
+            </NavItem>
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className={`pl-4 mt-1 overflow-hidden transition-all duration-300 ease-in-out ${
+                openNotificationsSubMenu ? 'h-auto max-h-screen' : 'max-h-0'
+              }`}
+            >
+              <NavItem
+                href="/super-admin/sub_hotel-management"
+                label="Sub-Hotel Management"
+              >
+                <div className="h-2 w-2 bg-brown rounded-full"></div>
+              </NavItem>
+            </div>
+          </div>
 
           <NavItem href="/logout" label="Logout">
             <LogOut className="h-5 w-5" />
