@@ -7,7 +7,7 @@ type OverviewDataType = {
 };
 const OverviewCard = ({ position, increment, progress }: OverviewDataType) => {
   return (
-    <div className="flex flex-col min-w-48 mx-2 h-[254px] items-center p-4 rounded-xl border border-brown bg-brown/60">
+    <div className="flex flex-col w-full mx-2 items-center p-4 rounded-xl bg-[#3B2E16] border border-[#6E511D]">
       <div className="space-y-7">
         {/* Title */}
         <h5 className="text-xs font-medium tracking-wide text-white/60">

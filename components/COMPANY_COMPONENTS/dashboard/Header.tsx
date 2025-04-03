@@ -15,7 +15,10 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-transparent px-4 py-6 flex gap-4 justify-end items-center">
+    <header className="bg-transparent px-5 pt-3 pb-2 flex gap-5 justify-end items-center">
+      <div className="min-w-44">
+        <DateRangePickerComponent />
+      </div>
       {/* Navigation Links */}
       <nav className="flex gap-6">
         {links.map((link) => (
@@ -34,7 +37,6 @@ const Header: React.FC = () => {
       </nav>
 
       {/* Date Range Picker */}
-      <DateRangePickerComponent />
     </header>
   );
 };

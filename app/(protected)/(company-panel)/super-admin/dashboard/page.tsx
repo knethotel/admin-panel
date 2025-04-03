@@ -210,22 +210,20 @@ const DBPage: React.FC = () => {
         </div>
 
         {/* Lower part - Overview, LineChart, and Details cards */}
-        <div className="flex flex-col md:flex-row md:justify-between items-center gap-6 w-full">
-          <div className="w-full md:w-1/6">
+        <div className="flex flex-col md:flex-row overflow-x-auto md:justify-between space-x-4 items-center w-full">
+          <div className="flex flex-col justify-center items-center gap-3">
             <OverviewCard
               position={OverviewCardDummyData.position}
               increment={OverviewCardDummyData.increment}
               progress={OverviewCardDummyData.progress}
             />
+            <DetailsCard data={DetailsCardDummyData} />
           </div>
-          <div className="w-full md:w-4/6">
+          <div className="w-[90%]">
             <MultipleLineChart
               chartData={MultipleLineChartDummyData}
               mode="Weekly"
             />
-          </div>
-          <div className="w-full md:w-1/6">
-            <DetailsCard data={DetailsCardDummyData} />
           </div>
         </div>
       </div>
