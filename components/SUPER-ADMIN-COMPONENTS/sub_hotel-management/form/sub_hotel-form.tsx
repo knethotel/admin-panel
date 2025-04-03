@@ -1,0 +1,509 @@
+'use client';
+import React, { useEffect, useState } from 'react';
+import {
+  dummySubHotelFormData,
+  DummySubHotelFormDataType
+} from '../../../../app/static/super-admin-panel/SubHotelManagement';
+import { useForm } from 'react-hook-form';
+import {
+  CreateSubHotelIdFormSchema,
+  CreateSubHotelIdFormSchemaType,
+  serviceOptions,
+  ServiceType
+} from '../../../../schema/super-admin-panel';
+import { zodResolver } from '@hookform/resolvers/zod';
+import FormWrapper from './form-wrapper';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
+import Image from 'next/image';
+import { PiCameraThin } from 'react-icons/pi';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
+
+type Props = {
+  subHotelID?: string;
+  mode: string; // Explicit modes
+};
+
+const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
+  const [preview, setPreview] = useState<string | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<
+    'idle' | 'success' | 'error'
+  >('idle');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Cleanup preview URL
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+
+  // Fetch sub-hotel details with proper typing
+  const getSubHotelDetails = (
+    id: string | undefined
+  ): DummySubHotelFormDataType | null => {
+    if (!id) return null;
+    return (
+      dummySubHotelFormData.find((subHotel) => subHotel.subHotelID === id) ||
+      null
+    );
+  };
+
+  const subHotel = getSubHotelDetails(subHotelID);
+
+  // Initialize form with default values from dummy data or empty
+  const form = useForm<CreateSubHotelIdFormSchemaType>({
+    resolver: zodResolver(CreateSubHotelIdFormSchema),
+    defaultValues: {
+      parentHotelID: subHotel?.parentHotelID || '',
+      subHotelImageUrl: subHotel?.subHotelImageUrl || '',
+      subHotelImageFile: subHotel?.subHotelImageFile || undefined,
+      subHotelName: subHotel?.subHotelName || '',
+      address: subHotel?.address || '',
+      services: (subHotel?.services as ServiceType[]) || [],
+      subscriptionPlan: subHotel?.subscriptionPlan || '',
+      subscriptionPrice: subHotel?.subscriptionPrice || 0,
+      subHotelID: subHotel?.subHotelID || '',
+      contactNo: subHotel?.contactNo || '',
+      email: subHotel?.email || '',
+      gstDetails: subHotel?.gstDetails || ''
+    }
+  });
+
+  // Set initial preview if image URL exists in view/edit mode
+  useEffect(() => {
+    if (
+      (mode === 'view' || mode === 'edit') &&
+      subHotel?.subHotelImageUrl &&
+      !preview
+    ) {
+      setPreview(subHotel.subHotelImageUrl);
+    }
+  }, [subHotel, mode]);
+
+  const onSubmit = async (data: CreateSubHotelIdFormSchemaType) => {
+    setIsSubmitting(true);
+    try {
+      console.log('Submitted data:', data);
+      setSubmitStatus('success');
+      if (mode === 'create') form.reset(); // Reset only in create mode
+    } catch (error) {
+      console.error('Error occurred:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <FormWrapper
+      title={mode === 'create' ? 'Create Sub-Hotel' : 'Sub-Hotel Details'}
+    >
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col px-8 gap-8 justify-center pt-8 items-center"
+        >
+          {/* Image Display or Upload */}
+          {(mode === 'view' || (mode === 'edit' && preview)) && preview ? (
+            <div className="h-32 w-32">
+              <Image
+                src={preview}
+                alt={subHotel?.subHotelName || 'Hotel Image'}
+                height={176}
+                width={176}
+                className="object-cover rounded-lg"
+              />
+            </div>
+          ) : (
+            <FormField
+              control={form.control}
+              name="subHotelImageFile"
+              render={({ field }) => (
+                <FormItem className="flex flex-col justify-center items-center tracking-wide">
+                  <FormLabel className="w-full text-center sm:w-32 text-sm opacity-60 text-coffee">
+                    Sub Hotel Image
+                  </FormLabel>
+                  <div className="flex items-center w-full">
+                    <FormControl>
+                      <div
+                        className="relative h-32 w-32 rounded-lg bg-[#F6EEE0] p-2"
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          const file = e.dataTransfer.files?.[0];
+                          if (file) {
+                            field.onChange(file);
+                            if (preview) URL.revokeObjectURL(preview);
+                            setPreview(URL.createObjectURL(file));
+                          }
+                        }}
+                        onDragOver={(e) => e.preventDefault()}
+                      >
+                        <div className="h-full w-full flex items-center justify-center">
+                          {preview && (
+                            <Image
+                              src={preview}
+                              alt="Preview"
+                              height={176}
+                              width={176}
+                              className="object-cover rounded-lg"
+                            />
+                          )}
+                        </div>
+                        {!preview && (
+                          <label
+                            htmlFor="fileUpload"
+                            className="absolute inset-0 flex justify-center items-center cursor-pointer"
+                            aria-label="Upload sub-hotel image"
+                          >
+                            <PiCameraThin className="text-black w-12 h-12 opacity-30" />
+                          </label>
+                        )}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              if (!file.type.startsWith('image/')) {
+                                alert('Please upload an image file.');
+                                return;
+                              }
+                              if (file.size > 5 * 1024 * 1024) {
+                                alert('File size exceeds 5MB.');
+                                return;
+                              }
+                              if (preview) URL.revokeObjectURL(preview);
+                              const imageUrl = URL.createObjectURL(file);
+                              setPreview(imageUrl);
+                              field.onChange(file);
+                            } else {
+                              setPreview(null);
+                              field.onChange(undefined);
+                            }
+                          }}
+                          className="hidden"
+                          id="fileUpload"
+                          disabled={mode === 'view'}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+          )}
+
+          {/* Form Fields */}
+          <div className="w-full flex justify-between items-start gap-4">
+            {/* Left Part */}
+            <div className="flex flex-col gap-3 w-full max-w-md">
+              <FormField
+                control={form.control}
+                name="parentHotelID"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:w-36 text-sm text-nowrap font-medium text-gray-700">
+                      Parent Hotel ID
+                    </FormLabel>
+                    <div className="w-full">
+                      <FormControl>
+                        <Input
+                          type="text"
+                          {...field}
+                          disabled={mode === 'view'}
+                          placeholder="e.g., PH001"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px] mt-1" />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="subHotelName"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                      Sub Hotel Name
+                    </FormLabel>
+                    <div className="w-full">
+                      <FormControl>
+                        <Input
+                          type="text"
+                          {...field}
+                          disabled={mode === 'view'}
+                          placeholder="e.g., Hotel Serenity"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px] mt-1" />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col sm:flex-row sm:items-start">
+                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                      Address
+                    </FormLabel>
+                    <div className="w-full">
+                      <FormControl>
+                        <Textarea
+                          {...field}
+                          disabled={mode === 'view'}
+                          placeholder="e.g., 123 Peace Road, Colombo"
+                          className="w-full h-16 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs resize-none"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px] mt-1" />
+                    </div>
+                  </FormItem>
+                )}
+              />
+            </div>
+            {/* Right Part */}
+            <div className="flex flex-col gap-3 w-full max-w-md">
+              <FormField
+                control={form.control}
+                name="subHotelID"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                      Sub-Hotel ID
+                    </FormLabel>
+                    <div className="w-full">
+                      <FormControl>
+                        <Input
+                          type="text"
+                          {...field}
+                          disabled={mode === 'view'}
+                          placeholder="e.g., SH001"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px] mt-1" />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="contactNo"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                      Contact
+                    </FormLabel>
+                    <div className="w-full">
+                      <FormControl>
+                        <Input
+                          type="text"
+                          {...field}
+                          disabled={mode === 'view'}
+                          placeholder="e.g., +94123456789"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px] mt-1" />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                      Email
+                    </FormLabel>
+                    <div className="w-full">
+                      <FormControl>
+                        <Input
+                          type="email"
+                          {...field}
+                          disabled={mode === 'view'}
+                          placeholder="e.g., contact@hotel.com"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px] mt-1" />
+                    </div>
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+
+          {/* Services and Subscription */}
+          <div className="flex flex-col gap-8 w-full">
+            <FormField
+              control={form.control}
+              name="services"
+              render={({ field }) => (
+                <FormItem className="flex flex-col sm:flex-row gap-2">
+                  <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700 pt-1">
+                    Services
+                  </FormLabel>
+                  <div className="w-full">
+                    <FormControl>
+                      <div className="flex flex-wrap gap-2">
+                        {serviceOptions.map((value) => (
+                          <div
+                            key={value}
+                            className="flex items-center space-x-2"
+                          >
+                            <Checkbox
+                              disabled={mode === 'view'}
+                              checked={field.value.includes(value)}
+                              onCheckedChange={(checked) => {
+                                const newValue = checked
+                                  ? [...field.value, value]
+                                  : field.value.filter(
+                                      (item) => item !== value
+                                    );
+                                field.onChange(newValue);
+                              }}
+                              id={value}
+                            />
+                            <label
+                              htmlFor={value}
+                              className="text-xs text-gray-700 capitalize"
+                            >
+                              {value}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </FormControl>
+                    <FormMessage className="text-[10px] mt-1" />
+                  </div>
+                </FormItem>
+              )}
+            />
+            <div className="flex w-full justify-between items-start gap-4">
+              <div className="flex flex-col gap-3 w-full max-w-md">
+                <FormField
+                  control={form.control}
+                  name="subscriptionPlan"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col sm:flex-row sm:items-center">
+                      <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                        Subscription Plan
+                      </FormLabel>
+                      <div className="w-full">
+                        <FormControl>
+                          <Input
+                            type="text"
+                            {...field}
+                            disabled={mode === 'view'}
+                            placeholder="e.g., Premium"
+                            className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-[10px] mt-1" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="subscriptionPrice"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col sm:flex-row sm:items-center">
+                      <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                        Subscription Price
+                      </FormLabel>
+                      <div className="w-full">
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            value={field.value}
+                            onChange={(e) =>
+                              field.onChange(Number(e.target.value))
+                            }
+                            disabled={mode === 'view'}
+                            placeholder="e.g., 1500"
+                            className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-[10px] mt-1" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex flex-col gap-3 w-full max-w-md">
+                <FormField
+                  control={form.control}
+                  name="gstDetails"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col sm:flex-row sm:items-center">
+                      <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                        GST Details
+                      </FormLabel>
+                      <div className="w-full">
+                        <FormControl>
+                          <Input
+                            type="text" // Changed from number to text for GST format
+                            {...field}
+                            disabled={mode === 'view'}
+                            placeholder="e.g., GSTIN123456789"
+                            className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-[10px] mt-1" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          {mode !== 'view' && (
+            <div className="w-full flex justify-start items-center">
+              <Button
+                type="submit"
+                disabled={isSubmitting || mode === 'view'}
+                className="w-28 h-8 md:ml-24 sm:w-auto bg-[#A07D3D] text-white hover:bg-[#8c6b33] px-6 rounded-md text-xs"
+              >
+                {isSubmitting ? 'Saving...' : 'Save'}
+              </Button>
+              {submitStatus === 'success' && (
+                <p className="text-green-600 text-xs ml-4">
+                  Form submitted successfully!
+                </p>
+              )}
+              {submitStatus === 'error' && (
+                <p className="text-red-600 text-xs ml-4">
+                  An error occurred. Please try again.
+                </p>
+              )}
+            </div>
+          )}
+        </form>
+      </Form>
+    </FormWrapper>
+  );
+};
+
+export default SubHotelIdForm;
