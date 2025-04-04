@@ -48,7 +48,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
       validityTo: '',
       usageLimit: '',
       discountPercentage: '',
-      discountAmount: 0,
+      discountAmount: undefined,
       minimumSpent: '',
       couponStatus: 'active',
       redemption: 'automatic',
