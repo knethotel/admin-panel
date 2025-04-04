@@ -24,9 +24,9 @@ const PaymentManagementPage = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="h-screen w-full space-y-6 relative">
       <div className="flex flex-col items-center gap-2">
-        <div className="w-[50%] fixed h-12 text-sm flex justify-evenly rounded-b-xl items-center px-2 bg-[#EFE9DF]">
+        <div className="w-[50%] fixed h-12 text-base flex justify-evenly rounded-b-xl items-center px-2 bg-[#EFE9DF]">
           <button
-            className={`border px-3 rounded-md ${
+            className={`border hover:bg-coffeeLight hover:text-white px-3 rounded-md ${
               activeButton === 'coupons'
                 ? 'bg-[#281F0F] text-white'
                 : 'bg-transparent text-[#281F0F]'
@@ -36,7 +36,7 @@ const PaymentManagementPage = ({ children }: { children: React.ReactNode }) => {
             Coupons
           </button>
           <button
-            className={`border px-3 rounded-md ${
+            className={`border hover:bg-coffeeLight hover:text-white px-3 rounded-md ${
               activeButton === 'refund'
                 ? 'bg-[#281F0F] text-white'
                 : 'bg-transparent text-[#281F0F]'
