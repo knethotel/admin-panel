@@ -18,7 +18,7 @@ const HomePage = () => {
           {' '}
           <Button
             onClick={() => setIsOpen(true)}
-            className="bg-[#A07D3D] px-2 h-8 hover:outline hover:text-black text-white rounded-sm"
+            className="btn-primary px-2 h-8 rounded-sm"
           >
             Create Coupon
           </Button>
