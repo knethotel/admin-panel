@@ -98,7 +98,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                               <SelectValue />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="bg-[#FAF6EF]">
+                          <SelectContent>
                             {['Percentage Coupons', 'Fixed Amount Coupons'].map(
                               (value) => (
                                 <SelectItem key={value} value={value}>
