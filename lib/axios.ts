@@ -46,7 +46,7 @@ axios.interceptors.response.use(
 
 // Common method for api hitting
 
-async function apiCall<T = any>(
+export async function apiCall<T = any>(
   method: Method,
   url: string,
   data?: any

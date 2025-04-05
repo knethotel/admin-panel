@@ -1,5 +1,7 @@
 'use client';
 
+import { setSessionStorageItem } from '@/utils/localstorage';
+import apiCall from '@/lib/axios';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
@@ -17,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import CardWrapper from './card-wrapper';
 import React, { useState } from 'react';
 import { Eye, EyeOff, CircleX } from 'lucide-react';
+import Auth from '@/types/auth';
 
 const DUMMY_CORRECT_PASSWORD = 'password123';
 
@@ -39,15 +42,38 @@ const LoginForm = () => {
     }
   };
 
-  const onSubmit = (data: loginSchemaType) => {
-    if (data.password !== DUMMY_CORRECT_PASSWORD) {
-      setPasswordError('Incorrect password');
-      return;
-    }
+  const onSubmit = async (data: loginSchemaType) => {
+    try {
+      // console.log(data);
 
-    setPasswordError(null);
-    console.log('Login successful:', data);
-    form.reset();
+      // Send login request to the backend API
+      const response = await apiCall<Auth.LoginResponse>(
+        'POST',
+        'api/superAdmin/login',
+        {
+          email: data.email,
+          password: data.password
+        }
+      );
+      if (response.data) {
+        const { token, user } = response.data;
+
+        setSessionStorageItem('admin', {
+          token,
+          user
+        });
+      } else {
+        console.error('No data returned from API call');
+      }
+
+      // Store token and user data in session storage
+
+      // Redirect user to the dashboard after successful login
+      window.location.href = '/super-admin/dashboard';
+    } catch (error: any) {
+      // Handle errors (e.g., invalid credentials)
+      setPasswordError(error.message || 'Login failed');
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -178,10 +204,7 @@ const LoginForm = () => {
                 </Link>
               </div>
             </div>
-            <Button
-              type="submit"
-              className="w-full text-white bg-[#A07D3D] hover:opacity-80 hover:text-black hover:border hover:border-black"
-            >
+            <Button type="submit" className="w-full btn-primary">
               Sign in
             </Button>
           </form>
