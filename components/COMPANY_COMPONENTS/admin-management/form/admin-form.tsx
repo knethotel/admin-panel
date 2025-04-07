@@ -28,6 +28,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { ChevronDown } from 'lucide-react';
+import { addAdmin } from '@/lib/superAdmin/api/admin/addAdmin';
 
 type Props = {
   adminID?: string;
@@ -75,15 +76,23 @@ const AdminForm = ({ adminID, mode }: Props) => {
       email: admin?.adminDetails?.emailID || '',
       password: admin?.adminDetails.password || '',
       phoneNo: admin?.adminDetails?.mobileNo || '',
-      role: admin?.role || '',
+      roleId: admin?.role || '',
       status: 'Active'
     }
   });
 
   // Modified: Typed data parameter as adminSchemaType for better type safety
-  const onSubmit = (data: adminSchemaType) => {
-    console.log(data);
-    form.reset();
+  const onSubmit = async (data: adminSchemaType) => {
+    setLoading(true);
+    try {
+      await addAdmin(data);
+      alert('Admin added successfully!');
+      // redirect or reset form
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -233,7 +242,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
               {/* Role Selection */}
               <FormField
                 control={form.control}
-                name="role"
+                name="roleId"
                 render={({ field }) => (
                   <FormItem className="relative">
                     <FormLabel>Select Role</FormLabel>

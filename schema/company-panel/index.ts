@@ -11,7 +11,7 @@ export const adminSchema = z.object({
     .min(6, { message: 'Password must be at least 6 characters' })
     .nonempty({ message: 'Password is required' }),
   phoneNo: z.string().min(1, 'Phone Number is required'),
-  role: z.string().min(1, 'Role is required'),
+  roleId: z.string().min(1, 'Role is required'),
   status: z.enum(['Active', 'Inactive'], {
     errorMap: () => ({ message: 'Invalid Status' })
   })
