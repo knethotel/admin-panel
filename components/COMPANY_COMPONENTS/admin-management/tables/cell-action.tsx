@@ -6,11 +6,11 @@ import React from 'react';
 
 const CellAction = (props: any) => {
   const { data } = props;
-  console.log(data.adminID);
+  console.log('The data is ', data);
   const router = useRouter();
 
   const handleEditUser = () => {
-    router.push(`admin-management/edit/${data.adminID}`);
+    router.push(`/super-admin/admin-management/edit/${data._id}`);
     console.log('success');
   };
 

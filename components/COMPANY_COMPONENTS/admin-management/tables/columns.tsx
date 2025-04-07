@@ -1,44 +1,64 @@
 import { ColumnDef } from '@tanstack/react-table';
 import CellAction from './cell-action';
-import { AdminDummyDataType } from 'app/static/company-panel/AdminManagement';
 
-export const columns: ColumnDef<AdminDummyDataType>[] = [
+// Updated interface to match your API response
+export interface AdminDataType {
+  _id: string;
+  isSuperAdmin: boolean;
+  roleId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  status: string;
+  IsOtpVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export const columns: ColumnDef<AdminDataType>[] = [
   {
-    accessorKey: 'adminID',
-    header: 'Admin ID'
-  },
-  {
-    accessorKey: 'adminDetails.name',
+    accessorKey: 'firstName',
     header: 'Admin Name',
     cell: ({ row }) => {
+      const fullName = `${row.original.firstName} ${row.original.lastName}`;
       return (
         <div className="flex flex-col items-start justify-center">
-          <span>{row.original.adminDetails.name}</span>
+          <span>{fullName}</span>
+          {/* Since login details aren't in the response, we'll show created date instead */}
           <span className="text-xs opacity-60 pt-1">
-            LOG IN: {row.original.loginDetails.time}
+            CREATED: {new Date(row.original.createdAt).toLocaleTimeString()}
           </span>
           <span className="text-xs opacity-60">
-            {row.original.loginDetails.date}
+            {new Date(row.original.createdAt).toLocaleDateString()}
           </span>
         </div>
       );
     }
   },
   {
-    accessorKey: 'adminDetails.mobileNo',
-    header: 'Mobile no.'
+    accessorKey: 'phoneNo', // Note: Your sample data doesn't have this field
+    header: 'Mobile no.',
+    cell: ({ row }) => {
+      // Since phone number isn't in the sample data, we'll show N/A, un-comment this as soon as phone no. arrives
+      // return row.original.phoneNo || 'N/A';
+      return 'N/A';
+    }
   },
   {
-    accessorKey: 'adminDetails.emailID',
+    accessorKey: 'email',
     header: 'Email ID'
   },
   {
-    accessorKey: 'role',
+    accessorKey: 'roleId',
     header: 'Role',
     cell: ({ row }) => {
-      const role = row.original.role || 'N/A';
-      if (role === 'SOS') {
-        return <div className="font-medium text-red-400">{role}</div>;
+      // Note: This shows roleId since role name isn't in the response
+      // You might need to fetch role details separately to show the role name
+      const role = row.original.roleId || 'N/A';
+      if (role === '67f0b1e2f570748052516630') {
+        // Super admin role ID from your data
+        return <div className="font-medium text-red-400">Super Admin</div>;
       } else {
         return <div className="text-black">{role}</div>;
       }
@@ -49,15 +69,15 @@ export const columns: ColumnDef<AdminDummyDataType>[] = [
     header: 'Status',
     cell: ({ row }) => {
       const status = row.original.status || 'N/A';
-      if (status === 'ACTIVE') {
-        return <div className="font-medium text-[#78B150]">{status}</div>;
+      if (status === 'Active') {
+        // Match your data's status value
+        return <div className="font-medium text-[#78B150]">ACTIVE</div>;
       } else {
-        return <div className="text-[#E5252A]">{status}</div>;
+        return <div className="text-[#E5252A]">{status.toUpperCase()}</div>;
       }
     }
   },
   {
-    accessorKey: 'actions',
     id: 'actions',
     header: 'Actions',
     cell: ({ row }) => (

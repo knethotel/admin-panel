@@ -4,47 +4,56 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Heading } from '@/components/ui/heading';
-
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 import { getAllAdmins } from '@/lib/superAdmin/api/admin/getAdmins';
 
+// Define the admin data type based on your structure
+interface Admin {
+  _id: string;
+  isSuperAdmin: boolean;
+  roleId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  status: string;
+  IsOtpVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
 type ModeType = 'add_admin';
 
 export const AdminTable: React.FC = () => {
   const router = useRouter();
-  const [data, setData] = useState<any>();
-  const [filteredData, setFilteredData] = useState<any>();
+  const [data, setData] = useState<Admin[]>([]);
+  const [filteredData, setFilteredData] = useState<Admin[]>([]);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [totalRecords, setTotalRecords] = useState(data?.length || 0);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [mode, setMode] = useState<ModeType>();
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAllAdmins();
-    };
-  }, []);
+      try {
+        setLoading(true);
+        const fetchedData = await getAllAdmins();
+        console.log(fetchedData);
 
-  // const filters = [
-  //     {
-  //         label: 'Account Status',
-  //         key: 'accountStatus', // Backend key
-  //         subOptions: ['Active', 'Suspended'],
-  //     },
-  //     {
-  //         label: 'Verification Status',
-  //         key: 'verificationStatus',
-  //         subOptions: ['Verified', 'Pending', 'Rejected'],
-  //     },
-  //     {
-  //         label: 'Activity Status',
-  //         key: 'activityStatus',
-  //         subOptions: ['Active', 'Inactive'],
-  //     },
-  // ];
+        setData(fetchedData);
+        setFilteredData(fetchedData);
+        setTotalRecords(fetchedData.length);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
@@ -61,11 +70,16 @@ export const AdminTable: React.FC = () => {
     setPageNo(1);
     if (searchValue.trim() === '') {
       setFilteredData(data);
+      setTotalRecords(data.length);
     } else {
-      const filtered = data.filter((item) =>
-        item.adminDetails.name.toLowerCase().includes(searchValue.toLowerCase())
+      const filtered = data.filter((item: Admin) =>
+        // Search across both firstName and lastName
+        `${item.firstName} ${item.lastName}`
+          .toLowerCase()
+          .includes(searchValue.toLowerCase())
       );
       setFilteredData(filtered);
+      setTotalRecords(filtered.length);
     }
   };
 
@@ -95,14 +109,7 @@ export const AdminTable: React.FC = () => {
           searchKey="firstName"
           columns={columns}
           data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)}
-          // onSearch={(searchValue) => {
-          //     const filtered = data.filter((item) =>
-          //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())
-          //     );
-          //     setData(filtered);
-          // }}
-          // filters={filters}
-          // onFilterChange={handleFilterChange}
+          onSearch={handleSearchChange}
         />
       )}
       <div className="flex justify-end space-x-2 py-2">
@@ -116,7 +123,7 @@ export const AdminTable: React.FC = () => {
             Previous
           </Button>
           <span className="text-sm text-gray-600">
-            Page {pageNo} of {Math.ceil(totalRecords / limit)}
+            Page {pageNo} of {Math.ceil(totalRecords / limit) || 1}
           </span>
           <Button
             variant="outline"

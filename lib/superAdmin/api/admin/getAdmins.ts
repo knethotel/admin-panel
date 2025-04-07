@@ -17,7 +17,7 @@ export async function getAllAdmins() {
     'GET',
     'api/superAdmin/admins'
   );
-  const admins = response;
+  const admins = response.admins;
   if (!admins) {
     throw new Error('Admin not found');
   }
