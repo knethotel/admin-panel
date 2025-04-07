@@ -1,6 +1,6 @@
 import apiCall from '@/lib/axios';
 
-export async function getAdminById(id: string) {
+export async function getAdminById(id: string | undefined) {
   const response = await apiCall<{ admins: any[] }>(
     'GET',
     'api/superAdmin/admins'

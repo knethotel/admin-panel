@@ -9,7 +9,6 @@ import FormWrapper from './form-wrapper';
 import { adminSchema, adminSchemaType } from 'schema/company-panel';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AdminDummyData } from 'app/static/company-panel/AdminManagement';
 import {
   Form,
   FormControl,
@@ -29,6 +28,7 @@ import {
 } from '@/components/ui/select';
 import { ChevronDown } from 'lucide-react';
 import { addAdmin } from '@/lib/superAdmin/api/admin/addAdmin';
+import { getAdminById } from '@/lib/superAdmin/api/admin/getAdminById';
 
 type Props = {
   adminID?: string;
@@ -37,10 +37,47 @@ type Props = {
 
 const AdminForm = ({ adminID, mode }: Props) => {
   const router = useRouter();
+  const [admin, setAdminData] = useState<any>();
   const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(true);
-  //Fetch all the available roles from backend
+  const form = useForm<adminSchemaType>({
+    resolver: zodResolver(adminSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      phoneNo: '',
+      roleId: '',
+      status: 'Active'
+    }
+  });
+
   useEffect(() => {
+    //Fetch admin object
+    const fetchAdmin = async () => {
+      try {
+        const data = await getAdminById(adminID);
+        if (data) {
+          setAdminData(data);
+          form.reset({
+            firstName: data.firstName || '',
+            lastName: data.lastName || '',
+            email: data.email || '',
+            password: '',
+            phoneNo: data.phoneNo || '',
+            roleId: data.roleId || '',
+            status: data.status || 'Active'
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch admins:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    //Fetch all the available roles from backend
     const fetchRoles = async () => {
       try {
         const res = await getAllRoles();
@@ -53,35 +90,12 @@ const AdminForm = ({ adminID, mode }: Props) => {
         setLoading(false);
       }
     };
-
-    fetchRoles();
-  }, []);
-
-  // Get admin details using id
-  const getAdminDetails = (adminID: string | undefined) => {
     if (adminID) {
-      return AdminDummyData.find((admin) => admin.adminID === adminID);
-    } else {
-      return null;
+      fetchAdmin();
     }
-  };
-  const admin = getAdminDetails(adminID);
+    fetchRoles();
+  }, [adminID, form]);
 
-  // Modified: Added all schema fields (logIn, logOut, priceType) to defaultValues
-  const form = useForm<adminSchemaType>({
-    resolver: zodResolver(adminSchema),
-    defaultValues: {
-      firstName: admin?.adminDetails?.name?.split(' ')[0] || '',
-      lastName: admin?.adminDetails?.name?.split(' ')[1] || '',
-      email: admin?.adminDetails?.emailID || '',
-      password: admin?.adminDetails.password || '',
-      phoneNo: admin?.adminDetails?.mobileNo || '',
-      roleId: admin?.role || '',
-      status: 'Active'
-    }
-  });
-
-  // Modified: Typed data parameter as adminSchemaType for better type safety
   const onSubmit = async (data: adminSchemaType) => {
     setLoading(true);
     try {
