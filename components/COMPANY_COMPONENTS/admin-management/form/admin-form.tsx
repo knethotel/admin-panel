@@ -30,6 +30,17 @@ import { ChevronDown } from 'lucide-react';
 import { addAdmin } from '@/lib/superAdmin/api/admin/addAdmin';
 import { getAdminById } from '@/lib/superAdmin/api/admin/getAdmins';
 
+interface Admin {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNo?: string;
+  roleId: string;
+  status: string;
+  [key: string]: any;
+}
+
 type Props = {
   adminID?: string;
   mode: string;
@@ -37,9 +48,10 @@ type Props = {
 
 const AdminForm = ({ adminID, mode }: Props) => {
   const router = useRouter();
-  const [admin, setAdminData] = useState<any>();
+  const [admin, setAdminData] = useState<Admin | undefined>();
   const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(true);
+
   const form = useForm<adminSchemaType>({
     resolver: zodResolver(adminSchema),
     defaultValues: {
@@ -49,51 +61,42 @@ const AdminForm = ({ adminID, mode }: Props) => {
       password: '',
       phoneNo: '',
       roleId: '',
-      status: 'Active'
+      status: mode === 'add' ? 'Active' : '' // Default to 'Active' only in add mode
     }
   });
 
   useEffect(() => {
-    //Fetch admin object
-    const fetchAdmin = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getAdminById(adminID);
-        if (data) {
-          setAdminData(data);
+        setLoading(true);
+        const [rolesRes, adminData] = await Promise.all([
+          getAllRoles(),
+          adminID ? getAdminById(adminID) : Promise.resolve(null)
+        ]);
+
+        if (rolesRes.status) {
+          setRoles(rolesRes.roles);
+        }
+
+        if (adminData) {
+          setAdminData(adminData);
           form.reset({
-            firstName: data.firstName || '',
-            lastName: data.lastName || '',
-            email: data.email || '',
+            firstName: adminData.firstName || '',
+            lastName: adminData.lastName || '',
+            email: adminData.email || '',
             password: '',
-            phoneNo: data.phoneNo || '',
-            roleId: data.roleId || '',
-            status: data.status || 'Active'
+            phoneNo: adminData.phoneNo || '',
+            roleId: adminData.roleId || '',
+            status: adminData.status // No fallback here, trust the API value
           });
         }
       } catch (error) {
-        console.error('Failed to fetch admins:', error);
+        console.error('Failed to fetch data:', error);
       } finally {
         setLoading(false);
       }
     };
-
-    //Fetch all the available roles from backend
-    const fetchRoles = async () => {
-      try {
-        const res = await getAllRoles();
-        if (res.status) {
-          setRoles(res.roles);
-        }
-      } catch (error) {
-        console.error('Failed to fetch roles:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (adminID) {
-      fetchAdmin();
-    }
-    fetchRoles();
+    fetchData();
   }, [adminID, form]);
 
   const onSubmit = async (data: adminSchemaType) => {
@@ -101,9 +104,13 @@ const AdminForm = ({ adminID, mode }: Props) => {
     try {
       await addAdmin(data);
       alert('Admin added successfully!');
-      // redirect or reset form
+      if (mode === 'add') {
+        form.reset();
+      } else {
+        router.push('/admin-management');
+      }
     } catch (error: any) {
-      alert(error.message);
+      alert(`Error: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -133,7 +140,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           type="text"
                           placeholder="First Name"
                           {...field}
-                          disabled={mode === 'view'}
+                          disabled={mode === 'view' || loading}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
                         {mode === 'add' && (
@@ -159,7 +166,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           type="text"
                           placeholder="Last Name"
                           {...field}
-                          disabled={mode === 'view'}
+                          disabled={mode === 'view' || loading}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
                         {mode === 'add' && (
@@ -185,7 +192,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           type="email"
                           placeholder="Email ID"
                           {...field}
-                          disabled={mode === 'view'}
+                          disabled={mode === 'view' || loading}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
                         {mode === 'add' && (
@@ -211,7 +218,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           type="password"
                           placeholder="Password"
                           {...field}
-                          disabled={mode === 'view'}
+                          disabled={mode === 'view' || loading}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
                         {mode === 'add' && (
@@ -231,7 +238,6 @@ const AdminForm = ({ adminID, mode }: Props) => {
                 name="phoneNo"
                 render={({ field }) => (
                   <FormItem>
-                    {/* Modified: Fixed label from "Email" to "Phone Number" */}
                     <FormLabel className="text-black text-[0.8rem]">
                       Phone Number
                     </FormLabel>
@@ -241,7 +247,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           type="text"
                           placeholder="Phone No"
                           {...field}
-                          disabled={mode === 'view'}
+                          disabled={mode === 'view' || loading}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
                         {mode === 'add' && (
@@ -264,6 +270,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
+                        disabled={loading}
                       >
                         <FormControl>
                           <SelectTrigger className="min-w-40 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
@@ -298,10 +305,10 @@ const AdminForm = ({ adminID, mode }: Props) => {
                         <Select
                           onValueChange={field.onChange}
                           value={field.value}
-                          disabled={mode === 'view'}
+                          disabled={mode === 'view' || loading}
                         >
                           <SelectTrigger className="min-w-32 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
-                            <SelectValue />
+                            <SelectValue placeholder="Select status" />
                           </SelectTrigger>
                           <SelectContent>
                             {['Active', 'Inactive'].map((value) => (
@@ -329,10 +336,11 @@ const AdminForm = ({ adminID, mode }: Props) => {
               type="button"
               onClick={() => router.back()}
               className="btn-secondary"
+              disabled={loading}
             >
               Cancel
             </Button>
-            <Button type="submit" className="btn-primary">
+            <Button type="submit" className="btn-primary" disabled={loading}>
               Save Changes
             </Button>
           </div>
