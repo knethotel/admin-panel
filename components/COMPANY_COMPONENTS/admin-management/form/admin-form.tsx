@@ -53,9 +53,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
       password: admin?.adminDetails.password || '',
       phoneNo: admin?.adminDetails?.mobileNo || '',
       role: admin?.role || '',
-      status: 'Active',
-      logIn: admin?.loginDetails.time || '', // Added login time
-      logOut: admin?.logoutDetails.time || '' // Added logout time
+      status: 'Active'
     }
   });
 
@@ -266,60 +264,6 @@ const AdminForm = ({ adminID, mode }: Props) => {
                     </FormControl>
                     <FormMessage />
                     <ChevronDown className="absolute right-4 top-[2.2rem] text-black w-4 h-4" />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="flex items-center gap-4">
-              <FormField
-                control={form.control}
-                name="logOut"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Logout Time
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="text"
-                          placeholder="Logout Time"
-                          {...field}
-                          disabled={mode === 'view'}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
-                        />
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="logIn"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Login Time
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="text"
-                          placeholder="Login Time"
-                          {...field}
-                          disabled={mode === 'view'}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
-                        />
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />

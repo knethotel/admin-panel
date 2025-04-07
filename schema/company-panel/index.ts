@@ -14,9 +14,7 @@ export const adminSchema = z.object({
   role: z.string().min(1, 'Role is required'),
   status: z.enum(['Active', 'Inactive'], {
     errorMap: () => ({ message: 'Invalid Status' })
-  }),
-  logIn: z.string().min(1, 'Login Time is required'),
-  logOut: z.string().min(1, 'Logout Time is required')
+  })
 });
 
 export type adminSchemaType = z.infer<typeof adminSchema>;
