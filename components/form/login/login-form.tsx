@@ -1,5 +1,7 @@
 'use client';
 
+import { setSessionStorageItem } from '@/utils/localstorage';
+import apiCall from '@/lib/axios';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
@@ -17,6 +19,8 @@ import { Input } from '@/components/ui/input';
 import CardWrapper from './card-wrapper';
 import React, { useState } from 'react';
 import { Eye, EyeOff, CircleX } from 'lucide-react';
+import LoginResponse from '@/types/auth';
+import { AxiosResponse } from 'axios';
 
 const DUMMY_CORRECT_PASSWORD = 'password123';
 
@@ -39,15 +43,32 @@ const LoginForm = () => {
     }
   };
 
-  const onSubmit = (data: loginSchemaType) => {
-    if (data.password !== DUMMY_CORRECT_PASSWORD) {
-      setPasswordError('Incorrect password');
-      return;
-    }
+  const onSubmit = async (data: loginSchemaType) => {
+    try {
+      const response = await apiCall<LoginResponse>(
+        'POST',
+        'api/superAdmin/login',
+        {
+          email: data.email,
+          password: data.password
+        }
+      );
+      console.log(response);
 
-    setPasswordError(null);
-    console.log('Login successful:', data);
-    form.reset();
+      if (response.token && response.user) {
+        setSessionStorageItem('admin', {
+          token: response.token,
+          user: response.user
+        });
+      } else {
+        console.error('Missing token or user in response');
+        return;
+      }
+
+      window.location.href = '/super-admin/dashboard';
+    } catch (error: any) {
+      setPasswordError(error.message || 'Login failed');
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -178,10 +199,7 @@ const LoginForm = () => {
                 </Link>
               </div>
             </div>
-            <Button
-              type="submit"
-              className="w-full text-white bg-[#A07D3D] hover:opacity-80 hover:text-black hover:border hover:border-black"
-            >
+            <Button type="submit" className="w-full btn-primary">
               Sign in
             </Button>
           </form>
