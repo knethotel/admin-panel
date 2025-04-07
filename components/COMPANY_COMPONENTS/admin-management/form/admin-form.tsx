@@ -61,7 +61,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
       password: '',
       phoneNo: '',
       roleId: '',
-      status: mode === 'add' ? 'Active' : '' // Default to 'Active' only in add mode
+      status: 'Active' // Default to 'Active' only in add mode
     }
   });
 
