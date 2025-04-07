@@ -4,32 +4,19 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Heading } from '@/components/ui/heading';
+import { ColumnDef } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { columns } from './columns';
+import { getColumns, AdminDataType } from './columns';
 import { getAllAdmins } from '@/lib/superAdmin/api/admin/getAdmins';
-
-// Define the admin data type based on your structure
-interface Admin {
-  _id: string;
-  isSuperAdmin: boolean;
-  roleId: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  status: string;
-  IsOtpVerified: boolean;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
 
 type ModeType = 'add_admin';
 
 export const AdminTable: React.FC = () => {
   const router = useRouter();
-  const [data, setData] = useState<Admin[]>([]);
-  const [filteredData, setFilteredData] = useState<Admin[]>([]);
+  const [columns, setColumns] = useState<ColumnDef<AdminDataType>[]>([]);
+  const [data, setData] = useState<AdminDataType[]>([]);
+  const [filteredData, setFilteredData] = useState<AdminDataType[]>([]);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>(true);
@@ -37,22 +24,28 @@ export const AdminTable: React.FC = () => {
   const [mode, setMode] = useState<ModeType>();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAllData = async () => {
       try {
         setLoading(true);
-        const fetchedData = await getAllAdmins();
-        console.log(fetchedData);
 
+        // Fetch columns and data concurrently
+        const [resolvedColumns, fetchedData] = await Promise.all([
+          getColumns(),
+          getAllAdmins()
+        ]);
+
+        setColumns(resolvedColumns);
         setData(fetchedData);
         setFilteredData(fetchedData);
         setTotalRecords(fetchedData.length);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching table data:', error);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
+
+    fetchAllData();
   }, []);
 
   const handlePageChange = (newPage: number) => {
@@ -72,8 +65,7 @@ export const AdminTable: React.FC = () => {
       setFilteredData(data);
       setTotalRecords(data.length);
     } else {
-      const filtered = data.filter((item: Admin) =>
-        // Search across both firstName and lastName
+      const filtered = data.filter((item: AdminDataType) =>
         `${item.firstName} ${item.lastName}`
           .toLowerCase()
           .includes(searchValue.toLowerCase())
@@ -90,6 +82,25 @@ export const AdminTable: React.FC = () => {
     }
   };
 
+  if (loading || columns.length === 0 || data.length === 0) {
+    return (
+      <div>
+        <div className="flex items-center justify-between">
+          <Heading title="Admins (Loading...)" />
+          <Button
+            className="text-xs md:text-sm btn-primary"
+            onClick={() => handleOnClick('add_admin')}
+            disabled
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            <span className="text-white group-hover:text-black">Add Admin</span>
+          </Button>
+        </div>
+        <span>Loading...</span>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -102,16 +113,12 @@ export const AdminTable: React.FC = () => {
           <span className="text-white group-hover:text-black">Add Admin</span>
         </Button>
       </div>
-      {loading ? (
-        <span>Loading...</span>
-      ) : (
-        <DataTable
-          searchKey="firstName"
-          columns={columns}
-          data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)}
-          onSearch={handleSearchChange}
-        />
-      )}
+      <DataTable
+        searchKey="firstName"
+        columns={columns}
+        data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)}
+        onSearch={handleSearchChange}
+      />
       <div className="flex justify-end space-x-2 py-2">
         <div className="space-x-2">
           <Button
