@@ -1,29 +1,27 @@
 import apiCall from '@/lib/axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { AxiosResponse } from 'axios';
 
+// Define the expected response structure
+interface GetAllUserResponse {
+  total: number;
+  currentPage: number;
+  totalPages: number;
+  Users: any[];
+}
 
-// --------user ---------------------
-
-// Action to get all user with pagination and filters support
+// Thunk to get all users
 export const getAllUser = createAsyncThunk<
-  AxiosResponse<{
-    total: number;
-    currentPage: number;
-    totalPages: number;
-    Users: any[];
-  }>, // Return type
-  string, // Input type with filters
+  GetAllUserResponse, // ✅ Just the data, not AxiosResponse
+  string, // query string input
   { rejectValue: any }
->('User/getAll', 
-  async (query , { rejectWithValue }) => {
+>('User/getAll', async (query, { rejectWithValue }) => {
   try {
-    const response = await apiCall(
+    const response = await apiCall<GetAllUserResponse>(
       'GET',
       `api/approver/all-approver?${query}`
     );
-    return response; // Return full response 
+    return response;
   } catch (error: any) {
-    return rejectWithValue(error || 'Failed to fetch Users');
+    return rejectWithValue(error.message || 'Failed to fetch Users');
   }
 });

@@ -19,7 +19,8 @@ import { Input } from '@/components/ui/input';
 import CardWrapper from './card-wrapper';
 import React, { useState } from 'react';
 import { Eye, EyeOff, CircleX } from 'lucide-react';
-import Auth from '@/types/auth';
+import LoginResponse from '@/types/auth';
+import { AxiosResponse } from 'axios';
 
 const DUMMY_CORRECT_PASSWORD = 'password123';
 
@@ -44,10 +45,7 @@ const LoginForm = () => {
 
   const onSubmit = async (data: loginSchemaType) => {
     try {
-      // console.log(data);
-
-      // Send login request to the backend API
-      const response = await apiCall<Auth.LoginResponse>(
+      const response = await apiCall<LoginResponse>(
         'POST',
         'api/superAdmin/login',
         {
@@ -55,23 +53,20 @@ const LoginForm = () => {
           password: data.password
         }
       );
-      if (response.data) {
-        const { token, user } = response.data;
+      console.log(response);
 
+      if (response.token && response.user) {
         setSessionStorageItem('admin', {
-          token,
-          user
+          token: response.token,
+          user: response.user
         });
       } else {
-        console.error('No data returned from API call');
+        console.error('Missing token or user in response');
+        return;
       }
 
-      // Store token and user data in session storage
-
-      // Redirect user to the dashboard after successful login
       window.location.href = '/super-admin/dashboard';
     } catch (error: any) {
-      // Handle errors (e.g., invalid credentials)
       setPasswordError(error.message || 'Login failed');
     }
   };

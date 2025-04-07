@@ -1,15 +1,15 @@
-declare namespace Auth {
-  interface LoginResponse {
-    status: boolean;
-    message: string;
-    token: string;
-    user: {
-      id: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-    };
-  }
+interface LoginResponse {
+  status: boolean;
+  message: string;
+  token: string;
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+    permissions: string[];
+  };
 }
 
-export default Auth;
+export default LoginResponse;

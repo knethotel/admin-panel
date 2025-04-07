@@ -1,4 +1,4 @@
-import Axios, { AxiosResponse, Method } from 'axios';
+import Axios, { Method } from 'axios';
 import { getSessionStorageItem } from 'utils/localstorage';
 
 // import storage from '../utils/storage';
@@ -50,20 +50,16 @@ export async function apiCall<T = any>(
   method: Method,
   url: string,
   data?: any
-): Promise<AxiosResponse<T>> {
-  // Return type is now AxiosResponse<T>
+): Promise<T> {
   try {
-    const response: AxiosResponse<T> = await axios({
+    const response: T = await axios({
       method,
       url,
       data
-      // You can add headers or other configurations here if needed
     });
-    // console.log(data);
-    return response; // Return the whole response object
+    return response; // response is already the data, not AxiosResponse
   } catch (error: any) {
-    // console.error('API call error:', error); // Log the error for debugging
-    throw error; // Rethrow the error for handling in the caller
+    throw error;
   }
 }
 
