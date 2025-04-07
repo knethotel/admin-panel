@@ -1,5 +1,9 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+  getAllRoles,
+  Role
+} from '@/lib/superAdmin/api/rolesAndPermissions/getAllRoles';
 import { useRouter } from 'next/navigation';
 import FormWrapper from './form-wrapper';
 import { adminSchema, adminSchemaType } from 'schema/company-panel';
@@ -32,6 +36,25 @@ type Props = {
 
 const AdminForm = ({ adminID, mode }: Props) => {
   const router = useRouter();
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [loading, setLoading] = useState(true);
+  //Fetch all the available roles from backend
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const res = await getAllRoles();
+        if (res.status) {
+          setRoles(res.roles);
+        }
+      } catch (error) {
+        console.error('Failed to fetch roles:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRoles();
+  }, []);
 
   // Get admin details using id
   const getAdminDetails = (adminID: string | undefined) => {
@@ -207,28 +230,27 @@ const AdminForm = ({ adminID, mode }: Props) => {
                   </FormItem>
                 )}
               />
+              {/* Role Selection */}
               <FormField
                 control={form.control}
                 name="role"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Role
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="text"
-                          placeholder="Role"
-                          {...field}
-                          disabled={mode === 'view'}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
-                        />
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
-                      </div>
-                    </FormControl>
+                    <FormLabel>Select Role</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {roles.map((role) => (
+                          <SelectItem key={role._id} value={role._id}>
+                            {role.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
