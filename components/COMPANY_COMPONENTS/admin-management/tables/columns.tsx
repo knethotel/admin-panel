@@ -1,5 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import CellAction from './cell-action';
+import { getAllRoles } from '@/lib/superAdmin/api/rolesAndPermissions/getAllRoles';
 
 // Updated interface to match your API response
 export interface AdminDataType {
@@ -15,6 +16,9 @@ export interface AdminDataType {
   updatedAt: string;
   __v: number;
 }
+
+const data = await getAllRoles();
+const roles = data.roles;
 
 export const columns: ColumnDef<AdminDataType>[] = [
   {
@@ -53,14 +57,14 @@ export const columns: ColumnDef<AdminDataType>[] = [
     accessorKey: 'roleId',
     header: 'Role',
     cell: ({ row }) => {
-      // Note: This shows roleId since role name isn't in the response
-      // You might need to fetch role details separately to show the role name
-      const role = row.original.roleId || 'N/A';
-      if (role === '67f0b1e2f570748052516630') {
-        // Super admin role ID from your data
-        return <div className="font-medium text-red-400">Super Admin</div>;
-      } else {
-        return <div className="text-black">{role}</div>;
+      const roleID = row.original.roleId || 'N/A';
+      {
+        const roleOject = roles.find((role: any) => role._id === roleID);
+        return (
+          <div className="text-base bg-zinc-300/40 py-1 rounded-md">
+            {roleOject?.name}
+          </div>
+        );
       }
     }
   },
