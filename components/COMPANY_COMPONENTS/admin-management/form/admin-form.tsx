@@ -6,7 +6,11 @@ import {
 } from '@/lib/superAdmin/api/rolesAndPermissions/getAllRoles';
 import { useRouter } from 'next/navigation';
 import FormWrapper from './form-wrapper';
-import { adminSchema, adminSchemaType } from 'schema/company-panel';
+import {
+  addAdminSchema,
+  editAdminSchema,
+  AdminSchemaType
+} from 'schema/company-panel';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -29,6 +33,7 @@ import {
 import { ChevronDown } from 'lucide-react';
 import { addAdmin } from '@/lib/superAdmin/api/admin/addAdmin';
 import { getAdminById } from '@/lib/superAdmin/api/admin/getAdmins';
+import { editAdmin } from '@/lib/superAdmin/api/admin/editAdmin';
 
 interface Admin {
   _id: string;
@@ -52,16 +57,16 @@ const AdminForm = ({ adminID, mode }: Props) => {
   const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const form = useForm<adminSchemaType>({
-    resolver: zodResolver(adminSchema),
+  const form = useForm<AdminSchemaType>({
+    resolver: zodResolver(mode === 'add' ? addAdminSchema : editAdminSchema),
     defaultValues: {
       firstName: '',
       lastName: '',
       email: '',
-      password: '',
+      password: mode === 'add' ? '' : undefined, // Password only in add mode
       phoneNo: '',
       roleId: '',
-      status: 'Active' // Default to 'Active' only in add mode
+      status: 'Active' // Default to 'Active'
     }
   });
 
@@ -84,10 +89,10 @@ const AdminForm = ({ adminID, mode }: Props) => {
             firstName: adminData.firstName || '',
             lastName: adminData.lastName || '',
             email: adminData.email || '',
-            password: '',
+            password: undefined, // Exclude password in edit mode
             phoneNo: adminData.phoneNo || '',
             roleId: adminData.roleId || '',
-            status: adminData.status // No fallback here, trust the API value
+            status: adminData.status || 'Active'
           });
         }
       } catch (error) {
@@ -99,17 +104,20 @@ const AdminForm = ({ adminID, mode }: Props) => {
     fetchData();
   }, [adminID, form]);
 
-  const onSubmit = async (data: adminSchemaType) => {
+  const onSubmit = async (data: AdminSchemaType) => {
+    console.log('Form Data:', data);
     setLoading(true);
     try {
-      await addAdmin(data);
-      alert('Admin added successfully!');
       if (mode === 'add') {
+        await addAdmin(data);
+        alert('Admin added successfully!');
         form.reset();
-      } else {
-        router.push('/admin-management');
+      } else if (mode === 'edit') {
+        await editAdmin(adminID!, data);
+        alert('Admin updated successfully!');
       }
     } catch (error: any) {
+      console.error('Submit Error:', error);
       alert(`Error: ${error.message}`);
     } finally {
       setLoading(false);
@@ -143,9 +151,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           disabled={mode === 'view' || loading}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
+                        <span className="text-red-500">*</span>
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -169,9 +175,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           disabled={mode === 'view' || loading}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
+                        <span className="text-red-500">*</span>
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -195,41 +199,39 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           disabled={mode === 'view' || loading}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
+                        <span className="text-red-500">*</span>
                       </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="password"
-                          placeholder="Password"
-                          {...field}
-                          disabled={mode === 'view' || loading}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
-                        />
-                        {mode === 'add' && (
+              {mode === 'add' && (
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-black text-[0.8rem]">
+                        Password
+                      </FormLabel>
+                      <FormControl>
+                        <div className="flex gap-1">
+                          <Input
+                            type="password"
+                            placeholder="Password"
+                            {...field}
+                            disabled={loading}
+                            className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          />
                           <span className="text-red-500">*</span>
-                        )}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
             </div>
             {/* Lower part */}
             <div className="flex items-center gap-4">
@@ -250,9 +252,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           disabled={mode === 'view' || loading}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
+                        <span className="text-red-500">*</span>
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -285,9 +285,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           ))}
                         </SelectContent>
                       </Select>
-                      {mode === 'add' && (
-                        <span className="text-red-500">*</span>
-                      )}
+                      <span className="text-red-500">*</span>
                     </div>
                     <FormMessage />
                     <ChevronDown className="absolute right-4 top-[2.2rem] text-black w-4 h-4" />
@@ -318,9 +316,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                             ))}
                           </SelectContent>
                         </Select>
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
+                        <span className="text-red-500">*</span>
                       </div>
                     </FormControl>
                     <FormMessage />

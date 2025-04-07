@@ -2,22 +2,31 @@ import { z } from 'zod';
 // ****************************Company Panel*********************
 
 // Admin Management Schema---------------------------------------------------------------------------------------
-export const adminSchema = z.object({
+const baseAdminSchema = z.object({
   firstName: z.string().min(1, 'First Name is required'),
   lastName: z.string().min(1, 'Last Name is required'),
   email: z.string().email().min(1, 'Email is required'),
-  password: z
-    .string()
-    .min(6, { message: 'Password must be at least 6 characters' })
-    .nonempty({ message: 'Password is required' }),
   phoneNo: z.string().min(1, 'Phone Number is required'),
   roleId: z.string().min(1, 'Role is required'),
   status: z.enum(['Active', 'Inactive'], {
     errorMap: () => ({ message: 'Invalid Status' })
-  })
+  }),
+  password: z.string().optional() // Optional by default
 });
 
-export type adminSchemaType = z.infer<typeof adminSchema>;
+// Schema for add mode (password required)
+export const addAdminSchema = baseAdminSchema.extend({
+  password: z
+    .string()
+    .min(6, { message: 'Password must be at least 6 characters' })
+    .nonempty({ message: 'Password is required' })
+});
+
+// Schema for edit mode (password optional)
+export const editAdminSchema = baseAdminSchema;
+
+export type AdminSchemaType = z.infer<typeof baseAdminSchema>;
+
 
 // Subscription Management Schema---------------------------------------------------------------------------------
 export const SubscriptionManagementFormSchema = z.object({
