@@ -12,7 +12,7 @@ export async function getAdminById(id: string | undefined) {
   return matchedAdmin;
 }
 
-export async function getAllAdmins(id: string | undefined) {
+export async function getAllAdmins() {
   const response = await apiCall<{ admins: any[] }>(
     'GET',
     'api/superAdmin/admins'

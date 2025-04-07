@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Heading } from '@/components/ui/heading';
@@ -8,20 +8,25 @@ import { Heading } from '@/components/ui/heading';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { columns } from './columns';
-
-import { AdminDummyData } from 'app/static/company-panel/AdminManagement';
+import { getAllAdmins } from '@/lib/superAdmin/api/admin/getAdmins';
 
 type ModeType = 'add_admin';
 
 export const AdminTable: React.FC = () => {
   const router = useRouter();
-  const [data, setData] = useState(AdminDummyData || []);
-  const [filteredData, setFilteredData] = useState(AdminDummyData || []);
+  const [data, setData] = useState<any>();
+  const [filteredData, setFilteredData] = useState<any>();
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>(false);
-  const [totalRecords, setTotalRecords] = useState(data.length || 0);
+  const [totalRecords, setTotalRecords] = useState(data?.length || 0);
   const [mode, setMode] = useState<ModeType>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getAllAdmins();
+    };
+  }, []);
 
   // const filters = [
   //     {
