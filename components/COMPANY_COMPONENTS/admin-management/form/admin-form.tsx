@@ -235,23 +235,32 @@ const AdminForm = ({ adminID, mode }: Props) => {
                 control={form.control}
                 name="role"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="relative">
                     <FormLabel>Select Role</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a role" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {roles.map((role) => (
-                          <SelectItem key={role._id} value={role._id}>
-                            {role.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="flex gap-1">
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="min-w-40 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
+                            <SelectValue placeholder="Select a role" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {roles.map((role) => (
+                            <SelectItem key={role._id} value={role._id}>
+                              {role.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {mode === 'add' && (
+                        <span className="text-red-500">*</span>
+                      )}
+                    </div>
                     <FormMessage />
+                    <ChevronDown className="absolute right-4 top-[2.2rem] text-black w-4 h-4" />
                   </FormItem>
                 )}
               />
@@ -271,7 +280,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           <SelectTrigger className="min-w-32 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent className="bg-[#362913] rounded-2xl text-white border-2 shadow-md border-white">
+                          <SelectContent>
                             {['Active', 'Inactive'].map((value) => (
                               <SelectItem key={value} value={value}>
                                 {value}
