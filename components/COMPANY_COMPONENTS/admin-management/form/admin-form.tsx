@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/select';
 import { ChevronDown } from 'lucide-react';
 import { addAdmin } from '@/lib/superAdmin/api/admin/addAdmin';
-import { getAdminById } from '@/lib/superAdmin/api/admin/getAdminById';
+import { getAdminById } from '@/lib/superAdmin/api/admin/getAdmins';
 
 type Props = {
   adminID?: string;

@@ -11,3 +11,15 @@ export async function getAdminById(id: string | undefined) {
   }
   return matchedAdmin;
 }
+
+export async function getAllAdmins(id: string | undefined) {
+  const response = await apiCall<{ admins: any[] }>(
+    'GET',
+    'api/superAdmin/admins'
+  );
+  const admins = response;
+  if (!admins) {
+    throw new Error('Admin not found');
+  }
+  return admins;
+}
