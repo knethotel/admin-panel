@@ -105,7 +105,7 @@ const LoginForm = () => {
                           type="email"
                           placeholder="Enter your email"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-10 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10" // Add padding-right for icon
+                          className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10" // Add padding-right for icon
                         />
                         {field.value && (
                           <button
