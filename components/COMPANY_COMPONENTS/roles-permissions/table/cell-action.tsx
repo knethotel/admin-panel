@@ -34,12 +34,16 @@ const CellAction = (props: any) => {
     console.log('Navigating to view:', data._id);
   };
 
+  const handleDeleteUser = async () => {
+    setOpen(true);
+  };
+
   return (
     <>
       <AlertModal
         isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onConfirm}
+        onCloseAction={() => setOpen(false)}
+        onConfirmAction={onConfirm}
         loading={loading}
         description="Are you sure you want to delete this role?"
       />
@@ -51,7 +55,7 @@ const CellAction = (props: any) => {
           <Eye className="w-4 text-button-dark group-hover:text-white" />
         </button>
         <button
-          onClick={() => setOpen(true)}
+          onClick={() => handleDeleteUser()}
           className="p-1 rounded-md group hover:bg-[#a07d3d5e]"
         >
           <Trash className="w-4 text-button-dark group-hover:text-white" />
