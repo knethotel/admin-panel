@@ -1,5 +1,6 @@
 import { AlertModal } from '@/components/modal/alert-modal';
 import { Button } from '@/components/ui/button';
+import { deleteRoleById } from '@/lib/superAdmin/api/rolesAndPermissions/deleteRoleById';
 import { Eye, Edit, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -14,7 +15,8 @@ const CellAction = (props: any) => {
 
   const onConfirm = async () => {
     try {
-      // TODO: Add delete logic here (e.g., API call to delete role)
+      const response = await deleteRoleById(data._id);
+      console.log(response);
       setLoading(true);
     } catch (error: any) {
       console.error('Error deleting role:', error);
