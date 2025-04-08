@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 import { RoleDetailsDataType } from 'app/static/company-panel/RolesAndPermissions';
 import apiCall from '@/lib/axios';
+import { Plus } from 'lucide-react';
 
 // Define interfaces and API function inline
 interface Permission {
@@ -96,6 +97,17 @@ export const RolesAndPermissionHome: React.FC = () => {
         <span>Loading...</span>
       ) : (
         <div>
+          <div className="w-full flex justify-end">
+            <Button
+              className="text-xs md:text-sm btn-primary"
+              // onClick={() => handleOnClick('add_admin')}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              <span className="text-white group-hover:text-black">
+                Add Role
+              </span>
+            </Button>
+          </div>
           <DataTable
             searchKey="role" // Changed from "firstName" to match RoleDetailsDataType
             columns={columns}
