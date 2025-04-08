@@ -1,6 +1,6 @@
 'use client';
 
-import { setSessionStorageItem } from '@/utils/localstorage';
+import { setSessionStorageItem } from '../../../utils/localstorage';
 import apiCall from '@/lib/axios';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -19,7 +19,7 @@ import { Input } from '@/components/ui/input';
 import CardWrapper from './card-wrapper';
 import React, { useState } from 'react';
 import { Eye, EyeOff, CircleX } from 'lucide-react';
-import LoginResponse from '@/types/auth';
+import LoginResponse from '../../../types/auth';
 
 const DUMMY_CORRECT_PASSWORD = 'password123';
 
