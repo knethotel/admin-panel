@@ -5,6 +5,10 @@ import { RoleDetailsDataType } from 'app/static/company-panel/RolesAndPermission
 // Update type to match guestDataType for better type safety
 export const columns: ColumnDef<RoleDetailsDataType>[] = [
   {
+    accessorKey: '_id',
+    header: 'Role ID'
+  },
+  {
     accessorKey: 'role',
     header: 'Role'
   },

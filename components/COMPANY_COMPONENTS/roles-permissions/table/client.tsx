@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { useRouter } from 'next/navigation';
 import { columns } from './columns';
+import { RoleDetailsDataType } from 'app/static/company-panel/RolesAndPermissions';
 import apiCall from '@/lib/axios';
 
 // Define interfaces and API function inline
@@ -35,13 +36,6 @@ const getAllRoles = async (): Promise<GetRolesResponse> => {
   );
 };
 
-// Define the expected data type for the table
-export type RoleDetailsDataType = {
-  role: string;
-  permissions: number;
-  taggedUsers: number;
-};
-
 export const RolesAndPermissionHome: React.FC = () => {
   const router = useRouter();
   const [data, setData] = useState<RoleDetailsDataType[]>([]);
@@ -61,6 +55,7 @@ export const RolesAndPermissionHome: React.FC = () => {
           // Transform API response to RoleDetailsDataType
           const transformedData: RoleDetailsDataType[] = response.roles.map(
             (role) => ({
+              _id: role._id,
               role: role.name,
               permissions: role.permissions.length, // Count of permissions
               taggedUsers: 0 // Placeholder; update if you have user data
