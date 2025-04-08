@@ -1,11 +1,18 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+  getAllRoles,
+  Role
+} from '@/lib/superAdmin/api/rolesAndPermissions/getAllRoles';
 import { useRouter } from 'next/navigation';
 import FormWrapper from './form-wrapper';
-import { adminSchema, adminSchemaType } from 'schema/company-panel';
+import {
+  addAdminSchema,
+  editAdminSchema,
+  AdminSchemaType
+} from 'schema/company-panel';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AdminDummyData } from 'app/static/company-panel/AdminManagement';
 import {
   Form,
   FormControl,
@@ -24,6 +31,20 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { ChevronDown } from 'lucide-react';
+import { addAdmin } from '@/lib/superAdmin/api/admin/addAdmin';
+import { getAdminById } from '@/lib/superAdmin/api/admin/getAdmins';
+import { editAdmin } from '@/lib/superAdmin/api/admin/editAdmin';
+
+interface Admin {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNo?: string;
+  roleId: string;
+  status: string;
+  [key: string]: any;
+}
 
 type Props = {
   adminID?: string;
@@ -32,37 +53,75 @@ type Props = {
 
 const AdminForm = ({ adminID, mode }: Props) => {
   const router = useRouter();
+  const [admin, setAdminData] = useState<Admin | undefined>();
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Get admin details using id
-  const getAdminDetails = (adminID: string | undefined) => {
-    if (adminID) {
-      return AdminDummyData.find((admin) => admin.adminID === adminID);
-    } else {
-      return null;
-    }
-  };
-  const admin = getAdminDetails(adminID);
-
-  // Modified: Added all schema fields (logIn, logOut, priceType) to defaultValues
-  const form = useForm<adminSchemaType>({
-    resolver: zodResolver(adminSchema),
+  const form = useForm<AdminSchemaType>({
+    resolver: zodResolver(mode === 'add' ? addAdminSchema : editAdminSchema),
     defaultValues: {
-      firstName: admin?.adminDetails?.name?.split(' ')[0] || '',
-      lastName: admin?.adminDetails?.name?.split(' ')[1] || '',
-      email: admin?.adminDetails?.emailID || '',
-      password: admin?.adminDetails.password || '',
-      phoneNo: admin?.adminDetails?.mobileNo || '',
-      role: admin?.role || '',
-      status: 'Active',
-      logIn: admin?.loginDetails.time || '', // Added login time
-      logOut: admin?.logoutDetails.time || '' // Added logout time
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: mode === 'add' ? '' : undefined, // Password only in add mode
+      phoneNo: '',
+      roleId: '',
+      status: 'Active' // Default to 'Active'
     }
   });
 
-  // Modified: Typed data parameter as adminSchemaType for better type safety
-  const onSubmit = (data: adminSchemaType) => {
-    console.log(data);
-    form.reset();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [rolesRes, adminData] = await Promise.all([
+          getAllRoles(),
+          adminID ? getAdminById(adminID) : Promise.resolve(null)
+        ]);
+
+        if (rolesRes.status) {
+          setRoles(rolesRes.roles);
+        }
+
+        if (adminData) {
+          setAdminData(adminData);
+          form.reset({
+            firstName: adminData.firstName || '',
+            lastName: adminData.lastName || '',
+            email: adminData.email || '',
+            password: undefined, // Exclude password in edit mode
+            phoneNo: adminData.phoneNo || '',
+            roleId: adminData.roleId || '',
+            status: adminData.status || 'Active'
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [adminID, form]);
+
+  const onSubmit = async (data: AdminSchemaType) => {
+    console.log('Form Data:', data);
+    setLoading(true);
+    try {
+      if (mode === 'add') {
+        await addAdmin(data);
+        alert('Admin added successfully!');
+        form.reset();
+      } else if (mode === 'edit') {
+        await editAdmin(adminID!, data);
+        alert('Admin updated successfully!');
+      }
+    } catch (error: any) {
+      console.error('Submit Error:', error);
+      alert(`Error: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -89,12 +148,10 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           type="text"
                           placeholder="First Name"
                           {...field}
-                          disabled={mode === 'view'}
+                          disabled={mode === 'view' || loading}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
+                        <span className="text-red-500">*</span>
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -115,12 +172,10 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           type="text"
                           placeholder="Last Name"
                           {...field}
-                          disabled={mode === 'view'}
+                          disabled={mode === 'view' || loading}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
+                        <span className="text-red-500">*</span>
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -141,44 +196,42 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           type="email"
                           placeholder="Email ID"
                           {...field}
-                          disabled={mode === 'view'}
+                          disabled={mode === 'view' || loading}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
+                        <span className="text-red-500">*</span>
                       </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="password"
-                          placeholder="Password"
-                          {...field}
-                          disabled={mode === 'view'}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
-                        />
-                        {mode === 'add' && (
+              {mode === 'add' && (
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-black text-[0.8rem]">
+                        Password
+                      </FormLabel>
+                      <FormControl>
+                        <div className="flex gap-1">
+                          <Input
+                            type="password"
+                            placeholder="Password"
+                            {...field}
+                            disabled={loading}
+                            className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          />
                           <span className="text-red-500">*</span>
-                        )}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
             </div>
             {/* Lower part */}
             <div className="flex items-center gap-4">
@@ -187,7 +240,6 @@ const AdminForm = ({ adminID, mode }: Props) => {
                 name="phoneNo"
                 render={({ field }) => (
                   <FormItem>
-                    {/* Modified: Fixed label from "Email" to "Phone Number" */}
                     <FormLabel className="text-black text-[0.8rem]">
                       Phone Number
                     </FormLabel>
@@ -197,41 +249,46 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           type="text"
                           placeholder="Phone No"
                           {...field}
-                          disabled={mode === 'view'}
+                          disabled={mode === 'view' || loading}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
                         />
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
+                        <span className="text-red-500">*</span>
                       </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              {/* Role Selection */}
               <FormField
                 control={form.control}
-                name="role"
+                name="roleId"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Role
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="text"
-                          placeholder="Role"
-                          {...field}
-                          disabled={mode === 'view'}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
-                        />
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
-                      </div>
-                    </FormControl>
+                  <FormItem className="relative">
+                    <FormLabel>Select Role</FormLabel>
+                    <div className="flex gap-1">
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        disabled={loading}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="min-w-40 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
+                            <SelectValue placeholder="Select a role" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {roles.map((role) => (
+                            <SelectItem key={role._id} value={role._id}>
+                              {role.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <span className="text-red-500">*</span>
+                    </div>
                     <FormMessage />
+                    <ChevronDown className="absolute right-4 top-[2.2rem] text-black w-4 h-4" />
                   </FormItem>
                 )}
               />
@@ -246,12 +303,12 @@ const AdminForm = ({ adminID, mode }: Props) => {
                         <Select
                           onValueChange={field.onChange}
                           value={field.value}
-                          disabled={mode === 'view'}
+                          disabled={mode === 'view' || loading}
                         >
                           <SelectTrigger className="min-w-32 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
-                            <SelectValue />
+                            <SelectValue placeholder="Select status" />
                           </SelectTrigger>
-                          <SelectContent className="bg-[#362913] rounded-2xl text-white border-2 shadow-md border-white">
+                          <SelectContent>
                             {['Active', 'Inactive'].map((value) => (
                               <SelectItem key={value} value={value}>
                                 {value}
@@ -259,67 +316,11 @@ const AdminForm = ({ adminID, mode }: Props) => {
                             ))}
                           </SelectContent>
                         </Select>
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
+                        <span className="text-red-500">*</span>
                       </div>
                     </FormControl>
                     <FormMessage />
                     <ChevronDown className="absolute right-4 top-[2.2rem] text-black w-4 h-4" />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="flex items-center gap-4">
-              <FormField
-                control={form.control}
-                name="logOut"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Logout Time
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="text"
-                          placeholder="Logout Time"
-                          {...field}
-                          disabled={mode === 'view'}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
-                        />
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="logIn"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Login Time
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="text"
-                          placeholder="Login Time"
-                          {...field}
-                          disabled={mode === 'view'}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
-                        />
-                        {mode === 'add' && (
-                          <span className="text-red-500">*</span>
-                        )}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -331,10 +332,11 @@ const AdminForm = ({ adminID, mode }: Props) => {
               type="button"
               onClick={() => router.back()}
               className="btn-secondary"
+              disabled={loading}
             >
               Cancel
             </Button>
-            <Button type="submit" className="btn-primary">
+            <Button type="submit" className="btn-primary" disabled={loading}>
               Save Changes
             </Button>
           </div>

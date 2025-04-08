@@ -20,7 +20,6 @@ import CardWrapper from './card-wrapper';
 import React, { useState } from 'react';
 import { Eye, EyeOff, CircleX } from 'lucide-react';
 import LoginResponse from '@/types/auth';
-import { AxiosResponse } from 'axios';
 
 const DUMMY_CORRECT_PASSWORD = 'password123';
 

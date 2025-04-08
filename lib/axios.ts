@@ -7,8 +7,9 @@ function authRequestInterceptor(config: any) {
   config.headers = config.headers ?? {};
   const adminData: any = getSessionStorageItem('admin');
   if (adminData && adminData.token) {
-    config.headers.authorization = adminData.token;
+    config.headers.authorization = `Bearer ${adminData.token}`;
   }
+
   config.headers.Accept = 'application/json';
   return config;
 }

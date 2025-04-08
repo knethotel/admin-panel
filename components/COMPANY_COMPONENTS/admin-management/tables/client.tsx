@@ -1,45 +1,43 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Heading } from '@/components/ui/heading';
-
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { columns } from './columns';
-
-import { AdminDummyData } from 'app/static/company-panel/AdminManagement';
-
-type ModeType = 'add_admin';
+import { useColumns, AdminDataType } from './columns';
+import { getAllAdmins } from '@/lib/superAdmin/api/admin/getAdmins';
 
 export const AdminTable: React.FC = () => {
   const router = useRouter();
-  const [data, setData] = useState(AdminDummyData || []);
-  const [filteredData, setFilteredData] = useState(AdminDummyData || []);
+  const columns = useColumns(); // Use hook directly at top level
+  const [data, setData] = useState<AdminDataType[]>([]);
+  const [filteredData, setFilteredData] = useState<AdminDataType[]>([]);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [totalRecords, setTotalRecords] = useState(data.length || 0);
-  const [mode, setMode] = useState<ModeType>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [totalRecords, setTotalRecords] = useState(0);
 
-  // const filters = [
-  //     {
-  //         label: 'Account Status',
-  //         key: 'accountStatus', // Backend key
-  //         subOptions: ['Active', 'Suspended'],
-  //     },
-  //     {
-  //         label: 'Verification Status',
-  //         key: 'verificationStatus',
-  //         subOptions: ['Verified', 'Pending', 'Rejected'],
-  //     },
-  //     {
-  //         label: 'Activity Status',
-  //         key: 'activityStatus',
-  //         subOptions: ['Active', 'Inactive'],
-  //     },
-  // ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const fetchedData = await getAllAdmins();
+        setData(fetchedData);
+        setFilteredData(fetchedData);
+        setTotalRecords(fetchedData.length);
+      } catch (error) {
+        console.error('Error fetching admins:', error);
+        setData([]);
+        setFilteredData([]);
+        setTotalRecords(0);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
@@ -56,20 +54,47 @@ export const AdminTable: React.FC = () => {
     setPageNo(1);
     if (searchValue.trim() === '') {
       setFilteredData(data);
+      setTotalRecords(data.length);
     } else {
       const filtered = data.filter((item) =>
-        item.adminDetails.name.toLowerCase().includes(searchValue.toLowerCase())
+        `${item.firstName} ${item.lastName}`
+          .toLowerCase()
+          .includes(searchValue.toLowerCase())
       );
       setFilteredData(filtered);
+      setTotalRecords(filtered.length);
     }
   };
 
   const handleOnClick = (actionName: string) => {
     if (actionName === 'add_admin') {
-      setMode('add_admin');
       router.push(`admin-management/add`);
     }
   };
+
+  if (loading) {
+    return (
+      <div>
+        <div className="flex items-center justify-between">
+          <Heading title="Admins (Loading...)" />
+          <Button
+            className="text-xs md:text-sm btn-primary"
+            onClick={() => handleOnClick('add_admin')}
+            disabled
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            <span className="text-white group-hover:text-black">Add Admin</span>
+          </Button>
+        </div>
+        <span>Loading...</span>
+      </div>
+    );
+  }
+
+  const paginatedData = filteredData.slice(
+    (pageNo - 1) * limit,
+    pageNo * limit
+  );
 
   return (
     <>
@@ -83,46 +108,41 @@ export const AdminTable: React.FC = () => {
           <span className="text-white group-hover:text-black">Add Admin</span>
         </Button>
       </div>
-      {loading ? (
-        <span>Loading...</span>
+      {paginatedData.length === 0 ? (
+        <div className="text-center py-4">No admins found.</div>
       ) : (
         <DataTable
           searchKey="firstName"
           columns={columns}
-          data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)}
-          // onSearch={(searchValue) => {
-          //     const filtered = data.filter((item) =>
-          //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())
-          //     );
-          //     setData(filtered);
-          // }}
-          // filters={filters}
-          // onFilterChange={handleFilterChange}
+          data={paginatedData}
+          onSearch={handleSearchChange}
         />
       )}
-      <div className="flex justify-end space-x-2 py-2">
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(pageNo - 1)}
-            disabled={pageNo === 1}
-          >
-            Previous
-          </Button>
-          <span className="text-sm text-gray-600">
-            Page {pageNo} of {Math.ceil(totalRecords / limit)}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(pageNo + 1)}
-            disabled={pageNo >= Math.ceil(totalRecords / limit)}
-          >
-            Next
-          </Button>
+      {totalRecords > 0 && (
+        <div className="flex justify-end space-x-2 py-2">
+          <div className="space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(pageNo - 1)}
+              disabled={pageNo === 1}
+            >
+              Previous
+            </Button>
+            <span className="text-sm text-gray-600">
+              Page {pageNo} of {Math.ceil(totalRecords / limit) || 1}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(pageNo + 1)}
+              disabled={pageNo >= Math.ceil(totalRecords / limit)}
+            >
+              Next
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
