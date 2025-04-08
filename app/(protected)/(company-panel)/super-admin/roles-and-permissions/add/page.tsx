@@ -1,13 +1,11 @@
 'use client';
 import React, { useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import RolesAndPermissionsModal from '../../../../../../components/shared/role-and-permission/role-permission';
-import { addNewRole } from '../../../../../../lib/superAdmin/api/rolesAndPermissions/addNewRole'; // Import the API function
+import { addNewRole } from '../../../../../../lib/superAdmin/api/rolesAndPermissions/addNewRole';
 
 const SuperAdminAddRolePage = () => {
   const router = useRouter();
-  const params = useParams();
-  const roleId = params.id as string; // Optional, depends if you use it for prefill/reference
 
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -17,24 +15,26 @@ const SuperAdminAddRolePage = () => {
     setError(null);
 
     try {
-      const [roleName, permissions] = Object.entries(data)[0]; // One role at a time
+      // Expected shape: { admin: ["dashboard", "Change Password"] }
+      const [[roleName, modules]] = Object.entries(data); // Destructure the first entry
       const formattedData = {
         name: roleName,
-        permissions: permissions.map((module) => ({
+        permissions: modules.map((module) => ({
           module: reverseMapModuleName(module),
           access: ['read', 'write', 'delete']
         }))
       };
 
-      console.log('Formatted data for API (add):', formattedData);
+      console.log('Formatted Data Sent to API:', formattedData);
       await addNewRole(formattedData);
 
       router.push('/super-admin/roles-and-permissions');
-    } catch (err) {
-      setError(
-        'Failed to add role: ' +
-          (err instanceof Error ? err.message : 'Unknown error')
-      );
+    } catch (err: any) {
+      const errorMessage =
+        err?.response?.data?.message ??
+        (err instanceof Error ? err.message : 'Unknown error');
+      setError('Failed to add role: ' + errorMessage);
+      console.error('Add Role Error:', err?.response?.data || err);
     } finally {
       setIsSaving(false);
     }
@@ -52,7 +52,7 @@ const SuperAdminAddRolePage = () => {
       'Complaint Management': 'complaint-management',
       'Admin Management': 'admin-management',
       'Guest Management': 'user-management',
-      Dashboard: 'dashboard',
+      Dashboard: 'Dashboard',
       'Roles and Permissions': 'roles-and-permissions',
       'Payment Management': 'payment-management',
       'Change Password': 'change-password',
@@ -68,7 +68,7 @@ const SuperAdminAddRolePage = () => {
         isOpen={true}
         onClose={handleClose}
         mode="add"
-        roleId={undefined} // No editing, so no ID needed
+        roleId={undefined}
         onSave={handleSave}
         isSuperAdmin={true}
       />

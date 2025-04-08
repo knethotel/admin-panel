@@ -114,7 +114,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     setLoading(true);
     setError(null);
     console.log(isSuperAdmin);
-    
+
     try {
       if (isSuperAdmin && (mode === 'edit' || mode === 'view') && roleId) {
         const matchedRole: RoleData = await getRoleById(roleId);
@@ -231,6 +231,8 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
           modules.map((module) => reverseMapModuleName(module))
         ])
       );
+      console.log('this data comes from form', apiFormattedData);
+
       await onSave(apiFormattedData);
       onClose();
     } catch (err) {
