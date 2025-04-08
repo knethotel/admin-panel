@@ -37,11 +37,7 @@ const getAllRoles = async (): Promise<GetRolesResponse> => {
   );
 };
 
-export const RolesAndPermissionHome = ({
-  roleIsDeleted
-}: {
-  roleIsDeleted?: boolean;
-}) => {
+export const RolesAndPermissionHome: React.FC = () => {
   const router = useRouter();
   const [data, setData] = useState<RoleDetailsDataType[]>([]);
   const [filteredData, setFilteredData] = useState<RoleDetailsDataType[]>([]);

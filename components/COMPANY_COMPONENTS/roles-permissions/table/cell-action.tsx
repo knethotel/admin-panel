@@ -15,8 +15,7 @@ const CellAction = (props: any) => {
 
   const onConfirm = async () => {
     try {
-      const response = await deleteRoleById(data._id);
-      console.log(response);
+      await deleteRoleById(data._id);
       setLoading(true);
     } catch (error: any) {
       console.error('Error deleting role:', error);
