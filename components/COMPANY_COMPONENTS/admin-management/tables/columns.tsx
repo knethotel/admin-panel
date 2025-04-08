@@ -1,4 +1,6 @@
-// columns.ts
+'use client'; // Mark as Client Component
+
+import { useState, useEffect } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import CellAction from './cell-action';
 import { getAllRoles } from '@/lib/superAdmin/api/rolesAndPermissions/getAllRoles';
@@ -17,10 +19,25 @@ export interface AdminDataType {
   __v: number;
 }
 
-export const getColumns = async (): Promise<ColumnDef<AdminDataType>[]> => {
-  const data = await getAllRoles();
-  const roles = data.roles || [];
+// Custom hook to fetch roles and return columns
+export const useColumns = (): ColumnDef<AdminDataType>[] => {
+  const [roles, setRoles] = useState<any[]>([]);
 
+  // Fetch roles on mount
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const data = await getAllRoles();
+        setRoles(data.roles || []);
+      } catch (error) {
+        console.error('Failed to fetch roles:', error);
+        setRoles([]); // Fallback to empty array on error
+      }
+    };
+    fetchRoles();
+  }, []);
+
+  // Define columns using the fetched roles
   return [
     {
       accessorKey: 'firstName',
@@ -41,7 +58,7 @@ export const getColumns = async (): Promise<ColumnDef<AdminDataType>[]> => {
       }
     },
     {
-      accessorKey: 'phoneNo',
+      accessorKey: 'phoneNo', // Note: Add to AdminDataType if used, otherwise remove
       header: 'Mobile no.',
       cell: () => 'N/A'
     },

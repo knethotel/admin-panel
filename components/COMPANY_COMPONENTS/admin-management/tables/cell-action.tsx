@@ -1,17 +1,14 @@
 import { Button } from '@/components/ui/button';
-import ToggleButton from '@/components/ui/toggleButton';
 import { Edit, Eye } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const CellAction = (props: any) => {
   const { data } = props;
-  // console.log('The data is ', data);
   const router = useRouter();
 
   const handleEditUser = () => {
     router.push(`/super-admin/admin-management/edit/${data._id}`);
-    // console.log('success');
   };
 
   const handleViewUser = () => {
