@@ -3,6 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  getAllRoles,
+  Role
+} from '../../../lib/superAdmin/api/rolesAndPermissions/getAllRoles'; // Adjust the import path
 
 type Mode = 'add' | 'edit' | 'view';
 type RolesAndPermissions = Record<string, string[]>;
@@ -13,6 +17,8 @@ interface ModalProps {
   mode?: Mode;
   existingRolesAndPermissions?: RolesAndPermissions;
   onSave: (data: RolesAndPermissions) => void;
+  roleId?: string; // New prop for matching role _id
+  isSuperAdmin?: boolean; // New prop to distinguish between Hotel and Super Admin panels
 }
 
 const RolesAndPermissionsModal: React.FC<ModalProps> = ({
@@ -20,7 +26,9 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
   onClose,
   mode = 'add',
   existingRolesAndPermissions = {},
-  onSave
+  onSave,
+  roleId,
+  isSuperAdmin = false
 }) => {
   const [role, setRole] = useState<string>('');
   const [roles, setRoles] = useState<string[]>([]);
@@ -28,6 +36,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     useState<RolesAndPermissions>({});
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [apiRoles, setApiRoles] = useState<Role[]>([]); // Store roles from API
 
   const superAdminModules = [
     'Dashboard',
@@ -41,15 +50,57 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     'Sub Hotel Management'
   ];
 
+  const hotelModules = [
+    'Dashboard',
+    'Room Management',
+    'Booking Management',
+    'Staff Management',
+    'Inventory',
+    'Reports',
+    'Settings'
+  ];
+
+  const availableModules = isSuperAdmin ? superAdminModules : hotelModules;
+
   useEffect(() => {
     if (isOpen) {
-      if (mode === 'edit' || mode === 'view') {
+      if (isSuperAdmin && (mode === 'edit' || mode === 'view')) {
+        // Fetch roles from API for Super Admin
+        const fetchRoles = async () => {
+          try {
+            const response = await getAllRoles();
+            if (response.status) {
+              setApiRoles(response.roles);
+              const matchedRole = response.roles.find(
+                (r: any) => r._id === roleId
+              );
+              if (matchedRole) {
+                const formattedPermissions: RolesAndPermissions = {
+                  [matchedRole.name]: matchedRole.permissions.map(
+                    (p: any) => p.module
+                  )
+                };
+                setRoles([matchedRole.name]);
+                setSelectedPermissions(formattedPermissions);
+                setSelectedRole(matchedRole.name);
+                setRole(matchedRole.name);
+              }
+            }
+          } catch (err) {
+            setError('Failed to fetch roles');
+            console.error(err);
+          }
+        };
+        fetchRoles();
+      } else if (!isSuperAdmin && (mode === 'edit' || mode === 'view')) {
+        // Hotel Panel existing logic
         const roleKeys = Object.keys(existingRolesAndPermissions);
         setRoles(roleKeys);
         setSelectedPermissions(existingRolesAndPermissions);
         setSelectedRole(roleKeys[0] || null);
         if (roleKeys[0]) setRole(roleKeys[0]);
       } else {
+        // Add mode for both panels
         setRoles([]);
         setSelectedPermissions({});
         setSelectedRole(null);
@@ -57,7 +108,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
       }
       setError(null);
     }
-  }, [isOpen, mode, existingRolesAndPermissions]);
+  }, [isOpen, mode, existingRolesAndPermissions, roleId, isSuperAdmin]);
 
   const handleRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRole(e.target.value);
@@ -75,7 +126,6 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     }
 
     if (mode === 'edit' && selectedRole) {
-      // Handle role name change in edit mode
       const updatedPermissions = { ...selectedPermissions };
       const permissions = updatedPermissions[selectedRole] || [];
       delete updatedPermissions[selectedRole];
@@ -85,7 +135,6 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
       setRoles(Object.keys(updatedPermissions));
       setSelectedRole(role);
     } else {
-      // Add new role
       setRoles([...roles, role]);
       setSelectedPermissions((prev) => ({ ...prev, [role]: [] }));
       setSelectedRole(role);
@@ -166,16 +215,19 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
                   value={role}
                   onChange={handleRoleChange}
                   className="bg-[#F6EEE0] text-gray-700 px-2 rounded-md border-none"
+                  disabled={isSuperAdmin && mode === 'edit'} // Disable role name editing for Super Admin in edit mode
                 />
                 {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
               </div>
-              <Button
-                type="button"
-                onClick={handleAddRole}
-                className="bg-[#8c6b33] text-white hover:bg-[#362913] px-4 h-auto rounded-lg"
-              >
-                {mode === 'edit' ? 'Update Role' : 'Add Role'}
-              </Button>
+              {!isSuperAdmin && (
+                <Button
+                  type="button"
+                  onClick={handleAddRole}
+                  className="bg-[#8c6b33] text-white hover:bg-[#362913] px-4 h-auto rounded-lg"
+                >
+                  {mode === 'edit' ? 'Update Role' : 'Add Role'}
+                </Button>
+              )}
             </div>
           )}
 
@@ -198,7 +250,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
                     />
                   )}
                 </button>
-                {mode !== 'view' && (
+                {mode !== 'view' && !isSuperAdmin && (
                   <button
                     type="button"
                     onClick={() => handleDeleteRole(r)}
@@ -219,7 +271,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
                 <span className="text-[#8c6b33]">{selectedRole}</span>
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {superAdminModules.map((permission) => (
+                {availableModules.map((permission) => (
                   <div key={permission} className="flex items-center space-x-2">
                     <Checkbox
                       id={`permission-${permission}`}

@@ -23,12 +23,12 @@ const CellAction = (props: any) => {
   };
 
   const handleEditUser = () => {
-    router.push(`company/roles-and-permissions/edit/${data.role}`);
+    router.push(`/super-admin/roles-and-permissions/edit/${data._id}`);
     console.log('success');
   };
 
   const handleViewUser = () => {
-    router.push(`company/roles-and-permissions/view/${data.role}`);
+    router.push(`/super-admin/roles-and-permissions/view/${data._id}`);
   };
 
   return (

@@ -1,13 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table';
 import CellAction from './cell-action';
-import { UsersDataType } from 'app/static/company-panel/RolesAndPermissions';
+import { RoleDetailsDataType } from 'app/static/company-panel/RolesAndPermissions';
 
 // Update type to match guestDataType for better type safety
-export const columns: ColumnDef<UsersDataType>[] = [
-  {
-    accessorKey: 'snNo',
-    header: 'sn no.'
-  },
+export const columns: ColumnDef<RoleDetailsDataType>[] = [
   {
     accessorKey: 'role',
     header: 'Role'
