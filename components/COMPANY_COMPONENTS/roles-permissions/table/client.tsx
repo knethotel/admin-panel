@@ -91,6 +91,10 @@ export const RolesAndPermissionHome: React.FC = () => {
     setPageNo(1); // Reset to first page when limit changes
   };
 
+  const handleOnClick = () => {
+    router.push('/super-admin/roles-and-permissions/add');
+  };
+
   return (
     <>
       {loading ? (
@@ -100,7 +104,7 @@ export const RolesAndPermissionHome: React.FC = () => {
           <div className="w-full flex justify-end">
             <Button
               className="text-xs md:text-sm btn-primary"
-              // onClick={() => handleOnClick('add_admin')}
+              onClick={() => handleOnClick()}
             >
               <Plus className="mr-2 h-4 w-4" />
               <span className="text-white group-hover:text-black">
