@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 
 const CellAction = (props: any) => {
   const { data } = props;
-  console.log(data.role);
+  // console.log(data.role); // Logs the role name (e.g., "Super Admin")
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -14,58 +14,53 @@ const CellAction = (props: any) => {
 
   const onConfirm = async () => {
     try {
-      // Perform user  logic here
+      // TODO: Add delete logic here (e.g., API call to delete role)
+      setLoading(true);
     } catch (error: any) {
-      // console.error("Error deactivating user:", error);
+      console.error('Error deleting role:', error);
     } finally {
+      setLoading(false);
       setOpen(false);
     }
   };
 
   const handleEditUser = () => {
     router.push(`/super-admin/roles-and-permissions/edit/${data._id}`);
-    console.log('success');
+    console.log('Navigating to edit:', data._id);
   };
 
   const handleViewUser = () => {
     router.push(`/super-admin/roles-and-permissions/view/${data._id}`);
+    console.log('Navigating to view:', data._id);
   };
 
   return (
     <>
-      {/* Deactivate Confirmation Modal */}
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onConfirm}
         loading={loading}
-        description="Are you sure you want to deactivate this user?"
+        description="Are you sure you want to delete this role?"
       />
-
-      {/* Action Buttons */}
       <div className="flex space-x-2">
-        {/* View user details */}
         <button
-          onClick={() => handleViewUser()}
+          onClick={handleViewUser}
           className="p-1 rounded-md group hover:bg-[#a07d3d5e]"
         >
-          <Eye className=" w-4 text-button-dark group-hover:text-white" />
+          <Eye className="w-4 text-button-dark group-hover:text-white" />
         </button>
-
-        {/* Delete User */}
         <button
           onClick={() => setOpen(true)}
           className="p-1 rounded-md group hover:bg-[#a07d3d5e]"
         >
-          <Trash className=" w-4 text-button-dark group-hover:text-white" />
+          <Trash className="w-4 text-button-dark group-hover:text-white" />
         </button>
-
-        {/* Edit User */}
         <Button
-          onClick={() => handleEditUser()}
+          onClick={handleEditUser}
           className="p-3 rounded-md group cursor-pointer hover:bg-[#a07d3d5e]"
         >
-          <Edit className=" w-4 text-button-dark group-hover:text-white" />
+          <Edit className="w-4 text-button-dark group-hover:text-white" />
         </Button>
       </div>
     </>

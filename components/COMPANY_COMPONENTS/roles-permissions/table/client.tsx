@@ -51,6 +51,8 @@ export const RolesAndPermissionHome: React.FC = () => {
       try {
         setLoading(true);
         const response = await getAllRoles();
+        // console.log(response);
+
         if (response.status) {
           // Transform API response to RoleDetailsDataType
           const transformedData: RoleDetailsDataType[] = response.roles.map(

@@ -14,9 +14,10 @@ const RolesAndPermissionsPage = () => {
   >({});
   const [editingRole, setEditingRole] = useState<string | null>(null);
 
-  const handleSaveRolesAndPermissions = (
+  const handleSaveRolesAndPermissions = async (
     newRolesAndPermissions: Record<string, string[]>
   ) => {
+    // Note: This is a Promise<void> in the modal, so we use async
     if (editingRole) {
       // Edit existing role
       const updated = { ...rolesAndPermissions };
@@ -33,6 +34,7 @@ const RolesAndPermissionsPage = () => {
         ...newRolesAndPermissions
       }));
     }
+    setIsOpen(false); // Close modal after saving
   };
 
   const handleEditRole = (role: string) => {
@@ -66,9 +68,10 @@ const RolesAndPermissionsPage = () => {
           existingRolesAndPermissions={
             editingRole
               ? { [editingRole]: rolesAndPermissions[editingRole] }
-              : {}
+              : rolesAndPermissions // Pass all roles for context
           }
           onSave={handleSaveRolesAndPermissions}
+          isSuperAdmin={false} // Explicitly set for non-super admin panel
         />
 
         <div className="flex justify-between w-full">
