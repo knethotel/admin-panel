@@ -29,19 +29,16 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const permissions = [
-    'Create',
-    'Read',
-    'Update',
-    'Delete',
-    'Manage Users',
-    'Manage Roles',
-    'Manage Permissions',
-    'View Reports',
-    'Export Data',
-    'Import Data',
-    'Edit Settings',
-    'Delete Records'
+  const superAdminModules = [
+    'Dashboard',
+    'Admin Management',
+    'Roles and Permissions',
+    'Guest Management',
+    'Complaint Management',
+    'Payment Management',
+    'Change Password',
+    'Hotel Management',
+    'Sub Hotel Management'
   ];
 
   useEffect(() => {
@@ -218,11 +215,11 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
           {selectedRole && (
             <div className="bg-[#F6EEE0] p-4 rounded-lg">
               <h3 className="font-medium mb-3">
-                Permissions for:{' '}
+                Permitted modules for:{' '}
                 <span className="text-[#8c6b33]">{selectedRole}</span>
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {permissions.map((permission) => (
+                {superAdminModules.map((permission) => (
                   <div key={permission} className="flex items-center space-x-2">
                     <Checkbox
                       id={`permission-${permission}`}
