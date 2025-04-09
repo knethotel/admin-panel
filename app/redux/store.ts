@@ -1,8 +1,10 @@
 'use-client';
 import { configureStore } from '@reduxjs/toolkit';
-
+import rolesReducer from './slices/roleSlice';
 export const store = configureStore({
-  reducer: {}
+  reducer: {
+    roles: rolesReducer
+  }
 });
 
 export type RootState = ReturnType<typeof store.getState>;
