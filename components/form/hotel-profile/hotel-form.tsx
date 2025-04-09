@@ -127,7 +127,7 @@ const HotelForm = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full h-full flex flex-col gap-2 bg-inherit max-w-4xl mx-auto"
+          className="w-full h-full flex flex-col gap-2 bg-inherit max-w-7xl mx-auto"
         >
           <div>
             <FormField
