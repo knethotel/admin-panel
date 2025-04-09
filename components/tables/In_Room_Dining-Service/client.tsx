@@ -85,7 +85,7 @@ export const InRoomDiningDataTable: React.FC = () => {
         <div className="flex justify-end px-4">
           <Button
             onClick={() => router.push(`/service-management/inroomdining/menu`)}
-            className="bg-[#A07D3D] text-white hover:text-black hover:outline h-8"
+            className="btn-primary"
           >
             View Menu
           </Button>
