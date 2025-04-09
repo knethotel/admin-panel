@@ -1,22 +1,28 @@
+'use client';
+
 import { AlertModal } from '@/components/modal/alert-modal';
 import { Button } from '@/components/ui/button';
 import { deleteRoleById } from '@/lib/superAdmin/api/rolesAndPermissions/deleteRoleById';
 import { Eye, Edit, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchRoles } from '../../../../app/redux/slices/roleSlice';
+import type { AppDispatch } from '../../../../app/redux/store'; 
 
 const CellAction = (props: any) => {
   const { data } = props;
-  // console.log(data.role); // Logs the role name (e.g., "Super Admin")
-
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   const onConfirm = async () => {
     try {
-      await deleteRoleById(data._id);
       setLoading(true);
+      await deleteRoleById(data._id);
+      await dispatch(fetchRoles()); // ✅ Refetch roles after delete
     } catch (error: any) {
       console.error('Error deleting role:', error);
     } finally {

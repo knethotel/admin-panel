@@ -1,84 +1,49 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { DataTable } from '@/components/ui/data-table';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { columns } from './columns';
-import { RoleDetailsDataType } from 'app/static/company-panel/RolesAndPermissions';
-import apiCall from '@/lib/axios';
+import { useDispatch, useSelector } from 'react-redux';
 import { Plus } from 'lucide-react';
 
-// Define interfaces and API function inline
-interface Permission {
-  module: string;
-  access: string[];
-  _id: string;
-}
+import { Button } from '@/components/ui/button';
+import { DataTable } from '@/components/ui/data-table';
+import { columns } from './columns';
+import { RoleDetailsDataType } from 'app/static/company-panel/RolesAndPermissions';
 
-interface Role {
-  _id: string;
-  name: string;
-  permissions: Permission[];
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
+import { AppDispatch, RootState } from '../../../../app/redux/store';
+import { fetchRoles } from '../../../../app/redux/slices/roleSlice';
 
-interface GetRolesResponse {
-  status: boolean;
-  roles: Role[];
-}
-
-const getAllRoles = async (): Promise<GetRolesResponse> => {
-  return await apiCall<GetRolesResponse>(
-    'GET',
-    'api/superAdmin/role/get-all-roles'
-  );
-};
-
-export const RolesAndPermissionHome: React.FC = () => {
+const RolesAndPermissionHome: React.FC = () => {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { roles, loading } = useSelector((state: RootState) => state.roles);
+
   const [data, setData] = useState<RoleDetailsDataType[]>([]);
   const [filteredData, setFilteredData] = useState<RoleDetailsDataType[]>([]);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [loading, setLoading] = useState<boolean>(true);
   const [totalRecords, setTotalRecords] = useState(0);
 
-  // Fetch roles from API on component mount
+  // Fetch data using Redux
   useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        setLoading(true);
-        const response = await getAllRoles();
-        // console.log(response);
+    dispatch(fetchRoles());
+  }, [dispatch]);
 
-        if (response.status) {
-          // Transform API response to RoleDetailsDataType
-          const transformedData: RoleDetailsDataType[] = response.roles.map(
-            (role) => ({
-              _id: role._id,
-              role: role.name,
-              permissions: role.permissions.length, // Count of permissions
-              taggedUsers: 0 // Placeholder; update if you have user data
-            })
-          );
-          setData(transformedData);
-          setFilteredData(transformedData);
-          setTotalRecords(transformedData.length);
-        } else {
-          console.error('API returned unsuccessful status');
-        }
-      } catch (error) {
-        console.error('Failed to fetch roles:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRoles();
-  }, []);
+  // Transform roles from Redux for the table
+  useEffect(() => {
+    if (roles.length > 0) {
+      const transformed: RoleDetailsDataType[] = roles.map((role) => ({
+        _id: role._id,
+        role: role.name,
+        permissions: role.permissions.length,
+        taggedUsers: 0 // Placeholder
+      }));
+      setData(transformed);
+      setFilteredData(transformed);
+      setTotalRecords(transformed.length);
+    }
+  }, [roles]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
@@ -88,7 +53,7 @@ export const RolesAndPermissionHome: React.FC = () => {
 
   const handleLimitChange = (newLimit: number) => {
     setLimit(newLimit);
-    setPageNo(1); // Reset to first page when limit changes
+    setPageNo(1);
   };
 
   const handleOnClick = () => {
@@ -104,7 +69,7 @@ export const RolesAndPermissionHome: React.FC = () => {
           <div className="w-full flex justify-end">
             <Button
               className="text-xs md:text-sm btn-primary"
-              onClick={() => handleOnClick()}
+              onClick={handleOnClick}
             >
               <Plus className="mr-2 h-4 w-4" />
               <span className="text-white group-hover:text-black">
@@ -112,11 +77,13 @@ export const RolesAndPermissionHome: React.FC = () => {
               </span>
             </Button>
           </div>
+
           <DataTable
-            searchKey="role" // Changed from "firstName" to match RoleDetailsDataType
+            searchKey="role"
             columns={columns}
             data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)}
           />
+
           <div className="flex justify-end space-x-2 py-2">
             <div className="space-x-2">
               <Button
