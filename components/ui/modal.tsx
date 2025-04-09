@@ -30,10 +30,10 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg bg-offWhite border border-coffee">
         <DialogHeader>
           <DialogTitle className="text-white">{title}</DialogTitle>
-          <DialogDescription className="text-slate-400">
+          <DialogDescription className="text-black">
             {description}
           </DialogDescription>
         </DialogHeader>
