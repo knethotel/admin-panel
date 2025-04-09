@@ -1,71 +1,77 @@
+'use client';
+
 import { AlertModal } from '@/components/modal/alert-modal';
 import { Button } from '@/components/ui/button';
+import { deleteRoleById } from '@/lib/superAdmin/api/rolesAndPermissions/deleteRoleById';
 import { Eye, Edit, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchRoles } from '../../../../app/redux/slices/roleSlice';
+import type { AppDispatch } from '../../../../app/redux/store'; 
 
 const CellAction = (props: any) => {
   const { data } = props;
-  console.log(data.role);
-
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   const onConfirm = async () => {
     try {
-      // Perform user  logic here
+      setLoading(true);
+      await deleteRoleById(data._id);
+      await dispatch(fetchRoles()); // ✅ Refetch roles after delete
     } catch (error: any) {
-      // console.error("Error deactivating user:", error);
+      console.error('Error deleting role:', error);
     } finally {
+      setLoading(false);
       setOpen(false);
     }
   };
 
   const handleEditUser = () => {
-    router.push(`company/roles-and-permissions/edit/${data.role}`);
-    console.log('success');
+    router.push(`/super-admin/roles-and-permissions/edit/${data._id}`);
+    console.log('Navigating to edit:', data._id);
   };
 
   const handleViewUser = () => {
-    router.push(`company/roles-and-permissions/view/${data.role}`);
+    router.push(`/super-admin/roles-and-permissions/view/${data._id}`);
+    console.log('Navigating to view:', data._id);
+  };
+
+  const handleDeleteUser = async () => {
+    setOpen(true);
   };
 
   return (
     <>
-      {/* Deactivate Confirmation Modal */}
       <AlertModal
         isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onConfirm}
+        onCloseAction={() => setOpen(false)}
+        onConfirmAction={onConfirm}
         loading={loading}
-        description="Are you sure you want to deactivate this user?"
+        description="Are you sure you want to delete this role?"
       />
-
-      {/* Action Buttons */}
       <div className="flex space-x-2">
-        {/* View user details */}
         <button
-          onClick={() => handleViewUser()}
+          onClick={handleViewUser}
           className="p-1 rounded-md group hover:bg-[#a07d3d5e]"
         >
-          <Eye className=" w-4 text-button-dark group-hover:text-white" />
+          <Eye className="w-4 text-button-dark group-hover:text-white" />
         </button>
-
-        {/* Delete User */}
         <button
-          onClick={() => setOpen(true)}
+          onClick={() => handleDeleteUser()}
           className="p-1 rounded-md group hover:bg-[#a07d3d5e]"
         >
-          <Trash className=" w-4 text-button-dark group-hover:text-white" />
+          <Trash className="w-4 text-button-dark group-hover:text-white" />
         </button>
-
-        {/* Edit User */}
         <Button
-          onClick={() => handleEditUser()}
+          onClick={handleEditUser}
           className="p-3 rounded-md group cursor-pointer hover:bg-[#a07d3d5e]"
         >
-          <Edit className=" w-4 text-button-dark group-hover:text-white" />
+          <Edit className="w-4 text-button-dark group-hover:text-white" />
         </Button>
       </div>
     </>

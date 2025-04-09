@@ -1,4 +1,4 @@
-import { RolesAndPermissionHome } from '@/components/COMPANY_COMPONENTS/roles-permissions/table/client';
+import RolesAndPermissionHome from '../../../../../components/COMPANY_COMPONENTS/roles-permissions/table/client';
 import Navbar from '@/components/Navbar';
 import React from 'react';
 

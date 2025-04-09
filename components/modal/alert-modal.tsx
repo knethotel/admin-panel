@@ -5,20 +5,20 @@ import { Modal } from '@/components/ui/modal';
 
 interface AlertModalProps {
   isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
+  onCloseAction: () => void;
+  onConfirmAction: () => void;
   loading: boolean;
-  title?: string; // Optional prop for title
-  description?: string; // Optional prop for description
+  title?: string;
+  description?: string;
 }
 
 export const AlertModal: React.FC<AlertModalProps> = ({
   isOpen,
-  onClose,
-  onConfirm,
+  onCloseAction,
+  onConfirmAction,
   loading,
-  title = 'Are you sure?', // Default value for title
-  description = 'This action cannot be undone.' // Default value for description
+  title = 'Are you sure?',
+  description = 'This action cannot be undone.'
 }) => {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -32,22 +32,47 @@ export const AlertModal: React.FC<AlertModalProps> = ({
 
   return (
     <Modal
-      title={title} // Use the provided title or default
-      description={description} // Use the provided description or default
+      title={title}
+      description={description}
       isOpen={isOpen}
-      onClose={onClose}
+      onCloseAction={onCloseAction}
     >
       <div className="flex w-full items-center justify-end space-x-2 pt-6">
-        <Button
-          disabled={loading}
-          variant="outline"
-          onClick={onClose}
-          className="text-white"
-        >
+        <Button disabled={loading} variant="outline" onClick={onCloseAction}>
           Cancel
         </Button>
-        <Button disabled={loading} variant="destructive" onClick={onConfirm}>
-          Continue
+        <Button
+          disabled={loading}
+          variant="destructive"
+          onClick={onConfirmAction}
+        >
+          {loading ? (
+            <span className="flex items-center">
+              <svg
+                className="animate-spin -ml-1 mr-3 h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Processing...
+            </span>
+          ) : (
+            'Continue'
+          )}
         </Button>
       </div>
     </Modal>

@@ -30,8 +30,8 @@ const CellAction = (props: any) => {
       {/* Deactivate Confirmation Modal */}
       <AlertModal
         isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onConfirm}
+        onCloseAction={() => setOpen(false)}
+        onConfirmAction={onConfirm}
         loading={loading}
         description="Are you sure you want to deactivate this user?"
       />
