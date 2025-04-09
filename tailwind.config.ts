@@ -90,7 +90,7 @@ export default {
       },
       boxShadow: {
         table: 'var(--table-shadow)',
-        custom: '0px 0px 5px rgba(0, 0, 0, 0.35)'
+        custom: '0px 0px 5px rgba(0, 0, 0, 0.40)'
       }
     }
   },

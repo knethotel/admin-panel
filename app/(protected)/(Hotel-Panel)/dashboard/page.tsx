@@ -13,9 +13,9 @@ import { RadialChartStacked } from '@/components/charts/radialChart';
 
 const DashboardPage = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col w-full">
       <Navbar active={true} />
-      <div className="flex-1 pt-24 pb-4 px-4 md:px-6 lg:px-8 flex flex-col md:flex-row gap-6">
+      <div className="flex-1 pt-24 pb-4 px-4 md:px-6 lg:px-8 w-full flex flex-col md:flex-row gap-6">
         {/* Left part */}
         <div className="w-full md:w-2/3 flex flex-col gap-4">
           {/* Upper part (line chart) */}

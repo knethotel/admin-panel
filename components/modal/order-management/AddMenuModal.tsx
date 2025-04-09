@@ -248,16 +248,10 @@ const AddMenuModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             <div className="w-full h-[1px] bg-black opacity-5"></div>
             {/* Submit Button */}
             <div className="flex items-center gap-4 px-10">
-              <Button
-                type="submit"
-                className="bg-[#EFE9DF] text-black px-6 h-9 rounded-md hover:text-black hover:outline transition"
-              >
+              <Button type="submit" className="btn-secondary">
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                className="bg-[#A07D3D] px-8 h-9 w-24 text-white p-2 rounded-md hover:text-black hover:outline transition"
-              >
+              <Button type="submit" className="btn-primary">
                 Save
               </Button>
             </div>

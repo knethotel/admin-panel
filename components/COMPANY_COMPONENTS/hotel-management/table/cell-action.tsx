@@ -23,12 +23,12 @@ const CellAction = (props: any) => {
   };
 
   const handleEditUser = () => {
-    router.push(`/company/hotel-management/edit/${data.hotelID}`);
+    router.push(`/super-admin/hotel-management/edit/${data.hotelID}`);
     console.log('success');
   };
 
   const handleViewUser = () => {
-    router.push(`/company/hotel-management/view/${data.hotelID}`);
+    router.push(`/super-admin/hotel-management/view/${data.hotelID}`);
   };
 
   return (

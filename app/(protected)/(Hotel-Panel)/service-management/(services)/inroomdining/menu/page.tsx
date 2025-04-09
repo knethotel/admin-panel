@@ -5,8 +5,7 @@ import { Plus } from 'lucide-react';
 import { inRoomDiningMenuData } from 'app/static/services-management/InRoomDining';
 import Image from 'next/image';
 import { Bookmark, Send } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import AddItemModal from '@/components/modal/in-rrom_dining/add-item';
+import AddItemModal from '@/components/modal/in-room_dining/add-item';
 const MenuPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const handleClick = () => {};
@@ -16,10 +15,10 @@ const MenuPage = () => {
         <h2 className="font-bold text-lg">Menu</h2>
         <Button
           onClick={() => setIsOpen(true)}
-          className="bg-[#A07D3D] group text-white hover:text-black hover:outline h-8"
+          className="btn-primary flex gap-1"
         >
           <Plus className="w-4 h-4 text-white group-hover:text-black" />
-          Add Items
+          <span>Add Items</span>
         </Button>
       </div>
       <AddItemModal isOpen={isOpen} onClose={() => setIsOpen(false)} />

@@ -85,10 +85,7 @@ const ManageProductsModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               />
             </div>
             <div className="">
-              <Button
-                type="submit"
-                className="bg-[#362913] text-white hover:text-black hover:outline px-5 h-8 rounded-lg text-xs"
-              >
+              <Button type="submit" className="btn-primary bg-coffeeLight">
                 ADD
               </Button>
             </div>

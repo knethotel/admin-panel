@@ -81,14 +81,13 @@ export const GuestClient: React.FC = () => {
         <Heading title={`Guests (${totalRecords})`} />
         <div className="flex gap-3">
           <Button
-            className="text-xs md:text-sm bg-button-light group hover:outline"
+            className="btn-primary text-xs md:text-sm"
             onClick={() => handleOnClick('add guest')}
           >
-            <Plus className="mr-2 h-4 w-4" />{' '}
-            <span className="text-white group-hover:text-black">Add Guest</span>
+            <Plus className="mr-2 h-4 w-4" /> <span>Add Guest</span>
           </Button>
           <Button
-            className="text-xs md:text-sm bg-button-light group hover:outline"
+            className="btn-primary text-xs md:text-sm"
             onClick={() => handleOnClick('add booking')}
           >
             <Plus className="mr-2 h-4 w-4" />{' '}

@@ -230,7 +230,7 @@ const PriceTimeSetting: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             <div className="w-full text-center">
               <Button
                 type="submit"
-                className="mt-6 bg-[#8c6b33] text-white hover:bg-[#362913] px-6 h-7 rounded-lg text-xs"
+                className="btn-primary text-xs xl:text-sm mt-6"
               >
                 Save
               </Button>

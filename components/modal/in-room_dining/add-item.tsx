@@ -289,14 +289,11 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <Button
                 type="button" // Changed to button to prevent form submission
                 onClick={onClose}
-                className="bg-[#EFE9DF] text-black px-6 h-9 rounded-md hover:text-black hover:outline transition"
+                className="btn-secondary"
               >
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                className="bg-[#A07D3D] px-8 h-9 w-24 text-white p-2 rounded-md hover:text-black hover:outline transition"
-              >
+              <Button type="submit" className="btn-primary">
                 Save
               </Button>
             </div>

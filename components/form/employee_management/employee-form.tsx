@@ -258,14 +258,11 @@ const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
             <Button
               type="button"
               onClick={() => router.back()}
-              className="bg-[#EFE9DF] hover:outline hover:outline-black"
+              className="btn-secondary"
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              className="bg-[#A07D3D] text-white hover:text-black hover:outline hover:outline-black"
-            >
+            <Button type="submit" className="btn-primary">
               Save Changes
             </Button>
           </div>

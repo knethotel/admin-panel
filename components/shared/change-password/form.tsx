@@ -111,10 +111,7 @@ export default function ChangePasswordForm() {
           </div>
 
           {/* Submit Button */}
-          <Button
-            type="submit"
-            className="w-[130px] text-xs text-white bg-[#A07D3D] hover:text-black hover:bg-transparent hover:outline hover:outline-black"
-          >
+          <Button type="submit" className="btn-primary text-xs xl:text-sm">
             Save Changes
           </Button>
         </form>

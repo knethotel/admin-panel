@@ -527,10 +527,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                   </FormItem>
                 )}
               />
-              <Button
-                type="submit"
-                className="w-28 md:ml-24 sm:w-auto bg-[#A07D3D] text-white hover:bg-[#8c6b33] px-6 py-2 rounded-md text-xs"
-              >
+              <Button type="submit" className="btn-primary">
                 Save Changes
               </Button>
             </div>
