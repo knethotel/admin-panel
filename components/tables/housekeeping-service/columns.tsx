@@ -1,5 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { HousekeepingDataType } from 'app/static/services-management/Housekeeping'; // Corrected import
+import CellAction from './cell-action';
 
 // Updated columns to match ReceptionDataType
 export const columns: ColumnDef<HousekeepingDataType>[] = [
@@ -9,7 +10,7 @@ export const columns: ColumnDef<HousekeepingDataType>[] = [
   },
   {
     accessorKey: 'requestTime',
-    header: 'Request Time',
+    header: 'Request line',
     cell: ({ row }) => {
       const { date, time } = row.original.requestTime;
       return (
@@ -63,10 +64,20 @@ export const columns: ColumnDef<HousekeepingDataType>[] = [
   },
   {
     accessorKey: 'assignedTo',
-    header: 'Assigned to',
+    header: 'Assigned too',
     cell: ({ row }) => {
       const assignedTo = row.original.assignedTo;
       return <div className="text-sm">{assignedTo}</div>;
     }
+  },
+  {
+    accessorKey: 'actions',
+    id: 'actions',
+    header: 'Actions',
+    cell: ({ row }) => (
+      <div className="flex items-center justify-center">
+        <CellAction data={row.original} />
+      </div>
+    )
   }
 ];
