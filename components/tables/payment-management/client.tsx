@@ -72,10 +72,7 @@ export const RefundDetailsTable: React.FC = () => {
       <div className="flex items-start justify-start">
         <div className="w-full flex justify-between items-center px-4">
           <Heading title={`Payment Management`} />
-          <Button
-            onClick={() => setIsOpen(true)}
-            className="bg-[#A07D3D] text-white hover:text-black hover:outline"
-          >
+          <Button onClick={() => setIsOpen(true)} className="btn-primary">
             Create Refund
           </Button>
         </div>

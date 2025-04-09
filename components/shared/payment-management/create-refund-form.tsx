@@ -271,10 +271,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
           {/* Buttons */}
           <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3">
             {' '}
-            <Button
-              type="submit"
-              className="w-28 md:ml-24 sm:w-auto bg-[#A07D3D] text-white hover:bg-[#8c6b33] px-6 py-2 rounded-md text-xs"
-            >
+            <Button type="submit" className="md:ml-24 btn-primary">
               Save Changes
             </Button>
           </div>
