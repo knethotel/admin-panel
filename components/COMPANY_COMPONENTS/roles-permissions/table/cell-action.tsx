@@ -8,7 +8,8 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchRoles } from '../../../../app/redux/slices/roleSlice';
-import type { AppDispatch } from '../../../../app/redux/store'; 
+import type { AppDispatch } from '../../../../app/redux/store';
+import { ToastAtTopRight } from '@/lib/sweetalert';
 
 const CellAction = (props: any) => {
   const { data } = props;
@@ -42,9 +43,17 @@ const CellAction = (props: any) => {
   };
 
   const handleDeleteUser = async () => {
-    setOpen(true);
-  };
+    console.log(data.name);
 
+    if (data.role === 'Super Admin') {
+      ToastAtTopRight.fire({
+        icon: 'error',
+        title: 'Cannot Delete Super Admin'
+      });
+      return; // exit early, don't open modal
+    }
+    setOpen(true); // only opens if it's safe to delete
+  };
   return (
     <>
       <AlertModal
