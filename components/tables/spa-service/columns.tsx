@@ -1,5 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { SpaServiceDataType } from 'app/static/services-management/Spa'; // Corrected import
+import CellAction from './cell-action';
 
 // Updated columns to match ReceptionDataType
 export const columns: ColumnDef<SpaServiceDataType>[] = [
@@ -63,5 +64,15 @@ export const columns: ColumnDef<SpaServiceDataType>[] = [
       const assignedTo = row.original.assignedTo;
       return <div className="text-sm">{assignedTo}</div>;
     }
+  },
+  {
+    accessorKey: 'actions',
+    id: 'actions',
+    header: 'Actions',
+    cell: ({ row }) => (
+      <div className="flex items-center justify-center">
+        <CellAction data={row.original} />
+      </div>
+    )
   }
 ];

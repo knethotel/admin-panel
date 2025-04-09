@@ -1,5 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { SwimmingpoolServiceDataType } from 'app/static/services-management/SwimmingPool';
+import CellAction from './cell-action';
 // Updated columns to match
 export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
   {
@@ -58,5 +59,15 @@ export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
       const assignedTo = row.original.assignedTo;
       return <div className="text-sm">{assignedTo}</div>;
     }
+  },
+  {
+    accessorKey: 'actions',
+    id: 'actions',
+    header: 'Actions',
+    cell: ({ row }) => (
+      <div className="flex items-center justify-center">
+        <CellAction data={row.original} />
+      </div>
+    )
   }
 ];

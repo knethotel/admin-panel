@@ -119,7 +119,7 @@ const NotificationDetailsForm = ({
                           type="text"
                           placeholder="Notification ID"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -143,7 +143,7 @@ const NotificationDetailsForm = ({
                           type="text"
                           placeholder="Guest Name"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -170,7 +170,7 @@ const NotificationDetailsForm = ({
                           type="text"
                           placeholder="Phone Number"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -194,7 +194,7 @@ const NotificationDetailsForm = ({
                           type="text"
                           placeholder="Room Number"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -218,7 +218,7 @@ const NotificationDetailsForm = ({
                           type="text"
                           placeholder="Date"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -244,7 +244,7 @@ const NotificationDetailsForm = ({
                           type="text"
                           placeholder="Time"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -268,7 +268,7 @@ const NotificationDetailsForm = ({
                           type="text"
                           placeholder="Notification Type"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -292,7 +292,7 @@ const NotificationDetailsForm = ({
                           type="text"
                           placeholder="Status"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-black border-opacity-40 placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
