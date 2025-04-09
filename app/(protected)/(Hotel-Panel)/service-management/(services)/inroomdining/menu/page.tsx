@@ -5,7 +5,6 @@ import { Plus } from 'lucide-react';
 import { inRoomDiningMenuData } from 'app/static/services-management/InRoomDining';
 import Image from 'next/image';
 import { Bookmark, Send } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import AddItemModal from '@/components/modal/in-room_dining/add-item';
 const MenuPage = () => {
   const [isOpen, setIsOpen] = useState(false);
