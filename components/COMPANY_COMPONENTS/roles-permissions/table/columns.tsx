@@ -10,7 +10,20 @@ export const columns: ColumnDef<RoleDetailsDataType>[] = [
   },
   {
     accessorKey: 'role',
-    header: 'Role'
+    header: 'Role',
+    cell: ({ row }) => {
+      if (row.original.role === 'Super Admin') {
+        return (
+          <span className="text-warning tracking-wide font-medium">
+            {row.original.role}
+          </span>
+        );
+      } else {
+        return (
+          <span className="text-black tracking-wide">{row.original.role}</span>
+        );
+      }
+    }
   },
   {
     accessorKey: 'permissions',
