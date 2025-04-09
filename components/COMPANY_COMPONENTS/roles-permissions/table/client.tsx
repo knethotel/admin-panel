@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { Plus } from 'lucide-react';
@@ -12,13 +12,13 @@ import { RoleDetailsDataType } from 'app/static/company-panel/RolesAndPermission
 
 import { AppDispatch, RootState } from '../../../../app/redux/store';
 import { fetchRoles } from '../../../../app/redux/slices/roleSlice';
+import { getAllAdmins } from '@/lib/superAdmin/api/admin/getAdmins';
 
 const RolesAndPermissionHome: React.FC = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
 
   const { roles, loading } = useSelector((state: RootState) => state.roles);
-
   const [data, setData] = useState<RoleDetailsDataType[]>([]);
   const [filteredData, setFilteredData] = useState<RoleDetailsDataType[]>([]);
   const [pageNo, setPageNo] = useState(1);
@@ -32,16 +32,36 @@ const RolesAndPermissionHome: React.FC = () => {
 
   // Transform roles from Redux for the table
   useEffect(() => {
+    const transformData = async () => {
+      try {
+        const admins = await getAllAdmins();
+
+        // Count users per role
+        const roleUserCounts: Record<string, number> = {};
+        admins.forEach((admin) => {
+          if (admin.roleId) {
+            roleUserCounts[admin.roleId] =
+              (roleUserCounts[admin.roleId] || 0) + 1;
+          }
+        });
+
+        const transformed: RoleDetailsDataType[] = roles.map((role) => ({
+          _id: role._id,
+          role: role.name,
+          permissions: role.permissions.length,
+          taggedUsers: roleUserCounts[role._id] || 0 // Use the counted value
+        }));
+
+        setData(transformed);
+        setFilteredData(transformed);
+        setTotalRecords(transformed.length);
+      } catch (error) {
+        console.error('Error transforming data:', error);
+      }
+    };
+
     if (roles.length > 0) {
-      const transformed: RoleDetailsDataType[] = roles.map((role) => ({
-        _id: role._id,
-        role: role.name,
-        permissions: role.permissions.length,
-        taggedUsers: 0 // Placeholder
-      }));
-      setData(transformed);
-      setFilteredData(transformed);
-      setTotalRecords(transformed.length);
+      transformData();
     }
   }, [roles]);
 
