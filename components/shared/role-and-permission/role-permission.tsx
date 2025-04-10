@@ -60,12 +60,15 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
 
   const hotelModules = [
     'Dashboard',
-    'Room Management',
-    'Booking Management',
-    'Staff Management',
-    'Inventory',
-    'Reports',
-    'Settings'
+    'Employee Management',
+    'Roles & Permissions',
+    'Guest Management',
+    'Service Management',
+    'Complaint Management',
+    'Payment Management',
+    'Notifications',
+    'Change Password',
+    'Hotel Profile'
   ];
 
   const availableModules = isSuperAdmin ? superAdminModules : hotelModules;
