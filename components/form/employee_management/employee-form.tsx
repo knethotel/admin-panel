@@ -176,7 +176,7 @@ const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
               />
             </div>
             {/* Lower part */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <FormField
                 control={employeeForm.control}
                 name="phoneNo"
@@ -234,7 +234,7 @@ const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                         onValueChange={field.onChange}
                         value={field.value}
                       >
-                        <SelectTrigger className="w-24 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
+                        <SelectTrigger className="w-28 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="bg-[#362913] rounded-2xl text-white border-2 shadow-md border-white">
