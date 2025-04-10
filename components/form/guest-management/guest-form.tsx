@@ -77,7 +77,7 @@ const GuestForm = ({ guestId, isEnabled, mode }: Props) => {
       <Form {...addGuestForm}>
         <form
           onSubmit={addGuestForm.handleSubmit(onSubmit)}
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-4 w-full"
         >
           {/* Form Fields */}
           <div className="grid grid-cols-3 gap-10">

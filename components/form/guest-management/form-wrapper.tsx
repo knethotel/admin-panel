@@ -9,7 +9,10 @@ type Props = {
 
 const FormWrapper = ({ title, children }: Props) => {
   return (
-    <Card title={title} className="bg-[#FAF6EF] w-full max-w-6xl shadow-custom border-none">
+    <Card
+      title={title}
+      className="bg-[#FAF6EF] w-full shadow-custom border-none"
+    >
       <CardHeader>
         <Heading title={title} />
       </CardHeader>
