@@ -32,6 +32,46 @@ export const PercentageCouponsData: CouponsDataType[] = [
   {
     title: 'Summer Special',
     subtitle: 'Get 20% off on all services',
+    image: img2
+  },
+  {
+    title: 'Summer Special',
+    subtitle: 'Get 20% off on all services',
+    image: img2
+  },
+  {
+    title: 'Summer Special',
+    subtitle: 'Get 20% off on all services',
+    image: img2
+  },
+  {
+    title: 'Summer Special',
+    subtitle: 'Get 20% off on all services',
+    image: img2
+  },
+  {
+    title: 'Summer Special',
+    subtitle: 'Get 20% off on all services',
+    image: img2
+  },
+  {
+    title: 'Summer Special',
+    subtitle: 'Get 20% off on all services',
+    image: img2
+  },
+  {
+    title: 'Summer Special',
+    subtitle: 'Get 20% off on all services',
+    image: img2
+  },
+  {
+    title: 'Summer Special',
+    subtitle: 'Get 20% off on all services',
+    image: img2
+  },
+  {
+    title: 'Summer Special',
+    subtitle: 'Get 20% off on all services',
     image: img3
   },
   {

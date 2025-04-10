@@ -8,7 +8,7 @@ const EmployeeManagementPage = () => {
       {' '}
       {/*------ Manadatory class for each page that have navbar -------*/}
       <Navbar active={true} search={true} />
-      <div className=" sm:px-6 sm:py-0 mt-24">
+      <div className=" sm:px-6 sm:py-0 mt-20">
         <EmployeeTable />
       </div>
     </div>

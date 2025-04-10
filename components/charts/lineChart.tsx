@@ -89,7 +89,7 @@ export function LineChartLinear() {
       <CardContent>
         <ChartContainer
           config={chartConfig}
-          className="bg-lightbrown h-[200px] w-[600px]"
+          className="bg-lightbrown h-[200px] w-full"
         >
           <LineChart
             accessibilityLayer

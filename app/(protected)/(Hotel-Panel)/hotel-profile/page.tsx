@@ -3,8 +3,10 @@ import React from 'react';
 
 const HotelProfile = () => {
   return (
-    <div className="flex flex-col min-h-screen w-full bg-[#FAF8F5] py-4">
-      <HotelForm />
+    <div className="flex flex-col min-h-screen w-full bg-white py-4">
+      <div className="h-full w-full container">
+        <HotelForm />
+      </div>
     </div>
   );
 };

@@ -12,8 +12,10 @@ const EditGuestPage = async ({
 }) => {
   const id = (await params).id;
   return (
-    <div className="flex justify-center items-center w-full py-10">
-      <GuestForm isEnabled={true} guestId={id} mode="edit" />
+    <div className="flex justify-center items-center h-screen w-full pt-8">
+      <div className="h-full w-full container">
+        <GuestForm isEnabled={true} guestId={id} mode="edit" />
+      </div>
     </div>
   );
 };
