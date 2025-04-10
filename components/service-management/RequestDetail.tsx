@@ -56,13 +56,13 @@ const RequestDetail = <T extends Record<string, any>>({
           <div className="space-y-8">
             <div className="flex flex-col items-start gap-2 text-sm">
               <span className="opacity-75">Request Detail</span>{' '}
-              <span className="bg-[#F6EEE0] max-w-96 rounded-md px-6 py-2">
+              <span className="bg-[#F6EEE0] w-full max-w-96 rounded-md px-6 py-2">
                 "{request?.requestDetail}"
               </span>
             </div>
             <div className="flex flex-col gap-2 items-start text-sm">
               <span className="opacity-75">Response Detail</span>{' '}
-              <span className="bg-[#F6EEE0] max-w-96 py-2 rounded-md px-6">
+              <span className="bg-[#F6EEE0] w-full max-w-96 py-2 rounded-md px-6">
                 "{request?.responseDetail}"
               </span>
             </div>

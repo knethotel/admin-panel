@@ -10,8 +10,10 @@ const ViewGuestPage = async ({
 }) => {
   const id = (await params).id;
   return (
-    <div className="flex justify-center items-center w-full py-10">
-      <GuestForm isEnabled={false} guestId={id} mode="view" />
+    <div className="flex justify-center items-center h-screen w-full pt-8">
+      <div className="h-full w-full container">
+        <GuestForm isEnabled={false} guestId={id} mode="view" />
+      </div>
     </div>
   );
 };

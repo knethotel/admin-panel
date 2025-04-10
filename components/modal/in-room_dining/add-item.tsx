@@ -203,7 +203,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 />
 
                 {/* Visibility */}
-                <div className="flex gap-14">
+                <div className="flex gap-[87px]">
                   <span>Visibility</span>
                   <ToggleButton />
                 </div>

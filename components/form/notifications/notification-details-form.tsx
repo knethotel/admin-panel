@@ -99,7 +99,7 @@ const NotificationDetailsForm = ({
       <Form {...addNotificationForm}>
         <form
           onSubmit={addNotificationForm.handleSubmit(onSubmit)}
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-4 pb-6 "
         >
           {/* Form Fields */}
           <div className="grid grid-cols-3 gap-10">
