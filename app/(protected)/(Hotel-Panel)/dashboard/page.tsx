@@ -73,7 +73,7 @@ const DashboardPage = () => {
         <div className="w-full md:w-1/3 flex flex-col gap-6">
           {/* Upper part (cards) */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-lightbrown flex flex-col justify-between rounded-xl p-4 hover:shadow-md transition-shadow">
+            <div className="bg-lightbrown flex flex-col gap-6 justify-between rounded-xl p-4 hover:shadow-md transition-shadow">
               <div className="flex justify-between items-center">
                 <div className="bg-success/20 rounded-full p-2">
                   <GrNotes className="h-4 w-4 text-success" />
@@ -82,15 +82,15 @@ const DashboardPage = () => {
                   -18.5%
                 </div>
               </div>
-              <div className="flex flex-col items-start gap-3">
+              <div className="flex flex-col items-start gap-1">
                 <h1 className="text-2xl font-medium">2563</h1>
-                <span className="text-[0.6rem] text-black/30">
+                <span className="text-[0.8rem] text-black/40">
                   Booked Rooms
                 </span>
               </div>
             </div>
 
-            <div className="bg-lightbrown flex flex-col justify-between rounded-xl p-4 hover:shadow-md transition-shadow">
+            <div className="bg-lightbrown flex flex-col gap-6 justify-between rounded-xl p-4 hover:shadow-md transition-shadow">
               <div className="flex justify-between items-center">
                 <div className="bg-danger/20 rounded-full p-2">
                   <RxCrossCircled className="h-4 w-4 text-danger" />
@@ -99,15 +99,15 @@ const DashboardPage = () => {
                   -18.5%
                 </div>
               </div>
-              <div className="flex flex-col items-start gap-3">
+              <div className="flex flex-col items-start gap-1">
                 <h1 className="text-2xl font-medium">2563</h1>
-                <span className="text-[0.6rem] text-black/30">
+                <span className="text-[0.8rem] text-black/40">
                   Canceled Rooms
                 </span>
               </div>
             </div>
 
-            <div className="bg-lightbrown flex flex-col justify-between rounded-xl p-4 hover:shadow-md transition-shadow">
+            <div className="bg-lightbrown flex flex-col gap-6 justify-between rounded-xl p-4 hover:shadow-md transition-shadow">
               <div className="flex justify-between items-center">
                 <div className="bg-primary2/20 rounded-full p-2">
                   <IoEnter className="h-4 w-4 text-primary2" />
@@ -116,15 +116,15 @@ const DashboardPage = () => {
                   -18.5%
                 </div>
               </div>
-              <div className="flex flex-col items-start gap-3">
+              <div className="flex flex-col items-start gap-1">
                 <h1 className="text-2xl font-medium">2563</h1>
-                <span className="text-[0.6rem] text-black/30">
+                <span className="text-[0.8rem] text-black/40">
                   Check-in Rooms
                 </span>
               </div>
             </div>
 
-            <div className="bg-lightbrown flex flex-col justify-between rounded-xl p-4 hover:shadow-md transition-shadow">
+            <div className="bg-lightbrown flex flex-col gap-6 justify-between rounded-xl p-4 hover:shadow-md transition-shadow">
               <div className="flex justify-between items-center">
                 <div className="bg-purple/20 rounded-full p-2">
                   <IoIosExit className="h-4 w-4 text-purple" />
@@ -133,9 +133,9 @@ const DashboardPage = () => {
                   -18.5%
                 </div>
               </div>
-              <div className="flex flex-col items-start gap-3">
+              <div className="flex flex-col items-start gap-1">
                 <h1 className="text-2xl font-medium">2563</h1>
-                <span className="text-[0.6rem] text-black/30">
+                <span className="text-[0.8rem] text-black/40">
                   Check-out Rooms
                 </span>
               </div>
