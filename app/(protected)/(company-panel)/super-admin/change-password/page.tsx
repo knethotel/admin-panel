@@ -3,7 +3,7 @@ import React from 'react';
 
 const ChangePasswordPage = () => {
   return (
-    <div className="w-full h-screen bg-[#FAF6EF] p-4">
+    <div className="w-full h-screen bg-white p-4">
       <ChangePasswordForm />
     </div>
   );

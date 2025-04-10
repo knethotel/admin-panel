@@ -22,7 +22,7 @@ const GuestDetails = ({ guestID }: Props) => {
   const guest = getGuestDetails(guestID);
   return (
     <CardWrapper title="">
-      <div className="w-full h-full p-6 flex justify-center items-center">
+      <div className="w-full p-6 flex justify-center items-center">
         <div className="flex w-full flex-col items-center justify-center gap-8">
           {/* Image part */}
           {guest?.guestImage && (
