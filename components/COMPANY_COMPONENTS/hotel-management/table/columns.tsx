@@ -26,9 +26,11 @@ export const columns: ColumnDef<HotelDataType>[] = [
     cell: ({ row }) => {
       const details = row.original.subscriptionDetails;
       return (
-        <div className="flex flex-col items-start justify-center">
-          <span>{details.planName}</span>
-          <span className="text-xs">{details.cost}</span>
+        <div className="flex items-center justify-center">
+          <div className="flex flex-col items-start">
+            <span>{details.planName}</span>
+            <span className="opacity-60">INR-{details.cost}/month</span>
+          </div>
         </div>
       );
     }
