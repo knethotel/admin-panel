@@ -21,13 +21,15 @@ export function NavItem({
       className={clsx(
         'flex items-center gap-4 p-2 2xl:my-2 rounded-lg transition-colors text-white ',
         {
-          'bg-[#ffffff3b] text-[#EEA720]': pathname === href, // Active state
+          'bg-[#ffffff3b] text-[#EEA720]': pathname?.startsWith(href), // Active state
           'hover:bg-[#ffffff3b] hover:text-[#EEA720]': pathname !== href // Hover effect only if not active
         }
       )}
     >
       {children}
-      <span className="text-xs xl:text-sm 2xl:text-base font-medium">{label}</span>
+      <span className="text-xs xl:text-sm 2xl:text-base font-medium">
+        {label}
+      </span>
     </Link>
   );
 }
