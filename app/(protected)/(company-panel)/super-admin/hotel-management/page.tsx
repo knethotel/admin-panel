@@ -3,8 +3,10 @@ import React from 'react';
 
 const HotelPage = () => {
   return (
-    <div className="h-screen w-full">
-      <HotelManagementHome />
+    <div className="w-full h-screen pt-8">
+      <div className="h-full w-full container">
+        <HotelManagementHome />
+      </div>
     </div>
   );
 };

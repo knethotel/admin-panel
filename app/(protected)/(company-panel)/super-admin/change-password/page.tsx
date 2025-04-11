@@ -4,7 +4,9 @@ import React from 'react';
 const ChangePasswordPage = () => {
   return (
     <div className="w-full h-screen bg-white p-4">
-      <ChangePasswordForm />
+      <div className="2xl:container w-full h-full">
+        <ChangePasswordForm />
+      </div>
     </div>
   );
 };

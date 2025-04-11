@@ -3,8 +3,10 @@ import React from 'react';
 
 const GuestManagementPage = () => {
   return (
-    <div className="w-full min-h-screen">
-      <CompanyPanelGuestManagementHome />
+    <div className="w-full h-screen pt-8">
+      <div className="h-full w-full container">
+        <CompanyPanelGuestManagementHome />
+      </div>
     </div>
   );
 };

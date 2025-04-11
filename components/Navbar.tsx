@@ -60,7 +60,7 @@ export default function Navbar({ active, search, searchKey }: navProps) {
         description="You will be logged out"
       />
 
-      <nav className="flex items-center justify-between bg-[#EFE9DF] p-4 w-[calc(100%-20%)] fixed z-50 ">
+      <nav className="flex items-center w-full justify-between bg-[#EFE9DF] p-4 lg:w-[calc(100%-20%)] fixed">
         {/* Left Side */}
         <div className="flex items-center gap-4">
           {active && (

@@ -133,7 +133,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                   <div className="flex items-center w-full">
                     <FormControl>
                       <div
-                        className="relative h-32 w-32 rounded-lg bg-[#F6EEE0] p-2"
+                        className="relative h-32 w-32 rounded-lg bg-[#F6EEE0] hover:drop-shadow-xl duration-200"
                         onDrop={(e) => {
                           e.preventDefault();
                           const file = e.dataTransfer.files?.[0];
@@ -152,7 +152,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                               alt="Preview"
                               height={176}
                               width={176}
-                              className="object-cover rounded-lg"
+                              className="object-cover h-full w-full rounded-lg"
                             />
                           )}
                         </div>

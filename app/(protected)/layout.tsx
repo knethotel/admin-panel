@@ -1,11 +1,7 @@
 'use client';
 import '../globals.css';
 import Link from 'next/link';
-import {
-  LogOut,
-  Users,
-  Landmark
-} from 'lucide-react';
+import { LogOut, Users, Landmark } from 'lucide-react';
 import Providers from '../providers';
 import { NavItem } from '../nav-item';
 import logo from '../../public/assets/logo.svg';
@@ -22,6 +18,8 @@ import { IoIosPeople } from 'react-icons/io';
 import { ImManWoman } from 'react-icons/im';
 import { MdManageAccounts } from 'react-icons/md';
 import { IoMdNotificationsOutline } from 'react-icons/io';
+import { Menu, X } from 'lucide-react';
+import { MdAnalytics } from 'react-icons/md';
 
 export default function RootLayout({
   children
@@ -30,22 +28,60 @@ export default function RootLayout({
 }) {
   const pathname = usePathname();
   const isSuperAdminRoute = pathname.startsWith('/super-admin');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to toggle sidebar
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
 
   return (
     <Providers>
-      <div className="flex w-full min-h-screen">
-        <div className="w-[20%]">
+      <div className="flex w-full overflow-hidden min-h-screen">
+        {/* Sidebar: Hidden on lg and below, shown when toggled */}
+        <div
+          className={`lg:w-[20%] fixed top-0 left-0 h-full transition-transform duration-300 ease-in-out transform ${
+            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } lg:translate-x-0 lg:static z-50`}
+        >
           {isSuperAdminRoute ? (
             <SuperAdminPanelSideNav />
           ) : (
             <HotelPanelSideNav />
           )}
         </div>
-        <div className="w-[80%] flex flex-col h-screen overflow-hidden">
+
+        {/* Main Content */}
+        <div
+          className={`w-full lg:w-[80%] flex flex-col h-screen overflow-hidden transition-all duration-300`}
+        >
+          {/* Header with Toggle Button */}
+          <header className="lg:hidden flex items-center justify-between p-4 bg-coffeeLight">
+            <Link
+              href={isSuperAdminRoute ? '/super-admin/dashboard' : '/dashboard'}
+            >
+              <Image loading="lazy" src={logo} alt="Logo" className="h-8" />
+            </Link>
+            <button onClick={toggleSidebar} aria-label="Toggle Sidebar">
+              {isSidebarOpen ? (
+                <X className="h-6 w-6 text-goldenYellow/80" />
+              ) : (
+                <Menu className="h-6 w-6 text-goldenYellow/80" />
+              )}
+            </button>
+          </header>
+
           <main className="overflow-y-auto flex items-start w-full md:gap-4 hide-scrollbar">
             {children}
           </main>
         </div>
+
+        {/* Overlay for mobile when sidebar is open */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 lg:hidden z-40"
+            onClick={toggleSidebar}
+          ></div>
+        )}
       </div>
     </Providers>
   );
@@ -55,7 +91,7 @@ function SuperAdminPanelSideNav() {
   const [openHotelSubMenu, setOpenHotelSubMenu] = useState(false);
 
   return (
-    <aside className="fixed lg:relative flex flex-col py-14 lg:py-2 2xl:py-4 h-screen p-4 pb-0 bg-coffeeLight z-40">
+    <aside className="flex flex-col py-14 lg:py-2 2xl:py-4 h-screen p-4 pb-0 bg-coffeeLight z-40">
       <nav className="flex flex-col gap-4 items-center overflow-y-auto hide-scrollbar">
         <Link
           href="/super-admin/dashboard"
@@ -131,6 +167,13 @@ function SuperAdminPanelSideNav() {
             </div>
           </div>
 
+          <NavItem
+            href="/super-admin/reports-and-analytics"
+            label="ANALYTICS & REPORTS"
+          >
+            <MdAnalytics className="h-5 w-5 lg:h-6 lg:w-6" />
+          </NavItem>
+
           <NavItem href="/logout" label="Logout">
             <LogOut className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
@@ -141,10 +184,8 @@ function SuperAdminPanelSideNav() {
 }
 
 function HotelPanelSideNav() {
-  // const [openHotelSubMenu, setOpenHotelSubMenu] = useState(false);
-
   return (
-    <aside className="fixed lg:relative flex flex-col py-14 lg:py-2 2xl:py-4 h-screen p-4 pb-0 bg-coffeeLight z-40">
+    <aside className="flex flex-col py-14 lg:py-2 2xl:py-4 h-screen p-4 pb-0 bg-coffeeLight z-40">
       <nav className="flex flex-col gap-4 items-center overflow-y-auto hide-scrollbar">
         <Link
           href="/dashboard"
@@ -192,6 +233,13 @@ function HotelPanelSideNav() {
 
           <NavItem href="/hotel-profile" label="Hotel Profile">
             <Landmark className="h-5 w-5 lg:h-6 lg:w-6" />
+          </NavItem>
+
+          <NavItem
+            href="/super-admin/reports-and-analytics"
+            label="ANALYTICS & REPORTS"
+          >
+            <MdAnalytics className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
           <NavItem href="/logout" label="Logout">

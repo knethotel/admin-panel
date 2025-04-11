@@ -10,8 +10,10 @@ const ViewAdminPage = async ({
 }) => {
   const id = (await params).id;
   return (
-    <div className="flex justify-center items-center w-full py-10 px-6">
-      <AdminForm adminID={id} mode="view" />
+    <div className="flex justify-center w-full pt-8">
+      <div className="w-full container py-6 flex justify-center">
+        <AdminForm adminID={id} mode="view" />
+      </div>
     </div>
   );
 };

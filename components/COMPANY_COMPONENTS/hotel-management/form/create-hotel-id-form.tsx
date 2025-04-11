@@ -110,7 +110,7 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
                   <div className="flex items-center w-full">
                     <FormControl>
                       <div
-                        className="relative h-32 w-32 rounded-lg bg-[#F6EEE0] p-2"
+                        className="relative h-32 w-32 2xl:h-36 2xl:w-36 rounded-lg bg-[#F6EEE0] hover:drop-shadow-xl duration-200"
                         onDrop={(e) => {
                           e.preventDefault();
                           const file = e.dataTransfer.files?.[0];
@@ -127,9 +127,9 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
                             <Image
                               src={preview} // Using Image component here as well
                               alt="Coupon preview"
-                              height={476}
-                              width={476}
-                              className="object-cover rounded-lg"
+                              height={576}
+                              width={576}
+                              className="object-cover rounded-lg h-full w-full"
                             />
                           )}
                         </div>

@@ -3,8 +3,10 @@ import React from 'react';
 
 const RefundHomePage = () => {
   return (
-    <div className="mt-14 w-full">
-      <RefundDetailsTable />
+    <div className="w-full min-h-screen pt-12">
+      <div className="h-full w-full container">
+        <RefundDetailsTable />
+      </div>
     </div>
   );
 };

@@ -71,7 +71,7 @@ export const ComplaintTable: React.FC = () => {
 
   return (
     <>
-      <div className="px-2 py-6 flex w-full items-center justify-end"> </div>
+      <div className="py-6 flex w-full items-center justify-end"> </div>
       {loading ? <span>Loading...</span> : tableContent}
       <div className="flex justify-end space-x-2 py-2">
         <div className="space-x-2">

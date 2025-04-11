@@ -23,11 +23,11 @@ const HomePage = () => {
         <CreateCouponModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
         {/* Coupon Carousel Container */}
         <div className="flex flex-col bg-[#FAF6EF] shadow-custom p-6 pb-10 w-full">
-          <div className="h-full w-full flex flex-col gap-14">
+          <div className="h-full w-full flex flex-col gap-8">
             {/* Percentage coupons list */}
             <div className="space-y-2">
               <p className="inline-block font-medium">Percentage Coupons</p>
-              <div className="flex gap-4 scrollbar-hide overflow-x-auto">
+              <div className="flex gap-4 h-44 scrollbar-hide overflow-x-auto">
                 {/* Coupon Card */}
                 {PercentageCouponsData.map((coupon, index) => (
                   <div
@@ -59,7 +59,7 @@ const HomePage = () => {
             {/* Fixed amount coupons list */}
             <div className="space-y-2">
               <p className="inline-block font-medium">Fixed Amount Coupons</p>
-              <div className="flex gap-4 scrollbar-hide overflow-x-auto">
+              <div className="flex gap-4 h-44 scrollbar-hide overflow-x-auto">
                 {/* Coupon Card */}
                 {FixedAmountCouponsData.map((coupon, index) => (
                   <div
