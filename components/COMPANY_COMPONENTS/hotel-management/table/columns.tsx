@@ -14,7 +14,10 @@ export const columns: ColumnDef<HotelDataType>[] = [
   },
   {
     accessorKey: 'mobileNo',
-    header: 'Mobile No.'
+    header: 'Mobile No.',
+    cell: ({ row }) => {
+      return <span>+91-{row.original.mobileNo}</span>;
+    }
   },
   {
     accessorKey: 'email',

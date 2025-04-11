@@ -14,7 +14,10 @@ export const columns: ColumnDef<SubHotelDataType>[] = [
   },
   {
     accessorKey: 'mobileNo',
-    header: 'Mobile No.'
+    header: 'Mobile No.',
+    cell: ({ row }) => {
+      return <span>+91-{row.original.mobileNo}</span>;
+    }
   },
   {
     accessorKey: 'email',
@@ -26,9 +29,11 @@ export const columns: ColumnDef<SubHotelDataType>[] = [
     cell: ({ row }) => {
       const details = row.original.subscriptionDetails;
       return (
-        <div className="flex flex-col items-start justify-center">
-          <span>{details.planName}</span>
-          <span className="text-xs">{details.cost}</span>
+        <div className="flex items-center justify-center">
+          <div className="flex flex-col items-start">
+            <span>{details.planName}</span>
+            <span className="opacity-60">INR-{details.cost}/month</span>
+          </div>
         </div>
       );
     }
