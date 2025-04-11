@@ -107,9 +107,6 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
               name="hotelImageFile"
               render={({ field }) => (
                 <FormItem className="flex flex-col justify-center items-center tracking-wide">
-                  <FormLabel className="w-full text-center sm:w-32 text-sm opacity-60 text-coffee">
-                    Hotel Image
-                  </FormLabel>
                   <div className="flex items-center w-full">
                     <FormControl>
                       <div
@@ -180,13 +177,13 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
           )}
           <div className="w-full flex justify-between items-center gap-4">
             {/* Left part */}
-            <div className="flex flex-col gap-3 justify-center items-center">
+            <div className="flex flex-col gap-3 justify-center items-start">
               <FormField
                 control={form.control}
                 name="hotelID"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
                       Hotel ID
                     </FormLabel>
                     <div className="w-full">
@@ -197,7 +194,7 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
                           value={field.value}
                           disabled={!isEnabled}
                           placeholder="Enter hotel ID"
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -210,7 +207,7 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
                 name="hotelName"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
                       Hotel Name
                     </FormLabel>
                     <div className="w-full">
@@ -221,7 +218,7 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
                           value={field.value}
                           disabled={!isEnabled}
                           placeholder="Enter hotel Name"
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -234,7 +231,7 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
                 name="address"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
                       Address
                     </FormLabel>
                     <div className="w-full">
@@ -244,7 +241,7 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
                           value={field.value}
                           disabled={!isEnabled}
                           placeholder="Enter address"
-                          className="w-full placeholder:opacity-65 h-16 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs resize-none"
+                          className="w-full placeholder:opacity-65 h-16 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm resize-none"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -260,7 +257,7 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
                 name="contactNo"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
                       Contact
                     </FormLabel>
                     <div className="w-full">
@@ -271,7 +268,7 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
                           value={field.value}
                           disabled={!isEnabled}
                           placeholder="Enter contact number"
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -284,7 +281,7 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
                 name="email"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
                       Email
                     </FormLabel>
                     <div className="w-full">
@@ -295,7 +292,7 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
                           value={field.value}
                           disabled={!isEnabled}
                           placeholder="Enter email"
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -307,118 +304,66 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
           </div>
           <div className="flex flex-col gap-4 justify-center items-start w-full">
             {/* Services options */}
-            <FormField
-              control={form.control}
-              name="services"
-              render={({ field }) => (
-                <FormItem className="flex flex-col sm:flex-row gap-2">
-                  <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700 pt-1">
-                    Services
-                  </FormLabel>
-                  <div className="w-full">
-                    <FormControl>
-                      <div className="flex flex-wrap xl:w-[650px] gap-2">
-                        {serviceOptions.map((value) => (
-                          <div
-                            key={value}
-                            className="flex items-center space-x-2"
-                          >
-                            <Checkbox
-                              disabled={!isEnabled}
-                              checked={field.value.includes(value)} // No need for ?. since services is required
-                              onCheckedChange={(checked) => {
-                                let newValue: ServiceType[] = field.value; // field.value is always ServiceType[]
-                                if (checked) {
-                                  newValue = [...newValue, value];
-                                } else {
-                                  newValue = newValue.filter(
-                                    (item) => item !== value
-                                  );
-                                }
-                                field.onChange(newValue);
-                              }}
-                              id={value}
-                            />
-                            <label
-                              htmlFor={value}
-                              className="text-xs text-gray-700 capitalize"
-                            >
-                              {value}
-                            </label>
-                          </div>
-                        ))}
-                      </div>
-                    </FormControl>
-                    <FormMessage className="text-[10px] mt-1" />
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="subscriptionPlan"
-              render={({ field }) => (
-                <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                  <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                    Subscription Plan
-                  </FormLabel>
-                  <div className="w-full">
-                    <FormControl>
-                      <Input
-                        type="text"
-                        {...field}
-                        value={field.value}
-                        disabled={!isEnabled}
-                        placeholder="Enter plan name"
-                        className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
-                      />
-                    </FormControl>
-                    <FormMessage className="text-[10px] mt-1" />
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="subscriptionPrice"
-              render={({ field }) => (
-                <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                  <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                    Subscription Price
-                  </FormLabel>
-                  <div className="w-full">
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        value={field.value}
-                        disabled={!isEnabled}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                        placeholder="Enter plan name"
-                        className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
-                      />
-                    </FormControl>
-                    <FormMessage className="text-[10px] mt-1" />
-                  </div>
-                </FormItem>
-              )}
-            />
+            <div className="flex flex-col sm:flex-row gap-2">
+              {/* Label */}
+              <label className="w-full sm:w-32 text-sm font-medium text-black pt-1">
+                Services
+              </label>
+
+              {/* Services Grid */}
+              <div className="w-full">
+                <div className="grid grid-cols-3 gap-x-4">
+                  {serviceOptions.map((service, index) => (
+                    <div key={service} className="flex items-center mb-2">
+                      <span className="text-sm text-black capitalize px-2 py-1 bg-lightbrown rounded cursor-pointer hover:bg-fadedCream transition">
+                        {service}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div>
+              <FormField
+                control={form.control}
+                name="subscriptionPlan"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col sm:flex-row gap-2 sm:items-center">
+                    <FormLabel className="w-full mb-5 text-nowrap sm:w-32 text-sm font-medium text-black">
+                      Subscription Plan
+                    </FormLabel>
+                    <div className="w-full">
+                      <FormControl>
+                        <Input
+                          type="text"
+                          {...field}
+                          value={field.value}
+                          disabled={!isEnabled}
+                          className="w-fit placeholder:opacity-65 mb-1 h-8 bg-transparent bg-lightbrown text-black rounded-md border-none outline-none focus:ring-0 text-sm"
+                        />
+                        {/* ****Hardcoded for now**** */}
+                      </FormControl>
+                      <span className="text-sm min-h-8 text-goldenBrown ml-2">
+                        INR- 2999/month
+                      </span>
+                    </div>
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
           <div className="w-full flex justify-start items-center">
-            <Button
-              type="submit"
-              className="w-28 h-8 md:ml-24 sm:w-auto bg-[#A07D3D] text-white hover:bg-[#8c6b33] px-6 rounded-md text-xs"
-            >
+            <Button type="submit" className="btn-primary">
               Save
             </Button>
             {isSubmitting && 'Saving...'}
             {submitStatus === 'success' && (
-              <p className="text-green-600 text-xs ml-4">
+              <p className="text-green-600 text-sm ml-4">
                 Form submitted successfully!
               </p>
             )}
             {submitStatus === 'error' && (
-              <p className="text-red-600 text-xs ml-4">
+              <p className="text-red-600 text-sm ml-4">
                 An error occurred. Please try again.
               </p>
             )}

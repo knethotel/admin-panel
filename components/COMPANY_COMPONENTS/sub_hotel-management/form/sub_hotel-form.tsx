@@ -130,9 +130,6 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
               name="subHotelImageFile"
               render={({ field }) => (
                 <FormItem className="flex flex-col justify-center items-center tracking-wide">
-                  <FormLabel className="w-full text-center sm:w-32 text-sm opacity-60 text-coffee">
-                    Sub Hotel Image
-                  </FormLabel>
                   <div className="flex items-center w-full">
                     <FormControl>
                       <div
@@ -223,7 +220,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                           {...field}
                           disabled={mode === 'view'}
                           placeholder="e.g., PH001"
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -236,7 +233,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                 name="subHotelName"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-gray-700">
                       Sub Hotel Name
                     </FormLabel>
                     <div className="w-full">
@@ -246,7 +243,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                           {...field}
                           disabled={mode === 'view'}
                           placeholder="e.g., Hotel Serenity"
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -259,7 +256,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                 name="address"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-start">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-gray-700">
                       Address
                     </FormLabel>
                     <div className="w-full">
@@ -268,7 +265,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                           {...field}
                           disabled={mode === 'view'}
                           placeholder="e.g., 123 Peace Road, Colombo"
-                          className="w-full h-16 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs resize-none"
+                          className="w-full h-16 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-sm resize-none"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -284,7 +281,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                 name="subHotelID"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-gray-700">
                       Sub-Hotel ID
                     </FormLabel>
                     <div className="w-full">
@@ -294,7 +291,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                           {...field}
                           disabled={mode === 'view'}
                           placeholder="e.g., SH001"
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -307,7 +304,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                 name="contactNo"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-gray-700">
                       Contact
                     </FormLabel>
                     <div className="w-full">
@@ -317,7 +314,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                           {...field}
                           disabled={mode === 'view'}
                           placeholder="e.g., +94123456789"
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -330,7 +327,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                 name="email"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-gray-700">
                       Email
                     </FormLabel>
                     <div className="w-full">
@@ -340,7 +337,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                           {...field}
                           disabled={mode === 'view'}
                           placeholder="e.g., contact@hotel.com"
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -353,128 +350,51 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
 
           {/* Services and Subscription */}
           <div className="flex flex-col gap-8 w-full">
-            <FormField
-              control={form.control}
-              name="services"
-              render={({ field }) => (
-                <FormItem className="flex flex-col sm:flex-row gap-2">
-                  <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700 pt-1">
-                    Services
-                  </FormLabel>
-                  <div className="w-full">
-                    <FormControl>
-                      <div className="flex flex-wrap gap-2">
-                        {serviceOptions.map((value) => (
-                          <div
-                            key={value}
-                            className="flex items-center space-x-2"
-                          >
-                            <Checkbox
-                              disabled={mode === 'view'}
-                              checked={field.value.includes(value)}
-                              onCheckedChange={(checked) => {
-                                const newValue = checked
-                                  ? [...field.value, value]
-                                  : field.value.filter(
-                                      (item) => item !== value
-                                    );
-                                field.onChange(newValue);
-                              }}
-                              id={value}
-                            />
-                            <label
-                              htmlFor={value}
-                              className="text-xs text-gray-700 capitalize"
-                            >
-                              {value}
-                            </label>
-                          </div>
-                        ))}
-                      </div>
-                    </FormControl>
-                    <FormMessage className="text-[10px] mt-1" />
-                  </div>
-                </FormItem>
-              )}
-            />
-            <div className="flex w-full justify-between items-start gap-4">
-              <div className="flex flex-col gap-3 w-full max-w-md">
-                <FormField
-                  control={form.control}
-                  name="subscriptionPlan"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                      <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                        Subscription Plan
-                      </FormLabel>
-                      <div className="w-full">
-                        <FormControl>
-                          <Input
-                            type="text"
-                            {...field}
-                            disabled={mode === 'view'}
-                            placeholder="e.g., Premium"
-                            className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
-                          />
-                        </FormControl>
-                        <FormMessage className="text-[10px] mt-1" />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="subscriptionPrice"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                      <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                        Subscription Price
-                      </FormLabel>
-                      <div className="w-full">
-                        <FormControl>
-                          <Input
-                            type="number"
-                            {...field}
-                            value={field.value}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
-                            disabled={mode === 'view'}
-                            placeholder="e.g., 1500"
-                            className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
-                          />
-                        </FormControl>
-                        <FormMessage className="text-[10px] mt-1" />
-                      </div>
-                    </FormItem>
-                  )}
-                />
+            <div className="flex flex-col w-fit sm:flex-row">
+              {/* Label */}
+              <label className="w-full sm:w-32 text-sm font-medium text-black pt-1">
+                Services
+              </label>
+
+              {/* Services Grid */}
+              <div className="w-full">
+                <div className="grid grid-cols-3 gap-x-4">
+                  {serviceOptions.map((service, index) => (
+                    <div key={service} className="flex items-center mb-2">
+                      <span className="text-sm text-black capitalize px-2 py-1 bg-lightbrown rounded cursor-pointer hover:bg-fadedCream transition">
+                        {service}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-col gap-3 w-full max-w-md">
-                <FormField
-                  control={form.control}
-                  name="gstDetails"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                      <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                        GST Details
-                      </FormLabel>
-                      <div className="w-full">
-                        <FormControl>
-                          <Input
-                            type="text" // Changed from number to text for GST format
-                            {...field}
-                            disabled={mode === 'view'}
-                            placeholder="e.g., GSTIN123456789"
-                            className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
-                          />
-                        </FormControl>
-                        <FormMessage className="text-[10px] mt-1" />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              </div>
+            </div>
+            <div>
+              <FormField
+                control={form.control}
+                name="subscriptionPlan"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col sm:flex-row gap-2 sm:items-center">
+                    <FormLabel className="w-full mb-5 text-nowrap sm:w-32 text-sm font-medium text-black">
+                      Subscription Plan
+                    </FormLabel>
+                    <div className="w-full">
+                      <FormControl>
+                        <Input
+                          type="text"
+                          {...field}
+                          value={field.value}
+                          className="w-fit placeholder:opacity-65 mb-1 h-8 bg-transparent bg-lightbrown text-black rounded-md border-none outline-none focus:ring-0 text-sm"
+                        />
+                        {/* ****Hardcoded for now**** */}
+                      </FormControl>
+                      <span className="text-sm min-h-8 text-goldenBrown ml-2">
+                        INR- 2999/month
+                      </span>
+                    </div>
+                  </FormItem>
+                )}
+              />
             </div>
           </div>
 
@@ -484,17 +404,17 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
               <Button
                 type="submit"
                 disabled={isSubmitting || mode === 'view'}
-                className="w-28 h-8 md:ml-24 sm:w-auto bg-[#A07D3D] text-white hover:bg-[#8c6b33] px-6 rounded-md text-xs"
+                className="btn-primary"
               >
                 {isSubmitting ? 'Saving...' : 'Save'}
               </Button>
               {submitStatus === 'success' && (
-                <p className="text-green-600 text-xs ml-4">
+                <p className="text-green-600 text-sm ml-4">
                   Form submitted successfully!
                 </p>
               )}
               {submitStatus === 'error' && (
-                <p className="text-red-600 text-xs ml-4">
+                <p className="text-red-600 text-sm ml-4">
                   An error occurred. Please try again.
                 </p>
               )}

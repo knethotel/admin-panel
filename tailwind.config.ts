@@ -24,6 +24,7 @@ export default {
         yellowBrown: '#DBB766',
         goldenYellow: '#E0C815',
         brown: '#A07D3D',
+        goldenBrown: '#9C783A',
         coffee: '#281F0F',
         coffeeLight: '#4A391B',
         orangeLight: '#F5F1EB',
