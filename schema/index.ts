@@ -148,6 +148,12 @@ export const hotelSchema = z.object({
     .refine((file) => file !== '', {
       message: 'Logo image must not be an empty value'
     }),
+  hotelImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional()
+    .refine((file) => file !== '', {
+      message: 'Hotel image must not be an empty value'
+    }),
 
   hotelName: z.string().min(1, 'Hotel name is required'),
   number: z
