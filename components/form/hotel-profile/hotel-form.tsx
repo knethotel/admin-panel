@@ -229,7 +229,7 @@ const HotelForm = () => {
           <div className="w-full flex flex-col gap-6">
             {/* Chunk 1: Basic Hotel Info */}
             <div className="flex flex-col gap-4 2xl:gap-5 bg-[#FAF6EF] shadow-custom p-6 2xl:p-8 rounded-lg">
-              <div className="grid grid-cols-1 sm:grid-cols-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <FormField
                   control={form.control}
                   name="hotelName"
