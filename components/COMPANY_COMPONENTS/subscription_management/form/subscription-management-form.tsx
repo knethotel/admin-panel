@@ -113,7 +113,7 @@ const SubscriptionManagemetForm: React.FC<Props> = ({
                         {...field}
                         value={field.value}
                         placeholder="Enter Subscription ID"
-                        disabled
+                        disabled={mode === 'view'}
                         className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
                       />
                     </FormControl>
@@ -137,7 +137,7 @@ const SubscriptionManagemetForm: React.FC<Props> = ({
                         {...field}
                         value={field.value}
                         placeholder="Enter Plan Name"
-                        disabled
+                        disabled={mode === 'view'}
                         className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
                       />
                     </FormControl>
@@ -161,7 +161,7 @@ const SubscriptionManagemetForm: React.FC<Props> = ({
                         {...field}
                         value={field.value}
                         placeholder="Enter Plan Duration"
-                        disabled
+                        disabled={mode === 'view'}
                         className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
                       />
                     </FormControl>
@@ -185,7 +185,7 @@ const SubscriptionManagemetForm: React.FC<Props> = ({
                         {...field}
                         value={field.value}
                         placeholder="Enter Plan Type"
-                        disabled
+                        disabled={mode === 'view'}
                         className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
                       />
                     </FormControl>
@@ -212,7 +212,7 @@ const SubscriptionManagemetForm: React.FC<Props> = ({
                           {...field}
                           value={field.value}
                           placeholder="Enter Description"
-                          disabled
+                          disabled={mode === 'view'}
                           className="w-full h-44 placeholder:opacity-65 min-h-[80px] p-2 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs resize-y"
                         />
                       </FormControl>
@@ -271,7 +271,7 @@ const SubscriptionManagemetForm: React.FC<Props> = ({
                           {...field}
                           value={field.value}
                           placeholder="Enter Cost"
-                          disabled
+                          disabled={mode === 'view'}
                           className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
                         />
                       </FormControl>

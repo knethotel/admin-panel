@@ -10,7 +10,7 @@ const ViewSubscriptionDetailsPage = async ({
   return (
     <div className="flex justify-center w-full pt-8">
       <div className="w-full container py-6 flex justify-center">
-        <SubscriptionManagemetForm subscriptionID={id} mode="view" />
+        <SubscriptionManagemetForm mode="add" />
       </div>
     </div>
   );
