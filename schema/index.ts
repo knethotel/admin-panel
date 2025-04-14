@@ -724,12 +724,7 @@ export const employeeSchema = z.object({
     .nonempty({ message: 'Password is required' }),
   phoneNo: z.string().min(1, 'Phone Number is required'),
   role: z.string().min(1, 'Role is required'),
-  status: z.enum(['Active', 'Inactive'], {}),
-  priceType: z.enum(['ACTIVE', 'INACTIVE'], {
-    errorMap: () => ({
-      message: 'Invalid status Category'
-    })
-  })
+  status: z.enum(['Active', 'Inactive'], {})
 });
 
 export type employeeSchemaType = z.infer<typeof employeeSchema>;

@@ -78,7 +78,7 @@ export const EmployeeTable: React.FC = () => {
       <div className="flex items-center justify-between">
         <Heading title={`Employees (${totalRecords})`} />
         <Button
-          className="btn-primary text-xs md:text-sm"
+          className="btn-primary text-xs 2xl:text-sm md:text-sm"
           onClick={() => handleOnClick('add employee')}
         >
           <Plus className="mr-2 h-4 w-4" />

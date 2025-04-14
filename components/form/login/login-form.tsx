@@ -105,7 +105,7 @@ const LoginForm = () => {
                           type="email"
                           placeholder="Enter your email"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10" // Add padding-right for icon
+                          className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-25 pr-10" // Add padding-right for icon
                         />
                         {field.value && (
                           <button
@@ -141,7 +141,7 @@ const LoginForm = () => {
                             field.onChange(e);
                             handleOnChangePassword(e.target.value);
                           }}
-                          className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs placeholder:opacity-25 pr-10"
+                          className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-25 pr-10"
                         />
                         <button
                           type="button"
@@ -181,7 +181,7 @@ const LoginForm = () => {
                         </FormControl>
                         <FormLabel
                           htmlFor="rememberMe"
-                          className="text-xs text-nowrap ml-2 text-black"
+                          className="text-xs 2xl:text-sm text-nowrap ml-2 text-black"
                         >
                           Remember me
                         </FormLabel>
@@ -192,7 +192,7 @@ const LoginForm = () => {
                 />
                 <Link
                   href="/resetpassword"
-                  className="text-xs text-black hover:underline"
+                  className="text-xs 2xl:text-sm text-black hover:underline"
                 >
                   Forgot Password?
                 </Link>

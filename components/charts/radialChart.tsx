@@ -39,14 +39,14 @@ export function RadialChartStacked() {
     chartData[0].Booked + chartData[0].Check_Out + chartData[0].Check_In;
 
   return (
-    <Card className="flex flex-col h-full bg-lightbrown">
+    <Card className="flex flex-col h-fit bg-lightbrown min-h-[640px]:">
       <CardHeader className="items-start pb-0">
         <CardTitle>Revenue Stats</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-1 mt-4 items-center pb-0">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square w-full max-w-[340px]"
+          className="mx-auto aspect-square w-full min-w-[240px]"
         >
           <RadialBarChart
             data={chartData}
@@ -119,11 +119,13 @@ export function RadialChartStacked() {
           <span className="opacity-30">Booked</span>
         </div>
 
-        <div className=" w-full flex justify-center items-center gap-8 my-6 border border-black border-opacity-15 rounded-lg px-4 py-2">
-          <span className="bg-success/20 text-xs px-2 flex justify-center items-center w-28 h-8 rounded-lg border border-success">
-            <span className="text-success w-12">+16.2 %</span>
+        <div className=" w-full flex justify-center items-center gap-8 border border-black border-opacity-15 rounded-lg px-4 py-2">
+          <span className="bg-success/20 text-xs 2xl:text-sm px-2 flex justify-center items-center w-28 h-8 rounded-lg border border-success">
+            <span className="text-success text-[0.8rem] text-nowrap w-12">
+              +16.2 %
+            </span>
           </span>
-          <p className="text-xs text-start text-black">
+          <p className="text-xs 2xl:text-sm text-start text-black">
             You booked 3,456 rooms compared to last month{' '}
           </p>
         </div>

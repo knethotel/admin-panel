@@ -149,7 +149,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           placeholder="First Name"
                           {...field}
                           disabled={mode === 'view' || loading}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -173,7 +173,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           placeholder="Last Name"
                           {...field}
                           disabled={mode === 'view' || loading}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -197,7 +197,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           placeholder="Email ID"
                           {...field}
                           disabled={mode === 'view' || loading}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -222,7 +222,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                             placeholder="Password"
                             {...field}
                             disabled={loading}
-                            className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                            className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                           />
                           <span className="text-red-500">*</span>
                         </div>
@@ -250,7 +250,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
                           placeholder="Phone No"
                           {...field}
                           disabled={mode === 'view' || loading}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />
                         <span className="text-red-500">*</span>
                       </div>

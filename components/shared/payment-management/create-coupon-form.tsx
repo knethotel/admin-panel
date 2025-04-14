@@ -73,9 +73,9 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full relative h-full max-w-4xl mx-auto p-4 sm:px-6 md:px-8 rounded-lg"
+          className="w-full relative h-full max-w-4xl mx-auto rounded-lg"
         >
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
             {/* Left Side */}
             <div className="flex flex-col gap-3">
               {/* Category */}
@@ -108,7 +108,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                             )}
                           </SelectContent>
                         </Select>
-                        <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                        <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                       </>
                     )}
                   />
@@ -160,7 +160,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                               </PopoverContent>
                             </Popover>
                           </FormControl>
-                          <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                          <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                         </FormItem>
                       )}
                     />
@@ -202,7 +202,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                               </PopoverContent>
                             </Popover>
                           </FormControl>
-                          <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                          <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                         </FormItem>
                       )}
                     />
@@ -228,7 +228,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                             className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                           />
                         </FormControl>
-                        <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                        <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                       </div>
                     </FormItem>
                   )}
@@ -250,7 +250,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                               className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                             />
                           </FormControl>
-                          <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                          <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                         </div>
                       </FormItem>
                     )}
@@ -277,7 +277,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                               className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                             />
                           </FormControl>
-                          <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                          <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                         </div>
                       </FormItem>
                     )}
@@ -299,7 +299,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                             className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                           />
                         </FormControl>
-                        <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                        <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                       </div>
                     </FormItem>
                   )}
@@ -338,7 +338,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                           ))}
                         </RadioGroup>
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -378,7 +378,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                           )}
                         </RadioGroup>
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -401,7 +401,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                           className="bg-[#F6EEE0] border-gray-300 data-[state=checked]:bg-[#A07D3D] data-[state=checked]:border-[#A07D3D]"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -427,7 +427,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -443,7 +443,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                     <div className="flex items-center w-full">
                       <FormControl>
                         <div
-                          className="relative h-36 w-36 2xl:h-40 2xl:w-40 rounded-lg bg-[#F6EEE0] p-2"
+                          className="relative h-36 w-36 2xl:h-40 2xl:w-40 rounded-lg bg-[#F6EEE0]"
                           onDrop={(e) => {
                             e.preventDefault();
                             const file = e.dataTransfer.files?.[0];
@@ -522,7 +522,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                           className="w-64 h-32 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 resize-y text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                     </div>
                   </FormItem>
                 )}

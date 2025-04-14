@@ -170,7 +170,7 @@ export function DataTable<TData, TValue>({
           <>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="text-xs md:text-sm ms-4">
+                <Button className="text-xs 2xl:text-sm md:text-sm ms-4">
                   Filter <ChevronDown className="ml-2 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -230,7 +230,7 @@ export function DataTable<TData, TValue>({
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* <Button onClick={handleClearFilters} className="text-xs md:text-sm">
+            {/* <Button onClick={handleClearFilters} className="text-xs 2xl:text-sm md:text-sm">
           Clear All
         </Button> */}
           </>
@@ -315,7 +315,7 @@ export function DataTable<TData, TValue>({
       ) : (
         <div className="flex flex-col items-center justify-center h-[55vh]">
           {/* <Image src={notFoundImage} alt="No Data Found" height={400} /> */}
-          <span className="text-4xl font-bold italic font-serif text-[#F7851E]">
+          <span className="text-xl font-bold text-coffee border border-coffeeLight rounded-md px-2 py-1">
             oops ! data not found
           </span>
         </div>

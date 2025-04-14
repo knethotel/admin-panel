@@ -60,7 +60,7 @@ export default function Navbar({ active, search, searchKey }: navProps) {
         description="You will be logged out"
       />
 
-      <nav className="flex items-center w-full justify-between bg-[#EFE9DF] p-4 lg:w-[calc(100%-20%)] fixed">
+      <nav className="flex items-center w-full justify-between bg-[#EFE9DF] p-4 lg:w-[calc(100%-20%)] fixed z-50">
         {/* Left Side */}
         <div className="flex items-center gap-4">
           {active && (
@@ -113,7 +113,7 @@ export default function Navbar({ active, search, searchKey }: navProps) {
                   <p className="text-sm font-medium leading-none">
                     Shivam Kumar
                   </p>
-                  <p className="text-xs leading-none text-muted-foreground">
+                  <p className="text-xs 2xl:text-sm leading-none text-muted-foreground">
                     shivamjha2705@gmail.com
                   </p>
                 </div>

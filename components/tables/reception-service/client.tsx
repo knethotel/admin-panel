@@ -66,7 +66,7 @@ export const ReceptionServiceTable: React.FC = () => {
   };
   return (
     <>
-      <div className="w-full pt-20 flex gap-2 justify-end px-4 py-2 bg-white">
+      <div className="w-full pt-20 flex gap-2 justify-end items-center px-4 py-2">
         <div className="flex w-full justify-between items-center">
           <h2 className="text-coffee text-2xl font-bold">Reception</h2>
           <div className="flex items-center gap-2">

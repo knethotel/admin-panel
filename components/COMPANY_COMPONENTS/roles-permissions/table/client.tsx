@@ -88,7 +88,7 @@ const RolesAndPermissionHome: React.FC = () => {
         <div>
           <div className="w-full flex justify-end">
             <Button
-              className="text-xs md:text-sm btn-primary"
+              className="text-xs 2xl:text-sm md:text-sm btn-primary"
               onClick={handleOnClick}
             >
               <Plus className="mr-2 h-4 w-4" />

@@ -47,10 +47,10 @@ export const useColumns = (): ColumnDef<AdminDataType>[] => {
         return (
           <div className="flex flex-col items-start justify-center">
             <span>{fullName}</span>
-            <span className="text-xs opacity-60 pt-1">
+            <span className="text-xs 2xl:text-sm opacity-60 pt-1">
               CREATED: {new Date(row.original.createdAt).toLocaleTimeString()}
             </span>
-            <span className="text-xs opacity-60">
+            <span className="text-xs 2xl:text-sm opacity-60">
               {new Date(row.original.createdAt).toLocaleDateString()}
             </span>
           </div>

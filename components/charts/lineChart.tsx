@@ -51,7 +51,7 @@ export function LineChartLinear() {
     <Card className="bg-lightbrown space-y-6 pt-2 w-full">
       <div className="flex flex-col gap-3 p-4">
         <div className="w-full flex justify-between items-center">
-          <p className="text-xs text-[#0B1C33] opacity-70 font-medium">
+          <p className="text-xs 2xl:text-sm text-[#0B1C33] opacity-70 font-medium">
             TOTAL CASES
           </p>
           <Select onValueChange={handleSelectChange}>
@@ -60,9 +60,11 @@ export function LineChartLinear() {
               <ChevronDown className="absolute w-4 h-4 z-50 right-0 top-2 text-black" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Monthly text-xs">Monthly</SelectItem>
-              <SelectItem value="Yearly text-xs">Yearly</SelectItem>
-              <SelectItem value="Weekly text-xs">Weekly</SelectItem>
+              <SelectItem value="Monthly text-xs 2xl:text-sm">
+                Monthly
+              </SelectItem>
+              <SelectItem value="Yearly text-xs 2xl:text-sm">Yearly</SelectItem>
+              <SelectItem value="Weekly text-xs 2xl:text-sm">Weekly</SelectItem>
             </SelectContent>
           </Select>
         </div>

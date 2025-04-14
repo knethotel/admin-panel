@@ -35,23 +35,23 @@ const GuestDetails = ({ guestID }: Props) => {
             </div>
           )}
           {/* Details part */}
-          <div className="flex justify-between w-full items-center">
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-0 justify-between w-full items-center">
             {/* Left part */}
             <div className="flex flex-col gap-4 justify-center items-end">
               <div className="flex justify-center items-center gap-5 group">
-                <span className="text-sm">Guest ID</span>
+                <span className="text-sm w-32 text-start">Guest ID</span>
                 <span className="text-sm w-48 py-1 text-center rounded-lg bg-lightbrown group-hover:bg-coffee group-hover:text-white transition-all duration-100 group-hover:shadow-xl">
                   {guest?.guestID}
                 </span>
               </div>
               <div className="flex justify-center items-center gap-5 group">
-                <span className="text-sm">First Name</span>
+                <span className="text-sm w-32 text-start">First Name</span>
                 <span className="text-sm w-48 py-1 text-center rounded-lg bg-lightbrown group-hover:bg-coffee group-hover:text-white transition-all duration-100 group-hover:shadow-xl">
                   {guest?.firstName}
                 </span>
               </div>
               <div className="flex justify-center items-center gap-5 group">
-                <span className="text-sm">Phone Number</span>
+                <span className="text-sm w-32 text-start">Phone Number</span>
                 <span className="text-sm w-48 py-1 text-center rounded-lg bg-lightbrown group-hover:bg-coffee group-hover:text-white transition-all duration-100 group-hover:shadow-xl">
                   {guest?.phoneNumber}
                 </span>
@@ -60,19 +60,19 @@ const GuestDetails = ({ guestID }: Props) => {
             {/* Right part */}
             <div className="flex flex-col gap-4 justify-center items-end">
               <div className="flex justify-center items-center gap-5 group">
-                <span className="text-sm">Hotel Name</span>
+                <span className="text-sm w-32 text-start">Hotel Name</span>
                 <span className="text-sm w-48 py-1 text-center rounded-lg bg-lightbrown group-hover:bg-coffee group-hover:text-white transition-all duration-100 group-hover:shadow-xl">
                   {guest?.hotelName}
                 </span>
               </div>
               <div className="flex justify-center items-center gap-5 group">
-                <span className="text-sm">Last Name</span>
+                <span className="text-sm w-32 text-start">Last Name</span>
                 <span className="text-sm w-48 py-1 text-center rounded-lg bg-lightbrown group-hover:bg-coffee group-hover:text-white transition-all duration-100 group-hover:shadow-xl">
                   {guest?.lastName}
                 </span>
               </div>
               <div className="flex justify-center items-center gap-5 group">
-                <span className="text-sm">Email</span>
+                <span className="text-sm w-32 text-start">Email</span>
                 <span className="text-sm w-48 py-1 text-center rounded-lg bg-lightbrown group-hover:bg-coffee group-hover:text-white transition-all duration-100 group-hover:shadow-xl">
                   {guest?.email}
                 </span>

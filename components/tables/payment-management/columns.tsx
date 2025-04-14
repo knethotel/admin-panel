@@ -25,7 +25,9 @@ export const columns: ColumnDef<RefundDataType>[] = [
         <div className="flex flex-col items-center">
           <div className="flex flex-col items-start">
             <span className="text-sm">{hotelDetails.hotelID}</span>
-            <span className="text-xs opacity-55">{hotelDetails.hotelName}</span>
+            <span className="text-xs 2xl:text-sm opacity-55">
+              {hotelDetails.hotelName}
+            </span>
           </div>
         </div>
       );
@@ -48,7 +50,9 @@ export const columns: ColumnDef<RefundDataType>[] = [
               <div className="flex flex-col items-start">
                 {' '}
                 <span className="text-[#FC690E]">{status}</span>
-                <span className="text-xs opacity-70">{processedAt}</span>
+                <span className="text-xs 2xl:text-sm opacity-70">
+                  {processedAt}
+                </span>
               </div>
             </div>
           );
@@ -58,7 +62,9 @@ export const columns: ColumnDef<RefundDataType>[] = [
               <div className="flex flex-col items-start">
                 {' '}
                 <span className="text-[#E5252A]">{status}</span>
-                <span className="text-xs opacity-70">{processedAt}</span>
+                <span className="text-xs 2xl:text-sm opacity-70">
+                  {processedAt}
+                </span>
               </div>
             </div>
           );
@@ -68,7 +74,9 @@ export const columns: ColumnDef<RefundDataType>[] = [
               <div className="flex flex-col items-start">
                 {' '}
                 <span className="text-[#3787E3]">{status}</span>
-                <span className="text-xs opacity-70">{processedAt}</span>
+                <span className="text-xs 2xl:text-sm opacity-70">
+                  {processedAt}
+                </span>
               </div>
             </div>
           );
@@ -78,7 +86,9 @@ export const columns: ColumnDef<RefundDataType>[] = [
               <div className="flex flex-col items-start">
                 {' '}
                 <span className="text-[#78B150]">{status}</span>
-                <span className="text-xs opacity-70">{processedAt}</span>
+                <span className="text-xs 2xl:text-sm opacity-70">
+                  {processedAt}
+                </span>
               </div>
             </div>
           );
@@ -87,7 +97,9 @@ export const columns: ColumnDef<RefundDataType>[] = [
             <div className="flex flex-col items-center">
               <div className="flex flex-col items-start">
                 <span className="text-gray-500">{status}</span>
-                <span className="text-xs opacity-70">{processedAt}</span>
+                <span className="text-xs 2xl:text-sm opacity-70">
+                  {processedAt}
+                </span>
               </div>
             </div>
           );

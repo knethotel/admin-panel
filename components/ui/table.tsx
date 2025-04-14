@@ -9,7 +9,10 @@ const Table = React.forwardRef<
   <div className="w-full ">
     <table
       ref={ref}
-      className={cn('w-full caption-bottom px-4 me-1 text-sm border-separate border-spacing-y-5 ', className)}
+      className={cn(
+        'w-full caption-bottom px-4 me-1 text-sm border-separate border-spacing-y-5 ',
+        className
+      )}
       {...props}
     />
   </div>
@@ -28,11 +31,7 @@ const TableBody = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <tbody
-    ref={ref}
-    className={cn('', className)}
-    {...props}
-  />
+  <tbody ref={ref} className={cn('', className)} {...props} />
 ));
 TableBody.displayName = 'TableBody';
 
@@ -63,7 +62,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
         className={cn(
           ' relative transition-colors data-[state=selected]:bg-muted',
           '',
-          isHighlighted ? '' : 'shadow-table relative  rounded-xl', // Apply green background if highlighted
+          isHighlighted ? '' : 'drop-shadow-md relative  rounded-xl', // Apply green background if highlighted
           className
         )}
         {...props}
@@ -81,7 +80,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-10 px-2 b text-[#666666] text-center align-middle font-medium whitespace-nowrap relative",
+      'h-10 px-2 b text-[#666666] text-center align-middle font-medium whitespace-nowrap relative',
       className
     )}
     {...props}
@@ -96,7 +95,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      "px-4 py-3  whitespace-nowrap relative text-center ",
+      'px-4 py-3  whitespace-nowrap relative text-center ',
       className
     )}
     {...props}

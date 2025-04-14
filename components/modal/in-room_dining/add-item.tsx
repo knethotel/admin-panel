@@ -81,7 +81,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                         />
                       </FormControl>
                     </div>
-                    <FormMessage className="mt-1 text-xs ml-56" />
+                    <FormMessage className="mt-1 text-xs 2xl:text-sm ml-56" />
                   </FormItem>
                 )}
               />
@@ -109,7 +109,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                           />
                         </FormControl>
                       </div>
-                      <FormMessage className="mt-1 text-xs ml-40" />
+                      <FormMessage className="mt-1 text-xs 2xl:text-sm ml-40" />
                     </FormItem>
                   )}
                 />
@@ -132,7 +132,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                           />
                         </FormControl>
                       </div>
-                      <FormMessage className="mt-1 text-xs ml-40" />
+                      <FormMessage className="mt-1 text-xs 2xl:text-sm ml-40" />
                     </FormItem>
                   )}
                 />
@@ -159,7 +159,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                           />
                         </FormControl>
                       </div>
-                      <FormMessage className="mt-1 text-xs ml-40" />
+                      <FormMessage className="mt-1 text-xs 2xl:text-sm ml-40" />
                     </FormItem>
                   )}
                 />
@@ -171,7 +171,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <div className="flex items-start gap-4">
-                        <FormLabel className="w-32 text-xs font-medium text-gray-700 pt-1">
+                        <FormLabel className="w-32 text-xs 2xl:text-sm font-medium text-gray-700 pt-1">
                           Type
                         </FormLabel>
                         <FormControl>
@@ -188,7 +188,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                                 <RadioGroupItem value={value} id={value} />
                                 <label
                                   htmlFor={value}
-                                  className="text-xs text-gray-700 capitalize"
+                                  className="text-xs 2xl:text-sm text-gray-700 capitalize"
                                 >
                                   {value}
                                 </label>
@@ -197,7 +197,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                           </RadioGroup>
                         </FormControl>
                       </div>
-                      <FormMessage className="mt-1 text-xs ml-32" />
+                      <FormMessage className="mt-1 text-xs 2xl:text-sm ml-32" />
                     </FormItem>
                   )}
                 />

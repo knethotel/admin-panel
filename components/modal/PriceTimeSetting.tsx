@@ -175,7 +175,7 @@ const PriceTimeSetting: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                               <RadioGroupItem value={value} id={value} />
                               <label
                                 htmlFor={value}
-                                className="text-xs text-gray-700 capitalize"
+                                className="text-xs 2xl:text-sm text-gray-700 capitalize"
                               >
                                 {value}
                               </label>
@@ -213,7 +213,7 @@ const PriceTimeSetting: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                               <RadioGroupItem value={value} id={value} />
                               <label
                                 htmlFor={value}
-                                className="text-xs text-gray-700 capitalize"
+                                className="text-xs 2xl:text-sm text-gray-700 capitalize"
                               >
                                 {value}
                               </label>
@@ -230,7 +230,7 @@ const PriceTimeSetting: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             <div className="w-full text-center">
               <Button
                 type="submit"
-                className="btn-primary text-xs xl:text-sm mt-6"
+                className="btn-primary text-xs 2xl:text-sm xl:text-sm mt-6"
               >
                 Save
               </Button>

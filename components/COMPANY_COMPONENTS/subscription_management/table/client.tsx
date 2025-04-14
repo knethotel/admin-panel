@@ -72,7 +72,7 @@ export const SubscriptionManagementHomePage: React.FC = () => {
       <div className="flex items-center justify-between">
         <Heading title={`Subscription(s) (${totalRecords})`} />
         <Button
-          className="btn-primary text-xs md:text-sm"
+          className="btn-primary text-xs 2xl:text-sm md:text-sm"
           onClick={() => handleOnClick()}
         >
           <Plus className="mr-2 h-4 w-4" />

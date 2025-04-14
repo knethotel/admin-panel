@@ -27,8 +27,10 @@ const ComplaintDashboard = ({
           <div className="flex gap-3">
             <span className="h-14 w-1 rounded-full bg-[#78B150]"></span>
             <div className="flex flex-col justify-center gap-1 items-start">
-              <p className="text-xs xl:text-sm opacity-35">CLOSED CASES</p>
-              <h3 className="text-start text-xs xl:text-sm font-semibold">
+              <p className="text-xs 2xl:text-sm xl:text-sm opacity-35">
+                CLOSED CASES
+              </p>
+              <h3 className="text-start text-xs 2xl:text-sm xl:text-sm font-semibold">
                 {closedCases}
               </h3>
             </div>
@@ -36,8 +38,10 @@ const ComplaintDashboard = ({
           <div className="flex gap-3">
             <span className="h-14 w-1 rounded-full bg-[#FE9900]"></span>
             <div className="flex flex-col justify-center gap-1 items-start">
-              <p className="text-xs xl:text-sm opacity-35">OPEN CASES</p>
-              <h3 className="text-start text-xs xl:text-sm font-semibold">
+              <p className="text-xs 2xl:text-sm xl:text-sm opacity-35">
+                OPEN CASES
+              </p>
+              <h3 className="text-start text-xs 2xl:text-sm xl:text-sm font-semibold">
                 {openCases}
               </h3>
             </div>
@@ -45,8 +49,10 @@ const ComplaintDashboard = ({
           <div className="flex gap-3">
             <span className="h-14 w-1 rounded-full bg-[#3787E3]"></span>
             <div className="flex flex-col justify-center gap-1 items-start">
-              <p className="text-xs xl:text-sm opacity-35">IN PROGRESS CASES</p>
-              <h3 className="text-start text-xs xl:text-sm font-semibold">
+              <p className="text-xs 2xl:text-sm xl:text-sm opacity-35">
+                IN PROGRESS CASES
+              </p>
+              <h3 className="text-start text-xs 2xl:text-sm xl:text-sm font-semibold">
                 {inProgressCases}
               </h3>
             </div>

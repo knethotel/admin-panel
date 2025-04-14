@@ -33,7 +33,7 @@ const CardWrapperHeader = ({
       )}
       <div className="space-y-1 text-start">
         <h2 className="">{title}</h2>
-        <p className="text-xs opacity-40">{label}</p>
+        <p className="text-xs 2xl:text-sm opacity-40">{label}</p>
       </div>
     </div>
   );

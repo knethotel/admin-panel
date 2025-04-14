@@ -66,7 +66,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="Enter First Name"
                           {...field}
-                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -89,7 +89,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="Enter Last Name"
                           {...field}
-                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -115,7 +115,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="Enter Phone Number"
                           {...field}
-                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -138,7 +138,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="Enter ID Proof"
                           {...field}
-                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -161,7 +161,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="Enter Room Type"
                           {...field}
-                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -187,7 +187,7 @@ const AddBookingForm = () => {
                           type="email"
                           placeholder="Enter Email ID"
                           {...field}
-                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -210,7 +210,7 @@ const AddBookingForm = () => {
                           type="text"
                           placeholder="Enter Room Number"
                           {...field}
-                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                         <span className="text-red-500">*</span>
                       </div>
@@ -256,14 +256,11 @@ const AddBookingForm = () => {
             <Button
               type="button"
               onClick={() => router.back()}
-              className="bg-[#EFE9DF] hover:outline hover:outline-black"
+              className="btn-secondary"
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              className="bg-[#A07D3D] text-white hover:text-black hover:outline hover:outline-black"
-            >
+            <Button type="submit" className="btn-primary">
               Save Changes
             </Button>
           </div>

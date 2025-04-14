@@ -58,11 +58,13 @@ const MenuPage = () => {
                 <span className="text-[#A07D3D] text-sm">
                   Get for ₹{item.cost - item.discount}
                 </span>
-                <p className="text-xs">{item.description}</p>
+                <p className="text-xs 2xl:text-sm">{item.description}</p>
                 <span className="flex gap-4 pt-2 justify-start">
                   <Bookmark className="h-3 w-3 text-black" />
                   <Send className="h-3 w-3 text-black" />
-                  <span className="text-xs opacity-30">(Serves 1)</span>
+                  <span className="text-xs 2xl:text-sm opacity-30">
+                    (Serves 1)
+                  </span>
                 </span>
               </div>
 

@@ -366,14 +366,14 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
               <Button
                 type="button"
                 onClick={onClose}
-                className="bg-gray-300 text-gray-800 hover:bg-gray-400 px-6 h-7 rounded-lg text-xs"
+                className="btn-secondary"
                 disabled={loading}
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                className="bg-[#8c6b33] text-white hover:bg-[#362913] px-6 h-7 rounded-lg text-xs"
+                className="btn-primary"
                 disabled={
                   Object.keys(selectedPermissions).length === 0 || loading
                 }

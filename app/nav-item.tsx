@@ -27,7 +27,7 @@ export function NavItem({
       )}
     >
       {children}
-      <span className="text-xs xl:text-sm 2xl:text-base font-medium">
+      <span className="text-xs 2xl:text-sm xl:text-sm 2xl:text-base font-medium">
         {label}
       </span>
     </Link>

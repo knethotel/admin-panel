@@ -20,6 +20,7 @@ import { MdManageAccounts } from 'react-icons/md';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { Menu, X } from 'lucide-react';
 import { MdAnalytics } from 'react-icons/md';
+import { MdOutlineSubscriptions } from 'react-icons/md';
 
 export default function RootLayout({
   children
@@ -124,6 +125,13 @@ function SuperAdminPanelSideNav() {
             label="Guest Management"
           >
             <Users className="h-5 w-5 lg:h-6 lg:w-6" />
+          </NavItem>
+
+          <NavItem
+            href="/super-admin/subscription-management"
+            label="Manage Subscription"
+          >
+            <MdOutlineSubscriptions className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
           <NavItem

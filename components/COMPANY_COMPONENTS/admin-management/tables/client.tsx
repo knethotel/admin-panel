@@ -78,7 +78,7 @@ export const AdminTable: React.FC = () => {
         <div className="flex items-center justify-between">
           <Heading title="Admins (Loading...)" />
           <Button
-            className="text-xs md:text-sm btn-primary"
+            className="text-xs 2xl:text-sm md:text-sm btn-primary"
             onClick={() => handleOnClick('add_admin')}
             disabled
           >
@@ -101,7 +101,7 @@ export const AdminTable: React.FC = () => {
       <div className="flex items-center justify-between">
         <Heading title={`Admins (${totalRecords})`} />
         <Button
-          className="text-xs md:text-sm btn-primary"
+          className="text-xs 2xl:text-sm md:text-sm btn-primary"
           onClick={() => handleOnClick('add_admin')}
         >
           <Plus className="mr-2 h-4 w-4" />

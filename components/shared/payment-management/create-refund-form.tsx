@@ -46,7 +46,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
           className="w-full relative h-full max-w-4xl mx-auto p-4 sm:px-6 md:px-8 rounded-lg"
         >
           {/* Main Grid: Two Sides */}
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
             {/* Left Side */}
             <div className="flex flex-col gap-3">
               <FormField
@@ -65,7 +65,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -86,7 +86,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -107,7 +107,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -132,7 +132,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -153,7 +153,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -196,7 +196,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                           ))}
                         </RadioGroup>
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -221,7 +221,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -242,7 +242,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -263,7 +263,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs mt-1" />
+                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
                     </div>
                   </FormItem>
                 )}
