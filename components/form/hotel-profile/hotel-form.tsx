@@ -1090,7 +1090,7 @@ const HotelForm = () => {
                   control={form.control}
                   name="internetConnectivity"
                   render={({ field }) => (
-                    <FormItem className="flex items-center gap-2">
+                    <FormItem className="flex items-center w-fit gap-4">
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
                         Internet Connectivity
                       </FormLabel>
@@ -1108,7 +1108,7 @@ const HotelForm = () => {
                   control={form.control}
                   name="softwareCompatibility"
                   render={({ field }) => (
-                    <FormItem className="flex items-center gap-2">
+                    <FormItem className="flex items-center w-fit gap-4">
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
                         Software Compatibility
                       </FormLabel>
