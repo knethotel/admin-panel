@@ -45,9 +45,11 @@ export const columns: ColumnDef<Subscription>[] = [
       }
 
       return (
-        <div className="flex flex-col items-start justify-center">
-          <span>{planDetails.planName}</span>
-          <span className="text-sm">{planTypeElement}</span>
+        <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-col items-start justify-center">
+            <span>{planDetails.planName}</span>
+            <span className="text-sm">{planTypeElement}</span>
+          </div>
         </div>
       );
     }
