@@ -1,7 +1,6 @@
 'use client';
 
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from 'recharts';
-
 import {
   Card,
   CardContent,
@@ -15,6 +14,7 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from '@/components/ui/chart';
+
 const chartData = [
   { month: 'january', Booked: 1260, Check_Out: 570, Check_In: 480 }
 ];
@@ -39,20 +39,20 @@ export function RadialChartStacked() {
     chartData[0].Booked + chartData[0].Check_Out + chartData[0].Check_In;
 
   return (
-    <Card className="flex flex-col h-fit bg-lightbrown min-h-[640px]:">
+    <Card className="flex flex-col gap-6 bg-lightbrown w-full max-w-xs sm:max-w-sm">
       <CardHeader className="items-start pb-0">
         <CardTitle>Revenue Stats</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-1 mt-4 items-center pb-0">
+      <CardContent className="flex justify-center mt-4 pb-0">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square w-full min-w-[240px]"
+          className="aspect-square w-full max-w-[250px]"
         >
           <RadialBarChart
             data={chartData}
             endAngle={180}
             innerRadius={100}
-            outerRadius={210}
+            outerRadius={170}
           >
             <ChartTooltip
               cursor={false}
@@ -98,14 +98,14 @@ export function RadialChartStacked() {
             />
             <RadialBar
               dataKey="Check_In"
-              stackId="a"
               fill="var(--color-Check_In)"
+              stackId="a"
               className="stroke-transparent stroke-2"
             />
           </RadialBarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex flex-col gap-3 items-start justify-center">
+      <CardFooter className="flex flex-col items-start justify-center gap-6 px-2">
         <div className="flex items-center gap-12">
           <span className="flex w-3 h-3 bg-success rounded-full"></span>
           <span className="opacity-30">Check-in</span>
@@ -119,14 +119,14 @@ export function RadialChartStacked() {
           <span className="opacity-30">Booked</span>
         </div>
 
-        <div className=" w-full flex justify-center items-center gap-8 border border-black border-opacity-15 rounded-lg px-4 py-2">
-          <span className="bg-success/20 text-xs 2xl:text-sm px-2 flex justify-center items-center w-28 h-8 rounded-lg border border-success">
-            <span className="text-success text-[0.8rem] text-nowrap w-12">
+        <div className="w-full flex flex-col xl:flex-row justify-center items-center gap-4 border border-black border-opacity-15 rounded-lg px-4 py-2 mt-4">
+          <span className="bg-success/20 text-xs px-2 flex justify-center items-center h-8 rounded-lg border border-success">
+            <span className="text-success text-[0.8rem] whitespace-nowrap">
               +16.2 %
             </span>
           </span>
-          <p className="text-xs 2xl:text-sm text-start text-black">
-            You booked 3,456 rooms compared to last month{' '}
+          <p className="text-xs text-black text-center">
+            You booked 3,456 rooms compared to last month
           </p>
         </div>
       </CardFooter>

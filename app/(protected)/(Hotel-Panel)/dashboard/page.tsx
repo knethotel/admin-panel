@@ -145,7 +145,7 @@ const DashboardPage = () => {
           </div>
 
           {/* Radial Chart (Right) */}
-          <div className="w-full lg:w-1/3 h-[640px] bg-transparent rounded-xl overflow-hidden">
+          <div className="w-full lg:w-1/3 h-[640px] bg-lightbrown rounded-xl px-2 overflow-hidden">
             <RadialChartStacked />
           </div>
         </div>
