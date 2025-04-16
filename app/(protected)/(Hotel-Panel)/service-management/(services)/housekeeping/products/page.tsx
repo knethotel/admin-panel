@@ -10,10 +10,10 @@ const ProductDetailsPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   //   const handleClick = () => {};
   return (
-    <div className="mt-20">
+    <div className="mt-20 w-full">
       <AddItemModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
       {/* Menu section */}
-      <div className="h-auto w-full pt-8 px-4 space-y-12">
+      <div className="container h-auto w-full pt-8 px-4 space-y-12">
         {HouseKeepingProductDetailsDummyData.map((service, index) => (
           <div key={index} className="flex flex-col gap-8 items-start">
             <h2

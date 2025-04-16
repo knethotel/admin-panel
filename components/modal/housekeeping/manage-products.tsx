@@ -234,7 +234,14 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <Button type="submit" className="btn-primary">
                 Save
               </Button>
-              <Button onClick={() => router.push('/')} className="btn-primary">
+              <Button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push('/service-management/housekeeping/products');
+                }}
+                className="btn-primary"
+              >
                 View Products
               </Button>
             </div>
