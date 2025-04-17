@@ -792,3 +792,25 @@ export const ManageProductsModalFormSchema = z.object({
 export type ManageProductsModalFormSchemaType = z.infer<
   typeof ManageProductsModalFormSchema
 >;
+
+//***************Concierge Service > Manage products modal form schema****************/
+export const ConciergeManageProductsModalFormSchema = z.object({
+  productCategory: z
+    .string()
+    .min(1, 'Input field must have at least 1 character.'),
+  selectService: z.enum(['Nearby Attractions', 'Nearby Cafe & Restaurants'], {
+    errorMap: () => ({ message: 'Invalid Category' })
+  }),
+  name: z.string().min(1, 'Input field must have at least 1 character.'),
+  description: z.string().min(1, 'Input field must have at least 1 character.'),
+  productImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional()
+    .refine((file) => file !== '', {
+      message: 'Logo image must not be an empty value'
+    })
+});
+
+export type ConciergeManageProductsModalFormSchemaType = z.infer<
+  typeof ConciergeManageProductsModalFormSchema
+>;

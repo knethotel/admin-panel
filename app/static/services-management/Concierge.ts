@@ -1,3 +1,5 @@
+import { StaticImageData } from 'next/image';
+import templePic from '../../../public/assets/sunTemple.png';
 type RequestTypeType =
   | 'Tourist Attraction'
   | 'Taxi/Cab'
@@ -491,5 +493,85 @@ export const ConciergeServiceData: ConciergeServiceDataType[] = [
     requestedTimeSlot: '9:00 AM - 12:00 PM',
     effectiveCost: 'INR 1200/hr. only',
     requestedVenue: 'City Palace, Jaipur'
+  }
+];
+
+/// Product details dummy data
+
+type Product = {
+  visibility: boolean;
+  name: string;
+  price: number;
+  image: StaticImageData;
+};
+
+type ProductType = {
+  productTypeName: string;
+  products: Product[];
+};
+
+type ConciergeProductDetails = {
+  serviceName: string;
+  productType: ProductType[];
+};
+
+export const ConciergeProductDetailsDummyData = [
+  {
+    serviceName: 'Nearby Attractions',
+    productType: [
+      {
+        productTypeName: 'cultural and historic sites',
+        products: [
+          {
+            visibility: true,
+            name: 'National museum',
+            price: 209,
+            image: templePic
+          },
+          { visibility: true, name: 'Sun temple', price: 199, image: templePic }
+        ]
+      },
+      {
+        productTypeName: 'Shopping and entertainment',
+        products: [
+          {
+            visibility: true,
+            name: 'phoenix mall',
+            price: 209,
+            image: templePic
+          },
+          {
+            visibility: true,
+            name: 'inox cinema',
+            price: 199,
+            image: templePic
+          }
+        ]
+      }
+    ]
+  },
+  {
+    serviceName: 'nearby cafe & restaurants',
+    productType: [
+      {
+        productTypeName: 'cozy dinnings',
+        products: [
+          {
+            visibility: true,
+            name: 'capuccino blast',
+            price: 40,
+            image: templePic
+          },
+          { visibility: true, name: 'dobara', price: 299, image: templePic }
+        ]
+      },
+      {
+        productTypeName: 'Bar & Lounge',
+        products: [
+          { visibility: true, name: 'Tonique', price: 67, image: templePic },
+          { visibility: true, name: 'skyglass', price: 20, image: templePic }
+        ]
+      }
+    ]
   }
 ];
