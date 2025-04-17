@@ -861,3 +861,17 @@ export const SpaManageProductsModalFormSchema = z.object({
 export type SpaManageProductsModalFormSchemaType = z.infer<
   typeof SpaManageProductsModalFormSchema
 >;
+
+//*****************Swimming Pool Service > Manage products modal form schema****************/
+export const SwimmingPoolManageProductsModalFormSchema = z.object({
+  swimmingPoolImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional()
+    .refine((file) => file !== '', {
+      message: 'Logo image must not be an empty value'
+    })
+});
+
+export type SwimmingPoolManageProductsModalFormSchemaType = z.infer<
+  typeof SwimmingPoolManageProductsModalFormSchema
+>;

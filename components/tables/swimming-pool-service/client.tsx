@@ -10,6 +10,7 @@ import { columns } from './columns';
 import { SwimmingpoolServiceData } from 'app/static/services-management/SwimmingPool';
 import ToggleButton from '@/components/ui/toggleButton';
 import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
+import ManageProductsModal from '@/components/modal/swimmingpool/manage-products';
 
 export const SwimmingpoolServiceDataTable: React.FC = () => {
   const router = useRouter();
@@ -48,6 +49,8 @@ export const SwimmingpoolServiceDataTable: React.FC = () => {
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isManageProductsModalOpen, setIsManageProductsModalOpen] =
+    useState(false);
 
   const handleLimitChange = (newLimit: number) => {
     setLimit(newLimit);
@@ -81,6 +84,18 @@ export const SwimmingpoolServiceDataTable: React.FC = () => {
         <PriceTimeSetting
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
+        />
+      </div>
+      <div className="w-full flex justify-end px-4">
+        <Button
+          onClick={() => setIsManageProductsModalOpen(true)}
+          className="btn-primary h-8 2xl:h-9"
+        >
+          Manage Products
+        </Button>
+        <ManageProductsModal
+          isOpen={isManageProductsModalOpen}
+          onClose={() => setIsManageProductsModalOpen(false)}
         />
       </div>
       {loading ? (
