@@ -65,6 +65,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
   const onSubmit = (data: createCouponSchemaType) => {
     console.log(data);
     form.reset();
+    setPreview(null);
     onClose();
   };
 
@@ -108,7 +109,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                             )}
                           </SelectContent>
                         </Select>
-                        <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
+                        <FormMessage className="text-[10px] text-xs mt-1" />
                       </>
                     )}
                   />
@@ -160,7 +161,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                               </PopoverContent>
                             </Popover>
                           </FormControl>
-                          <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
+                          <FormMessage className="text-[10px] text-xs mt-1" />
                         </FormItem>
                       )}
                     />
@@ -202,7 +203,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                               </PopoverContent>
                             </Popover>
                           </FormControl>
-                          <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
+                          <FormMessage className="text-[10px] text-xs mt-1" />
                         </FormItem>
                       )}
                     />
@@ -228,7 +229,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                             className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                           />
                         </FormControl>
-                        <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
+                        <FormMessage className="text-[10px] text-xs mt-1" />
                       </div>
                     </FormItem>
                   )}
@@ -250,7 +251,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                               className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                             />
                           </FormControl>
-                          <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
+                          <FormMessage className="text-[10px] text-xs mt-1" />
                         </div>
                       </FormItem>
                     )}
@@ -277,7 +278,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                               className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                             />
                           </FormControl>
-                          <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
+                          <FormMessage className="text-[10px] text-xs mt-1" />
                         </div>
                       </FormItem>
                     )}
@@ -299,7 +300,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                             className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                           />
                         </FormControl>
-                        <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
+                        <FormMessage className="text-[10px] text-xs mt-1" />
                       </div>
                     </FormItem>
                   )}
@@ -338,7 +339,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                           ))}
                         </RadioGroup>
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
+                      <FormMessage className="text-[10px] text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -378,7 +379,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                           )}
                         </RadioGroup>
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
+                      <FormMessage className="text-[10px] text-xs  mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -401,7 +402,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                           className="bg-[#F6EEE0] border-gray-300 data-[state=checked]:bg-[#A07D3D] data-[state=checked]:border-[#A07D3D]"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
+                      <FormMessage className="text-[10px] text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -427,7 +428,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
+                      <FormMessage className="text-[10px] text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -448,31 +449,49 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                             e.preventDefault();
                             const file = e.dataTransfer.files?.[0];
                             if (file) {
-                              field.onChange(file);
+                              if (!file.type.startsWith('image/')) {
+                                alert('Please upload an image file.');
+                                return;
+                              }
+                              if (file.size > 5 * 1024 * 1024) {
+                                alert('File size exceeds 5MB.');
+                                return;
+                              }
                               if (preview) URL.revokeObjectURL(preview);
-                              setPreview(URL.createObjectURL(file));
+                              const imageUrl = URL.createObjectURL(file);
+                              setPreview(imageUrl);
+                              field.onChange(file);
                             }
                           }}
                           onDragOver={(e) => e.preventDefault()}
                         >
-                          <div className="h-full w-full flex items-center justify-center">
-                            {preview && (
-                              <img
-                                src={preview}
-                                alt="Coupon preview"
-                                className="h-full w-full object-cover rounded-lg"
-                              />
+                          <div className="h-full w-full flex items-center justify-center relative">
+                            {preview ? (
+                              <>
+                                <img
+                                  src={preview}
+                                  alt="Coupon preview"
+                                  className="h-full w-full object-cover rounded-lg"
+                                />
+                                {/* Overlay to make the image clickable for reupload */}
+                                <label
+                                  htmlFor="fileUpload"
+                                  className="absolute inset-0 flex justify-center items-center cursor-pointer bg-black bg-opacity-20 hover:bg-opacity-30 transition-opacity rounded-lg"
+                                  aria-label="Reupload coupon image"
+                                >
+                                  <PiCameraThin className="text-white w-12 h-12 opacity-70" />
+                                </label>
+                              </>
+                            ) : (
+                              <label
+                                htmlFor="fileUpload"
+                                className="absolute inset-0 flex justify-center items-center cursor-pointer"
+                                aria-label="Upload coupon image"
+                              >
+                                <PiCameraThin className="text-black w-12 h-44 opacity-30" />
+                              </label>
                             )}
                           </div>
-                          {!preview && (
-                            <label
-                              htmlFor="fileUpload"
-                              className="absolute inset-0 flex justify-center items-center cursor-pointer"
-                              aria-label="Upload coupon image"
-                            >
-                              <PiCameraThin className="text-black w-12 h-44 opacity-30" />
-                            </label>
-                          )}
                           <input
                             type="file"
                             accept="image/*"
@@ -490,10 +509,11 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                                 if (preview) URL.revokeObjectURL(preview);
                                 const imageUrl = URL.createObjectURL(file);
                                 setPreview(imageUrl);
+                                field.onChange(file);
                               } else {
                                 setPreview(null);
+                                field.onChange(undefined);
                               }
-                              field.onChange(file);
                             }}
                             className="hidden"
                             id="fileUpload"
@@ -522,7 +542,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                           className="w-64 h-32 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 resize-y text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] 2xl:text-xs 2xl:text-sm mt-1" />
+                      <FormMessage className="text-[10px] text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}

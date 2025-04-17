@@ -36,24 +36,26 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
   const [preview, setPreview] = useState<string | null>(null);
 
+  const form = useForm<ManageProductsModalFormSchemaType>({
+    resolver: zodResolver(ManageProductsModalFormSchema),
+    defaultValues: {
+      selectService: 'Laundary Service',
+      productCategory: '',
+      productName: '',
+      productImage: undefined
+    }
+  });
+
   useEffect(() => {
     return () => {
       if (preview) URL.revokeObjectURL(preview);
     };
   }, [preview]);
 
-  const form = useForm<ManageProductsModalFormSchemaType>({
-    resolver: zodResolver(ManageProductsModalFormSchema),
-    defaultValues: {
-      selectService: 'Laundary Service',
-      productCategory: '',
-      productName: ''
-    }
-  });
-
   const onSubmit = (data: ManageProductsModalFormSchemaType) => {
     console.log('Submitted Data:', data);
     form.reset();
+    setPreview(null); // Reset preview on submit
   };
 
   if (!isOpen) return null;
@@ -71,9 +73,8 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-6 text-sm"
           >
-            {/* Line */}
             <div className="w-full h-[1px] bg-black opacity-20 mt-12" />
-            {/* Lower part of the form */}
+
             <div className="flex justify-between items-start px-10">
               <div className="w-[60%] flex flex-col gap-6">
                 {/* Select Service */}
@@ -170,31 +171,49 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                             e.preventDefault();
                             const file = e.dataTransfer.files?.[0];
                             if (file) {
-                              field.onChange(file);
+                              if (!file.type.startsWith('image/')) {
+                                alert('Please upload an image file.');
+                                return;
+                              }
+                              if (file.size > 5 * 1024 * 1024) {
+                                alert('File size exceeds 5MB.');
+                                return;
+                              }
                               if (preview) URL.revokeObjectURL(preview);
-                              setPreview(URL.createObjectURL(file));
+                              const imageUrl = URL.createObjectURL(file);
+                              setPreview(imageUrl);
+                              field.onChange(file);
                             }
                           }}
                           onDragOver={(e) => e.preventDefault()}
                         >
-                          <div className="h-full w-full flex items-center justify-center">
-                            {preview && (
-                              <img
-                                src={preview}
-                                alt="Product preview"
-                                className="h-full w-full object-cover rounded-lg"
-                              />
+                          <div className="h-full w-full flex items-center justify-center relative">
+                            {preview ? (
+                              <>
+                                <img
+                                  src={preview}
+                                  alt="Product preview"
+                                  className="h-full w-full object-cover rounded-lg"
+                                />
+                                {/* Overlay to make the image clickable for reupload */}
+                                <label
+                                  htmlFor="fileUpload"
+                                  className="absolute inset-0 flex justify-center items-center cursor-pointer bg-black bg-opacity-20 hover:bg-opacity-30 transition-opacity rounded-lg"
+                                  aria-label="Reupload product image"
+                                >
+                                  <PiCameraThin className="text-white w-12 h-12 opacity-70" />
+                                </label>
+                              </>
+                            ) : (
+                              <label
+                                htmlFor="fileUpload"
+                                className="absolute inset-0 flex justify-center items-center cursor-pointer"
+                                aria-label="Upload product image"
+                              >
+                                <PiCameraThin className="text-black w-12 h-44 opacity-30" />
+                              </label>
                             )}
                           </div>
-                          {!preview && (
-                            <label
-                              htmlFor="fileUpload"
-                              className="absolute inset-0 flex justify-center items-center cursor-pointer"
-                              aria-label="Upload product image"
-                            >
-                              <PiCameraThin className="text-black w-12 h-44 opacity-30" />
-                            </label>
-                          )}
                           <input
                             type="file"
                             accept="image/*"
@@ -212,10 +231,11 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                                 if (preview) URL.revokeObjectURL(preview);
                                 const imageUrl = URL.createObjectURL(file);
                                 setPreview(imageUrl);
+                                field.onChange(file);
                               } else {
                                 setPreview(null);
+                                field.onChange(undefined);
                               }
-                              field.onChange(file);
                             }}
                             className="hidden"
                             id="fileUpload"
@@ -228,7 +248,9 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 />
               </div>
             </div>
+
             <div className="w-full h-[1px] bg-black opacity-15" />
+
             {/* Submit Button */}
             <div className="flex items-center gap-4 px-10">
               <Button type="submit" className="btn-primary">

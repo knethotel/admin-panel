@@ -31,6 +31,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       if (preview) URL.revokeObjectURL(preview);
     };
   }, [preview]);
+
   const addItemForm = useForm<AddItemsSchemaType>({
     resolver: zodResolver(AddItemsSchema),
     defaultValues: {
@@ -47,6 +48,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const onSubmit = (data: AddItemsSchemaType) => {
     console.log('Submitted Data:', data);
     addItemForm.reset();
+    setPreview(null);
   };
 
   if (!isOpen) return null;
@@ -219,36 +221,54 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                       <div className="flex items-center w-full">
                         <FormControl>
                           <div
-                            className="relative h-44 w-44 rounded-lg bg-[#F6EEE0] p-2"
+                            className="relative h-44 w-44 rounded-lg bg-[#F6EEE0]"
                             onDrop={(e) => {
                               e.preventDefault();
                               const file = e.dataTransfer.files?.[0];
                               if (file) {
-                                field.onChange(file);
+                                if (!file.type.startsWith('image/')) {
+                                  alert('Please upload an image file.');
+                                  return;
+                                }
+                                if (file.size > 5 * 1024 * 1024) {
+                                  alert('File size exceeds 5MB.');
+                                  return;
+                                }
                                 if (preview) URL.revokeObjectURL(preview);
-                                setPreview(URL.createObjectURL(file));
+                                const imageUrl = URL.createObjectURL(file);
+                                setPreview(imageUrl);
+                                field.onChange(file);
                               }
                             }}
                             onDragOver={(e) => e.preventDefault()}
                           >
-                            <div className="h-full w-full flex items-center justify-center">
-                              {preview && (
-                                <img
-                                  src={preview}
-                                  alt="Coupon preview"
-                                  className="h-full w-full object-cover rounded-lg"
-                                />
+                            <div className="h-full w-full flex items-center justify-center relative">
+                              {preview ? (
+                                <>
+                                  <img
+                                    src={preview}
+                                    alt="Coupon preview"
+                                    className="h-full w-full object-cover rounded-lg"
+                                  />
+                                  {/* Overlay to make the image clickable for reupload */}
+                                  <label
+                                    htmlFor="fileUpload"
+                                    className="absolute inset-0 flex justify-center items-center cursor-pointer bg-black bg-opacity-20 hover:bg-opacity-30 transition-opacity rounded-lg"
+                                    aria-label="Reupload coupon image"
+                                  >
+                                    <PiCameraThin className="text-white w-12 h-12 opacity-70" />
+                                  </label>
+                                </>
+                              ) : (
+                                <label
+                                  htmlFor="fileUpload"
+                                  className="absolute inset-0 flex justify-center items-center cursor-pointer"
+                                  aria-label="Upload coupon image"
+                                >
+                                  <PiCameraThin className="text-black w-12 h-44 opacity-30" />
+                                </label>
                               )}
                             </div>
-                            {!preview && (
-                              <label
-                                htmlFor="fileUpload"
-                                className="absolute inset-0 flex justify-center items-center cursor-pointer"
-                                aria-label="Upload coupon image"
-                              >
-                                <PiCameraThin className="text-black w-12 h-44 opacity-30" />
-                              </label>
-                            )}
                             <input
                               type="file"
                               accept="image/*"
@@ -266,10 +286,11 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                                   if (preview) URL.revokeObjectURL(preview);
                                   const imageUrl = URL.createObjectURL(file);
                                   setPreview(imageUrl);
+                                  field.onChange(file);
                                 } else {
                                   setPreview(null);
+                                  field.onChange(undefined);
                                 }
-                                field.onChange(file);
                               }}
                               className="hidden"
                               id="fileUpload"
@@ -286,11 +307,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             <div className="w-full h-[1px] bg-black opacity-15" />
             {/* Submit Button */}
             <div className="flex items-center gap-4 px-10">
-              <Button
-                type="button" // Changed to button to prevent form submission
-                onClick={onClose}
-                className="btn-secondary"
-              >
+              <Button type="button" onClick={onClose} className="btn-secondary">
                 Cancel
               </Button>
               <Button type="submit" className="btn-primary">

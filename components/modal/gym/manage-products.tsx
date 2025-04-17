@@ -87,35 +87,49 @@ const ManageProductsModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                           e.preventDefault();
                           const file = e.dataTransfer.files?.[0];
                           if (file) {
-                            field.onChange(file);
+                            if (!file.type.startsWith('image/')) {
+                              alert('Please upload an image file.');
+                              return;
+                            }
+                            if (file.size > 5 * 1024 * 1024) {
+                              alert('File size exceeds 5MB.');
+                              return;
+                            }
                             if (preview) URL.revokeObjectURL(preview);
-                            setPreview(URL.createObjectURL(file));
+                            const imageUrl = URL.createObjectURL(file);
+                            setPreview(imageUrl);
+                            field.onChange(file);
                           }
                         }}
                         onDragOver={(e) => e.preventDefault()}
                       >
-                        {preview ? (
-                          <label
-                            htmlFor="fileUpload"
-                            className="h-full w-full cursor-pointer"
-                            title="Click to reupload"
-                          >
-                            <img
-                              src={preview}
-                              alt="Product preview"
-                              className="h-full w-full object-cover rounded-lg"
-                            />
-                          </label>
-                        ) : (
-                          <label
-                            htmlFor="fileUpload"
-                            className="absolute inset-0 flex justify-center items-center cursor-pointer"
-                            aria-label="Upload product image"
-                          >
-                            <PiCameraThin className="text-black w-12 h-44 opacity-30" />
-                          </label>
-                        )}
-
+                        <div className="h-full w-full flex items-center justify-center relative">
+                          {preview ? (
+                            <>
+                              <img
+                                src={preview}
+                                alt="Product preview"
+                                className="h-full w-full object-cover rounded-lg"
+                              />
+                              {/* Overlay to make the image clickable for reupload */}
+                              <label
+                                htmlFor="fileUpload"
+                                className="absolute inset-0 flex justify-center items-center cursor-pointer bg-black bg-opacity-20 hover:bg-opacity-30 transition-opacity rounded-lg"
+                                aria-label="Reupload product image"
+                              >
+                                <PiCameraThin className="text-white w-12 h-12 opacity-70" />
+                              </label>
+                            </>
+                          ) : (
+                            <label
+                              htmlFor="fileUpload"
+                              className="absolute inset-0 flex justify-center items-center cursor-pointer"
+                              aria-label="Upload product image"
+                            >
+                              <PiCameraThin className="text-black w-12 h-44 opacity-30" />
+                            </label>
+                          )}
+                        </div>
                         <input
                           type="file"
                           accept="image/*"

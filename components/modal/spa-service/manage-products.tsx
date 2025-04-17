@@ -199,32 +199,50 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                             e.preventDefault();
                             const file = e.dataTransfer.files?.[0];
                             if (file) {
-                              field.onChange(file);
+                              if (!file.type.startsWith('image/')) {
+                                alert('Please upload an image file.');
+                                return;
+                              }
+                              if (file.size > 5 * 1024 * 1024) {
+                                alert('File size exceeds 5MB.');
+                                return;
+                              }
                               if (productPreview)
                                 URL.revokeObjectURL(productPreview);
-                              setProductPreview(URL.createObjectURL(file));
+                              const imageUrl = URL.createObjectURL(file);
+                              setProductPreview(imageUrl);
+                              field.onChange(file);
                             }
                           }}
                           onDragOver={(e) => e.preventDefault()}
                         >
-                          <div className="h-full w-full flex items-center justify-center">
-                            {productPreview && (
-                              <img
-                                src={productPreview}
-                                alt="Product preview"
-                                className="h-full w-full object-cover rounded-lg"
-                              />
+                          <div className="h-full w-full flex items-center justify-center relative">
+                            {productPreview ? (
+                              <>
+                                <img
+                                  src={productPreview}
+                                  alt="Product preview"
+                                  className="h-full w-full object-cover rounded-lg"
+                                />
+                                {/* Overlay to make the image clickable for reupload */}
+                                <label
+                                  htmlFor="productImageUpload"
+                                  className="absolute inset-0 flex justify-center items-center cursor-pointer bg-black bg-opacity-20 hover:bg-opacity-30 transition-opacity rounded-lg"
+                                  aria-label="Reupload product image"
+                                >
+                                  <PiCameraThin className="text-white w-12 h-12 opacity-70" />
+                                </label>
+                              </>
+                            ) : (
+                              <label
+                                htmlFor="productImageUpload"
+                                className="absolute inset-0 flex justify-center items-center cursor-pointer"
+                                aria-label="Upload product image"
+                              >
+                                <PiCameraThin className="text-black w-12 h-44 opacity-30" />
+                              </label>
                             )}
                           </div>
-                          {!productPreview && (
-                            <label
-                              htmlFor="productImageUpload"
-                              className="absolute inset-0 flex justify-center items-center cursor-pointer"
-                              aria-label="Upload product image"
-                            >
-                              <PiCameraThin className="text-black w-12 h-44 opacity-30" />
-                            </label>
-                          )}
                           <input
                             type="file"
                             accept="image/*"
@@ -243,10 +261,11 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                                   URL.revokeObjectURL(productPreview);
                                 const imageUrl = URL.createObjectURL(file);
                                 setProductPreview(imageUrl);
+                                field.onChange(file);
                               } else {
                                 setProductPreview(null);
+                                field.onChange(undefined);
                               }
-                              field.onChange(file);
                             }}
                             className="hidden"
                             id="productImageUpload"
@@ -317,34 +336,50 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                             e.preventDefault();
                             const file = e.dataTransfer.files?.[0];
                             if (file) {
-                              field.onChange(file);
+                              if (!file.type.startsWith('image/')) {
+                                alert('Please upload an image file.');
+                                return;
+                              }
+                              if (file.size > 5 * 1024 * 1024) {
+                                alert('File size exceeds 5MB.');
+                                return;
+                              }
                               if (additionalServicePreview)
                                 URL.revokeObjectURL(additionalServicePreview);
-                              setAdditionalServicePreview(
-                                URL.createObjectURL(file)
-                              );
+                              const imageUrl = URL.createObjectURL(file);
+                              setAdditionalServicePreview(imageUrl);
+                              field.onChange(file);
                             }
                           }}
                           onDragOver={(e) => e.preventDefault()}
                         >
-                          <div className="h-full w-full flex items-center justify-center">
-                            {additionalServicePreview && (
-                              <img
-                                src={additionalServicePreview}
-                                alt="Additional service preview"
-                                className="h-full w-full object-cover rounded-lg"
-                              />
+                          <div className="h-full w-full flex items-center justify-center relative">
+                            {additionalServicePreview ? (
+                              <>
+                                <img
+                                  src={additionalServicePreview}
+                                  alt="Additional service preview"
+                                  className="h-full w-full object-cover rounded-lg"
+                                />
+                                {/* Overlay to make the image clickable for reupload */}
+                                <label
+                                  htmlFor="additionalServiceImageUpload"
+                                  className="absolute inset-0 flex justify-center items-center cursor-pointer bg-black bg-opacity-20 hover:bg-opacity-30 transition-opacity rounded-lg"
+                                  aria-label="Reupload additional service image"
+                                >
+                                  <PiCameraThin className="text-white w-12 h-12 opacity-70" />
+                                </label>
+                              </>
+                            ) : (
+                              <label
+                                htmlFor="additionalServiceImageUpload"
+                                className="absolute inset-0 flex justify-center items-center cursor-pointer"
+                                aria-label="Upload additional service image"
+                              >
+                                <PiCameraThin className="text-black w-12 h-44 opacity-30" />
+                              </label>
                             )}
                           </div>
-                          {!additionalServicePreview && (
-                            <label
-                              htmlFor="additionalServiceImageUpload"
-                              className="absolute inset-0 flex justify-center items-center cursor-pointer"
-                              aria-label="Upload additional service image"
-                            >
-                              <PiCameraThin className="text-black w-12 h-44 opacity-30" />
-                            </label>
-                          )}
                           <input
                             type="file"
                             accept="image/*"
@@ -363,10 +398,11 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                                   URL.revokeObjectURL(additionalServicePreview);
                                 const imageUrl = URL.createObjectURL(file);
                                 setAdditionalServicePreview(imageUrl);
+                                field.onChange(file);
                               } else {
                                 setAdditionalServicePreview(null);
+                                field.onChange(undefined);
                               }
-                              field.onChange(file);
                             }}
                             className="hidden"
                             id="additionalServiceImageUpload"
