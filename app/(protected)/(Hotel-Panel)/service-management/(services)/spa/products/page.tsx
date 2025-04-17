@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { ConciergeProductDetailsDummyData } from 'app/static/services-management/Concierge';
+import { SpaProductDetailsDummyData } from 'app/static/services-management/Spa';
 import Image from 'next/image';
 import { Send } from 'lucide-react';
 import AddItemModal from '@/components/modal/in-room_dining/add-item';
@@ -13,7 +13,7 @@ const ProductDetailsPage = () => {
       <AddItemModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
       {/* Menu section */}
       <div className="container h-auto w-full pt-8 px-4 space-y-12">
-        {ConciergeProductDetailsDummyData.map((service, index) => (
+        {SpaProductDetailsDummyData.map((service, index) => (
           <div key={index} className="flex flex-col gap-8 items-start">
             <h2
               className="border border-coffee border-opacity-60
@@ -36,8 +36,8 @@ const ProductDetailsPage = () => {
                       className="w-full flex justify-between py-4 items-center"
                     >
                       {/* Product details */}
-                      <div className="flex flex-col gap-2 max-w-44 w-80 text-xs 2xl:text-sm">
-                        <div className="flex justify-between items-center">
+                      <div className="flex flex-col gap-2 w-80 text-xs 2xl:text-sm">
+                        <div className="flex justify-between max-w-44 items-center">
                           <span className="text-sm 2xl:text-base font-bold">
                             Visibility
                           </span>
@@ -49,6 +49,9 @@ const ProductDetailsPage = () => {
                         <span className="text-xs 2xl:text-sm opacity-70">
                           ₹{product.price}
                         </span>{' '}
+                        <p className="text-xs 2xl:text-sm text-wrap">
+                          {product.description}
+                        </p>
                         <Send className="h-4 w-4 mt-3" />{' '}
                       </div>
 

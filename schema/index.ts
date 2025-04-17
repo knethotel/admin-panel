@@ -744,7 +744,14 @@ export const AddItemsSchema = z.object({
   newProductType: z.string().min(1, 'Enter valid input'),
   productName: z.string().min(1, 'Enter valid input'),
   description: z.string().min(1, 'Enter valid input'),
-  cost: z.number().positive('Cost must be a positive value'),
+  cost: z
+    .string()
+    .refine((val) => val === '' || /^\d+(\.\d{1,2})?$/.test(val), {
+      message: 'Invalid price format (e.g., 10 or 10.99)'
+    })
+    .transform((val) => (val === '' ? 0 : parseFloat(val)))
+    .refine((val) => val > 0, { message: 'Price must be greater than 0' })
+    .or(z.number().min(1, { message: 'Price must be greater than 0' })),
   type: z.enum(['Vegetarian', 'Non-Vegeterian'], {
     errorMap: () => ({
       message: 'Not a valid type'
@@ -813,4 +820,44 @@ export const ConciergeManageProductsModalFormSchema = z.object({
 
 export type ConciergeManageProductsModalFormSchemaType = z.infer<
   typeof ConciergeManageProductsModalFormSchema
+>;
+
+//***************Spa/Salon Service > Manage products modal form schema****************/
+
+export const SpaManageProductsModalFormSchema = z.object({
+  productCategory: z
+    .string()
+    .min(1, 'Input field must have at least 1 character.'),
+  selectService: z.enum(['SPA SERVICE', 'SALON SERVICE'], {
+    errorMap: () => ({ message: 'Invalid Category' })
+  }),
+  name: z.string().min(1, 'Input field must have at least 1 character.'),
+  description: z.string().min(1, 'Input field must have at least 1 character.'),
+  productImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional()
+    .refine((file) => file !== '', {
+      message: 'Logo image must not be an empty value'
+    }),
+  additionalService: z
+    .string()
+    .min(1, 'Input field must have at least 1 character.'),
+  additionalServicePrice: z
+    .string()
+    .refine((val) => val === '' || /^\d+(\.\d{1,2})?$/.test(val), {
+      message: 'Invalid price format (e.g., 10 or 10.99)'
+    })
+    .transform((val) => (val === '' ? 0 : parseFloat(val)))
+    .refine((val) => val > 0, { message: 'Price must be greater than 0' })
+    .or(z.number().min(1, { message: 'Price must be greater than 0' })),
+  additionalServiceImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional()
+    .refine((file) => file !== '', {
+      message: 'Logo image must not be an empty value'
+    })
+});
+
+export type SpaManageProductsModalFormSchemaType = z.infer<
+  typeof SpaManageProductsModalFormSchema
 >;

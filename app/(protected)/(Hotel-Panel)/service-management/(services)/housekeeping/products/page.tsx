@@ -42,7 +42,7 @@ const ProductDetailsPage = () => {
                           <span className="text-sm 2xl:text-base font-bold">
                             Visibility
                           </span>
-                          <Switch className="h-4 w-9" />
+                          <Switch className="h-4 w-11" />
                         </div>
                         <p className="text-sm 2xl:text-base font-medium">
                           {product.name}

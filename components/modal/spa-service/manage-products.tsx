@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import {
-  ConciergeManageProductsModalFormSchema,
-  ConciergeManageProductsModalFormSchemaType
+  SpaManageProductsModalFormSchema,
+  SpaManageProductsModalFormSchemaType
 } from 'schema';
 import { PiCameraThin } from 'react-icons/pi';
 import {
@@ -18,7 +18,7 @@ import {
 } from '../../ui/form';
 import { Input } from '../../ui/input';
 import { Button } from '../../ui/button';
-import { ChevronDown, X } from 'lucide-react';
+import { ArrowDown, ChevronDown, X } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 
 interface ModalProps {
   isOpen: boolean;
@@ -34,27 +35,40 @@ interface ModalProps {
 
 const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
-  const [preview, setPreview] = useState<string | null>(null);
+  // Separate state for each image preview
+  const [productPreview, setProductPreview] = useState<string | null>(null);
+  const [additionalServicePreview, setAdditionalServicePreview] = useState<
+    string | null
+  >(null);
 
+  // Cleanup for both previews
   useEffect(() => {
     return () => {
-      if (preview) URL.revokeObjectURL(preview);
+      if (productPreview) URL.revokeObjectURL(productPreview);
+      if (additionalServicePreview)
+        URL.revokeObjectURL(additionalServicePreview);
     };
-  }, [preview]);
+  }, [productPreview, additionalServicePreview]);
 
-  const form = useForm<ConciergeManageProductsModalFormSchemaType>({
-    resolver: zodResolver(ConciergeManageProductsModalFormSchema),
+  const form = useForm<SpaManageProductsModalFormSchemaType>({
+    resolver: zodResolver(SpaManageProductsModalFormSchema),
     defaultValues: {
       productCategory: '',
-      selectService: 'Nearby Attractions',
+      selectService: 'SPA SERVICE',
       name: '',
       description: '',
-      productImage: undefined
+      productImage: undefined,
+      additionalService: '',
+      additionalServicePrice: 0,
+      additionalServiceImage: undefined
     }
   });
-  const onSubmit = (data: ConciergeManageProductsModalFormSchemaType) => {
+
+  const onSubmit = (data: SpaManageProductsModalFormSchemaType) => {
     console.log('Submitted Data:', data);
     form.reset();
+    setProductPreview(null);
+    setAdditionalServicePreview(null);
   };
 
   if (!isOpen) return null;
@@ -83,7 +97,7 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Enter Description"
+                        placeholder="Enter Product Category"
                         {...field}
                         className="bg-[#F6EEE0] w-64 text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-sm"
                       />
@@ -105,16 +119,12 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                         onValueChange={field.onChange}
                         value={field.value}
                       >
-                        <SelectTrigger className="w-56 bg-lightbrown text-gray-700 py-4 px-2 rounded-md border-none flex justify-between items-center">
+                        <SelectTrigger className="w-44 bg-lightbrown text-gray-700 py-4 px-2 rounded-md border-none">
                           <SelectValue placeholder="Select type" />
                           <ChevronDown className="ml-2 mt-1 h-5 w-5 text-black" />
                         </SelectTrigger>
-
                         <SelectContent className="bg-[#362913] text-nowrap rounded-2xl text-white border-2 shadow-md border-white">
-                          {[
-                            'Nearby Attractions',
-                            'Nearby Cafe & Restaurants'
-                          ].map((value) => (
+                          {['SPA SERVICE', 'SALON SERVICE'].map((value) => (
                             <SelectItem
                               key={value}
                               value={value}
@@ -136,7 +146,6 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             {/* Lower part of the form */}
             <div className="flex justify-between items-start px-10">
               <div className="w-[60%] flex flex-col gap-6">
-                {/* Product Category */}
                 <FormField
                   control={form.control}
                   name="name"
@@ -156,22 +165,19 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                     </FormItem>
                   )}
                 />
-
-                {/* Product Name */}
                 <FormField
                   control={form.control}
                   name="description"
                   render={({ field }) => (
                     <FormItem className="flex items-center gap-4">
-                      <FormLabel className="text-sm w-40 text-nowrap font-medium text-gray-700">
-                        Descripton
+                      <FormLabel className="text-sm w-[125px] text-nowrap font-medium text-gray-700">
+                        Description
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          type="text"
+                        <Textarea
                           placeholder="Enter Product Description"
                           {...field}
-                          className="bg-[#F6EEE0] w-64 text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-sm"
+                          className="bg-[#F6EEE0] w-64 text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-sm resize-y min-h-[100px]"
                         />
                       </FormControl>
                       <FormMessage />
@@ -179,7 +185,6 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                   )}
                 />
               </div>
-
               {/* Product Image Upload */}
               <div className="w-[30%]">
                 <FormField
@@ -195,24 +200,25 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                             const file = e.dataTransfer.files?.[0];
                             if (file) {
                               field.onChange(file);
-                              if (preview) URL.revokeObjectURL(preview);
-                              setPreview(URL.createObjectURL(file));
+                              if (productPreview)
+                                URL.revokeObjectURL(productPreview);
+                              setProductPreview(URL.createObjectURL(file));
                             }
                           }}
                           onDragOver={(e) => e.preventDefault()}
                         >
                           <div className="h-full w-full flex items-center justify-center">
-                            {preview && (
+                            {productPreview && (
                               <img
-                                src={preview}
+                                src={productPreview}
                                 alt="Product preview"
                                 className="h-full w-full object-cover rounded-lg"
                               />
                             )}
                           </div>
-                          {!preview && (
+                          {!productPreview && (
                             <label
-                              htmlFor="fileUpload"
+                              htmlFor="productImageUpload"
                               className="absolute inset-0 flex justify-center items-center cursor-pointer"
                               aria-label="Upload product image"
                             >
@@ -233,16 +239,137 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                                   alert('File size exceeds 5MB.');
                                   return;
                                 }
-                                if (preview) URL.revokeObjectURL(preview);
+                                if (productPreview)
+                                  URL.revokeObjectURL(productPreview);
                                 const imageUrl = URL.createObjectURL(file);
-                                setPreview(imageUrl);
+                                setProductPreview(imageUrl);
                               } else {
-                                setPreview(null);
+                                setProductPreview(null);
                               }
                               field.onChange(file);
                             }}
                             className="hidden"
-                            id="fileUpload"
+                            id="productImageUpload"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="w-full h-[1px] bg-black opacity-15" />
+            <div className="flex justify-between items-start px-10">
+              <div className="w-[60%] flex flex-col gap-6">
+                <FormField
+                  control={form.control}
+                  name="additionalService"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center gap-4">
+                      <FormLabel className="text-sm w-40 text-nowrap font-medium text-gray-700">
+                        Additional Service
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter Service Name"
+                          {...field}
+                          className="bg-[#F6EEE0] w-64 text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="additionalServicePrice"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center gap-4">
+                      <FormLabel className="text-sm w-40 text-nowrap font-medium text-gray-700">
+                        Price
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Enter Price(₹)"
+                          {...field}
+                          className="bg-[#F6EEE0] w-40 text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/* Additional Service Image Upload */}
+              <div className="w-[30%]">
+                <FormField
+                  control={form.control}
+                  name="additionalServiceImage"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col gap-2">
+                      <FormControl>
+                        <div
+                          className="relative h-36 w-36 rounded-lg bg-[#F6EEE0]"
+                          onDrop={(e) => {
+                            e.preventDefault();
+                            const file = e.dataTransfer.files?.[0];
+                            if (file) {
+                              field.onChange(file);
+                              if (additionalServicePreview)
+                                URL.revokeObjectURL(additionalServicePreview);
+                              setAdditionalServicePreview(
+                                URL.createObjectURL(file)
+                              );
+                            }
+                          }}
+                          onDragOver={(e) => e.preventDefault()}
+                        >
+                          <div className="h-full w-full flex items-center justify-center">
+                            {additionalServicePreview && (
+                              <img
+                                src={additionalServicePreview}
+                                alt="Additional service preview"
+                                className="h-full w-full object-cover rounded-lg"
+                              />
+                            )}
+                          </div>
+                          {!additionalServicePreview && (
+                            <label
+                              htmlFor="additionalServiceImageUpload"
+                              className="absolute inset-0 flex justify-center items-center cursor-pointer"
+                              aria-label="Upload additional service image"
+                            >
+                              <PiCameraThin className="text-black w-12 h-44 opacity-30" />
+                            </label>
+                          )}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                if (!file.type.startsWith('image/')) {
+                                  alert('Please upload an image file.');
+                                  return;
+                                }
+                                if (file.size > 5 * 1024 * 1024) {
+                                  alert('File size exceeds 5MB.');
+                                  return;
+                                }
+                                if (additionalServicePreview)
+                                  URL.revokeObjectURL(additionalServicePreview);
+                                const imageUrl = URL.createObjectURL(file);
+                                setAdditionalServicePreview(imageUrl);
+                              } else {
+                                setAdditionalServicePreview(null);
+                              }
+                              field.onChange(file);
+                            }}
+                            className="hidden"
+                            id="additionalServiceImageUpload"
                           />
                         </div>
                       </FormControl>
@@ -262,7 +389,7 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
-                  router.push('/service-management/concierge/products');
+                  router.push('/service-management/spa/products');
                 }}
                 className="btn-primary"
               >
