@@ -11,6 +11,7 @@ import { columns } from './columns';
 import { GymServiceData } from 'app/static/services-management/Gym';
 import ToggleButton from '@/components/ui/toggleButton';
 import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
+import ManageProductsModal from '@/components/modal/gym/manage-products';
 
 export const GymServiceTable: React.FC = () => {
   const router = useRouter();
@@ -47,6 +48,8 @@ export const GymServiceTable: React.FC = () => {
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isManageProductsModalOpen, setIsManageProductsModalOpen] =
+    useState(false);
 
   const handleLimitChange = (newLimit: number) => {
     setLimit(newLimit);
@@ -84,6 +87,18 @@ export const GymServiceTable: React.FC = () => {
           onClose={() => setIsModalOpen(false)}
         />
       </div>
+      <div className="w-full flex justify-end px-4">
+        <Button
+          onClick={() => setIsManageProductsModalOpen(true)}
+          className="btn-primary h-8 2xl:h-9"
+        >
+          Manage Products
+        </Button>
+        <ManageProductsModal
+          isOpen={isManageProductsModalOpen}
+          onClose={() => setIsManageProductsModalOpen(false)}
+        />
+      </div>
       {loading ? (
         <span>Loading...</span>
       ) : (
@@ -101,7 +116,7 @@ export const GymServiceTable: React.FC = () => {
           //   onFilterChange={handleFilterChange}
         />
       )}
-      <div className="flex justify-end space-x-2 py-2">
+      <div className="flex justify-end space-x-2 px-3 py-2">
         <div className="space-x-2">
           <Button
             variant="outline"

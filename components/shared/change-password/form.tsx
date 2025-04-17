@@ -46,7 +46,7 @@ export default function ChangePasswordForm() {
           onSubmit={changePasswordForm.handleSubmit(onChangePasswordSubmit)}
           className="lg:flex flex-col w-full bg-[#FAF6EF] h-full justify-center items-start space-y-6 bg-[AF6EF] shadow-custom p-8 border-none outline-none rounded-md"
         >
-          <div className="flex justify-between items-center w-full text-sm">
+          <div className="flex justify-between items-center w-full">
             {/* Old Password Field */}
             <FormField
               control={changePasswordForm.control}
@@ -59,10 +59,10 @@ export default function ChangePasswordForm() {
                       {...field}
                       type="password"
                       placeholder="Current Password"
-                      className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs placeholder:opacity-25"
+                      className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs 2xl:text-sm 2xl:placeholder:text-sm placeholder:opacity-25"
                     />
                   </FormControl>
-                  <FormMessage className="min-h-[20px] text-xs" />
+                  <FormMessage className="min-h-[20px] text-xs 2xl:text-sm" />
                 </FormItem>
               )}
             />
@@ -79,10 +79,10 @@ export default function ChangePasswordForm() {
                       {...field}
                       type="password"
                       placeholder="New Password"
-                      className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs placeholder:opacity-25"
+                      className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs 2xl:text-sm 2xl:placeholder:text-sm placeholder:opacity-25"
                     />
                   </FormControl>
-                  <FormMessage className="min-h-[20px] text-xs" />
+                  <FormMessage className="min-h-[20px] text-xs 2xl:text-sm" />
                 </FormItem>
               )}
             />
@@ -101,17 +101,20 @@ export default function ChangePasswordForm() {
                       {...field}
                       type="password"
                       placeholder="Confirm New Password"
-                      className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs placeholder:opacity-25"
+                      className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs 2xl:text-sm 2xl:placeholder:text-sm placeholder:opacity-25"
                     />
                   </FormControl>
-                  <FormMessage className="min-h-[20px] text-xs" />
+                  <FormMessage className="min-h-[20px] text-xs 2xl:text-sm" />
                 </FormItem>
               )}
             />
           </div>
 
           {/* Submit Button */}
-          <Button type="submit" className="btn-primary text-xs xl:text-sm">
+          <Button
+            type="submit"
+            className="btn-primary text-xs 2xl:text-sm xl:text-sm"
+          >
             Save Changes
           </Button>
         </form>

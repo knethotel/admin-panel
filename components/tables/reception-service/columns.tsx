@@ -14,9 +14,11 @@ export const columns: ColumnDef<ReceptionDataType>[] = [
     cell: ({ row }) => {
       const { date, time } = row.original.requestTime;
       return (
-        <div className="flex flex-col justify-center">
-          <p className="text-xs opacity-50">{date}</p>
-          <p className="text-xs opacity-50">{time}</p>
+        <div className="flex justify-center items-center">
+          <div className="flex flex-col w-1/2 justify-center items-start gap-1">
+            <p className="text-xs opacity-50">{date}</p>
+            <p className="text-xs opacity-50">{time}</p>
+          </div>
         </div>
       );
     }
@@ -27,12 +29,12 @@ export const columns: ColumnDef<ReceptionDataType>[] = [
     cell: ({ row }) => {
       const details = row.original.guestDetails;
       return (
-        <div className="flex flex-col justify-center">
-          <p className="text-start pl-5 text-sm opacity-50">{details.name}</p>
-          <p className="text-start pl-5 text-xs opacity-50">
-            {details.guestID}
-          </p>
-          <p className="text-start pl-5 text-xs opacity-50">{details.roomNo}</p>
+        <div className="flex justify-center items-center">
+          <div className="flex flex-col w-1/2 justify-center items-start gap-1">
+            <p className="text-sm text-gray-900">{details.name}</p>
+            <p className="text-xs text-gray-600">{details.guestID}</p>
+            <p className="text-xs text-gray-600">{details.roomNo}</p>
+          </div>
         </div>
       );
     }

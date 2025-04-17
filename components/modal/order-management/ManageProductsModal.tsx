@@ -105,7 +105,7 @@ const ManageProductsModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                   <span className="text-gray-700">50</span>
                   <Button
                     onClick={() => handleDelete(index)}
-                    className="bg-red-500 text-white hover:bg-red-600 px-2 h-7 rounded-lg text-xs"
+                    className="bg-red-500 text-white hover:bg-red-600 px-2 h-7 rounded-lg text-xs 2xl:text-sm"
                   >
                     DELETE
                   </Button>

@@ -55,7 +55,7 @@ const PriceTimeSetting: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
-      <div className="bg-white rounded-lg shadow-lg flex flex-col gap-6 p-6 w-full max-w-md relative animate-fadeIn">
+      <div className="bg-white rounded-lg shadow-lg flex flex-col gap-6 p-6 w-full max-w-lg relative animate-fadeIn">
         <div>
           <h5 className="font-medium absolute top-2 left-2">Settings</h5>
           <button
@@ -133,10 +133,10 @@ const PriceTimeSetting: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                       <FormItem className="flex flex-col">
                         <FormControl>
                           <Input
-                            type="number"
+                            type="text"
                             placeholder="Enter Amount"
                             {...field}
-                            className="w-32 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none"
+                            className="w-32 h-9 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none"
                           />
                         </FormControl>
                         <div className="h-4">
@@ -149,7 +149,7 @@ const PriceTimeSetting: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               )}
             </div>
 
-            <div className="flex pt-6 justify-between items-center">
+            <div className="flex pt-6 px-7 justify-between items-center">
               <FormField
                 control={priceTimeSettingForm.control}
                 name="timeSlot"
@@ -175,7 +175,7 @@ const PriceTimeSetting: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                               <RadioGroupItem value={value} id={value} />
                               <label
                                 htmlFor={value}
-                                className="text-xs text-gray-700 capitalize"
+                                className="text-xs 2xl:text-sm text-gray-700 capitalize"
                               >
                                 {value}
                               </label>
@@ -213,7 +213,7 @@ const PriceTimeSetting: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                               <RadioGroupItem value={value} id={value} />
                               <label
                                 htmlFor={value}
-                                className="text-xs text-gray-700 capitalize"
+                                className="text-xs 2xl:text-sm text-gray-700 capitalize"
                               >
                                 {value}
                               </label>
@@ -230,7 +230,7 @@ const PriceTimeSetting: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             <div className="w-full text-center">
               <Button
                 type="submit"
-                className="btn-primary text-xs xl:text-sm mt-6"
+                className="btn-primary text-xs 2xl:text-sm xl:text-sm mt-6"
               >
                 Save
               </Button>

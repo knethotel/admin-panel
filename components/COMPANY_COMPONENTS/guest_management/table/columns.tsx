@@ -17,8 +17,11 @@ export const columns: ColumnDef<GuestDetailsDataType>[] = [
     header: 'Guest Name'
   },
   {
-    accessorKey: 'moblieNo',
-    header: 'Contact Details'
+    accessorKey: 'mobileNo',
+    header: 'Contact Details',
+    cell: ({ row }) => {
+      return <span>+91-{row.original.mobileNo}</span>;
+    }
   },
   {
     accessorKey: 'roomCategory',
@@ -30,7 +33,7 @@ export const columns: ColumnDef<GuestDetailsDataType>[] = [
     cell: ({ row }) => {
       const details = row.original.checkInDetails;
       return (
-        <div className="flex flex-row items-start justify-center text-xs text-success">
+        <div className="flex flex-row items-start justify-center text-xs 2xl:text-sm text-success">
           <span>{details.date}</span>
           <span>{details.time}</span>
         </div>
@@ -43,7 +46,7 @@ export const columns: ColumnDef<GuestDetailsDataType>[] = [
     cell: ({ row }) => {
       const details = row.original.checkOutDetails;
       return (
-        <div className="flex flex-row items-start justify-center text-xs text-warning">
+        <div className="flex flex-row items-start justify-center text-xs 2xl:text-sm text-warning">
           <span>{details.date}</span>
           <span>{details.time}</span>
         </div>

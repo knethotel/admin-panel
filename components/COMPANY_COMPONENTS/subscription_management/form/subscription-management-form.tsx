@@ -1,11 +1,9 @@
 'use client';
 import React, { useState } from 'react';
-
 import {
   SubscriptionManagementFormSchema,
   SubscriptionManagementFormSchemaType
 } from 'schema/company-panel';
-
 import {
   Form,
   FormControl,
@@ -33,7 +31,7 @@ import { useRouter } from 'next/navigation';
 type Props = {
   subscriptionID?: string;
   mode?: string;
-  data?: Partial<SubscriptionManagementFormSchemaType>; // Partial to allow incomplete data
+  data?: Partial<SubscriptionManagementFormSchemaType>;
 };
 
 // Dummy data for testing
@@ -47,7 +45,7 @@ const dummyData: SubscriptionManagementFormSchemaType = {
   cost: 99.99
 };
 
-const SubscriptionManagemetForm: React.FC<Props> = ({
+const SubscriptionManagementForm: React.FC<Props> = ({
   subscriptionID,
   mode,
   data
@@ -59,9 +57,7 @@ const SubscriptionManagemetForm: React.FC<Props> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Use prop data if provided, otherwise fall back to dummy data
-  const defaultValues = data
-    ? { ...dummyData, ...data } // Merge dummy data with prop data, prioritizing prop data
-    : dummyData;
+  const defaultValues = data ? { ...dummyData, ...data } : dummyData;
 
   const form = useForm<SubscriptionManagementFormSchemaType & FieldValues>({
     resolver: zodResolver(SubscriptionManagementFormSchema),
@@ -71,7 +67,7 @@ const SubscriptionManagemetForm: React.FC<Props> = ({
       planDuration: defaultValues.planDuration || '',
       planType: defaultValues.planType || '',
       description: defaultValues.description || '',
-      status: defaultValues.status || '', // Fallback to 'Active' if status is missing
+      status: defaultValues.status || '',
       cost: defaultValues.cost || 0
     }
   });
@@ -95,149 +91,144 @@ const SubscriptionManagemetForm: React.FC<Props> = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-5 items-center py-7 px-2"
+          className="flex flex-col gap-8 py-7 px-2"
         >
-          <div className="w-full flex justify-between">
-            <FormField
-              control={form.control}
-              name="subscriptionID"
-              render={({ field }) => (
-                <FormItem className="flex flex-col items-start">
-                  <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                    Subscription ID
-                  </FormLabel>
-                  <div className="w-full">
-                    <FormControl>
-                      <Input
-                        type="text"
-                        {...field}
-                        value={field.value}
-                        placeholder="Enter Subscription ID"
-                        disabled
-                        className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
-                      />
-                    </FormControl>
-                    <FormMessage className="text-[10px] mt-1" />
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="planName"
-              render={({ field }) => (
-                <FormItem className="flex flex-col items-start">
-                  <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                    Plan Name
-                  </FormLabel>
-                  <div className="w-full">
-                    <FormControl>
-                      <Input
-                        type="text"
-                        {...field}
-                        value={field.value}
-                        placeholder="Enter Plan Name"
-                        disabled
-                        className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
-                      />
-                    </FormControl>
-                    <FormMessage className="text-[10px] mt-1" />
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="planDuration"
-              render={({ field }) => (
-                <FormItem className="flex flex-col items-start">
-                  <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                    Plan Duration
-                  </FormLabel>
-                  <div className="w-full">
-                    <FormControl>
-                      <Input
-                        type="text"
-                        {...field}
-                        value={field.value}
-                        placeholder="Enter Plan Duration"
-                        disabled
-                        className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
-                      />
-                    </FormControl>
-                    <FormMessage className="text-[10px] mt-1" />
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="planType"
-              render={({ field }) => (
-                <FormItem className="flex flex-col items-center">
-                  <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                    Plan Type
-                  </FormLabel>
-                  <div className="w-full">
-                    <FormControl>
-                      <Input
-                        type="text"
-                        {...field}
-                        value={field.value}
-                        placeholder="Enter Plan Type"
-                        disabled
-                        className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
-                      />
-                    </FormControl>
-                    <FormMessage className="text-[10px] mt-1" />
-                  </div>
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="w-full flex justify-start items-start gap-12">
-            <div className="w-1/2">
+          {/* Main Container for Two Parts */}
+          <div className="flex flex-row gap-8">
+            {/* First Part */}
+            <div className="w-1/2 flex flex-col gap-6">
+              {/* Subscription ID and Plan Name */}
+              <div className="flex justify-between gap-4">
+                <FormField
+                  control={form.control}
+                  name="subscriptionID"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start w-full">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Subscription ID
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          {...field}
+                          placeholder="Enter Subscription ID"
+                          disabled={mode === 'view'}
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px] mt-1" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="planName"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start w-full">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Plan Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          {...field}
+                          placeholder="Enter Plan Name"
+                          disabled={mode === 'view'}
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px] mt-1" />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/* Description */}
               <FormField
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col items-start">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700 pt-1">
+                  <FormItem className="flex flex-col items-start w-full">
+                    <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
                       Description
                     </FormLabel>
-                    <div className="w-full">
-                      <FormControl>
-                        <Textarea
-                          {...field}
-                          value={field.value}
-                          placeholder="Enter Description"
-                          disabled
-                          className="w-full h-44 placeholder:opacity-65 min-h-[80px] p-2 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs resize-y"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
-                    </div>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        placeholder="Enter Description"
+                        disabled={mode === 'view'}
+                        className="w-full h-44 placeholder:opacity-65 min-h-[80px] p-2 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm resize-y"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-[10px] mt-1" />
                   </FormItem>
                 )}
               />
             </div>
-            <div className="w-1/2 flex items-start justify-between">
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Status
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
+
+            {/* Second Part */}
+            <div className="w-1/2 flex flex-col gap-6">
+              {/* Plan Duration and Plan Type */}
+              <div className="flex justify-between gap-4">
+                <FormField
+                  control={form.control}
+                  name="planDuration"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start w-full">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Plan Duration
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          {...field}
+                          placeholder="Enter Plan Duration"
+                          disabled={mode === 'view'}
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px] mt-1" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="planType"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start w-full">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Plan Type
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          {...field}
+                          placeholder="Enter Plan Type"
+                          disabled={mode === 'view'}
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px] mt-1" />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/* Status and Cost */}
+              <div className="flex justify-between gap-4">
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start w-full">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Status
+                      </FormLabel>
+                      <FormControl>
                         <Select
                           onValueChange={field.onChange}
                           value={field.value}
+                          disabled={mode === 'view'}
                         >
-                          <SelectTrigger className="w-48 text-left bg-[#F6EEE0] hover:text-black border-opacity-45 text-black">
+                          <SelectTrigger className="w-full text-left bg-[#F6EEE0] hover:text-black border-opacity-45 text-black h-8 text-xs 2xl:text-sm">
                             <SelectValue placeholder="Select Status" />
                           </SelectTrigger>
                           <SelectContent>
@@ -250,45 +241,49 @@ const SubscriptionManagemetForm: React.FC<Props> = ({
                             )}
                           </SelectContent>
                         </Select>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="cost"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col items-start mt-3">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                      Cost
-                    </FormLabel>
-                    <div className="w-full">
+                      </FormControl>
+                      <FormMessage className="text-[10px] mt-1" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="cost"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start w-full">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Cost
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="number"
                           {...field}
-                          value={field.value}
                           placeholder="Enter Cost"
-                          disabled
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          disabled={mode === 'view'}
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
-                    </div>
-                  </FormItem>
-                )}
-              />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
           </div>
-          {/* Payment Type -- dummy data for now */}
+
+          {/* Payment Type */}
           <div className="flex w-full items-center justify-start">
-            <div className="flex flex-col items-center">
-              <span className="text-xs font-medium">Payment Type</span>
-              <span className="text-xs opacity-60">Auto Renewal</span>
+            <div className="flex flex-col items-start">
+              <span className="text-xs 2xl:text-sm font-medium">
+                Payment Type
+              </span>
+              <span className="text-xs 2xl:text-sm opacity-60">
+                Auto Renewal
+              </span>
             </div>
           </div>
+
+          {/* Buttons */}
           <div className="flex items-center justify-start w-full pt-6 gap-3">
             <Button
               type="button"
@@ -300,6 +295,7 @@ const SubscriptionManagemetForm: React.FC<Props> = ({
             <Button
               type="submit"
               className="bg-[#A07D3D] h-8 px-2 text-sm text-white hover:text-black hover:outline hover:outline-black"
+              disabled={isSubmitting}
             >
               Save Changes
             </Button>
@@ -310,15 +306,15 @@ const SubscriptionManagemetForm: React.FC<Props> = ({
   );
 };
 
-export default SubscriptionManagemetForm;
+export default SubscriptionManagementForm;
 
 // Example usage with dummy data (for testing)
 const ExampleParentComponent: React.FC = () => {
   return (
-    <SubscriptionManagemetForm
+    <SubscriptionManagementForm
       subscriptionID="SUB123"
       mode="edit"
-      data={dummyData} // Pass dummy data via prop
+      data={dummyData}
     />
   );
 };

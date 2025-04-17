@@ -3,8 +3,10 @@ import CreateHotelIdForm from '@/components/COMPANY_COMPONENTS/hotel-management/
 
 const CreateHotelIDPage = () => {
   return (
-    <div className="flex justify-center items-center w-full px-14 py-10">
-      <CreateHotelIdForm isEnabled={true} mode="add" />
+    <div className="w-full h-screen pt-8">
+      <div className="h-full w-full container">
+        <CreateHotelIdForm isEnabled={true} mode="add" />
+      </div>
     </div>
   );
 };

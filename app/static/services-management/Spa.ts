@@ -1,3 +1,5 @@
+import { StaticImageData } from 'next/image';
+import massagePic from '../../../public/assets/massage.png';
 type ServiceCategoryType = 'Spa' | 'Salon';
 
 type StatusType = 'Pending' | 'In-Progress' | 'Completed';
@@ -311,5 +313,75 @@ export const SpaServiceData: SpaServiceDataType[] = [
     duration: '45 mins',
     status: 'Pending',
     assignedTo: 'Employee 3'
+  }
+];
+
+/// Product details dummy data
+
+type Product = {
+  visibility: boolean;
+  name: string;
+  price: number;
+  description: string;
+  image: StaticImageData;
+};
+
+type ProductType = {
+  productTypeName: string;
+  products: Product[];
+};
+
+type SpaProductDetails = {
+  serviceName: string;
+  productType: ProductType[];
+};
+
+export const SpaProductDetailsDummyData = [
+  {
+    serviceName: 'SPA SERVICE',
+    productType: [
+      {
+        productTypeName: 'Massage',
+        products: [
+          {
+            visibility: true,
+            name: 'Swedish massage',
+            price: 209,
+            description:
+              'Swedish massage description, with 30 min duration and 1 hour price, Swedish massage description, with 30 min duration and 1 hour price, Swedish massage description, with 30 min duration and 1 hour price, Swedish massage description, with 30 min duration and 1 hour price',
+            image: massagePic
+          },
+          {
+            visibility: true,
+            name: 'Deep-tissue massage',
+            price: 199,
+            description:
+              'Swedish massage description, with 30 min duration and 1 hour price, Swedish massage description, with 30 min duration and 1 hour price, Swedish massage description, with 30 min duration and 1 hour price, Swedish massage description, with 30 min duration and 1 hour price',
+            image: massagePic
+          }
+        ]
+      },
+      {
+        productTypeName: 'Facial',
+        products: [
+          {
+            visibility: true,
+            name: 'Hydrating facial',
+            price: 209,
+            description:
+              'Swedish massage description, with 30 min duration and 1 hour price, Swedish massage description, with 30 min duration and 1 hour price, Swedish massage description, with 30 min duration and 1 hour price, Swedish massage description, with 30 min duration and 1 hour price',
+            image: massagePic
+          },
+          {
+            visibility: true,
+            name: 'anti-aging facial',
+            price: 199,
+            description:
+              'Swedish massage description, with 30 min duration and 1 hour price, Swedish massage description, with 30 min duration and 1 hour price, Swedish massage description, with 30 min duration and 1 hour price, Swedish massage description, with 30 min duration and 1 hour price',
+            image: massagePic
+          }
+        ]
+      }
+    ]
   }
 ];

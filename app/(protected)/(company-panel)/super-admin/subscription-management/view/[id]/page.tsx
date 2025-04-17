@@ -8,8 +8,10 @@ const ViewSubscriptionDetailsPage = async ({
 }) => {
   const id = (await params).id;
   return (
-    <div className="lg:h-screen w-full flex justify-center items-center px-8">
-      <SubscriptionManagemetForm subscriptionID={id} mode="view" />
+    <div className="flex justify-center w-full pt-8">
+      <div className="w-full container py-6 flex justify-center">
+        <SubscriptionManagemetForm subscriptionID={id} mode="view" />
+      </div>
     </div>
   );
 };

@@ -4,8 +4,8 @@ import React from 'react';
 
 const ComplaintManagementPage = () => {
   return (
-    <div className="w-full flex-col justify-center py-4 items-center">
-      <div className="px-4">
+    <div className="w-full h-screen container flex-col justify-center py-4 items-center">
+      <div>
         <ComplaintDashboard
           title="COMPLAINT OVERVIEW"
           closedCases={276}

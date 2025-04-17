@@ -7,11 +7,13 @@ type Params = {
 const ViewDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
   return (
-    <div className="px-5 h-screen">
-      <ConciergeServiceRequestDetail
-        requestDetails={ConciergeServiceData}
-        requestId={id}
-      />
+    <div className="flex justify-center items-center h-full w-full pt-3">
+      <div className="h-full w-full container">
+        <ConciergeServiceRequestDetail
+          requestDetails={ConciergeServiceData}
+          requestId={id}
+        />
+      </div>
     </div>
   );
 };

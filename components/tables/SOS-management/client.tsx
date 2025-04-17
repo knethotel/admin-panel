@@ -82,7 +82,7 @@ export const SOSManagementDataTable: React.FC = () => {
         />
       )}
 
-      <div className="flex justify-end space-x-2 py-2">
+      <div className="flex justify-end space-x-2 px-3 py-2">
         <div className="space-x-2">
           <Button
             variant="outline"

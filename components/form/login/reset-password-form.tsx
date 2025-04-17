@@ -36,7 +36,7 @@ enum Mode {
 
 // Reusable styles
 const inputClassName =
-  'bg-transparent text-black border-black border-opacity-10 placeholder:text-black placeholder:text-xs placeholder:opacity-25';
+  'bg-transparent text-black border-black border-opacity-10 placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-25';
 const buttonClassName =
   'w-full text-white text-sm font-[400] bg-[#A07D3D] hover:opacity-80 hover:text-black hover:border hover:border-black';
 

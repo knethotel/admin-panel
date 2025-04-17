@@ -1,5 +1,3 @@
-// Table dummy data
-
 export type Subscription = {
   subscriptionID: string;
   planDetails: {
@@ -29,8 +27,51 @@ export const subscriptionData: Subscription[] = [
       planCost: 1999
     },
     status: 'ACTIVE'
+  },
+  {
+    subscriptionID: 'SD123453', // Different subscription ID
+    planDetails: {
+      planName: 'Basic Stay Plan',
+      planType: 'CANCELED'
+    },
+    planDuration: '6 Months',
+    planDurationType: 'Half Yearly',
+    costDetails: {
+      planName: 'Basic',
+      planCost: 1999
+    },
+    status: 'INACTIVE'
+  },
+  {
+    subscriptionID: 'SD123454', // Different subscription ID
+    planDetails: {
+      planName: 'Basic Stay Plan',
+      planType: 'EXPIRED'
+    },
+    planDuration: '6 Months',
+    planDurationType: 'Half Yearly',
+    costDetails: {
+      planName: 'Basic',
+      planCost: 1999
+    },
+    status: 'EXPIRED'
+  },
+  {
+    subscriptionID: 'SD123455', // Different subscription ID
+    planDetails: {
+      planName: 'Basic Stay Plan',
+      planType: 'TRIAL'
+    },
+    planDuration: '6 Months',
+    planDurationType: 'Half Yearly',
+    costDetails: {
+      planName: 'Basic',
+      planCost: 1999
+    },
+    status: 'CANCELED'
   }
 ];
+
 //Form Dummy data
 
 type status = 'Active' | 'Inactive' | 'Cancelled' | 'Expired';

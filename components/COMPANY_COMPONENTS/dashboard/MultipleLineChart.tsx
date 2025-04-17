@@ -46,7 +46,7 @@ export function MultipleLineChart({
     <Card className="bg-[#3B2E16] w-auto border border-[#6E511D] pt-2">
       <div className="flex justify-between items-center px-6 pb-4">
         <div className="space-y-2">
-          <span className="text-xs font-semibold text-white/60">
+          <span className="text-xs 2xl:text-sm font-semibold text-white/60">
             {mode} Traffic
           </span>
 

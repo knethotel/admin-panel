@@ -3,8 +3,10 @@ import React from 'react';
 
 const SubscriptionManagementPage = () => {
   return (
-    <div className="min-h-screen w-full overflow-hidden">
-      <SubscriptionManagementHomePage />
+    <div className="w-full h-screen pt-4">
+      <div className="h-full w-full container">
+        <SubscriptionManagementHomePage />
+      </div>
     </div>
   );
 };

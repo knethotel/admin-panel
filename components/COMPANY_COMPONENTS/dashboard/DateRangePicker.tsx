@@ -9,7 +9,7 @@ const DateRangePickerComponent = () => {
   const [startDate, endDate] = dateRange;
   return (
     <DatePicker
-      className="bg-transparent text-white text-xs focus:outline-none border border-amber-600 border-opacity-60 placeholder:text-xs px-1 py-1 rounded-md"
+      className="bg-transparent text-white text-xs 2xl:text-sm focus:outline-none border border-amber-600 border-opacity-60 placeholder:text-xs 2xl:text-sm px-1 py-1 rounded-md"
       selectsRange={true}
       startDate={startDate}
       endDate={endDate}

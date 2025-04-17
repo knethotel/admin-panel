@@ -26,7 +26,7 @@ const PaymentManagementPage = ({ children }: { children: React.ReactNode }) => {
       <div className="flex flex-col items-center gap-2">
         <div className="w-[50%] fixed h-12 text-sm flex justify-evenly rounded-b-xl items-center px-2 bg-[#EFE9DF]">
           <button
-            className={`border px-3 rounded-md ${
+            className={`border px-3 py-1 rounded-lg ${
               activeButton === 'coupons'
                 ? 'bg-[#281F0F] text-white'
                 : 'bg-transparent text-[#281F0F]'
@@ -36,7 +36,7 @@ const PaymentManagementPage = ({ children }: { children: React.ReactNode }) => {
             Coupons
           </button>
           <button
-            className={`border px-3 rounded-md ${
+            className={`border px-3 py-1 rounded-lg ${
               activeButton === 'refund'
                 ? 'bg-[#281F0F] text-white'
                 : 'bg-transparent text-[#281F0F]'

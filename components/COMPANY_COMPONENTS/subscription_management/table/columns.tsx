@@ -2,7 +2,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Subscription } from 'app/static/company-panel/SubscriptionManagement';
 import { Switch } from '@/components/ui/switch';
 
-// Update type to match guestDataType for better type safety
 export const columns: ColumnDef<Subscription>[] = [
   {
     accessorKey: 'subscriptionID',
@@ -39,6 +38,7 @@ export const columns: ColumnDef<Subscription>[] = [
               {planDetails.planType}
             </span>
           );
+          break;
         default:
           planTypeElement = <span>{planDetails.planType}</span>;
           break;
@@ -47,7 +47,7 @@ export const columns: ColumnDef<Subscription>[] = [
       return (
         <div className="flex flex-col items-start justify-center">
           <span>{planDetails.planName}</span>
-          <span className="text-sm">{planTypeElement}</span>
+          {planTypeElement}
         </div>
       );
     }
@@ -64,12 +64,14 @@ export const columns: ColumnDef<Subscription>[] = [
     accessorKey: 'costDetails',
     header: 'Cost',
     cell: ({ row }) => {
-      const costDetails = row.original.costDetails;
+      const { planName, planCost } = row.original.costDetails;
 
       return (
-        <div className="flex justify-center items-start">
-          <span>{costDetails.planName}</span>
-          <span className="text-sm opacity-60">{costDetails.planCost}</span>
+        <div className="flex flex-col justify-center items-start">
+          <span>{planName}</span>
+          <span className="text-sm opacity-60">
+            ₹{planCost.toLocaleString()}
+          </span>
         </div>
       );
     }
@@ -99,17 +101,16 @@ export const columns: ColumnDef<Subscription>[] = [
           statusElement = (
             <span className="text-sm text-primary2">{status}</span>
           );
+          break;
         default:
           statusElement = (
-            <span className="text-sm text-gray-500"> {status}</span>
+            <span className="text-sm text-gray-500">{status}</span>
           );
           break;
       }
 
       return (
-        <div className="flex justify-center items-center">
-          <span>{status}</span>
-        </div>
+        <div className="flex justify-center items-center">{statusElement}</div>
       );
     }
   },
@@ -117,10 +118,27 @@ export const columns: ColumnDef<Subscription>[] = [
     accessorKey: 'actions',
     id: 'actions',
     header: 'Actions',
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center">
-        <Switch />
-      </div>
-    )
+    cell: ({ row }) => {
+      const status = row.original.status;
+
+      const isChecked = status === 'ACTIVE';
+      const isEditable = status === 'ACTIVE' || status === 'INACTIVE';
+
+      return (
+        <div className="flex items-center justify-center">
+          <Switch
+            checked={isChecked}
+            disabled={!isEditable}
+            onCheckedChange={(checked) => {
+              console.log(
+                `Switch toggled for subscription ${row.original.subscriptionID}:`,
+                checked
+              );
+              // handle state update / API call here
+            }}
+          />
+        </div>
+      );
+    }
   }
 ];

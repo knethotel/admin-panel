@@ -7,9 +7,12 @@ import { DataTable } from '@/components/ui/data-table';
 import { columns } from './columns';
 
 import { subscriptionData } from 'app/static/company-panel/SubscriptionManagement';
+import { Heading } from '@/components/ui/heading';
+import { Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export const SubscriptionManagementHomePage: React.FC = () => {
-  // const router = useRouter();
+  const router = useRouter();
   const [data, setData] = useState(subscriptionData || []);
   const [filteredData, setFilteredData] = useState(subscriptionData || []);
   const [pageNo, setPageNo] = useState(1);
@@ -60,8 +63,22 @@ export const SubscriptionManagementHomePage: React.FC = () => {
     }
   };
 
+  const handleOnClick = () => {
+    router.push('/super-admin/subscription-management/add');
+  };
+
   return (
     <>
+      <div className="flex items-center justify-between">
+        <Heading title={`Subscription(s) (${totalRecords})`} />
+        <Button
+          className="btn-primary text-xs 2xl:text-sm md:text-sm"
+          onClick={() => handleOnClick()}
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          <span className="text-white">Create Subscription</span>
+        </Button>
+      </div>
       {loading ? (
         <span>Loading...</span>
       ) : (
@@ -79,7 +96,7 @@ export const SubscriptionManagementHomePage: React.FC = () => {
           //   onFilterChange={handleFilterChange}
         />
       )}
-      <div className="flex justify-end space-x-2 py-2">
+      <div className="flex justify-end space-x-2 px-3 py-2">
         <div className="space-x-2">
           <Button
             variant="outline"

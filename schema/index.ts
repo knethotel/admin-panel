@@ -148,6 +148,12 @@ export const hotelSchema = z.object({
     .refine((file) => file !== '', {
       message: 'Logo image must not be an empty value'
     }),
+  hotelImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional()
+    .refine((file) => file !== '', {
+      message: 'Hotel image must not be an empty value'
+    }),
 
   hotelName: z.string().min(1, 'Hotel name is required'),
   number: z
@@ -718,12 +724,7 @@ export const employeeSchema = z.object({
     .nonempty({ message: 'Password is required' }),
   phoneNo: z.string().min(1, 'Phone Number is required'),
   role: z.string().min(1, 'Role is required'),
-  status: z.enum(['Active', 'Inactive'], {}),
-  priceType: z.enum(['ACTIVE', 'INACTIVE'], {
-    errorMap: () => ({
-      message: 'Invalid status Category'
-    })
-  })
+  status: z.enum(['Active', 'Inactive'], {})
 });
 
 export type employeeSchemaType = z.infer<typeof employeeSchema>;
@@ -743,7 +744,14 @@ export const AddItemsSchema = z.object({
   newProductType: z.string().min(1, 'Enter valid input'),
   productName: z.string().min(1, 'Enter valid input'),
   description: z.string().min(1, 'Enter valid input'),
-  cost: z.number().positive('Cost must be a positive value'),
+  cost: z
+    .string()
+    .refine((val) => val === '' || /^\d+(\.\d{1,2})?$/.test(val), {
+      message: 'Invalid price format (e.g., 10 or 10.99)'
+    })
+    .transform((val) => (val === '' ? 0 : parseFloat(val)))
+    .refine((val) => val > 0, { message: 'Price must be greater than 0' })
+    .or(z.number().min(1, { message: 'Price must be greater than 0' })),
   type: z.enum(['Vegetarian', 'Non-Vegeterian'], {
     errorMap: () => ({
       message: 'Not a valid type'
@@ -769,3 +777,117 @@ export const AddItemsSchema = z.object({
 });
 
 export type AddItemsSchemaType = z.infer<typeof AddItemsSchema>;
+
+//*****************Housekeeping Service > Manage products modal form schema****************/
+
+export const ManageProductsModalFormSchema = z.object({
+  selectService: z.enum(['Laundary Service', 'Deliever Toileteries'], {
+    errorMap: () => ({ message: 'Invalid Category' })
+  }),
+  productCategory: z
+    .string()
+    .min(1, 'Input field must have at least 1 character.'),
+  productName: z.string().min(1, 'Input field must have at least 1 character.'),
+  productImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional()
+    .refine((file) => file !== '', {
+      message: 'Logo image must not be an empty value'
+    })
+});
+
+export type ManageProductsModalFormSchemaType = z.infer<
+  typeof ManageProductsModalFormSchema
+>;
+
+//***************Concierge Service > Manage products modal form schema****************/
+export const ConciergeManageProductsModalFormSchema = z.object({
+  productCategory: z
+    .string()
+    .min(1, 'Input field must have at least 1 character.'),
+  selectService: z.enum(['Nearby Attractions', 'Nearby Cafe & Restaurants'], {
+    errorMap: () => ({ message: 'Invalid Category' })
+  }),
+  name: z.string().min(1, 'Input field must have at least 1 character.'),
+  description: z.string().min(1, 'Input field must have at least 1 character.'),
+  productImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional()
+    .refine((file) => file !== '', {
+      message: 'Logo image must not be an empty value'
+    })
+});
+
+export type ConciergeManageProductsModalFormSchemaType = z.infer<
+  typeof ConciergeManageProductsModalFormSchema
+>;
+
+//***************Spa/Salon Service > Manage products modal form schema****************/
+
+export const SpaManageProductsModalFormSchema = z.object({
+  productCategory: z
+    .string()
+    .min(1, 'Input field must have at least 1 character.'),
+  selectService: z.enum(['SPA SERVICE', 'SALON SERVICE'], {
+    errorMap: () => ({ message: 'Invalid Category' })
+  }),
+  name: z.string().min(1, 'Input field must have at least 1 character.'),
+  description: z.string().min(1, 'Input field must have at least 1 character.'),
+  productImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional()
+    .refine((file) => file !== '', {
+      message: 'Logo image must not be an empty value'
+    }),
+  additionalService: z
+    .string()
+    .min(1, 'Input field must have at least 1 character.'),
+  additionalServicePrice: z
+    .string()
+    .refine((val) => val === '' || /^\d+(\.\d{1,2})?$/.test(val), {
+      message: 'Invalid price format (e.g., 10 or 10.99)'
+    })
+    .transform((val) => (val === '' ? 0 : parseFloat(val)))
+    .refine((val) => val > 0, { message: 'Price must be greater than 0' })
+    .or(z.number().min(1, { message: 'Price must be greater than 0' })),
+  additionalServiceImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional()
+    .refine((file) => file !== '', {
+      message: 'Logo image must not be an empty value'
+    })
+});
+
+export type SpaManageProductsModalFormSchemaType = z.infer<
+  typeof SpaManageProductsModalFormSchema
+>;
+
+//*****************Swimming Pool Service > Manage products modal form schema****************/
+export const SwimmingPoolManageProductsModalFormSchema = z.object({
+  swimmingPoolImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional()
+    .refine((file) => file !== '', {
+      message: 'Logo image must not be an empty value'
+    })
+});
+
+export type SwimmingPoolManageProductsModalFormSchemaType = z.infer<
+  typeof SwimmingPoolManageProductsModalFormSchema
+>;
+
+//*****************Gym Pool Service > Manage products modal form schema****************/
+
+export const GymManageProductsModalFormSchema = z.object({
+  equipmentImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional()
+    .refine((file) => file !== '', {
+      message: 'Logo image must not be an empty value'
+    }),
+  equipmentName: z.string().min(1, 'Empty input field.')
+});
+
+export type GymManageProductsModalFormSchemaType = z.infer<
+  typeof GymManageProductsModalFormSchema
+>;

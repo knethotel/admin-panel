@@ -14,11 +14,13 @@ export default function ToggleButton() {
     >
       <div
         className={`h-[17px] w-[17px] rounded-full shadow-md transform transition duration-300 ${
-          enabled ? 'translate-x-[23px] bg-brown' : '-translate-x-[4px] bg-coffee'
+          enabled
+            ? 'translate-x-[23px] bg-brown'
+            : '-translate-x-[4px] bg-coffee'
         }`}
       />
-      <span className="absolute left-2 text-xs"></span>
-      <span className="absolute right-2 text-xs"></span>
+      <span className="absolute left-2 text-xs 2xl:text-sm"></span>
+      <span className="absolute right-2 text-xs 2xl:text-sm"></span>
     </button>
   );
 }

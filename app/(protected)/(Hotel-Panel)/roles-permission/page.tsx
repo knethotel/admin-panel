@@ -45,7 +45,7 @@ const RolesAndPermissionsPage = () => {
   return (
     <div className="flex flex-col w-full">
       <Navbar active={true} search={true} />
-      <div className="flex flex-col pt-4 gap-8 items-center px-4 py-2 text-coffee">
+      <div className="flex flex-col pt-4 gap-8 container items-center px-4 py-2 text-coffee">
         <div className="w-full flex justify-between mt-20">
           <h2 className="text-lg font-bold">Manage Roles</h2>
           <button

@@ -3,8 +3,10 @@ import React from 'react';
 
 const ReceptionPage = () => {
   return (
-    <div className="w-full">
-      <ReceptionServiceTable />
+    <div className="flex justify-center items-center h-full w-full pt-3">
+      <div className="h-full w-full container">
+        <ReceptionServiceTable />
+      </div>
     </div>
   );
 };

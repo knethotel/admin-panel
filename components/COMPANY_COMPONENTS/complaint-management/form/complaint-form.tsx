@@ -62,7 +62,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
                 name="complaintID"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-xs 2xl:text-sm font-medium text-gray-700">
                       Complaint ID
                     </FormLabel>
                     <div className="w-full">
@@ -71,7 +71,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
                           type="text"
                           {...field}
                           disabled={mode === 'view'}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -84,7 +84,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
                 name="userID"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-xs 2xl:text-sm font-medium text-gray-700">
                       User ID
                     </FormLabel>
                     <div className="w-full">
@@ -93,7 +93,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
                           type="text"
                           {...field}
                           disabled={mode === 'view'}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -140,7 +140,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
                 name="description"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-xs 2xl:text-sm font-medium text-gray-700">
                       Description
                     </FormLabel>
                     <div className="w-full">
@@ -149,7 +149,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
                           type="text"
                           {...field}
                           disabled={mode === 'view'}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -162,7 +162,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
                 name="feedback"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-xs 2xl:text-sm font-medium text-gray-700">
                       Feedback
                     </FormLabel>
                     <div className="w-full">
@@ -171,7 +171,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
                           type="text"
                           {...field}
                           disabled={mode === 'view'}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -186,7 +186,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
                 name="status"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700 pt-1">
+                    <FormLabel className="w-full sm:w-32 text-xs 2xl:text-sm font-medium text-gray-700 pt-1">
                       Status
                     </FormLabel>
                     <div className="w-full">
@@ -206,7 +206,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
                                 <RadioGroupItem value={value} id={value} />
                                 <label
                                   htmlFor={value}
-                                  className="text-xs text-gray-700 capitalize"
+                                  className="text-xs 2xl:text-sm text-gray-700 capitalize"
                                 >
                                   {value}
                                 </label>
@@ -230,7 +230,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
                 name="assignedStaff"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-xs 2xl:text-sm font-medium text-gray-700">
                       Assigned Staff
                     </FormLabel>
                     <div className="w-full">
@@ -239,7 +239,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
                           type="text"
                           {...field}
                           disabled={mode === 'view'}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -252,7 +252,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
                 name="dateAndTime"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-32 text-xs 2xl:text-sm font-medium text-gray-700">
                       Date & Time
                     </FormLabel>
                     <div className="w-full">
@@ -261,7 +261,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
                           type="text"
                           {...field}
                           disabled={mode === 'view'}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -276,10 +276,7 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
           {mode === 'edit' && (
             <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3">
               {' '}
-              <Button
-                type="submit"
-                className="w-28 md:ml-24 sm:w-auto bg-[#A07D3D] text-white hover:bg-[#8c6b33] px-6 py-2 rounded-md text-xs"
-              >
+              <Button type="submit" className="btn-primary">
                 Save Changes
               </Button>
             </div>

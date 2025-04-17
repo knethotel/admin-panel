@@ -11,6 +11,7 @@ import { columns } from './columns';
 import { HousekeepingData } from 'app/static/services-management/Housekeeping';
 import ToggleButton from '@/components/ui/toggleButton';
 import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
+import ManageProductsModal from '@/components/modal/housekeeping/manage-products';
 
 export const HousekeepingServiceTable: React.FC = () => {
   const router = useRouter();
@@ -47,6 +48,8 @@ export const HousekeepingServiceTable: React.FC = () => {
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isManageProductsModalOpen, setIsManageProductsModalOpen] =
+    useState(false);
 
   const handleLimitChange = (newLimit: number) => {
     setLimit(newLimit);
@@ -66,7 +69,7 @@ export const HousekeepingServiceTable: React.FC = () => {
   };
   return (
     <>
-      <div className="w-full pt-20 flex gap-2 justify-end px-4 py-2 bg-white">
+      <div className="w-full pt-20 flex gap-2 justify-end items-center px-4 py-2 bg-white">
         <div className="flex w-full justify-between items-center">
           <h2 className="text-coffee text-2xl font-bold">Housekeeping</h2>
           <div className="flex items-center gap-2">
@@ -80,6 +83,18 @@ export const HousekeepingServiceTable: React.FC = () => {
         <PriceTimeSetting
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
+        />
+      </div>
+      <div className="w-full flex justify-end px-4">
+        <Button
+          onClick={() => setIsManageProductsModalOpen(true)}
+          className="btn-primary h-8 2xl:h-9"
+        >
+          Manage Products
+        </Button>
+        <ManageProductsModal
+          isOpen={isManageProductsModalOpen}
+          onClose={() => setIsManageProductsModalOpen(false)}
         />
       </div>
       {loading ? (
@@ -99,7 +114,7 @@ export const HousekeepingServiceTable: React.FC = () => {
           //   onFilterChange={handleFilterChange}
         />
       )}
-      <div className="flex justify-end space-x-2 py-2">
+      <div className="flex justify-end space-x-2 px-3 py-2">
         <div className="space-x-2">
           <Button
             variant="outline"

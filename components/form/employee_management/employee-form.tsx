@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import FormWrapper from './form-wrapper';
 import { employeeSchema, employeeSchemaType } from 'schema';
@@ -24,6 +24,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { ChevronDown } from 'lucide-react';
+import { ToastAtTopRight } from '@/lib/sweetalert';
 
 type Props = {
   employeeID?: string;
@@ -34,15 +35,14 @@ type Props = {
 const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
   const router = useRouter();
 
-  // Get guest details using id
+  // Get employee details using id
   const getEmployeeDetails = (employeeID: string | undefined) => {
     if (employeeID) {
       return EmployeeData.find(
         (employee) => employee.employeeID === employeeID
       );
-    } else {
-      return null;
     }
+    return null;
   };
   const employee = getEmployeeDetails(employeeID);
 
@@ -59,18 +59,32 @@ const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
     }
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-    employeeForm.reset({
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      phoneNo: '',
-      role: '',
-      status: 'Active'
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const onSubmit = async (data: employeeSchemaType) => {
+    console.log('Submitted data:', data);
+    setIsSubmitted(true);
+    ToastAtTopRight.fire({
+      icon: 'success',
+      title: 'Employee Created successfully'
     });
   };
+
+  useEffect(() => {
+    if (isSubmitted) {
+      employeeForm.reset({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        phoneNo: '',
+        role: '',
+        status: 'Active'
+      });
+      console.log('Form state after reset:', employeeForm.getValues());
+      setIsSubmitted(false);
+    }
+  }, [isSubmitted, employeeForm]);
 
   return (
     <FormWrapper title={'Employee Profile'}>
@@ -96,8 +110,8 @@ const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                           type="text"
                           placeholder="First Name"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
-                        />{' '}
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
+                        />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
                     </FormControl>
@@ -119,8 +133,8 @@ const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                           type="text"
                           placeholder="Last Name"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
-                        />{' '}
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
+                        />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
                     </FormControl>
@@ -142,7 +156,7 @@ const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                           type="email"
                           placeholder="Email ID"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -165,7 +179,7 @@ const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                           type="password"
                           placeholder="Password"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -183,7 +197,7 @@ const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-black text-[0.8rem]">
-                      Email
+                      Phone Number
                     </FormLabel>
                     <FormControl>
                       <div className="flex gap-1">
@@ -191,7 +205,7 @@ const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                           type="text"
                           placeholder="Phone No"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -214,7 +228,7 @@ const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                           type="text"
                           placeholder="Role"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>

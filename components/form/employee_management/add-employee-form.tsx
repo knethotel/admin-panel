@@ -76,7 +76,7 @@ const EditEmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                           type="text"
                           placeholder="First Name"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />{' '}
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -99,7 +99,7 @@ const EditEmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                           type="text"
                           placeholder="Last Name"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />{' '}
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -122,7 +122,7 @@ const EditEmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                           type="email"
                           placeholder="Email ID"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -145,7 +145,7 @@ const EditEmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                           type="password"
                           placeholder="Password"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -171,7 +171,7 @@ const EditEmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                           type="text"
                           placeholder="Phone No"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -194,7 +194,7 @@ const EditEmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                           type="text"
                           placeholder="Role"
                           {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs placeholder:opacity-45 pr-10"
+                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />
                         {isEnabled && <span className="text-red-500">*</span>}
                       </div>
@@ -238,14 +238,11 @@ const EditEmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
             <Button
               type="button"
               onClick={() => router.back()}
-              className="bg-[#EFE9DF] hover:outline hover:outline-black"
+              className="btn-secondary"
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              className="bg-[#A07D3D] text-white hover:text-black hover:outline hover:outline-black"
-            >
+            <Button type="submit" className="btn-primary">
               Save Changes
             </Button>
           </div>

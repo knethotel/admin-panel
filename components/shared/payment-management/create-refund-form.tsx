@@ -24,11 +24,11 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
       hotelID: '',
       amount: 0,
       refundReason: '',
-      refundStatus: 'Initiated', // Default status can be any of the enum values
+      refundStatus: 'Initiated',
       message: '',
       assignedStaff: '',
       serviceDepartment: '',
-      dateAndTime: '' // You might want to set a default date-time string if needed
+      dateAndTime: ''
     }
   });
 
@@ -46,7 +46,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
           className="w-full relative h-full max-w-4xl mx-auto p-4 sm:px-6 md:px-8 rounded-lg"
         >
           {/* Main Grid: Two Sides */}
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
             {/* Left Side */}
             <div className="flex flex-col gap-3">
               <FormField
@@ -54,7 +54,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                 name="refundID"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 shrink-0">
                       Refund ID
                     </FormLabel>
                     <div className="w-full">
@@ -62,10 +62,10 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                         <Input
                           type="text"
                           {...field}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
+                      <FormMessage className="text-[10px] text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -75,7 +75,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                 name="userID"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 shrink-0">
                       User ID
                     </FormLabel>
                     <div className="w-full">
@@ -83,10 +83,10 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                         <Input
                           type="text"
                           {...field}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
+                      <FormMessage className="text-[10px] text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -96,7 +96,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                 name="hotelID"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 shrink-0">
                       Hotel ID
                     </FormLabel>
                     <div className="w-full">
@@ -104,10 +104,10 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                         <Input
                           type="text"
                           {...field}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
+                      <FormMessage className="text-[10px] text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -117,7 +117,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                 name="amount"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 shrink-0">
                       Amount
                     </FormLabel>
                     <div className="w-full">
@@ -125,10 +125,14 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                         <Input
                           type="number"
                           {...field}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
+                          value={field.value ?? ''}
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
+                      <FormMessage className="text-[10px] text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -138,18 +142,18 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                 name="refundReason"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
-                      REfund Reason
+                    <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 shrink-0">
+                      Refund Reason
                     </FormLabel>
                     <div className="w-full">
                       <FormControl>
                         <Input
                           type="text"
                           {...field}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
+                      <FormMessage className="text-[10px] text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -161,7 +165,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                 name="refundStatus"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700 pt-1">
+                    <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 pt-1 shrink-0">
                       Refund Status
                     </FormLabel>
                     <div className="w-full">
@@ -184,7 +188,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                               <RadioGroupItem value={value} id={value} />
                               <label
                                 htmlFor={value}
-                                className="text-xs text-gray-700 capitalize"
+                                className="text-xs 2xl:text-sm text-gray-700 capitalize"
                               >
                                 {value}
                               </label>
@@ -192,7 +196,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                           ))}
                         </RadioGroup>
                       </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
+                      <FormMessage className="text-[10px] text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -201,13 +205,12 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
 
             {/* Right Side */}
             <div className="flex flex-col items-center md:items-start space-y-8">
-              {/* Create Code */}
               <FormField
                 control={form.control}
                 name="assignedStaff"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 shrink-0">
                       Assigned Staff
                     </FormLabel>
                     <div className="w-full">
@@ -215,10 +218,10 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                         <Input
                           type="text"
                           {...field}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
+                      <FormMessage className="text-[10px] text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -228,7 +231,7 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                 name="serviceDepartment"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 shrink-0">
                       Service Department
                     </FormLabel>
                     <div className="w-full">
@@ -236,20 +239,20 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                         <Input
                           type="text"
                           {...field}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
+                      <FormMessage className="text-[10px] text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name="serviceDepartment"
+                name="dateAndTime"
                 render={({ field }) => (
                   <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-32 text-xs font-medium text-gray-700">
+                    <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 shrink-0">
                       Date & Time
                     </FormLabel>
                     <div className="w-full">
@@ -257,10 +260,10 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                         <Input
                           type="text"
                           {...field}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs"
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
+                      <FormMessage className="text-[10px] text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -270,7 +273,6 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
 
           {/* Buttons */}
           <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3">
-            {' '}
             <Button type="submit" className="md:ml-24 btn-primary">
               Save Changes
             </Button>

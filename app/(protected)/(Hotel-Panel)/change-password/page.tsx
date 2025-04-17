@@ -3,8 +3,10 @@ import React from 'react';
 
 const ChangePasswordPage = () => {
   return (
-    <div className="w-full h-screen bg-white p-4">
-      <ChangePasswordForm />
+    <div className="flex justify-center items-center h-full w-full pt-5">
+      <div className="h-full w-full container">
+        <ChangePasswordForm />
+      </div>
     </div>
   );
 };

@@ -12,8 +12,14 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: '2rem',
+      padding: {
+        DEFAULT: '1rem'
+      },
       screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
         '2xl': '1400px'
       }
     },
@@ -24,6 +30,7 @@ export default {
         yellowBrown: '#DBB766',
         goldenYellow: '#E0C815',
         brown: '#A07D3D',
+        goldenBrown: '#9C783A',
         coffee: '#281F0F',
         coffeeLight: '#4A391B',
         orangeLight: '#F5F1EB',

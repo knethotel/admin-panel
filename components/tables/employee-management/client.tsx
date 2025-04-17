@@ -78,7 +78,7 @@ export const EmployeeTable: React.FC = () => {
       <div className="flex items-center justify-between">
         <Heading title={`Employees (${totalRecords})`} />
         <Button
-          className="btn-primary text-xs md:text-sm"
+          className="btn-primary text-xs 2xl:text-sm md:text-sm"
           onClick={() => handleOnClick('add employee')}
         >
           <Plus className="mr-2 h-4 w-4" />
@@ -102,7 +102,7 @@ export const EmployeeTable: React.FC = () => {
           // onFilterChange={handleFilterChange}
         />
       )}
-      <div className="flex justify-end space-x-2 py-2">
+      <div className="flex justify-end space-x-2 px-3 py-2">
         <div className="space-x-2">
           <Button
             variant="outline"

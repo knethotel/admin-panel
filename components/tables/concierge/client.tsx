@@ -10,6 +10,7 @@ import { columns } from './columns';
 import { ConciergeServiceData } from 'app/static/services-management/Concierge';
 import ToggleButton from '@/components/ui/toggleButton';
 import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
+import ManageProductsModal from '@/components/modal/concierge/manage-products';
 
 export const ConciergeServiceTable: React.FC = () => {
   const router = useRouter();
@@ -46,6 +47,8 @@ export const ConciergeServiceTable: React.FC = () => {
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isManageProductsModalOpen, setIsManageProductsModalOpen] =
+    useState(false);
 
   const handleLimitChange = (newLimit: number) => {
     setLimit(newLimit);
@@ -81,6 +84,18 @@ export const ConciergeServiceTable: React.FC = () => {
           onClose={() => setIsModalOpen(false)}
         />
       </div>
+      <div className="w-full flex justify-end px-4">
+        <Button
+          onClick={() => setIsManageProductsModalOpen(true)}
+          className="btn-primary h-8 2xl:h-9"
+        >
+          Manage Products
+        </Button>
+        <ManageProductsModal
+          isOpen={isManageProductsModalOpen}
+          onClose={() => setIsManageProductsModalOpen(false)}
+        />
+      </div>
       {loading ? (
         <span>Loading...</span>
       ) : (
@@ -98,7 +113,7 @@ export const ConciergeServiceTable: React.FC = () => {
           //   onFilterChange={handleFilterChange}
         />
       )}
-      <div className="flex justify-end space-x-2 py-2">
+      <div className="flex justify-end space-x-2 px-3 py-2">
         <div className="space-x-2">
           <Button
             variant="outline"
