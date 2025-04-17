@@ -25,7 +25,6 @@ import Image from 'next/image';
 import { PiCameraThin } from 'react-icons/pi';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 
 type Props = {
@@ -95,7 +94,10 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
     try {
       console.log('Submitted data:', data);
       setSubmitStatus('success');
-      if (mode === 'create') form.reset(); // Reset only in create mode
+      if (mode === 'create') {
+        form.reset();
+        setPreview(null);
+      }
     } catch (error) {
       console.error('Error occurred:', error);
       setSubmitStatus('error');
@@ -114,11 +116,11 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
           className="flex flex-col px-8 gap-8 justify-center pt-8 items-center"
         >
           {/* Image Display or Upload */}
-          {(mode === 'view' || (mode === 'edit' && preview)) && preview ? (
+          {mode === 'view' && preview ? (
             <div className="h-32 w-32">
               <Image
                 src={preview}
-                alt={subHotel?.subHotelName || 'Hotel Image'}
+                alt={subHotel?.subHotelName || 'Sub-Hotel Image'}
                 height={176}
                 width={176}
                 className="object-cover rounded-lg"
@@ -135,63 +137,89 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                       <div
                         className="relative h-32 w-32 rounded-lg bg-[#F6EEE0] hover:drop-shadow-xl duration-200"
                         onDrop={(e) => {
+                          if (mode === 'view') return;
                           e.preventDefault();
                           const file = e.dataTransfer.files?.[0];
                           if (file) {
-                            field.onChange(file);
+                            if (!file.type.startsWith('image/')) {
+                              alert('Please upload an image file.');
+                              return;
+                            }
+                            if (file.size > 5 * 1024 * 1024) {
+                              alert('File size exceeds 5MB.');
+                              return;
+                            }
                             if (preview) URL.revokeObjectURL(preview);
-                            setPreview(URL.createObjectURL(file));
+                            const imageUrl = URL.createObjectURL(file);
+                            setPreview(imageUrl);
+                            field.onChange(file);
                           }
                         }}
-                        onDragOver={(e) => e.preventDefault()}
+                        onDragOver={(e) => {
+                          if (mode === 'view') return;
+                          e.preventDefault();
+                        }}
                       >
-                        <div className="h-full w-full flex items-center justify-center">
-                          {preview && (
-                            <Image
-                              src={preview}
-                              alt="Preview"
-                              height={176}
-                              width={176}
-                              className="object-cover h-full w-full rounded-lg"
-                            />
+                        <div className="h-full w-full flex items-center justify-center relative">
+                          {preview ? (
+                            <>
+                              <Image
+                                src={preview}
+                                alt="Sub-Hotel Preview"
+                                height={176}
+                                width={176}
+                                className="object-cover h-full w-full rounded-lg"
+                              />
+                              {mode !== 'view' && (
+                                <label
+                                  htmlFor="fileUpload"
+                                  className="absolute inset-0 flex justify-center items-center cursor-pointer bg-black bg-opacity-20 hover:bg-opacity-30 transition-opacity rounded-lg"
+                                  aria-label="Reupload sub-hotel image"
+                                >
+                                  <PiCameraThin className="text-white w-12 h-12 opacity-70" />
+                                </label>
+                              )}
+                            </>
+                          ) : (
+                            mode !== 'view' && (
+                              <label
+                                htmlFor="fileUpload"
+                                className="absolute inset-0 flex justify-center items-center cursor-pointer"
+                                aria-label="Upload sub-hotel image"
+                              >
+                                <PiCameraThin className="text-black w-12 h-12 opacity-30" />
+                              </label>
+                            )
                           )}
                         </div>
-                        {!preview && (
-                          <label
-                            htmlFor="fileUpload"
-                            className="absolute inset-0 flex justify-center items-center cursor-pointer"
-                            aria-label="Upload sub-hotel image"
-                          >
-                            <PiCameraThin className="text-black w-12 h-12 opacity-30" />
-                          </label>
+                        {mode !== 'view' && (
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                if (!file.type.startsWith('image/')) {
+                                  alert('Please upload an image file.');
+                                  return;
+                                }
+                                if (file.size > 5 * 1024 * 1024) {
+                                  alert('File size exceeds 5MB.');
+                                  return;
+                                }
+                                if (preview) URL.revokeObjectURL(preview);
+                                const imageUrl = URL.createObjectURL(file);
+                                setPreview(imageUrl);
+                                field.onChange(file);
+                              } else {
+                                setPreview(null);
+                                field.onChange(undefined);
+                              }
+                            }}
+                            className="hidden"
+                            id="fileUpload"
+                          />
                         )}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              if (!file.type.startsWith('image/')) {
-                                alert('Please upload an image file.');
-                                return;
-                              }
-                              if (file.size > 5 * 1024 * 1024) {
-                                alert('File size exceeds 5MB.');
-                                return;
-                              }
-                              if (preview) URL.revokeObjectURL(preview);
-                              const imageUrl = URL.createObjectURL(file);
-                              setPreview(imageUrl);
-                              field.onChange(file);
-                            } else {
-                              setPreview(null);
-                              field.onChange(undefined);
-                            }
-                          }}
-                          className="hidden"
-                          id="fileUpload"
-                          disabled={mode === 'view'}
-                        />
                       </div>
                     </FormControl>
                     <FormMessage />

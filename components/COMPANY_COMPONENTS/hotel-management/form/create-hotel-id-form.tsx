@@ -6,8 +6,7 @@ import { useForm } from 'react-hook-form';
 import {
   CreateHotelIdFormSchema,
   CreateHotelIdFormSchemaType,
-  serviceOptions,
-  ServiceType
+  serviceOptions
 } from '../../../../schema/company-panel';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormWrapper from './form-wrapper';
@@ -45,6 +44,7 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
       if (preview) URL.revokeObjectURL(preview);
     };
   }, [preview]);
+
   const getHotelDetails = (hotelID: string | undefined) => {
     if (hotelID) {
       return dummyHotelData.find((hotel) => hotel.hotelID === hotelID);
@@ -76,13 +76,14 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
       console.log(data);
       setSubmitStatus('success');
     } catch (error) {
-      console.log('Error occured: ', error);
+      console.log('Error occurred: ', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
     }
     form.reset();
   };
+
   return (
     <FormWrapper title="">
       <Form {...form}>
@@ -94,7 +95,7 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
           {mode === 'view' && hotel?.hotelImageUrl ? (
             <div className="h-32 w-32">
               <Image
-                src={hotel.hotelImageUrl} // Using Image component correctly
+                src={hotel.hotelImageUrl}
                 alt={hotel.hotelName || 'Hotel Image'}
                 height={176}
                 width={176}
@@ -112,61 +113,89 @@ const CreateHotelIdForm = ({ hotelID, isEnabled, mode }: Props) => {
                       <div
                         className="relative h-32 w-32 2xl:h-36 2xl:w-36 rounded-lg bg-[#F6EEE0] hover:drop-shadow-xl duration-200"
                         onDrop={(e) => {
+                          if (mode === 'view') return;
                           e.preventDefault();
                           const file = e.dataTransfer.files?.[0];
                           if (file) {
-                            field.onChange(file);
+                            if (!file.type.startsWith('image/')) {
+                              alert('Please upload an image file.');
+                              return;
+                            }
+                            if (file.size > 5 * 1024 * 1024) {
+                              alert('File size exceeds 5MB.');
+                              return;
+                            }
                             if (preview) URL.revokeObjectURL(preview);
-                            setPreview(URL.createObjectURL(file));
+                            const imageUrl = URL.createObjectURL(file);
+                            setPreview(imageUrl);
+                            field.onChange(file);
                           }
                         }}
-                        onDragOver={(e) => e.preventDefault()}
+                        onDragOver={(e) => {
+                          if (mode === 'view') return;
+                          e.preventDefault();
+                        }}
                       >
-                        <div className="h-full w-full flex items-center justify-center">
-                          {preview && (
-                            <Image
-                              src={preview} // Using Image component here as well
-                              alt="Coupon preview"
-                              height={576}
-                              width={576}
-                              className="object-cover rounded-lg h-full w-full"
-                            />
+                        <div className="h-full w-full flex items-center justify-center relative">
+                          {preview ? (
+                            <>
+                              <Image
+                                src={preview}
+                                alt="Hotel preview"
+                                height={576}
+                                width={576}
+                                className="object-cover rounded-lg h-full w-full"
+                              />
+                              {mode !== 'view' && (
+                                <label
+                                  htmlFor="fileUpload"
+                                  className="absolute inset-0 flex justify-center items-center cursor-pointer bg-black bg-opacity-20 hover:bg-opacity-30 transition-opacity rounded-lg"
+                                  aria-label="Reupload hotel image"
+                                >
+                                  <PiCameraThin className="text-white w-12 h-12 opacity-70" />
+                                </label>
+                              )}
+                            </>
+                          ) : (
+                            mode !== 'view' && (
+                              <label
+                                htmlFor="fileUpload"
+                                className="absolute inset-0 flex justify-center items-center cursor-pointer"
+                                aria-label="Upload hotel image"
+                              >
+                                <PiCameraThin className="text-black w-12 h-44 opacity-30" />
+                              </label>
+                            )
                           )}
                         </div>
-                        {!preview && (
-                          <label
-                            htmlFor="fileUpload"
-                            className="absolute inset-0 flex justify-center items-center cursor-pointer"
-                            aria-label="Upload coupon image"
-                          >
-                            <PiCameraThin className="text-black w-12 h-44 opacity-30" />
-                          </label>
+                        {mode !== 'view' && (
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                if (!file.type.startsWith('image/')) {
+                                  alert('Please upload an image file.');
+                                  return;
+                                }
+                                if (file.size > 5 * 1024 * 1024) {
+                                  alert('File size exceeds 5MB.');
+                                  return;
+                                }
+                                if (preview) URL.revokeObjectURL(preview);
+                                const imageUrl = URL.createObjectURL(file);
+                                setPreview(imageUrl);
+                                field.onChange(file);
+                              } else {
+                                setPreview(null);
+                                field.onChange(undefined);
+                              }
+                            }}
+                            className="hidden"
+                            id="fileUpload"
+                          />
                         )}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              if (!file.type.startsWith('image/')) {
-                                alert('Please upload an image file.');
-                                return;
-                              }
-                              if (file.size > 5 * 1024 * 1024) {
-                                alert('File size exceeds 5MB.');
-                                return;
-                              }
-                              if (preview) URL.revokeObjectURL(preview);
-                              const imageUrl = URL.createObjectURL(file);
-                              setPreview(imageUrl);
-                            } else {
-                              setPreview(null);
-                            }
-                            field.onChange(file);
-                          }}
-                          className="hidden"
-                          id="fileUpload"
-                        />
                       </div>
                     </FormControl>
                     <FormMessage />
