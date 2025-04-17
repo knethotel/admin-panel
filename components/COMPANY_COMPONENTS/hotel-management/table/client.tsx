@@ -62,6 +62,14 @@ export const HotelManagementHome: React.FC = () => {
 
   return (
     <>
+      <div className="w-full flex justify-end">
+        <Button
+          onClick={() => router.push('/super-admin/hotel-management/add')}
+          className="btn-primary"
+        >
+          Create Hotel ID
+        </Button>
+      </div>
       {loading ? (
         <span>Loading...</span>
       ) : (
@@ -87,7 +95,7 @@ export const HotelManagementHome: React.FC = () => {
             onClick={() => handlePageChange(pageNo - 1)}
             disabled={pageNo === 1}
           >
-            Previous
+            {/* Previous */}
           </Button>
           <span className="text-sm text-gray-600">
             Page {pageNo} of {Math.ceil(totalRecords / limit)}
