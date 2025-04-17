@@ -875,3 +875,19 @@ export const SwimmingPoolManageProductsModalFormSchema = z.object({
 export type SwimmingPoolManageProductsModalFormSchemaType = z.infer<
   typeof SwimmingPoolManageProductsModalFormSchema
 >;
+
+//*****************Gym Pool Service > Manage products modal form schema****************/
+
+export const GymManageProductsModalFormSchema = z.object({
+  equipmentImage: z
+    .union([z.instanceof(File), z.string().url()])
+    .optional()
+    .refine((file) => file !== '', {
+      message: 'Logo image must not be an empty value'
+    }),
+  equipmentName: z.string().min(1, 'Empty input field.')
+});
+
+export type GymManageProductsModalFormSchemaType = z.infer<
+  typeof GymManageProductsModalFormSchema
+>;
