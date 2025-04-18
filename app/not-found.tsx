@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import logo from '../public/assets/logo2.svg';
 
-export default function NotFound() {
+const NotFound = () => {
   // Logo animation variants (for your SVG logo)
   const brandLogoVariants = {
     hidden: { opacity: 0, y: -50 },
@@ -111,4 +111,6 @@ export default function NotFound() {
       />
     </div>
   );
-}
+};
+
+export default NotFound;
