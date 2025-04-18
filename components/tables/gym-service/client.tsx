@@ -12,6 +12,7 @@ import { GymServiceData } from 'app/static/services-management/Gym';
 import ToggleButton from '@/components/ui/toggleButton';
 import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
 import ManageProductsModal from '@/components/modal/gym/manage-products';
+import PriceTimeSettingGym from '@/components/modal/gym/PriceTimeSetting';
 
 export const GymServiceTable: React.FC = () => {
   const router = useRouter();
@@ -82,7 +83,7 @@ export const GymServiceTable: React.FC = () => {
           </div>
         </div>
         <Settings onClick={() => setIsModalOpen(true)} />
-        <PriceTimeSetting
+        <PriceTimeSettingGym
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />

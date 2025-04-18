@@ -9,8 +9,8 @@ import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 import { ConciergeServiceData } from 'app/static/services-management/Concierge';
 import ToggleButton from '@/components/ui/toggleButton';
-import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
 import ManageProductsModal from '@/components/modal/concierge/manage-products';
+import PriceTimeSettingConciergeModal from '@/components/modal/concierge/PriceTimeSetting';
 
 export const ConciergeServiceTable: React.FC = () => {
   const router = useRouter();
@@ -79,7 +79,7 @@ export const ConciergeServiceTable: React.FC = () => {
           </div>
         </div>
         <Settings onClick={() => setIsModalOpen(true)} />
-        <PriceTimeSetting
+        <PriceTimeSettingConciergeModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />
