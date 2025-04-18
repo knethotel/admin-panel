@@ -10,8 +10,8 @@ import { columns } from './columns';
 
 import { HousekeepingData } from 'app/static/services-management/Housekeeping';
 import ToggleButton from '@/components/ui/toggleButton';
-import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
 import ManageProductsModal from '@/components/modal/housekeeping/manage-products';
+import PriceTimeSettingHouseKeeping from '@/components/modal/housekeeping/PriceTimeSetting';
 
 export const HousekeepingServiceTable: React.FC = () => {
   const router = useRouter();
@@ -80,7 +80,7 @@ export const HousekeepingServiceTable: React.FC = () => {
           </div>
         </div>
         <Settings onClick={() => setIsModalOpen(true)} />
-        <PriceTimeSetting
+        <PriceTimeSettingHouseKeeping
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />

@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 import { InRoomControlData } from 'app/static/services-management/InRoomControl';
 import ToggleButton from '@/components/ui/toggleButton';
-import PriceTimeSetting from '@/components/modal//PriceTimeSetting';
+import PriceTimeSettingInRoomControlModal from '@/components/modal/in-room-control/PriceTimeSetting';
 
 export const InRoomControlDataTable: React.FC = () => {
   const router = useRouter();
@@ -76,7 +76,7 @@ export const InRoomControlDataTable: React.FC = () => {
           </div>
         </div>
         <Settings onClick={() => setIsModalOpen(true)} />
-        <PriceTimeSetting
+        <PriceTimeSettingInRoomControlModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />

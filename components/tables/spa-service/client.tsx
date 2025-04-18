@@ -12,6 +12,7 @@ import { SpaServiceData } from 'app/static/services-management/Spa';
 import ToggleButton from '@/components/ui/toggleButton';
 import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
 import ManageProductsModal from '@/components/modal/spa-service/manage-products';
+import PriceTimeSettingSpa from '@/components/modal/spa-service/PriceTimeSetting';
 
 export const SpaServiceDataTable: React.FC = () => {
   const router = useRouter();
@@ -80,7 +81,7 @@ export const SpaServiceDataTable: React.FC = () => {
           </div>
         </div>
         <Settings onClick={() => setIsModalOpen(true)} />
-        <PriceTimeSetting
+        <PriceTimeSettingSpa
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />

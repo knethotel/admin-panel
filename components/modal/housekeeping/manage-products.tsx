@@ -121,7 +121,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Enter Description"
+                          placeholder="Enter Product Category"
                           {...field}
                           className="bg-[#F6EEE0] w-64 text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-sm"
                         />

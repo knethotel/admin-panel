@@ -597,8 +597,9 @@ export const changePasswordSchema = z
 
 export type ChangePasswordSchemaType = z.infer<typeof changePasswordSchema>;
 
-// ***********************PriceTimeSetting Modal Form Schema
+// ***********************PriceTimeSetting Modal Form Schema **********************//
 
+// PriceTimeSetting(Global) Schema
 export const PriceTimeSettingSchema = z.object({
   priceType: z.enum(['Free', 'Paid'], {
     errorMap: () => ({
@@ -628,6 +629,210 @@ export const PriceTimeSettingSchema = z.object({
 });
 
 export type PriceTimeSettingSchemaType = z.infer<typeof PriceTimeSettingSchema>;
+
+// Price time setting schema for gym service
+
+export const PriceTimeSettingGymSchema = z.object({
+  priceType: z.enum(['Free', 'Paid'], {
+    errorMap: () => ({
+      message: 'Invalid Price Category'
+    })
+  }),
+  price: z
+    .string()
+    .refine((val) => val === '' || /^\d+(\.\d{1,2})?$/.test(val), {
+      message: 'Invalid price format (e.g., 10 or 10.99)'
+    })
+    .transform((val) => (val === '' ? 0 : parseFloat(val)))
+    .refine((val) => val > 0, { message: 'Price must be greater than 0' })
+    .or(z.number().min(1, { message: 'Price must be greater than 0' })),
+  timeSlot: z.enum(
+    ['5:00AM-12:00PM', '12:00PM-10:00PM', '10:00PM-1:00AM', '11:00PM-12:00AM'],
+    {
+      errorMap: () => ({ message: 'Please select valid time slot' })
+    }
+  ),
+  availability: z.enum(
+    ['Monday-Friday', 'Monday-saturday', 'Monday-Sunday', 'only Weekends'],
+    {
+      errorMap: () => ({ message: 'Please select valid slot' })
+    }
+  ),
+  category: z.string({
+    required_error: 'Status is required',
+    invalid_type_error: 'Status must be a string'
+  })
+});
+
+export type PriceTimeSettingGymSchemaType = z.infer<
+  typeof PriceTimeSettingGymSchema
+>;
+
+// Price time setting schema for Concierge service
+
+export const PriceTimeSettingConciergeSchema = z.object({
+  priceType: z.enum(['Free', 'Paid'], {
+    errorMap: () => ({
+      message: 'Invalid Price Category'
+    })
+  }),
+  price: z
+    .string()
+    .refine((val) => val === '' || /^\d+(\.\d{1,2})?$/.test(val), {
+      message: 'Invalid price format (e.g., 10 or 10.99)'
+    })
+    .transform((val) => (val === '' ? 0 : parseFloat(val)))
+    .refine((val) => val > 0, { message: 'Price must be greater than 0' })
+    .or(z.number().min(1, { message: 'Price must be greater than 0' })),
+  timeSlot: z.enum(
+    ['5:00AM-12:00PM', '12:00PM-10:00PM', '10:00PM-1:00AM', '11:00PM-12:00AM'],
+    {
+      errorMap: () => ({ message: 'Please select valid time slot' })
+    }
+  ),
+  availability: z.enum(
+    ['Monday-Friday', 'Monday-saturday', 'Monday-Sunday', 'only Weekends'],
+    {
+      errorMap: () => ({ message: 'Please select valid slot' })
+    }
+  ),
+  category: z.string({
+    required_error: 'Status is required',
+    invalid_type_error: 'Status must be a string'
+  })
+});
+
+export type PriceTimeSettingConciergeSchemaType = z.infer<
+  typeof PriceTimeSettingConciergeSchema
+>;
+// Price time setting schema for InRoomControl service
+
+export const PriceTimeSettingInRoomControlSchema = z.object({
+  priceType: z.enum(['Free', 'Paid'], {
+    errorMap: () => ({
+      message: 'Invalid Price Category'
+    })
+  }),
+  price: z
+    .string()
+    .refine((val) => val === '' || /^\d+(\.\d{1,2})?$/.test(val), {
+      message: 'Invalid price format (e.g., 10 or 10.99)'
+    })
+    .transform((val) => (val === '' ? 0 : parseFloat(val)))
+    .refine((val) => val > 0, { message: 'Price must be greater than 0' })
+    .or(z.number().min(1, { message: 'Price must be greater than 0' })),
+  timeSlot: z.enum(
+    ['5:00AM-12:00PM', '12:00PM-10:00PM', '10:00PM-1:00AM', '11:00PM-12:00AM'],
+    {
+      errorMap: () => ({ message: 'Please select valid time slot' })
+    }
+  ),
+  availability: z.enum(
+    ['Monday-Friday', 'Monday-saturday', 'Monday-Sunday', 'only Weekends'],
+    {
+      errorMap: () => ({ message: 'Please select valid slot' })
+    }
+  ),
+  category: z.string({
+    required_error: 'Status is required',
+    invalid_type_error: 'Status must be a string'
+  })
+});
+
+export type PriceTimeSettingInRoomControlSchemaType = z.infer<
+  typeof PriceTimeSettingInRoomControlSchema
+>;
+
+// Price time setting schema for spa/salon service
+
+export const PriceTimeSettingSpaSchema = z.object({
+  priceType: z.enum(['Free', 'Paid'], {
+    errorMap: () => ({
+      message: 'Invalid Price Category'
+    })
+  }),
+  price: z
+    .string()
+    .refine((val) => val === '' || /^\d+(\.\d{1,2})?$/.test(val), {
+      message: 'Invalid price format (e.g., 10 or 10.99)'
+    })
+    .transform((val) => (val === '' ? 0 : parseFloat(val)))
+    .refine((val) => val > 0, { message: 'Price must be greater than 0' })
+    .or(z.number().min(1, { message: 'Price must be greater than 0' })),
+  timeSlot: z.enum(
+    ['5:00AM-12:00PM', '12:00PM-10:00PM', '10:00PM-1:00AM', '11:00PM-12:00AM'],
+    {
+      errorMap: () => ({ message: 'Please select valid time slot' })
+    }
+  ),
+  availability: z.enum(
+    ['Monday-Friday', 'Monday-saturday', 'Monday-Sunday', 'only Weekends'],
+    {
+      errorMap: () => ({ message: 'Please select valid slot' })
+    }
+  ),
+  service: z.string({
+    required_error: 'Status is required',
+    invalid_type_error: 'Status must be a string'
+  }),
+  productCategory: z.string({
+    required_error: 'Status is required',
+    invalid_type_error: 'Status must be a string'
+  }),
+  productName: z.string({
+    required_error: 'Status is required',
+    invalid_type_error: 'Status must be a string'
+  })
+});
+
+export type PriceTimeSettingSpaSchemaType = z.infer<
+  typeof PriceTimeSettingSpaSchema
+>;
+// Price time setting schema for spa/salon service
+
+export const PriceTimeSettingHouseKeepingSchema = z.object({
+  priceType: z.enum(['Free', 'Paid'], {
+    errorMap: () => ({
+      message: 'Invalid Price Category'
+    })
+  }),
+  price: z
+    .string()
+    .refine((val) => val === '' || /^\d+(\.\d{1,2})?$/.test(val), {
+      message: 'Invalid price format (e.g., 10 or 10.99)'
+    })
+    .transform((val) => (val === '' ? 0 : parseFloat(val)))
+    .refine((val) => val > 0, { message: 'Price must be greater than 0' })
+    .or(z.number().min(1, { message: 'Price must be greater than 0' })),
+  timeSlot: z.enum(
+    ['5:00AM-12:00PM', '12:00PM-10:00PM', '10:00PM-1:00AM', '11:00PM-12:00AM'],
+    {
+      errorMap: () => ({ message: 'Please select valid time slot' })
+    }
+  ),
+  availability: z.enum(
+    ['Monday-Friday', 'Monday-saturday', 'Monday-Sunday', 'only Weekends'],
+    {
+      errorMap: () => ({ message: 'Please select valid slot' })
+    }
+  ),
+  service: z.string({
+    required_error: 'Status is required',
+    invalid_type_error: 'Status must be a string'
+  }),
+  productCategory: z.string({
+    required_error: 'Status is required',
+    invalid_type_error: 'Status must be a string'
+  }),
+  productName: z.string({
+    required_error: 'Status is required',
+    invalid_type_error: 'Status must be a string'
+  })
+});
+
+export type PriceTimeSettingHouseKeepingSchemaType = z.infer<
+  typeof PriceTimeSettingHouseKeepingSchema
+>;
 
 // ***********Reception Details Form Schema************//
 
