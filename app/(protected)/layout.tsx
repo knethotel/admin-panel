@@ -143,7 +143,7 @@ function SuperAdminPanelSideNav() {
           <NavItem
             href="/super-admin/coupon-management"
             label="Coupon Management"
-          > 
+          >
             <RiMoneyRupeeCircleLine className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
           <NavItem
@@ -233,6 +233,18 @@ function HotelPanelSideNav() {
           </NavItem>
 
           <NavItem href="/payment-management" label="Payment Management">
+            <RiMoneyRupeeCircleLine className="h-5 w-5 lg:h-6 lg:w-6" />
+          </NavItem>
+          <NavItem
+            href="/coupon-management"
+            label="Coupon Management"
+          >
+            <RiMoneyRupeeCircleLine className="h-5 w-5 lg:h-6 lg:w-6" />
+          </NavItem>
+          <NavItem
+            href="/refund-management"
+            label="Refunds Management"
+          >
             <RiMoneyRupeeCircleLine className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 

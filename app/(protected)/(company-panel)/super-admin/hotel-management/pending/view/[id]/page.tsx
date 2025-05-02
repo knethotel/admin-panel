@@ -1,9 +1,13 @@
 import CreateHotelIdForm from '@/components/COMPANY_COMPONENTS/hotel-management/form/create-hotel-id-form';
 import Navbar from '@/components/Navbar';
 
-const ViewPendingHotelPage = async ({ params }: { params: { id: string } }) => {
-  const mode = 'pending'; // force this for pending-specific view
-  const id = params.id;
+const ViewPendingHotelPage = async ({
+  params
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const id = (await params).id;
+  const mode = 'pending'; 
 
   return (
     <div className="flex flex-col w-full">
