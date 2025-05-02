@@ -13,6 +13,7 @@ import pic5 from '../../public/assets/payment_management/pic5.png';
 
 // ***************Coupon details data************//
 export type CouponsDataType = {
+  id?: string;
   title: string;
   subtitle: string;
   image: StaticImageData;
@@ -20,71 +21,85 @@ export type CouponsDataType = {
 
 export const PercentageCouponsData: CouponsDataType[] = [
   {
+    id: '1',
     title: 'Summer Special',
     subtitle: 'Get 20% off on all services',
     image: img1
   },
   {
+    id: '2',
     title: 'Summer Special',
     subtitle: 'Get 20% off on all services',
     image: img2
   },
   {
+    id: '3',
     title: 'Summer Special',
     subtitle: 'Get 20% off on all services',
     image: img2
   },
   {
+    id: '4',
     title: 'Summer Special',
     subtitle: 'Get 20% off on all services',
     image: img2
   },
   {
+    id: '5',
     title: 'Summer Special',
     subtitle: 'Get 20% off on all services',
     image: img2
   },
   {
+    id: '6',
     title: 'Summer Special',
     subtitle: 'Get 20% off on all services',
     image: img2
   },
   {
+    id: '7',
     title: 'Summer Special',
     subtitle: 'Get 20% off on all services',
     image: img2
   },
   {
+    id: '8',
     title: 'Summer Special',
     subtitle: 'Get 20% off on all services',
     image: img2
   },
   {
+    id: '9',
     title: 'Summer Special',
     subtitle: 'Get 20% off on all services',
     image: img2
   },
   {
+    id: '10',
     title: 'Summer Special',
     subtitle: 'Get 20% off on all services',
     image: img2
   },
   {
+    id: '11',
     title: 'Summer Special',
     subtitle: 'Get 20% off on all services',
     image: img3
   },
   {
+    id: '12',
     title: 'Summer Special',
     subtitle: 'Get 20% off on all services',
     image: img4
   },
   {
+    id: '13',
     title: 'Summer Special',
     subtitle: 'Get 20% off on all services',
     image: img5
   },
   {
+    id: '14',
     title: 'Summer Special',
     subtitle: 'Get 20% off on all services',
     image: img2

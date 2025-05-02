@@ -5,6 +5,7 @@ import { StackedBarChart } from '../../../../../components/COMPANY_COMPONENTS/da
 import { DonutChart } from '../../../../../components/COMPANY_COMPONENTS/dashboard/DonutChart';
 import { MultipleLineChart } from '../../../../../components/COMPANY_COMPONENTS/dashboard/MultipleLineChart';
 import Header from '../../../../../components/COMPANY_COMPONENTS/dashboard/Header';
+import Navbar from '@/components/Navbar';
 
 // Type definitions
 type OverviewCardData = {
@@ -194,36 +195,39 @@ const MultipleLineChartDummyData: LineChartData = [
 
 const DBPage: React.FC = () => {
   return (
-    <div className="min-h-screen w-full bg-coffee overflow-x-hidden">
-      <Header />
+    <div className="flex flex-col w-full">
+      <Navbar active search className="relative w-full lg:w-full" />
+      <div className="min-h-screen w-full bg-coffee overflow-x-hidden">
+        <Header />
 
-      {/* Main content container */}
-      <div className="p-4 space-y-6 w-full flex flex-col justify-center items-center">
-        {/* Upper part - StackedBarChart and DonutChart */}
-        <div className="flex flex-col lg:flex-row justify-center items-center gap-6 w-full">
-          <div className="flex-1 flex justify-center">
-            <StackedBarChart chartData={StackedBarChartDummyData} />
+        {/* Main content container */}
+        <div className="p-4 space-y-6 w-full flex flex-col justify-center items-center">
+          {/* Upper part - StackedBarChart and DonutChart */}
+          <div className="flex flex-col lg:flex-row justify-center items-center gap-6 w-full">
+            <div className="flex-1 flex justify-center">
+              <StackedBarChart chartData={StackedBarChartDummyData} />
+            </div>
+            <div className="flex-2 flex justify-center">
+              <DonutChart chartData={DonutChartDummyData} />
+            </div>
           </div>
-          <div className="flex-2 flex justify-center">
-            <DonutChart chartData={DonutChartDummyData} />
-          </div>
-        </div>
 
-        {/* Lower part - Overview, LineChart, and Details cards */}
-        <div className="flex flex-col md:flex-row overflow-x-auto md:justify-between space-x-4 items-center w-full">
-          <div className="flex flex-col justify-center items-center gap-3">
-            <OverviewCard
-              position={OverviewCardDummyData.position}
-              increment={OverviewCardDummyData.increment}
-              progress={OverviewCardDummyData.progress}
-            />
-            <DetailsCard data={DetailsCardDummyData} />
-          </div>
-          <div className="w-[90%]">
-            <MultipleLineChart
-              chartData={MultipleLineChartDummyData}
-              mode="Weekly"
-            />
+          {/* Lower part - Overview, LineChart, and Details cards */}
+          <div className="flex flex-col md:flex-row overflow-x-auto md:justify-between space-x-4 items-center w-full">
+            <div className="flex flex-col justify-center items-center gap-3">
+              <OverviewCard
+                position={OverviewCardDummyData.position}
+                increment={OverviewCardDummyData.increment}
+                progress={OverviewCardDummyData.progress}
+              />
+              <DetailsCard data={DetailsCardDummyData} />
+            </div>
+            <div className="w-[90%]">
+              <MultipleLineChart
+                chartData={MultipleLineChartDummyData}
+                mode="Weekly"
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -6,21 +6,26 @@ import {
   PercentageCouponsData,
   FixedAmountCouponsData
 } from 'app/static/PaymentManagement';
-import { SquarePen, Trash2 } from 'lucide-react';
-import CreateCouponModal from '@/components/shared/payment-management/create-coupon-modal';
+import { Eye, SquarePen, Trash2 } from 'lucide-react';
+import { Heading } from '@/components/ui/heading';
+import { useRouter } from 'next/navigation';
 
-const HomePage = () => {
+const CouponManagement = () => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const router = useRouter();
+
   return (
-    <div className="min-h-screen w-full flex justify-center items-center">
+    <div className="min-h-screen w-full flex justify-center pt-6">
       <div className="flex flex-col w-full gap-3 container">
-        <div className="flex justify-end w-full">
-          {' '}
-          <Button onClick={() => setIsOpen(true)} className="btn-primary">
+        <div className="flex justify-between mb-2 w-full">
+          <Heading title={`Coupon Management`} className="mt-0" />
+          <Button
+            onClick={() => router.push(`/super-admin/coupon-management/create`)}
+            className="btn-primary"
+          >
             Create Coupon
           </Button>
         </div>
-        <CreateCouponModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
         {/* Coupon Carousel Container */}
         <div className="flex flex-col bg-[#FAF6EF] shadow-custom p-6 pb-10 w-full">
           <div className="h-full w-full flex flex-col gap-8">
@@ -49,6 +54,16 @@ const HomePage = () => {
                       </div>
                     </div>
                     <div className="absolute w-full -bottom-6 flex justify-between">
+                      <button
+                        onClick={() =>
+                          router.push(
+                            `/super-admin/coupon-management/view/${coupon.id}`
+                          )
+                        }
+                        className="rounded-md bg-[#F6EEE0] hover:bg-[#e6dcc4]"
+                      >
+                        <Eye className="h-4 w-4 text-black" />
+                      </button>
                       <SquarePen className="h-4 w-4" />
                       <Trash2 className="h-4 w-4" />
                     </div>
@@ -81,6 +96,16 @@ const HomePage = () => {
                       </div>
                     </div>
                     <div className="absolute w-full -bottom-6 flex justify-between">
+                      <button
+                        onClick={() =>
+                          router.push(
+                            `/super-admin/coupon-management/view/${coupon.id}`
+                          )
+                        }
+                        className="rounded-md bg-[#F6EEE0] hover:bg-[#e6dcc4]"
+                      >
+                        <Eye className="h-4 w-4 text-black" />
+                      </button>
                       <SquarePen className="h-4 w-4" />
                       <Trash2 className="h-4 w-4" />
                     </div>
@@ -95,4 +120,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default CouponManagement;

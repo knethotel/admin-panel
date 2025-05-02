@@ -1,6 +1,8 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Subscription } from 'app/static/company-panel/SubscriptionManagement';
 import { Switch } from '@/components/ui/switch';
+import { Eye } from 'lucide-react';
+import CellAction from './cell-action';
 
 export const columns: ColumnDef<Subscription>[] = [
   {
@@ -125,7 +127,7 @@ export const columns: ColumnDef<Subscription>[] = [
       const isEditable = status === 'ACTIVE' || status === 'INACTIVE';
 
       return (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center gap-x-4">
           <Switch
             checked={isChecked}
             disabled={!isEditable}
@@ -137,6 +139,7 @@ export const columns: ColumnDef<Subscription>[] = [
               // handle state update / API call here
             }}
           />
+          <CellAction data={row.original}/>
         </div>
       );
     }

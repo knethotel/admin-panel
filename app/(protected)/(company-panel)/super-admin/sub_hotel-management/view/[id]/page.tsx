@@ -1,5 +1,6 @@
 import React from 'react';
 import SubHotelIdForm from '@/components/COMPANY_COMPONENTS/sub_hotel-management/form/sub_hotel-form';
+import Navbar from '@/components/Navbar';
 const ViewSubHotelDetailsPage = async ({
   params
 }: {
@@ -7,8 +8,11 @@ const ViewSubHotelDetailsPage = async ({
 }) => {
   const id = (await params).id;
   return (
-    <div className="flex justify-center items-center w-full px-14 py-10">
-      <SubHotelIdForm subHotelID={id} mode="view" />
+    <div className="flex flex-col w-full">
+      <Navbar active search className="relative w-full lg:w-full" />
+      <div className="flex justify-center items-center w-full px-6 md:px-14 py-10">
+        <SubHotelIdForm subHotelID={id} mode="view" />
+      </div>
     </div>
   );
 };

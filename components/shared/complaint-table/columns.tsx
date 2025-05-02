@@ -1,5 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ComplaintDataType } from '../../../app/static/ComplaintData'; // Adjust the import path
+import CellAction from './cell.action';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useState } from 'react';
 
 export const columns: ColumnDef<ComplaintDataType>[] = [
   {
@@ -7,20 +11,8 @@ export const columns: ColumnDef<ComplaintDataType>[] = [
     header: 'Complaint ID'
   },
   {
-    accessorKey: 'complaintTime',
-    header: 'Date & Time',
-    cell: ({ row }) => {
-      const { date, time } = row.original.complaintTime;
-      return (
-        <div>
-          {date} {time}
-        </div>
-      );
-    }
-  },
-  {
-    accessorKey: 'guestId',
-    header: 'Guest ID'
+    accessorKey: 'hotelId',
+    header: 'Hotel ID'
   },
   {
     accessorKey: 'complaintType',
@@ -35,22 +27,105 @@ export const columns: ColumnDef<ComplaintDataType>[] = [
     header: 'Status',
     cell: ({ row }) => {
       const status = row.original.status;
-      switch (status) {
-        case 'OPEN':
-          return <div className="text-orange-500">{status}</div>;
-        case 'CLOSED':
-          return <div className="text-green-500">{status}</div>;
-        default:
-          return <div className="text-gray-500">{status}</div>;
-      }
+      const [open, setOpen] = useState(false);
+
+      return (
+        <div className="text-center">
+          {status === 'OPEN' ? (
+            <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+              <DropdownMenu.Trigger asChild>
+                <button className="text-[#E5252A] font-medium text-sm flex items-center mx-auto gap-1">
+                  OPEN
+                  {open ? (
+                    <ChevronUp className="h-4 w-4 text-black" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4 text-black" />
+                  )}
+                </button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Portal>
+                <DropdownMenu.Content
+                  side="bottom"
+                  align="start"
+                  className="bg-white rounded-md shadow-md text-sm z-50 px-2 py-1 w-[100px]"
+                >
+                  <DropdownMenu.Item className="text-[#78B15099] px-2 py-1 cursor-pointer outline-none">
+                    CLOSED
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Portal>
+            </DropdownMenu.Root>
+          ) : (
+            <div className="flex flex-col">
+              <span className="text-[#78B15099] font-medium text-sm">
+                CLOSED
+              </span>
+              <button className="text-[#78B150] text-[10px] pr-3">
+                View Feedback
+              </button>
+            </div>
+          )}
+        </div>
+      );
     }
   },
   {
     accessorKey: 'assignedTo',
     header: 'Assigned To',
     cell: ({ row }) => {
-      const assigned = row.original.assignedTo;
-      return <div>{assigned}</div>;
+      const employeeList = ['EMPLOYEE 1', 'EMPLOYEE 2', 'EMPLOYEE 3'];
+      const selected = row.original.assignedTo;
+      const loginTime = '10:00AM';
+      const loginDate = '10-02-25';
+      const [open, setOpen] = useState(false);
+
+      return (
+        <div className="flex flex-col items-center">
+          <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+            <DropdownMenu.Trigger asChild>
+              <button className="text-black font-medium text-sm flex items-center gap-1">
+                {selected}
+                {open ? (
+                  <ChevronUp className="h-4 w-4 text-black" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 text-black" />
+                )}
+              </button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Portal>
+              <DropdownMenu.Content
+                side="bottom"
+                align="end"
+                className="bg-white rounded-md shadow-md text-sm z-50 px-2 py-1 w-[150px]"
+              >
+                {employeeList.map((emp) => (
+                  <DropdownMenu.Item
+                    key={emp}
+                    className="px-2 py-1 cursor-pointer text-sm text-black outline-none"
+                  >
+                    {emp}
+                  </DropdownMenu.Item>
+                ))}
+              </DropdownMenu.Content>
+            </DropdownMenu.Portal>
+          </DropdownMenu.Root>
+          <div className="flex flex-col">
+            <p className="text-[10px] text-gray-500">LOG IN : {loginDate}</p>
+            <span className="text-[10px] text-gray-500 text-end -mt-1">
+              {loginTime}
+            </span>
+          </div>
+        </div>
+      );
     }
+  },
+  {
+    id: 'actions',
+    header: 'Actions',
+    cell: ({ row }) => (
+      <div className="flex items-center justify-center">
+        <CellAction data={row.original} />
+      </div>
+    )
   }
 ];

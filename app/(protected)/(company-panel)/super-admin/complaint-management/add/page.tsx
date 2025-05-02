@@ -1,0 +1,19 @@
+import AdminForm from '@/components/COMPANY_COMPONENTS/admin-management/form/admin-form';
+import ComplaintForm from '@/components/COMPANY_COMPONENTS/complaint-management/form/complaint-form';
+import Navbar from '@/components/Navbar';
+import React from 'react';
+
+const AddNewComplaint = () => {
+  return (
+    <div className='w-full h-screen bg-[#FAF8F5]'>
+      <Navbar search className="relative w-full lg:w-full" />
+      <div className="flex pt-8">
+        <div className="w-full max-w-6xl container py-6 flex">
+          <ComplaintForm mode="add" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AddNewComplaint;

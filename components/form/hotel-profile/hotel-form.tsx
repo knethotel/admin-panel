@@ -466,7 +466,7 @@ const HotelForm = () => {
 
             {/* Chunk 2: Room Details */}
             <div className="flex flex-col gap-4 2xl:gap-5 bg-[#FAF6EF] shadow-custom p-6 2xl:p-8 rounded-lg">
-              <div className="flex gap-5 w-fit">
+              <div className="flex flex-col md:flex-row gap-5 w-fit">
                 <FormField
                   control={form.control}
                   name="roomTypes"

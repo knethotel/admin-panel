@@ -6,7 +6,7 @@ export type ComplaintDataType = {
     date: string;
     time: string;
   };
-  guestId: string;
+  hotelId: string;
   complaintType: string;
   status: ComplaintStatusType;
   assignedTo: string;
@@ -19,7 +19,7 @@ export const ComplaintData: ComplaintDataType[] = [
       date: '10-02-2024',
       time: '1 min ago'
     },
-    guestId: '01953268',
+    hotelId: '01953268',
     complaintType: 'Wi-fi access',
     status: 'OPEN',
     assignedTo: 'EMPLOYEE 1'
@@ -30,7 +30,7 @@ export const ComplaintData: ComplaintDataType[] = [
       date: '11-02-2024',
       time: '5 min ago'
     },
-    guestId: '01953269',
+    hotelId: '01953269',
     complaintType: 'Room service',
     status: 'OPEN',
     assignedTo: 'EMPLOYEE 2'
@@ -41,7 +41,7 @@ export const ComplaintData: ComplaintDataType[] = [
       date: '11-02-2024',
       time: '15 min ago'
     },
-    guestId: '01953270',
+    hotelId: '01953270',
     complaintType: 'Noise issue',
     status: 'CLOSED',
     assignedTo: 'EMPLOYEE 3'
@@ -52,7 +52,7 @@ export const ComplaintData: ComplaintDataType[] = [
       date: '12-02-2024',
       time: '30 min ago'
     },
-    guestId: '01953271',
+    hotelId: '01953271',
     complaintType: 'Billing dispute',
     status: 'OPEN',
     assignedTo: 'EMPLOYEE 1'
@@ -63,7 +63,7 @@ export const ComplaintData: ComplaintDataType[] = [
       date: '12-02-2024',
       time: '1 hr ago'
     },
-    guestId: '01953272',
+    hotelId: '01953272',
     complaintType: 'AC malfunction',
     status: 'OPEN',
     assignedTo: 'EMPLOYEE 4'
@@ -74,7 +74,7 @@ export const ComplaintData: ComplaintDataType[] = [
       date: '13-02-2024',
       time: '2 hrs ago'
     },
-    guestId: '01953273',
+    hotelId: '01953273',
     complaintType: 'Cleanliness',
     status: 'CLOSED',
     assignedTo: 'EMPLOYEE 2'
@@ -85,7 +85,7 @@ export const ComplaintData: ComplaintDataType[] = [
       date: '13-02-2024',
       time: '3 hrs ago'
     },
-    guestId: '01953274',
+    hotelId: '01953274',
     complaintType: 'Food quality',
     status: 'OPEN',
     assignedTo: 'EMPLOYEE 5'
@@ -96,7 +96,7 @@ export const ComplaintData: ComplaintDataType[] = [
       date: '14-02-2024',
       time: '4 hrs ago'
     },
-    guestId: '01953275',
+    hotelId: '01953275',
     complaintType: 'Staff behavior',
     status: 'OPEN',
     assignedTo: 'EMPLOYEE 1'
@@ -107,7 +107,7 @@ export const ComplaintData: ComplaintDataType[] = [
       date: '14-02-2024',
       time: '6 hrs ago'
     },
-    guestId: '01953276',
+    hotelId: '01953276',
     complaintType: 'Lost item',
     status: 'CLOSED',
     assignedTo: 'EMPLOYEE 3'
@@ -118,7 +118,7 @@ export const ComplaintData: ComplaintDataType[] = [
       date: '15-02-2024',
       time: '8 hrs ago'
     },
-    guestId: '01953277',
+    hotelId: '01953277',
     complaintType: 'Parking issue',
     status: 'OPEN',
     assignedTo: 'EMPLOYEE 4'
@@ -129,7 +129,7 @@ export const ComplaintData: ComplaintDataType[] = [
       date: '15-02-2024',
       time: '12 hrs ago'
     },
-    guestId: '01953278',
+    hotelId: '01953278',
     complaintType: 'Hot water',
     status: 'OPEN',
     assignedTo: 'EMPLOYEE 2'
