@@ -113,7 +113,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col px-8 gap-8 justify-center pt-8 items-center"
+          className="flex flex-col md:px-8 gap-8 justify-center pt-8 items-center"
         >
           {/* Image Display or Upload */}
           {mode === 'view' && preview ? (
@@ -230,7 +230,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
           )}
 
           {/* Form Fields */}
-          <div className="w-full flex justify-between items-start gap-4">
+          <div className="w-full flex flex-col md:flex-row justify-between items-start gap-4">
             {/* Left Part */}
             <div className="flex flex-col gap-3 w-full max-w-md">
               <FormField
@@ -386,7 +386,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
 
               {/* Services Grid */}
               <div className="w-full">
-                <div className="grid grid-cols-3 gap-x-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4">
                   {serviceOptions.map((service, index) => (
                     <div key={service} className="flex items-center mb-2">
                       <span className="text-sm text-black capitalize px-2 py-1 bg-lightbrown rounded cursor-pointer hover:bg-fadedCream transition">
@@ -397,7 +397,7 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                 </div>
               </div>
             </div>
-            <div>
+            <div className="w-full flex flex-col md:flex-row justify-between items-start gap-4">
               <FormField
                 control={form.control}
                 name="subscriptionPlan"
@@ -419,6 +419,28 @@ const SubHotelIdForm = ({ subHotelID, mode }: Props) => {
                       <span className="text-sm min-h-8 text-goldenBrown ml-2">
                         INR- 2999/month
                       </span>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="gstDetails"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-gray-700">
+                      GST Details
+                    </FormLabel>
+                    <div className="w-full">
+                      <FormControl>
+                        <Input
+                          type="email"
+                          {...field}
+                          disabled={mode === 'view'}
+                          className="w-full lg:w-80 placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px] mt-1" />
                     </div>
                   </FormItem>
                 )}

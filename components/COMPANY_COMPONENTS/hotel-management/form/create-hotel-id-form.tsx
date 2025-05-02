@@ -3,12 +3,15 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import dummyHotelData from '../../../../app/static/company-panel/HotelManagement';
 import { useForm } from 'react-hook-form';
+import 'keen-slider/keen-slider.min.css';
 import {
   CreateHotelIdFormSchema,
   CreateHotelIdFormSchemaType,
   serviceOptions
 } from '../../../../schema/company-panel';
 import { zodResolver } from '@hookform/resolvers/zod';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import FormWrapper from './form-wrapper';
 import {
   Form,
@@ -35,6 +38,8 @@ type Props = {
 const CreateHotelIdForm = ({ hotelID, isEnabled = true, mode }: Props) => {
   const router = useRouter();
   const [preview, setPreview] = useState<string | null>(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [status, setStatus] = useState<'PENDING' | 'APPROVE'>('PENDING');
   const [submitStatus, setSubmitStatus] = useState<
     'idle' | 'success' | 'error'
   >('idle');
@@ -112,343 +117,427 @@ const CreateHotelIdForm = ({ hotelID, isEnabled = true, mode }: Props) => {
     router.push('/hotels'); // Navigate back to hotels list
   };
 
+  const data = [
+    {
+      title: 'Hotel License & Certification',
+      number: '1234RTFVEG',
+      image: '/certificate.png'
+    },
+    {
+      title: 'Legal and Business license',
+      number: '1234RTFVEG',
+      image: '/legal.png'
+    },
+    {
+      title: 'Tourist License',
+      number: '1234RTFVEG',
+      image: '/tourist.png'
+    },
+    {
+      title: 'Tan number',
+      number: '1234RTFVEG',
+      image: '/tan.png'
+    },
+    {
+      title: 'Data Privacy & GDPR Compliances',
+      number: '1234RTFVEG',
+      image: '/privacy.png'
+    }
+  ];
+
   return (
-    <FormWrapper title="">
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col px-8 gap-8 justify-center pt-8 items-center"
-        >
-          {/* Image Upload */}
-          {mode === 'view' && hotel?.hotelImageUrl ? (
-            <div className="h-32 w-32">
-              <Image
-                src={hotel.hotelImageUrl}
-                alt={hotel.hotelName || 'Hotel Image'}
-                height={176}
-                width={176}
-                className="object-cover rounded-lg"
-              />
-            </div>
-          ) : (
-            <FormField
-              control={form.control}
-              name="hotelImageFile"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-center items-center tracking-wide">
-                  <div className="flex items-center w-full">
-                    <FormControl>
-                      <div
-                        className="relative h-32 w-32 2xl:h-36 2xl:w-36 rounded-lg bg-[#F6EEE0] hover:drop-shadow-xl duration-200"
-                        onDrop={(e) => {
-                          if (mode === 'view') return;
-                          e.preventDefault();
-                          const file = e.dataTransfer.files?.[0];
-                          if (file) {
-                            if (!file.type.startsWith('image/')) {
-                              alert('Please upload an image file.');
-                              return;
-                            }
-                            if (file.size > 5 * 1024 * 1024) {
-                              alert('File size exceeds 5MB.');
-                              return;
-                            }
-                            if (preview) URL.revokeObjectURL(preview);
-                            const imageUrl = URL.createObjectURL(file);
-                            setPreview(imageUrl);
-                            field.onChange(file);
-                          }
-                        }}
-                        onDragOver={(e) => {
-                          if (mode === 'view') return;
-                          e.preventDefault();
-                        }}
+    <div className="flex flex-col gap-4 w-full">
+      <FormWrapper title="">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-8 justify-center pt-4 items-center"
+          >
+            {/* Image Upload */}
+            <div className="flex flex-col md:flex-row gap-4 items-center md:items-start justify-between w-full">
+              <h2 className="text-[#362913] font-bold text-[16px]">
+                BRANDED HOTEL
+              </h2>
+              <div>
+                {mode === 'pending' || mode === 'view' ? (
+                  <>
+                    <div className="flex justify-end w-full mb-4 cursor-pointer">
+                      <DropdownMenu.Root
+                        open={showDropdown}
+                        onOpenChange={setShowDropdown}
                       >
-                        <div className="h-full w-full flex items-center justify-center relative">
-                          {preview ? (
-                            <>
-                              <Image
-                                src={preview}
-                                alt="Hotel preview"
-                                height={576}
-                                width={576}
-                                className="object-cover rounded-lg h-full w-full"
-                              />
-                              {mode !== 'view' && (
-                                <label
-                                  htmlFor="fileUpload"
-                                  className="absolute inset-0 flex justify-center items-center cursor-pointer bg-black bg-opacity-20 hover:bg-opacity-30 transition-opacity rounded-lg"
-                                  aria-label="Reupload hotel image"
-                                >
-                                  <PiCameraThin className="text-white w-12 h-12 opacity-70" />
-                                </label>
-                              )}
-                            </>
-                          ) : (
-                            mode !== 'view' && (
-                              <label
-                                htmlFor="fileUpload"
-                                className="absolute inset-0 flex justify-center items-center cursor-pointer"
-                                aria-label="Upload hotel image"
-                              >
-                                <PiCameraThin className="text-black w-12 h-44 opacity-30" />
-                              </label>
-                            )
-                          )}
-                        </div>
-                        {mode !== 'view' && (
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) {
-                                if (!file.type.startsWith('image/')) {
-                                  alert('Please upload an image file.');
-                                  return;
-                                }
-                                if (file.size > 5 * 1024 * 1024) {
-                                  alert('File size exceeds 5MB.');
-                                  return;
-                                }
-                                if (preview) URL.revokeObjectURL(preview);
-                                const imageUrl = URL.createObjectURL(file);
-                                setPreview(imageUrl);
-                                field.onChange(file);
-                              } else {
-                                setPreview(null);
-                                field.onChange(undefined);
-                              }
-                            }}
-                            className="hidden"
-                            id="fileUpload"
-                          />
-                        )}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            />
-          )}
-          <div className="w-full flex justify-between items-center gap-4">
-            {/* Left part */}
-            <div className="flex flex-col gap-3 justify-center items-start">
-              <FormField
-                control={form.control}
-                name="hotelID"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
-                      Hotel ID
-                    </FormLabel>
-                    <div className="w-full">
-                      <FormControl>
-                        <Input
-                          type="text"
-                          {...field}
-                          disabled={mode === 'view' || !isEnabled}
-                          placeholder="Enter hotel ID"
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
+                        <DropdownMenu.Trigger asChild className="w-full">
+                          <button
+                            className={`flex items-center gap-2 px-4 py-2 rounded-md border ${
+                              status === 'PENDING'
+                                ? 'bg-red-100 text-red-700'
+                                : 'bg-green-100 text-green-700'
+                            }`}
+                          >
+                            {status}
+                            {showDropdown ? (
+                              <ChevronUp size={16} />
+                            ) : (
+                              <ChevronDown size={16} />
+                            )}
+                          </button>
+                        </DropdownMenu.Trigger>
+                        <DropdownMenu.Content className="bg-white rounded px-4 shadow-lg p-2 space-y-1 mt-1">
+                          <DropdownMenu.Item
+                            onSelect={() => setStatus('PENDING')}
+                          >
+                            <span className="text-sm px-2 py-1 hover:bg-gray-100 rounded">
+                              PENDING
+                            </span>
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item
+                            onSelect={() => setStatus('APPROVE')}
+                          >
+                            <span className="text-sm px-2 py-1 hover:bg-gray-100 rounded">
+                              APPROVE
+                            </span>
+                          </DropdownMenu.Item>
+                        </DropdownMenu.Content>
+                      </DropdownMenu.Root>
                     </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="hotelName"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
-                      Hotel Name
-                    </FormLabel>
-                    <div className="w-full">
-                      <FormControl>
-                        <Input
-                          type="text"
-                          {...field}
-                          disabled={mode === 'view' || !isEnabled}
-                          placeholder="Enter hotel Name"
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
-                      Address
-                    </FormLabel>
-                    <div className="w-full">
-                      <FormControl>
-                        <Textarea
-                          {...field}
-                          disabled={mode === 'view' || !isEnabled}
-                          placeholder="Enter address"
-                          className="w-full placeholder:opacity-65 h-16 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm resize-none"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
-                    </div>
-                  </FormItem>
-                )}
-              />
+                  </>
+                ) : null}
+              </div>
             </div>
-            {/* Right part */}
-            <div className="flex flex-col gap-3 justify-center items-start">
-              <FormField
-                control={form.control}
-                name="contactNo"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
-                      Contact
-                    </FormLabel>
-                    <div className="w-full">
-                      <FormControl>
-                        <Input
-                          type="text"
-                          {...field}
-                          disabled={mode === 'view' || !isEnabled}
-                          placeholder="Enter contact number"
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
-                      Email
-                    </FormLabel>
-                    <div className="w-full">
-                      <FormControl>
-                        <Input
-                          type="email"
-                          {...field}
-                          disabled={mode === 'view' || !isEnabled}
-                          placeholder="Enter email"
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-          <div className="flex flex-col gap-4 justify-center items-start w-full">
-            {/* Services */}
-            <FormField
-              control={form.control}
-              name="services"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium text-black">
-                    Services
-                  </FormLabel>
-                  <div className="grid grid-cols-3 gap-x-4">
-                    {serviceOptions.map((service) => (
-                      <div key={service} className="flex items-center mb-2">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes(service)}
-                            onCheckedChange={(checked) => {
-                              const updatedServices = checked
-                                ? [...(field.value || []), service]
-                                : (field.value || []).filter(
-                                    (s) => s !== service
-                                  );
-                              field.onChange(updatedServices);
-                            }}
-                            disabled={mode === 'view' || !isEnabled}
-                          />
-                        </FormControl>
-                        <FormLabel className="ml-2 text-sm text-black capitalize">
-                          {service}
+            <div className="flex flex-col gap-4 w-full px-0 md:px-10">
+              <div className="w-full flex justify-between items-center gap-4">
+                {/* Left part */}
+                <div className="flex flex-col gap-3 justify-center items-start">
+                  <FormField
+                    control={form.control}
+                    name="hotelID"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col sm:flex-row sm:items-center">
+                        <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
+                          Hotel ID
                         </FormLabel>
+                        <div className="w-full">
+                          <FormControl>
+                            <Input
+                              type="text"
+                              {...field}
+                              disabled={mode === 'view' || !isEnabled}
+                              placeholder="Enter hotel ID"
+                              className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[10px] mt-1" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="hotelName"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col sm:flex-row sm:items-center">
+                        <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
+                          Hotel Name
+                        </FormLabel>
+                        <div className="w-full">
+                          <FormControl>
+                            <Input
+                              type="text"
+                              {...field}
+                              disabled={mode === 'view' || !isEnabled}
+                              placeholder="Enter hotel Name"
+                              className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[10px] mt-1" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="address"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col sm:flex-row sm:items-center">
+                        <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
+                          Address
+                        </FormLabel>
+                        <div className="w-full">
+                          <FormControl>
+                            <Textarea
+                              {...field}
+                              disabled={mode === 'view' || !isEnabled}
+                              placeholder="Enter address"
+                              className="w-full placeholder:opacity-65 h-16 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm resize-none"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[10px] mt-1" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                {/* Right part */}
+                <div className="flex flex-col gap-3 justify-center items-start">
+                  <FormField
+                    control={form.control}
+                    name="contactNo"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col sm:flex-row sm:items-center">
+                        <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
+                          Contact
+                        </FormLabel>
+                        <div className="w-full">
+                          <FormControl>
+                            <Input
+                              type="text"
+                              {...field}
+                              disabled={mode === 'view' || !isEnabled}
+                              placeholder="Enter contact number"
+                              className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[10px] mt-1" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col sm:flex-row sm:items-center">
+                        <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
+                          Email
+                        </FormLabel>
+                        <div className="w-full">
+                          <FormControl>
+                            <Input
+                              type="email"
+                              {...field}
+                              disabled={mode === 'view' || !isEnabled}
+                              placeholder="Enter email"
+                              className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[10px] mt-1" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col gap-4 justify-center items-start w-full">
+                {/* Services */}
+                <FormField
+                  control={form.control}
+                  name="services"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-black">
+                        Services
+                      </FormLabel>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4">
+                        {serviceOptions.map((service) => (
+                          <div key={service} className="flex items-center mb-2">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value?.includes(service)}
+                                onCheckedChange={(checked) => {
+                                  const updatedServices = checked
+                                    ? [...(field.value || []), service]
+                                    : (field.value || []).filter(
+                                        (s) => s !== service
+                                      );
+                                  field.onChange(updatedServices);
+                                }}
+                                disabled={mode === 'view' || !isEnabled}
+                              />
+                            </FormControl>
+                            <FormLabel className="ml-2 text-sm text-black capitalize">
+                              {service}
+                            </FormLabel>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-              <FormField
-                control={form.control}
-                name="subscriptionPlan"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
-                      Subscription Plan
-                    </FormLabel>
-                    <div className="w-full">
-                      <FormControl>
-                        <Input
-                          type="text"
-                          {...field}
-                          disabled={mode === 'view' || !isEnabled}
-                          className="w-fit placeholder:opacity-65 h-8 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm"
-                        />
-                      </FormControl>
-                      <span className="text-sm text-goldenBrown ml-2">
-                        INR- 2999/month
-                      </span>
-                      <FormMessage className="text-[10px] mt-1" />
-                    </div>
-                  </FormItem>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex flex-col sm:flex-row gap-2 sm:items-center w-full justify-between">
+                  <FormField
+                    control={form.control}
+                    name="subscriptionPlan"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col sm:flex-row sm:items-center gap-8">
+                        <FormLabel className="w-full sm:w-32 lg:w-full text-sm font-medium text-black">
+                          Subscription Plan
+                        </FormLabel>
+                        <div className="w-full">
+                          <FormControl>
+                            <Input
+                              type="text"
+                              {...field}
+                              disabled={mode === 'view' || !isEnabled}
+                              className="w-fit placeholder:opacity-65 h-8 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm"
+                            />
+                          </FormControl>
+                          <span className="text-sm text-goldenBrown ml-2">
+                            INR- 2999/month
+                          </span>
+                          <FormMessage className="text-[10px] mt-1" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="hotelName"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col sm:flex-row sm:items-center">
+                        <FormLabel className="w-full sm:w-32 text-sm font-medium text-black">
+                          GST Details
+                        </FormLabel>
+                        <div className="w-full">
+                          <FormControl>
+                            <Input
+                              type="text"
+                              {...field}
+                              disabled={mode === 'view' || !isEnabled}
+                              placeholder="Enter hotel Name"
+                              className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-black rounded-md border-none outline-none focus:ring-0 text-sm"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[10px] mt-1" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex justify-start items-center gap-4">
+                <Button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={onCancel}
+                  disabled={isSubmitting || mode === 'view'}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={isSubmitting || mode === 'view'}
+                >
+                  {isSubmitting ? 'Saving...' : 'Save'}
+                </Button>
+                {submitStatus === 'success' && (
+                  <p className="text-green-600 text-sm">
+                    Form submitted successfully!
+                  </p>
                 )}
-              />
+                {submitStatus === 'error' && (
+                  <p className="text-red-600 text-sm">
+                    An error occurred. Please try again.
+                  </p>
+                )}
+              </div>
+            </div>
+          </form>
+        </Form>
+      </FormWrapper>
+      <FormWrapper title="">
+        <div className="flex flex-col md:flex-row justify-between w-full">
+          {/* Left Column */}
+          <div className="w-full md:w-1/3 flex flex-col gap-3 md:gap-6">
+            {/* Room Types */}
+            <div className="flex">
+              <div className="w-40 font-medium text-sm text-black">
+                Room types
+              </div>
+              <ul className="text-sm text-black space-y-1">
+                <li>Single</li>
+                <li>Double</li>
+                <li>Twin</li>
+                <li>Deluxe</li>
+                <li>Studio Room /Apartments</li>
+                <li>Junior Suits</li>
+                <li>Suite</li>
+                <li>Presidential Suite</li>
+                <li>Connecting Suite</li>
+                <li>Rooms with a View</li>
+              </ul>
+            </div>
+
+            {/* Select Features */}
+            <div className="flex mt-4">
+              <div className="w-40 font-medium text-sm text-black">
+                Select features
+              </div>
+              <ul className="text-sm text-black space-y-1">
+                <li>Sea View</li>
+                <li>Balcony View</li>
+              </ul>
             </div>
           </div>
-          <div className="w-full flex justify-start items-center gap-4">
-            <Button
-              type="button"
-              className="btn-secondary"
-              onClick={onCancel}
-              disabled={isSubmitting || mode === 'view'}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="btn-primary"
-              disabled={isSubmitting || mode === 'view'}
-            >
-              {isSubmitting ? 'Saving...' : 'Save'}
-            </Button>
-            {submitStatus === 'success' && (
-              <p className="text-green-600 text-sm">
-                Form submitted successfully!
-              </p>
-            )}
-            {submitStatus === 'error' && (
-              <p className="text-red-600 text-sm">
-                An error occurred. Please try again.
-              </p>
-            )}
+
+          {/* Right Column */}
+          <div className="w-full md:w-2/3 flex flex-col justify-start gap-3 md:gap-6 mt-3 md:mt-0">
+            <div className="flex flex-col gap-3 md:gap-0 md:flex-row w-full justify-evenly">
+              <div className="flex justify-between w-52 text-sm text-black">
+                <span className="font-medium">Check-in time</span>
+                <span>12:00AM</span>
+              </div>
+              <div className="flex justify-between w-52 text-sm text-black">
+                <span className="font-medium">Number of rooms</span>
+                <span>65372</span>
+              </div>
+            </div>
+            <div className="flex flex-col gap-3 md:gap-0 md:flex-row w-full justify-evenly">
+              <div className="flex justify-between w-52 text-sm text-black">
+                <span className="font-medium">Check-out time</span>
+                <span>12:00PM</span>
+              </div>
+              <div className="flex justify-between w-52 text-sm text-black">
+                <span className="font-medium">Total staff</span>
+                <span>1234567</span>
+              </div>
+            </div>
           </div>
-        </form>
-      </Form>
-    </FormWrapper>
+        </div>
+      </FormWrapper>
+      <FormWrapper title="">
+        <div className="flex flex-col gap-5">
+          {data.map((item, index) => (
+            <div key={index} className="flex items-start">
+              <div className="w-1/3 text-sm text-gray-500">{item.title}</div>
+              <div className="w-1/3 text-sm font-normal text-black">
+                {item.number}
+              </div>
+              <div className="w-1/3 flex justify-start">
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  width={100}
+                  height={60}
+                  className="rounded-md object-contain"
+                />
+              </div>
+            </div>
+          ))}
+
+          {/* Additional Labels */}
+          <div className="pt-6 space-y-6">
+            <p className="text-sm font-medium text-black">
+              Internet Connectivity
+            </p>
+            <p className="text-sm font-medium text-black">
+              Software Compatibility
+            </p>
+          </div>
+        </div>
+      </FormWrapper>
+    </div>
   );
 };
 

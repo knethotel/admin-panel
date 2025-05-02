@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 
 import { HotelData } from 'app/static/company-panel/HotelManagement';
+import { Heading } from '@/components/ui/heading';
 
 // type ModeType = 'add_guest' | 'add_booking';
 
@@ -62,13 +63,25 @@ export const HotelManagementHome: React.FC = () => {
 
   return (
     <>
-      <div className="w-full flex justify-end">
-        <Button
-          onClick={() => router.push('/super-admin/hotel-management/add')}
-          className="btn-primary"
-        >
-          Create Hotel ID
-        </Button>
+      <div className="w-full flex justify-between items-start px-3">
+        <Heading title={`Hotels`} className="my-0" />
+        <div className="flex flex-col gap-3">
+          <Button
+            onClick={() => router.push('/super-admin/hotel-management/add')}
+            className="btn-primary"
+          >
+            Create Hotel ID
+          </Button>
+          <div className='relative'>
+            <Button
+              onClick={() => router.push('/super-admin/hotel-management/pending')}
+              className="btn-primary"
+            >
+              Pending Requests
+            </Button>
+            <span className='absolute -top-2 -right-1 text-white w-6 h-6 text-center pt-1 font-medium text-xs rounded-full bg-gradient-to-t from-[#E0363A] via-[#E0363A] to-[#E0363A]'>12</span>
+          </div>
+        </div>
       </div>
       {loading ? (
         <span>Loading...</span>

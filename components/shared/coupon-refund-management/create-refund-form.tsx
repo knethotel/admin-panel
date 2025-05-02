@@ -14,8 +14,13 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import FormWrapper from './form-wrapper';
+import { usePathname } from 'next/navigation';
 
 const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
+  const pathname = usePathname();
+  const isRefundPage = pathname?.includes(
+    '/super-admin/payment-management/refund'
+  );
   const form = useForm<createRefundSchemaType>({
     resolver: zodResolver(createRefundSchema),
     defaultValues: {
@@ -70,27 +75,29 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="userID"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 shrink-0">
-                      User ID
-                    </FormLabel>
-                    <div className="w-full">
-                      <FormControl>
-                        <Input
-                          type="text"
-                          {...field}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px] text-xs mt-1" />
-                    </div>
-                  </FormItem>
-                )}
-              />
+              {!isRefundPage && (
+                <FormField
+                  control={form.control}
+                  name="userID"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
+                      <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 shrink-0">
+                        User ID
+                      </FormLabel>
+                      <div className="w-full">
+                        <FormControl>
+                          <Input
+                            type="text"
+                            {...field}
+                            className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-[10px] text-xs mt-1" />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              )}
               <FormField
                 control={form.control}
                 name="hotelID"
@@ -205,48 +212,52 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
 
             {/* Right Side */}
             <div className="flex flex-col items-center md:items-start space-y-8">
-              <FormField
-                control={form.control}
-                name="assignedStaff"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 shrink-0">
-                      Assigned Staff
-                    </FormLabel>
-                    <div className="w-full">
-                      <FormControl>
-                        <Input
-                          type="text"
-                          {...field}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px] text-xs mt-1" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="serviceDepartment"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 shrink-0">
-                      Service Department
-                    </FormLabel>
-                    <div className="w-full">
-                      <FormControl>
-                        <Input
-                          type="text"
-                          {...field}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px] text-xs mt-1" />
-                    </div>
-                  </FormItem>
-                )}
-              />
+              {!isRefundPage && (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="assignedStaff"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
+                        <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 shrink-0">
+                          Assigned Staff
+                        </FormLabel>
+                        <div className="w-full">
+                          <FormControl>
+                            <Input
+                              type="text"
+                              {...field}
+                              className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[10px] text-xs mt-1" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="serviceDepartment"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
+                        <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 shrink-0">
+                          Service Department
+                        </FormLabel>
+                        <div className="w-full">
+                          <FormControl>
+                            <Input
+                              type="text"
+                              {...field}
+                              className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[10px] text-xs mt-1" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </>
+              )}
               <FormField
                 control={form.control}
                 name="dateAndTime"
@@ -268,6 +279,26 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
                   </FormItem>
                 )}
               />
+              {isRefundPage && (
+                <FormField
+                  control={form.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <textarea
+                          {...field}
+                          placeholder="Your message here..."
+                          rows={10}
+                          cols={50}
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-3 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm resize-none"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px] text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
+              )}
             </div>
           </div>
 

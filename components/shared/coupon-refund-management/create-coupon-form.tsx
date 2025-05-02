@@ -32,8 +32,17 @@ import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import { PiCameraThin } from 'react-icons/pi';
 
-const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
+interface CreateCouponFormProps {
+  mode?: 'create' | 'view';
+  defaultValues?: Partial<createCouponSchemaType>;
+}
+
+const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
+  mode = 'create',
+  defaultValues
+}) => {
   const [preview, setPreview] = useState<string | null>(null);
+  const isViewMode = mode === 'view';
 
   useEffect(() => {
     return () => {
@@ -44,7 +53,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
   const form = useForm<createCouponSchemaType>({
     resolver: zodResolver(createCouponSchema),
     defaultValues: {
-      category: 'Percentage Coupons',
+      category: defaultValues?.category || 'Percentage Coupons',
       validityFrom: '',
       validityTo: '',
       usageLimit: '',
@@ -66,7 +75,6 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
     console.log(data);
     form.reset();
     setPreview(null);
-    onClose();
   };
 
   return (
@@ -133,6 +141,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                               <PopoverTrigger asChild>
                                 <Input
                                   type="text"
+                                  disabled={isViewMode}
                                   value={
                                     field.value
                                       ? format(new Date(field.value), 'PPP')
@@ -175,6 +184,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                               <PopoverTrigger asChild>
                                 <Input
                                   type="text"
+                                  disabled={isViewMode}
                                   value={
                                     field.value
                                       ? format(new Date(field.value), 'PPP')
@@ -225,6 +235,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                         <FormControl>
                           <Input
                             type="text"
+                            disabled={isViewMode}
                             {...field}
                             className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                           />
@@ -247,6 +258,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                           <FormControl>
                             <Input
                               type="text"
+                              disabled={isViewMode}
                               {...field}
                               className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                             />
@@ -270,6 +282,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                           <FormControl>
                             <Input
                               type="number"
+                              disabled={isViewMode}
                               {...field}
                               value={field.value ?? ''}
                               onChange={(e) =>
@@ -296,6 +309,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                         <FormControl>
                           <Input
                             type="text"
+                            disabled={isViewMode}
                             {...field}
                             className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                           />
@@ -424,6 +438,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                       <FormControl>
                         <Input
                           type="text"
+                          disabled={isViewMode}
                           {...field}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
@@ -494,6 +509,7 @@ const CreateCouponForm = ({ onClose }: { onClose: () => void }) => {
                           </div>
                           <input
                             type="file"
+                            disabled={isViewMode}
                             accept="image/*"
                             onChange={(e) => {
                               const file = e.target.files?.[0];

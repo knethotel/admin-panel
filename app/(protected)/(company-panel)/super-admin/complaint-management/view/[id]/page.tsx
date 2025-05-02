@@ -1,11 +1,15 @@
 import ComplaintForm from '@/components/COMPANY_COMPONENTS/complaint-management/form/complaint-form';
+import Navbar from '@/components/Navbar';
 import React from 'react';
 
 const ComplaintDetailsFormPage = () => {
   return (
-    <div className="w-full h-screen pt-8">
-      <div className="h-full w-full container">
-        <ComplaintForm mode="view" />
+    <div className="flex flex-col w-full">
+      <Navbar className="relative w-full lg:w-full" />
+      <div className="w-full h-screen pt-8">
+        <div className="h-full w-full container">
+          <ComplaintForm mode="view" />
+        </div>
       </div>
     </div>
   );

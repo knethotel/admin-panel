@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 
 import { RefundData } from 'app/static/PaymentManagement';
-import CreateRefundModal from '@/components/shared/payment-management/create_refund_modal';
+import CreateRefundModal from '@/components/shared/coupon-refund-management/create_refund_modal';
 
 type ModeType = 'add_employee';
 
@@ -71,7 +71,7 @@ export const RefundDetailsTable: React.FC = () => {
     <>
       <div className="flex items-start justify-start">
         <div className="w-full flex justify-between items-center px-4">
-          <Heading title={`Payment Management`} />
+          <Heading title={`Refunds Management`} />
           <Button onClick={() => setIsOpen(true)} className="btn-primary">
             Create Refund
           </Button>

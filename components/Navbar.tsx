@@ -19,12 +19,14 @@ interface navProps {
   active?: boolean;
   search?: boolean;
   searchKey?: string;
+  className?: string;
+  onSearch?: (query: string) => void; // onSearch prop
 }
 
-export default function Navbar({ active, search, searchKey }: navProps) {
+export default function Navbar({ active, search, searchKey, className, onSearch }: navProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [randomColor, setRandomColor] = useState('#000000'); // Default value
+  const [randomColor, setRandomColor] = useState('#000000');
 
   useEffect(() => {
     const generateColor = () => {
@@ -52,7 +54,7 @@ export default function Navbar({ active, search, searchKey }: navProps) {
         description="You will be logged out"
       />
 
-      <nav className="flex items-center w-full justify-between bg-[#EFE9DF] p-4 lg:w-[calc(100%-20%)] fixed z-50">
+      <nav className={`flex items-center w-full justify-between bg-[#EFE9DF] p-4 lg:w-[calc(100%-20%)] fixed ${className}`}>
         {/* Left Side */}
         <div className="flex items-center gap-2 px-2 rounded-lg">
           {active && (
@@ -77,21 +79,11 @@ export default function Navbar({ active, search, searchKey }: navProps) {
                   side="bottom"
                   align="start"
                 >
-                  <DropdownMenuItem onClick={() => alert('Today')}>
-                    Today
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => alert('Last Week')}>
-                    Last Week
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => alert('Last Month')}>
-                    Last Month
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => alert('Last Quarter')}>
-                    Last Quarter
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => alert('Last Year')}>
-                    Last Year
-                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => alert('Today')}>Today</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => alert('Last Week')}>Last Week</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => alert('Last Month')}>Last Month</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => alert('Last Quarter')}>Last Quarter</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => alert('Last Year')}>Last Year</DropdownMenuItem>
 
                   {/* Custom Date Submenu */}
                   <DropdownMenu>
@@ -131,9 +123,14 @@ export default function Navbar({ active, search, searchKey }: navProps) {
             <Input
               ref={inputRef}
               value={filterInput}
-              onChange={(e) => setFilterInput(e.target.value)}
+              onChange={(e) => {
+                setFilterInput(e.target.value);
+                if (onSearch) {
+                  onSearch(e.target.value); // Call onSearch when input changes
+                }
+              }}
               placeholder={'Search '}
-              className="w-[40rem] rounded-xl pl-9"
+              className="w-full md:w-[40rem] rounded-xl pl-9"
               icon={<Search width={17} height={17} />}
             />
           )}
@@ -160,10 +157,8 @@ export default function Navbar({ active, search, searchKey }: navProps) {
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">
-                    Shivam Kumar
-                  </p>
-                  <p className="text-xs 2xl:text-sm leading-none text-muted-foreground">
+                  <p className="text-sm font-medium leading-none">Shivam Kumar</p>
+                  <p className="text-xs leading-none text-muted-foreground">
                     shivamjha2705@gmail.com
                   </p>
                 </div>

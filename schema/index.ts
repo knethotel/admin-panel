@@ -143,13 +143,13 @@ export type createRefundSchemaType = z.infer<typeof createRefundSchema>;
 // **********Hotel Profile schema***************
 export const hotelSchema = z.object({
   logoImage: z
-    .union([z.instanceof(File), z.string().url()])
+    .union([z.any(), z.string().url()])
     .optional()
     .refine((file) => file !== '', {
       message: 'Logo image must not be an empty value'
     }),
   hotelImage: z
-    .union([z.instanceof(File), z.string().url()])
+    .union([z.any(), z.string().url()])
     .optional()
     .refine((file) => file !== '', {
       message: 'Hotel image must not be an empty value'
@@ -462,7 +462,7 @@ export const hotelSchema = z.object({
       errorMap: () => ({ message: 'Please select a valid room type' })
     }
   ),
-  roomImage: z.union([z.instanceof(File), z.string().url()]).optional(),
+  roomImage: z.union([z.any(), z.string().url()]).optional(),
 
   features: z.enum(['Sea Side', 'Balcony View'], {
     errorMap: () => ({ message: 'Please select a valid feature' })
@@ -517,19 +517,19 @@ export const hotelSchema = z.object({
     .string()
     .min(1, 'Hotel license & certifications are required'),
 
-  hotelLicenseImage: z.union([z.instanceof(File), z.string().url()]).optional(),
+  hotelLicenseImage: z.union([z.any(), z.string().url()]).optional(),
 
   legalBusinessLicense: z
     .string()
     .min(1, 'Legal and business license is required'),
 
   legalBusinessLicenseImage: z
-    .union([z.instanceof(File), z.string().url()])
+    .union([z.any(), z.string().url()])
     .optional(),
 
   touristLicense: z.string().min(1, 'Tourist license is required'),
   touristLicenseImage: z
-    .union([z.instanceof(File), z.string().url()])
+    .union([z.any(), z.string().url()])
     .optional(),
 
   tanNumber: z
@@ -539,14 +539,14 @@ export const hotelSchema = z.object({
       'Invalid TAN number format (e.g., ABCD12345E)'
     ),
 
-  tanNumberImage: z.union([z.instanceof(File), z.string().url()]).optional(),
+  tanNumberImage: z.union([z.any(), z.string().url()]).optional(),
 
   dataPrivacyGdprCompliances: z
     .string()
     .min(1, 'Data privacy & GDPR compliances are required'),
 
   dataPrivacyGdprImage: z
-    .union([z.instanceof(File), z.string().url()])
+    .union([z.any(), z.string().url()])
     .optional(),
 
   internetConnectivity: z.boolean().default(false),
@@ -994,7 +994,7 @@ export const ManageProductsModalFormSchema = z.object({
     .min(1, 'Input field must have at least 1 character.'),
   productName: z.string().min(1, 'Input field must have at least 1 character.'),
   productImage: z
-    .union([z.instanceof(File), z.string().url()])
+    .union([z.any(), z.string().url()])
     .optional()
     .refine((file) => file !== '', {
       message: 'Logo image must not be an empty value'
@@ -1016,7 +1016,7 @@ export const ConciergeManageProductsModalFormSchema = z.object({
   name: z.string().min(1, 'Input field must have at least 1 character.'),
   description: z.string().min(1, 'Input field must have at least 1 character.'),
   productImage: z
-    .union([z.instanceof(File), z.string().url()])
+    .union([z.any(), z.string().url()])
     .optional()
     .refine((file) => file !== '', {
       message: 'Logo image must not be an empty value'
@@ -1039,7 +1039,7 @@ export const SpaManageProductsModalFormSchema = z.object({
   name: z.string().min(1, 'Input field must have at least 1 character.'),
   description: z.string().min(1, 'Input field must have at least 1 character.'),
   productImage: z
-    .union([z.instanceof(File), z.string().url()])
+    .union([z.any(), z.string().url()])
     .optional()
     .refine((file) => file !== '', {
       message: 'Logo image must not be an empty value'
@@ -1056,7 +1056,7 @@ export const SpaManageProductsModalFormSchema = z.object({
     .refine((val) => val > 0, { message: 'Price must be greater than 0' })
     .or(z.number().min(1, { message: 'Price must be greater than 0' })),
   additionalServiceImage: z
-    .union([z.instanceof(File), z.string().url()])
+    .union([z.any(), z.string().url()])
     .optional()
     .refine((file) => file !== '', {
       message: 'Logo image must not be an empty value'
@@ -1070,7 +1070,7 @@ export type SpaManageProductsModalFormSchemaType = z.infer<
 //*****************Swimming Pool Service > Manage products modal form schema****************/
 export const SwimmingPoolManageProductsModalFormSchema = z.object({
   swimmingPoolImage: z
-    .union([z.instanceof(File), z.string().url()])
+    .union([z.any(), z.string().url()])
     .optional()
     .refine((file) => file !== '', {
       message: 'Logo image must not be an empty value'
@@ -1085,7 +1085,7 @@ export type SwimmingPoolManageProductsModalFormSchemaType = z.infer<
 
 export const GymManageProductsModalFormSchema = z.object({
   equipmentImage: z
-    .union([z.instanceof(File), z.string().url()])
+    .union([z.any(), z.string().url()])
     .optional()
     .refine((file) => file !== '', {
       message: 'Logo image must not be an empty value'

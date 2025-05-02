@@ -52,7 +52,8 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     'Roles and Permissions',
     'Guest Management',
     'Complaint Management',
-    'Payment Management',
+    'Coupon Management',
+    'Refunds Management',
     'Change Password',
     'Hotel Management',
     'Sub Hotel Management'

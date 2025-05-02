@@ -71,29 +71,30 @@ export const ComplaintTable: React.FC = () => {
 
   return (
     <>
-      <div className="py-6 flex w-full items-center justify-end"> </div>
-      {loading ? <span>Loading...</span> : tableContent}
-      <div className="flex justify-end space-x-2 py-2">
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(pageNo - 1)}
-            disabled={pageNo === 1}
-          >
-            Previous
-          </Button>
-          <span className="text-sm text-gray-600">
-            Page {pageNo} of {Math.ceil(totalRecords / limit)}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(pageNo + 1)}
-            disabled={pageNo >= Math.ceil(totalRecords / limit)}
-          >
-            Next
-          </Button>
+      <div className="py-6 flex flex-col w-full">
+        {loading ? <span>Loading...</span> : tableContent}
+        <div className="flex justify-end space-x-2 px-3 py-2">
+          <div className="space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(pageNo - 1)}
+              disabled={pageNo === 1}
+            >
+              Previous
+            </Button>
+            <span className="text-sm text-gray-600">
+              Page {pageNo} of {Math.ceil(totalRecords / limit) || 1}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(pageNo + 1)}
+              disabled={pageNo >= Math.ceil(totalRecords / limit)}
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </>
