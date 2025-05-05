@@ -1,10 +1,14 @@
+import Navbar from '@/components/Navbar';
 import { RefundDetailsTable } from '@/components/tables/payment-management/client';
 import React from 'react';
 
 const RefundHomePage = () => {
   return (
-    <div className="mt-14 w-full">
-      <RefundDetailsTable />
+    <div className="flex flex-col w-full">
+      <Navbar active search />
+      <div className="mt-16 w-full">
+        <RefundDetailsTable />
+      </div>
     </div>
   );
 };

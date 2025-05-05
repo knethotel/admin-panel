@@ -6,8 +6,8 @@ import React from 'react';
 const AddNewComplaint = () => {
   return (
     <div className='w-full h-screen bg-[#FAF8F5]'>
-      <Navbar search className="relative w-full lg:w-full" />
-      <div className="flex pt-8">
+      <Navbar search />
+      <div className="flex pt-8 mt-20">
         <div className="w-full max-w-6xl container py-6 flex">
           <ComplaintForm mode="add" />
         </div>

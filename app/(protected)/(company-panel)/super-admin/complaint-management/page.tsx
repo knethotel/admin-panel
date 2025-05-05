@@ -19,8 +19,8 @@ const ComplaintManagementPage = () => {
 
   return (
     <div className="w-full h-screen flex-col justify-center items-center">
-      <Navbar search className="relative w-full lg:w-full" />
-      <div className="py-4 px-6">
+      <Navbar search />
+      <div className="py-4 px-6 mt-20">
         <div className="flex justify-end">
           <Button
             className="text-xs 2xl:text-sm md:text-sm btn-primary mb-4"

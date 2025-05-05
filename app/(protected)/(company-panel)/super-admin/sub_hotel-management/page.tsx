@@ -6,8 +6,8 @@ import React from 'react';
 const SubHotelManagementPage = () => {
   return (
     <div className="flex flex-col w-full">
-      <Navbar active search className="relative w-full lg:w-full" />
-      <div className="container px-7">
+      <Navbar active search />
+      <div className="container px-7 mt-20">
         <Heading title={`Hotels(Sub-Hotels)`} />
       </div>
       <div className="w-full h-screen">

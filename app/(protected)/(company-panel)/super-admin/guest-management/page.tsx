@@ -6,8 +6,8 @@ import React from 'react';
 const GuestManagementPage = () => {
   return (
     <div className="flex flex-col w-full">
-      <Navbar active search className="relative w-full lg:w-full" />
-      <div className='container px-7'>
+      <Navbar active search/>
+      <div className='container px-7 mt-20'>
         <Heading title={`Guests`} className='mb-0'/>
       </div>
       <div className="w-full h-screen">

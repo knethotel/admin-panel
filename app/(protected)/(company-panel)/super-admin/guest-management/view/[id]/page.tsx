@@ -13,8 +13,8 @@ const ViewGuestPage = async ({
   const id = (await params).id;
   return (
     <div className="flex flex-col w-full">
-      <Navbar className="relative w-full lg:w-full" />
-      <div className="flex justify-center w-full pt-8">
+      <Navbar/>
+      <div className="flex justify-center w-full pt-8 mt-14">
         <div className="w-full container py-6 flex justify-center">
           <GuestDetails guestID={id} />
         </div>

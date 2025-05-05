@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
 import { Card, CardContent } from '../ui/card';
 import {
@@ -36,15 +36,46 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function LineChartLinear() {
-  const [selectedValue, setSelectedValue] = useState('Monthly');
-  const [activeButton, setActiveButton] = useState<number | null>(0);
+  const [selectedValue, setSelectedValue] = useState('Today');
+  const [activeButton, setActiveButton] = useState(0);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const datePickerRef = useRef<HTMLDivElement | null>(null);
+  const [dateRange, setDateRange] = useState({
+    from: '',
+    to: ''
+  });
 
-  const handleSelectChange = (value: string) => {
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        showDatePicker &&
+        datePickerRef.current &&
+        !datePickerRef.current.contains(event.target as Node)
+      ) {
+        setShowDatePicker(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDatePicker]);
+
+  const handleSelectChange = (value: any) => {
     setSelectedValue(value);
+    setShowDatePicker(value === 'custom');
   };
 
-  const handleButtonClick = (index: number) => {
+  const handleButtonClick = (index: any) => {
     setActiveButton(index);
+  };
+
+  const handleDateChange = (type: any, e: any) => {
+    setDateRange((prev) => ({
+      ...prev,
+      [type]: e.target.value
+    }));
   };
 
   return (
@@ -54,19 +85,47 @@ export function LineChartLinear() {
           <p className="text-xs 2xl:text-sm text-[#0B1C33] opacity-70 font-medium">
             TOTAL CASES
           </p>
-          <Select onValueChange={handleSelectChange}>
-            <SelectTrigger className="w-[100px] border-white border relative">
-              <SelectValue placeholder={selectedValue} />
-              <ChevronDown className="absolute w-4 h-4 z-50 right-0 top-2 text-black" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Monthly text-xs 2xl:text-sm">
-                Monthly
-              </SelectItem>
-              <SelectItem value="Yearly text-xs 2xl:text-sm">Yearly</SelectItem>
-              <SelectItem value="Weekly text-xs 2xl:text-sm">Weekly</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="relative">
+            <Select onValueChange={handleSelectChange}>
+              <SelectTrigger className="w-[110px] border-white border relative">
+                <SelectValue placeholder={selectedValue} />
+                <ChevronDown className="absolute w-4 h-4 z-50 right-0 top-2 text-black" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Today">Today</SelectItem>
+                <SelectItem value="week">Last week</SelectItem>
+                <SelectItem value="month">Last month</SelectItem>
+                <SelectItem value="quater">Last quater</SelectItem>
+                <SelectItem value="year">Last year</SelectItem>
+                <SelectItem value="custom">Custom Date</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {showDatePicker && (
+              <div ref={datePickerRef} className="absolute top-full mt-2 right-0 bg-[#2C1E12] text-white p-4 rounded-lg shadow-lg w-64 z-50">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm">From</p>
+                    <input
+                      type="date"
+                      className="bg-[#2C1E12] border border-[#5A4332] rounded p-1 text-sm"
+                      value={dateRange.from}
+                      onChange={(e) => handleDateChange('from', e)}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm">To</p>
+                    <input
+                      type="date"
+                      className="bg-[#2C1E12] border border-[#5A4332] rounded p-1 text-sm"
+                      value={dateRange.to}
+                      onChange={(e) => handleDateChange('to', e)}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex items-center justify-between bg-offWhite p-2 rounded-lg">
           {[

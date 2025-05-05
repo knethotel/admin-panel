@@ -196,8 +196,8 @@ const MultipleLineChartDummyData: LineChartData = [
 const DBPage: React.FC = () => {
   return (
     <div className="flex flex-col w-full">
-      <Navbar active search className="relative w-full lg:w-full" />
-      <div className="min-h-screen w-full bg-coffee overflow-x-hidden">
+      <Navbar active search />
+      <div className="min-h-screen w-full bg-coffee overflow-x-hidden mt-20">
         <Header />
 
         {/* Main content container */}
