@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import { DataTable } from '@/components/ui/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { useRouter } from 'next/navigation';
+import { Heading } from '@/components/ui/heading';
 
 type PendingRequest = {
   id: string;
@@ -90,10 +91,10 @@ export default function HotelManagementPendingPage() {
 
   return (
     <div className="flex flex-col w-full">
-      <Navbar active search className="relative w-full lg:w-full" />
-      <div className="w-full min-h-screen pt-8">
+      <Navbar active search />
+      <div className="w-full min-h-screen pt-8 mt-14">
         <div className="container mx-auto">
-          <h2 className="text-xl font-semibold mb-4">Pending Hotel Requests</h2>
+          <Heading title='Pending Hotel Requests'/>
           <DataTable
             columns={pendingColumns}
             data={pendingData}

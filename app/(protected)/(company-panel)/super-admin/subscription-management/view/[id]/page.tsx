@@ -10,8 +10,8 @@ const ViewSubscriptionDetailsPage = async ({
   const id = (await params).id;
   return (
     <div className="flex flex-col w-full">
-      <Navbar active search className="relative w-full lg:w-full" />
-      <div className="flex justify-center w-full pt-8">
+      <Navbar active search />
+      <div className="flex justify-center w-full pt-8 mt-16">
         <div className="w-full container py-6 flex justify-center">
           <SubscriptionManagemetForm subscriptionID={id} mode="view" />
         </div>

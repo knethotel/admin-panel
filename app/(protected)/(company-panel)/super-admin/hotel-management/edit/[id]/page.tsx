@@ -10,8 +10,8 @@ const EditHotelDetailsPage = async ({
   const id = (await params).id;
   return (
     <div className="flex flex-col w-full">
-      <Navbar active search className="relative w-full lg:w-full" />
-      <div className="flex justify-center items-center w-full px-14 py-10">
+      <Navbar active search />
+      <div className="flex justify-center items-center w-full px-14 py-10 mt-14">
         <CreateHotelIdForm isEnabled={true} hotelID={id} mode="edit" />
       </div>
     </div>

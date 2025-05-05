@@ -5,8 +5,8 @@ import React from 'react';
 const ComplaintDetailsFormPage = () => {
   return (
     <div className="flex flex-col w-full">
-      <Navbar className="relative w-full lg:w-full" />
-      <div className="w-full h-screen pt-8">
+      <Navbar />
+      <div className="w-full h-screen pt-8 mt-20">
         <div className="h-full w-full container">
           <ComplaintForm mode="view" />
         </div>

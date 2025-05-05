@@ -5,8 +5,8 @@ import React from 'react';
 const SubscriptionManagementPage = () => {
   return (
     <div className='flex flex-col w-full'>
-      <Navbar active search className="relative w-full lg:w-full" />
-      <div className="w-full h-screen pt-4">
+       <Navbar active={true} search={true} />
+      <div className="w-full h-screen mt-20">
         <div className="h-full w-full container">
           <SubscriptionManagementHomePage />
         </div>

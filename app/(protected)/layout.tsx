@@ -248,10 +248,6 @@ function HotelPanelSideNav() {
             <RiMoneyRupeeCircleLine className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
-          <NavItem href="/notifications" label="Notifications">
-            <IoMdNotificationsOutline className="h-5 w-5 lg:h-7 lg:w-7" />
-          </NavItem>
-
           <NavItem href="/change-password" label="Change Password">
             <TbPasswordUser className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>

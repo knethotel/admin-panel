@@ -1,4 +1,5 @@
 import EmployeeForm from '@/components/form/employee_management/employee-form';
+import Navbar from '@/components/Navbar';
 import React from 'react';
 
 type Params = {
@@ -12,9 +13,12 @@ const EditGuestPage = async ({
 }) => {
   const id = (await params).id;
   return (
-    <div className="flex justify-center items-center h-screen w-full pt-8">
-      <div className="h-full w-full container">
-        <EmployeeForm isEnabled={true} employeeID={id} mode="edit" />
+    <div className="flex flex-col w-full">
+      <Navbar />
+      <div className="flex justify-center items-center h-screen w-full pt-8 mt-16">
+        <div className="h-full w-full container">
+          <EmployeeForm isEnabled={true} employeeID={id} mode="edit" />
+        </div>
       </div>
     </div>
   );

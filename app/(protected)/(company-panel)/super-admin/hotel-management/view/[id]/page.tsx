@@ -9,8 +9,8 @@ const ViewHotelDetailsPage = async ({
   const id = (await params).id;
   return (
     <div className="flex flex-col w-full">
-      <Navbar className="relative w-full lg:w-full" />
-      <div className="flex justify-center items-center w-full px-4 md:px-8 py-10">
+      <Navbar />
+      <div className="flex justify-center items-center w-full px-4 md:px-8 py-10 mt-14">
         <CreateHotelIdForm isEnabled={false} hotelID={id} mode="view" />
       </div>
     </div>

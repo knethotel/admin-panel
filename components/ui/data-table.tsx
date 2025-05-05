@@ -78,7 +78,14 @@ export function DataTable<TData, TValue>({
 
   const table = useReactTable({
     data,
-    columns,
+    columns: [
+      {
+        id: 'sn',
+        header: 'SN',
+        cell: ({ row }) => <span>{row.index + 1}</span>, // Dynamically renders 1, 2, 3...
+      },
+      ...columns // original columns passed to DataTable
+    ],
     state: {
       sorting,
       globalFilter: filterInput
@@ -157,7 +164,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className="flex justify-end gap-2">
+      {/* <div className="flex justify-end gap-2"> */}
         {/* <Input
           ref={inputRef}
           value={filterInput}
@@ -235,7 +242,7 @@ export function DataTable<TData, TValue>({
         </Button> */}
           </>
         )}
-      </div>
+      {/* </div> */}
 
       {table.getRowModel().rows.length ? (
         <ScrollArea className="rounded-md  max-h-full ">

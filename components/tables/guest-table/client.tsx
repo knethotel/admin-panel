@@ -72,13 +72,13 @@ export const GuestClient: React.FC = () => {
     }
     if (actionName === 'add booking') {
       setMode('add_booking');
-      router.push(`/guest-management/add-booking`);
+      router.push(`/guest-management/pending`);
     }
   };
   return (
     <>
       <div className="flex items-center justify-between">
-        <Heading title={`Guests (${totalRecords})`} />
+        <Heading title={`Guests at Hotel`} />
         <div className="flex gap-3">
           <Button
             className="btn-primary text-xs 2xl:text-sm md:text-sm"
@@ -90,10 +90,9 @@ export const GuestClient: React.FC = () => {
             className="btn-primary text-xs 2xl:text-sm md:text-sm"
             onClick={() => handleOnClick('add booking')}
           >
-            <Plus className="mr-2 h-4 w-4" />{' '}
             <span className="text-white group-hover:text-black">
               {' '}
-              Add Booking
+              View Requests
             </span>
           </Button>
         </div>
