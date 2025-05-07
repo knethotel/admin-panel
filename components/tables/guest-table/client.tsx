@@ -23,54 +23,19 @@ export const GuestClient: React.FC = () => {
   const [totalRecords, setTotalRecords] = useState(data.length || 0);
   const [mode, setMode] = useState<ModeType>();
 
-  // const filters = [
-  //     {
-  //         label: 'Account Status',
-  //         key: 'accountStatus', // Backend key
-  //         subOptions: ['Active', 'Suspended'],
-  //     },
-  //     {
-  //         label: 'Verification Status',
-  //         key: 'verificationStatus',
-  //         subOptions: ['Verified', 'Pending', 'Rejected'],
-  //     },
-  //     {
-  //         label: 'Activity Status',
-  //         key: 'activityStatus',
-  //         subOptions: ['Active', 'Inactive'],
-  //     },
-  // ];
-
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
       setPageNo(newPage);
     }
   };
 
-  const handleLimitChange = (newLimit: number) => {
-    setLimit(newLimit);
-    setPageNo(1); // Reset to the first page when the limit changes
-  };
-
-  // Function to handle search input
-  const handleSearchChange = (searchValue: string) => {
-    if (searchValue.trim() === '') {
-      setFilteredData(data); // Reset if empty
-    } else {
-      const filtered = data.filter((item) =>
-        item.guestDetails.name.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      setFilteredData(filtered);
-    }
-  };
-
   //   Onclick event handler functions
   const handleOnClick = (actionName: string) => {
-    if (actionName === 'add guest') {
+    if (actionName === 'add booking') {
       setMode('add_guest');
       router.push(`/guest-management/add`);
     }
-    if (actionName === 'add booking') {
+    if (actionName === 'view requests') {
       setMode('add_booking');
       router.push(`/guest-management/pending`);
     }
@@ -82,13 +47,13 @@ export const GuestClient: React.FC = () => {
         <div className="flex gap-3">
           <Button
             className="btn-primary text-xs 2xl:text-sm md:text-sm"
-            onClick={() => handleOnClick('add guest')}
+            onClick={() => handleOnClick('add booking')}
           >
-            <Plus className="mr-2 h-4 w-4" /> <span>Add Guest</span>
+            <Plus className="mr-2 h-4 w-4" /> <span>Add Booking</span>
           </Button>
           <Button
             className="btn-primary text-xs 2xl:text-sm md:text-sm"
-            onClick={() => handleOnClick('add booking')}
+            onClick={() => handleOnClick('view requests')}
           >
             <span className="text-white group-hover:text-black">
               {' '}
@@ -104,14 +69,6 @@ export const GuestClient: React.FC = () => {
           searchKey="firstName"
           columns={columns}
           data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)} // Use filteredData instead of data while api integration
-          // onSearch={(searchValue) => {
-          //     const filtered = data.filter((item) =>
-          //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())
-          //     );
-          //     setData(filtered);
-          // }}
-          // filters={filters}
-          //   onFilterChange={handleFilterChange}
         />
       )}
       <div className="flex justify-end space-x-2 px-3 py-2">

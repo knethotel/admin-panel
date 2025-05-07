@@ -4,10 +4,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Settings } from 'lucide-react';
-
 import { useRouter } from 'next/navigation';
 import { columns } from './columns';
-
 import { HousekeepingData } from 'app/static/services-management/Housekeeping';
 import ToggleButton from '@/components/ui/toggleButton';
 import ManageProductsModal from '@/components/modal/housekeeping/manage-products';
@@ -21,25 +19,6 @@ export const HousekeepingServiceTable: React.FC = () => {
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>();
   const [totalRecords, setTotalRecords] = useState(data.length || 0);
-
-  // **********Search Filter and pagination logic************
-  // const filters = [
-  //     {
-  //         label: 'Account Status',
-  //         key: 'accountStatus', // Backend key
-  //         subOptions: ['Active', 'Suspended'],
-  //     },
-  //     {
-  //         label: 'Verification Status',
-  //         key: 'verificationStatus',
-  //         subOptions: ['Verified', 'Pending', 'Rejected'],
-  //     },
-  //     {
-  //         label: 'Activity Status',
-  //         key: 'activityStatus',
-  //         subOptions: ['Active', 'Inactive'],
-  //     },
-  // ];
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
@@ -79,7 +58,7 @@ export const HousekeepingServiceTable: React.FC = () => {
             <ToggleButton />
           </div>
         </div>
-        <Settings onClick={() => setIsModalOpen(true)} />
+        <Settings className='cursor-pointer' onClick={() => setIsModalOpen(true)} />
         <PriceTimeSettingHouseKeeping
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}

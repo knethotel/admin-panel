@@ -46,23 +46,6 @@ export const columns: ColumnDef<GuestDataType>[] = [
     }
   },
   {
-    accessorKey: 'trackingStatus',
-    header: 'Tracking Status',
-    cell: ({ row }) => {
-      const status = row.original.trackingStatus || 'N/A';
-      switch (status) {
-        case 'under review':
-          return <div className="text-orange-500">{status}</div>;
-        case 'pending':
-          return <div className="text-blue-500">{status}</div>;
-        case 'submitted':
-          return <div className="text-green-500">{status}</div>;
-        default:
-          return <div className="text-gray-500">{status}</div>;
-      }
-    }
-  },
-  {
     accessorKey: 'paymentStatus',
     header: 'Payment Status',
     cell: ({ row }) => {

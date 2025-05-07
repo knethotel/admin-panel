@@ -31,14 +31,18 @@ const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >({
+  className, // Accept className prop here
   ...props
-}: ControllerProps<TFieldValues, TName>) => {
+}: ControllerProps<TFieldValues, TName> & { className?: string }) => {
   return (
     <FormFieldContext.Provider value={{ name: props.name }}>
-      <Controller {...props} />
+      <div className={cn(className)}> {/* Apply the className here */}
+        <Controller {...props} />
+      </div>
     </FormFieldContext.Provider>
   );
 };
+
 
 const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext);

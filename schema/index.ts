@@ -1,3 +1,4 @@
+import { sources } from 'next/dist/compiled/webpack/webpack';
 import { z } from 'zod';
 
 // *****************Login and resetpassword form schema and type*******************
@@ -44,7 +45,8 @@ export const guestSchema = z.object({
   city: z.string().min(1, 'City is required'),
   email: z.string().email().min(1, 'Email is required'),
   state: z.string().min(1, 'State is required'),
-  pinCode: z.string().min(1, 'Pin Code is required')
+  pinCode: z.string().min(1, 'Pin Code is required'),
+  sources: z.string().min(1, 'Sources is required'),
 });
 
 export type guestSchemaType = z.infer<typeof guestSchema>;
@@ -166,7 +168,10 @@ export const hotelSchema = z.object({
   hotelCategory: z.enum(['3 Starr', '4 Star', '5 Star', '7 Star'], {
     errorMap: () => ({ message: 'Invalid hotel category' })
   }),
-
+  brandedHotel: z.boolean().optional(),  // Add this for branded hotel checkbox
+  chainHotel: z.boolean().optional(),    // Add this for chain hotel checkbox
+  parentHotelName: z.string().optional(), // Add this for parent hotel name input
+  subHotelName: z.string().optional(),
   city: z.enum(
     [
       'Delhi',

@@ -1,5 +1,5 @@
 import Navbar from '@/components/Navbar';
-import { RefundDetailsTable } from '@/components/tables/payment-management/client';
+import { RefundDetailsTable } from '@/components/tables/refund-management/client';
 import React from 'react';
 
 const RefundHomePage = () => {

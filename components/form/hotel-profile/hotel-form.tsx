@@ -28,6 +28,8 @@ import {
 
 const HotelForm = () => {
   const router = useRouter();
+  const [isBrandedHotelChecked, setIsBrandedHotelChecked] = useState(false);
+  const [isChainHotelChecked, setIsChainHotelChecked] = useState(false);
 
   // Refs for file inputs
   const roomImageRef = useRef<HTMLInputElement>(null);
@@ -41,16 +43,16 @@ const HotelForm = () => {
 
   // State for image previews
   const [imagePreviews, setImagePreviews] = useState<{
-    [key: string]: string | null;
+    [key: string]: string[]; // Ensure it's an array for each key
   }>({
-    logoImage: null,
-    additionalImage: null, // New key for additional image
-    roomImage: null,
-    hotelLicenseImage: null,
-    legalBusinessLicenseImage: null,
-    touristLicenseImage: null,
-    tanNumberImage: null,
-    dataPrivacyGdprImage: null
+    logoImage: [],
+    additionalImage: [],
+    roomImage: [], // Initialize as an empty array
+    hotelLicenseImage: [],
+    legalBusinessLicenseImage: [],
+    touristLicenseImage: [],
+    tanNumberImage: [],
+    dataPrivacyGdprImage: []
   });
 
   const form = useForm<HotelSchemaType>({
@@ -92,14 +94,14 @@ const HotelForm = () => {
     console.log('Hotel Data:', data);
     form.reset();
     setImagePreviews({
-      logoImage: null,
-      additionalImage: null, // Reset additional image preview
-      roomImage: null,
-      hotelLicenseImage: null,
-      legalBusinessLicenseImage: null,
-      touristLicenseImage: null,
-      tanNumberImage: null,
-      dataPrivacyGdprImage: null
+      logoImage: [],
+      additionalImage: [], // Reset additional image preview
+      roomImage: [],
+      hotelLicenseImage: [],
+      legalBusinessLicenseImage: [],
+      touristLicenseImage: [],
+      tanNumberImage: [],
+      dataPrivacyGdprImage: []
     });
   };
 
@@ -114,14 +116,34 @@ const HotelForm = () => {
     }
     if (file) {
       const previewUrl = URL.createObjectURL(file);
-      setImagePreviews((prev) => ({ ...prev, [fieldName]: previewUrl }));
+      setImagePreviews((prev) => ({
+        ...prev,
+        [fieldName]: [...prev[fieldName], previewUrl] // Append new image to array
+      }));
     } else {
-      setImagePreviews((prev) => ({ ...prev, [fieldName]: null }));
+      setImagePreviews((prev) => ({ ...prev, [fieldName]: [] })); // Reset if no file
     }
   };
 
   const triggerFileInput = (ref: React.RefObject<HTMLInputElement | null>) => {
     ref.current?.click();
+  };
+
+  const handleBrandedHotelChange = (checked: boolean) => {
+    setIsBrandedHotelChecked(checked);
+    if (checked) setIsChainHotelChecked(false); // Disable the Chain Hotel checkbox when Branded is checked
+  };
+
+  const handleChainHotelChange = (checked: boolean) => {
+    setIsChainHotelChecked(checked);
+    if (checked) setIsBrandedHotelChecked(false); // Disable the Branded Hotel checkbox when Chain is checked
+  };
+
+  const handleImageRemove = (index: number, fieldName: string) => {
+    setImagePreviews((prev) => {
+      const updatedImages = prev[fieldName].filter((_, i) => i !== index); // Filter out the image at index
+      return { ...prev, [fieldName]: updatedImages }; // Update the state with the new array
+    });
   };
 
   return (
@@ -146,9 +168,10 @@ const HotelForm = () => {
                       className="w-32 h-12 2xl:w-36 2xl:h-14 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-100"
                       onClick={() => triggerFileInput(logoImageRef)}
                     >
-                      {imagePreviews.logoImage ? (
+                      {imagePreviews.logoImage &&
+                      imagePreviews.logoImage.length > 0 ? (
                         <img
-                          src={imagePreviews.logoImage}
+                          src={imagePreviews.logoImage[0]}
                           alt="Logo Preview"
                           className="w-full h-full object-cover rounded-md"
                         />
@@ -193,9 +216,10 @@ const HotelForm = () => {
                   className="w-32 h-12 2xl:w-36 2xl:h-14 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-100"
                   onClick={() => triggerFileInput(additionalImageRef)}
                 >
-                  {imagePreviews.additionalImage ? (
+                  {imagePreviews.additionalImage &&
+                  imagePreviews.additionalImage.length > 0 ? (
                     <img
-                      src={imagePreviews.additionalImage}
+                      src={imagePreviews.additionalImage[0]}
                       alt="Additional Image Preview"
                       className="w-full h-full object-cover rounded-md"
                     />
@@ -462,42 +486,101 @@ const HotelForm = () => {
                   )}
                 />
               </div>
+
+              <div className="flex flex-col md:flex-row gap-5 w-fit">
+                <FormField
+                  control={form.control}
+                  name="brandedHotel"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center gap-4">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Branded Hotel
+                      </FormLabel>
+                      <FormControl>
+                        <input
+                          type="checkbox"
+                          checked={isBrandedHotelChecked}
+                          onChange={(e) =>
+                            handleBrandedHotelChange(e.target.checked)
+                          }
+                          className="form-checkbox"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="chainHotel"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center gap-4">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Chain Hotel
+                      </FormLabel>
+                      <FormControl>
+                        <input
+                          type="checkbox"
+                          checked={isChainHotelChecked}
+                          onChange={(e) =>
+                            handleChainHotelChange(e.target.checked)
+                          }
+                          disabled={isBrandedHotelChecked} // Disable when Branded hotel is selected
+                          className="form-checkbox"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Show both fields when either checkbox is checked */}
+              {(isBrandedHotelChecked || isChainHotelChecked) && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                  <>
+                    <FormField
+                      control={form.control}
+                      name="parentHotelName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                            Parent Hotel Name
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[10px]" />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="subHotelName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                            Sub Hotel Name
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-[10px]" />
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                </div>
+              )}
             </div>
 
             {/* Chunk 2: Room Details */}
             <div className="flex flex-col gap-4 2xl:gap-5 bg-[#FAF6EF] shadow-custom p-6 2xl:p-8 rounded-lg">
-              <div className="flex flex-col md:flex-row gap-5 w-fit">
-                <FormField
-                  control={form.control}
-                  name="roomTypes"
-                  render={({ field }) => (
-                    <FormItem className="w-40">
-                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        Room Types <span className="text-red-500">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
-                          <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
-                            <SelectValue placeholder="Select room type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {['Single', 'Double', 'Twin', 'Deluxe'].map(
-                              (value) => (
-                                <SelectItem key={value} value={value}>
-                                  {value}
-                                </SelectItem>
-                              )
-                            )}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage className="text-[10px]" />
-                    </FormItem>
-                  )}
-                />
+              <div>
                 <FormField
                   control={form.control}
                   name="roomImage"
@@ -511,9 +594,14 @@ const HotelForm = () => {
                           className="w-32 h-12 2xl:w-36 2xl:h-14 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-100"
                           onClick={() => triggerFileInput(roomImageRef)}
                         >
-                          {imagePreviews.roomImage ? (
+                          {imagePreviews.roomImage &&
+                          imagePreviews.roomImage.length > 0 ? (
                             <img
-                              src={imagePreviews.roomImage}
+                              src={
+                                imagePreviews.roomImage[
+                                  imagePreviews.roomImage.length - 1
+                                ]
+                              }
                               alt="Room Preview"
                               className="w-full h-full object-cover rounded-md"
                             />
@@ -544,6 +632,64 @@ const HotelForm = () => {
                           }
                         />
                       </div>
+                      <FormMessage className="text-[10px]" />
+
+                      {/* Display all selected images in a row, wrapping to the next line if necessary */}
+                      <div className="flex flex-wrap gap-3 mt-4">
+                        {imagePreviews.roomImage?.map((image, index) => (
+                          <div
+                            key={index}
+                            className="relative w-24 h-24 2xl:w-28 2xl:h-28"
+                          >
+                            <img
+                              src={image}
+                              alt={`Room Preview ${index + 1}`}
+                              className="w-full h-full object-cover rounded-md"
+                            />
+                            <button
+                              type="button"
+                              className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+                              onClick={() =>
+                                handleImageRemove(index, 'roomImage')
+                              }
+                            >
+                              X
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex flex-col md:flex-row gap-5 w-fit">
+                <FormField
+                  control={form.control}
+                  name="roomTypes"
+                  render={({ field }) => (
+                    <FormItem className="w-40">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Room Types <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
+                            <SelectValue placeholder="Select room type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {['Single', 'Double', 'Twin', 'Deluxe'].map(
+                              (value) => (
+                                <SelectItem key={value} value={value}>
+                                  {value}
+                                </SelectItem>
+                              )
+                            )}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
                       <FormMessage className="text-[10px]" />
                     </FormItem>
                   )}
@@ -743,9 +889,10 @@ const HotelForm = () => {
                         className="w-32 h-12 2xl:w-36 2xl:h-14 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-100"
                         onClick={() => triggerFileInput(hotelLicenseImageRef)}
                       >
-                        {imagePreviews.hotelLicenseImage ? (
+                        {imagePreviews.hotelLicenseImage &&
+                        imagePreviews.hotelLicenseImage.length > 0 ? (
                           <img
-                            src={imagePreviews.hotelLicenseImage}
+                            src={imagePreviews.hotelLicenseImage[0]}
                             alt="Hotel License Preview"
                             className="w-full h-full object-cover rounded-md"
                           />
@@ -820,9 +967,10 @@ const HotelForm = () => {
                           triggerFileInput(legalBusinessLicenseImageRef)
                         }
                       >
-                        {imagePreviews.legalBusinessLicenseImage ? (
+                        {imagePreviews.legalBusinessLicenseImage &&
+                        imagePreviews.legalBusinessLicenseImage.length > 0 ? (
                           <img
-                            src={imagePreviews.legalBusinessLicenseImage}
+                            src={imagePreviews.legalBusinessLicenseImage[0]}
                             alt="Business License Preview"
                             className="w-full h-full object-cover rounded-md"
                           />
@@ -894,9 +1042,10 @@ const HotelForm = () => {
                         className="w-32 h-12 2xl:w-36 2xl:h-14 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-100"
                         onClick={() => triggerFileInput(touristLicenseImageRef)}
                       >
-                        {imagePreviews.touristLicenseImage ? (
+                        {imagePreviews.touristLicenseImage &&
+                        imagePreviews.touristLicenseImage.length > 0 ? (
                           <img
-                            src={imagePreviews.touristLicenseImage}
+                            src={imagePreviews.touristLicenseImage[0]}
                             alt="Tourist License Preview"
                             className="w-full h-full object-cover rounded-md"
                           />
@@ -967,9 +1116,10 @@ const HotelForm = () => {
                         className="w-32 h-12 2xl:w-36 2xl:h-14 bg-[#F6EEE0] flex items-center justify-center cursor-pointer rounded-md border border-gray-100"
                         onClick={() => triggerFileInput(tanNumberImageRef)}
                       >
-                        {imagePreviews.tanNumberImage ? (
+                        {imagePreviews.tanNumberImage &&
+                        imagePreviews.tanNumberImage.length > 0 ? (
                           <img
-                            src={imagePreviews.tanNumberImage}
+                            src={imagePreviews.tanNumberImage[0]}
                             alt="TAN Number Preview"
                             className="w-full h-full object-cover rounded-md"
                           />
@@ -1044,9 +1194,10 @@ const HotelForm = () => {
                           triggerFileInput(dataPrivacyGdprImageRef)
                         }
                       >
-                        {imagePreviews.dataPrivacyGdprImage ? (
+                        {imagePreviews.dataPrivacyGdprImage &&
+                        imagePreviews.dataPrivacyGdprImage.length > 0 ? (
                           <img
-                            src={imagePreviews.dataPrivacyGdprImage}
+                            src={imagePreviews.dataPrivacyGdprImage[0]}
                             alt="GDPR Compliance Preview"
                             className="w-full h-full object-cover rounded-md"
                           />
@@ -1085,6 +1236,27 @@ const HotelForm = () => {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="dataPrivacyGdprCompliances"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                      GST Details
+                      <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter GDPR details"
+                        {...field}
+                        className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-[10px]" />
+                  </FormItem>
+                )}
+              />
+              <div></div>
               <div className="flex flex-col gap-3">
                 <FormField
                   control={form.control}

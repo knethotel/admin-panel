@@ -75,7 +75,7 @@ export const InRoomControlDataTable: React.FC = () => {
             <ToggleButton />
           </div>
         </div>
-        <Settings onClick={() => setIsModalOpen(true)} />
+        <Settings className='cursor-pointer' onClick={() => setIsModalOpen(true)} />
         <PriceTimeSettingInRoomControlModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}

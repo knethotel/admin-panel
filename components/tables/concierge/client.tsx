@@ -78,7 +78,7 @@ export const ConciergeServiceTable: React.FC = () => {
             <ToggleButton />
           </div>
         </div>
-        <Settings onClick={() => setIsModalOpen(true)} />
+        <Settings className='cursor-pointer' onClick={() => setIsModalOpen(true)} />
         <PriceTimeSettingConciergeModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}

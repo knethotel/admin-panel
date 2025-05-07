@@ -3,7 +3,6 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import dummyHotelData from '../../../../app/static/company-panel/HotelManagement';
 import { useForm } from 'react-hook-form';
-import 'keen-slider/keen-slider.min.css';
 import {
   CreateHotelIdFormSchema,
   CreateHotelIdFormSchemaType,

@@ -3,8 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import {
-  PriceTimeSettingSpaSchema,
-  PriceTimeSettingSpaSchemaType
+  PriceTimeSettingHouseKeepingSchema,
+  PriceTimeSettingHouseKeepingSchemaType
 } from 'schema';
 import exchageIcon from '../../../public/assets/exchange.png';
 import {
@@ -33,9 +33,12 @@ interface ModalProps {
   onClose: () => void;
 }
 
-const PriceTimeSettingSpa: React.FC<ModalProps> = ({ isOpen, onClose }) => {
-  const form = useForm<PriceTimeSettingSpaSchemaType>({
-    resolver: zodResolver(PriceTimeSettingSpaSchema),
+const PriceTimeSettingHouseKeeping: React.FC<ModalProps> = ({
+  isOpen,
+  onClose
+}) => {
+  const form = useForm<PriceTimeSettingHouseKeepingSchemaType>({
+    resolver: zodResolver(PriceTimeSettingHouseKeepingSchema),
     defaultValues: {
       priceType: 'Free',
       price: 0,
@@ -48,7 +51,7 @@ const PriceTimeSettingSpa: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const priceType = form.watch('priceType');
   if (!isOpen) return null;
 
-  const onSubmit = async (data: PriceTimeSettingSpaSchemaType) => {
+  const onSubmit = async (data: PriceTimeSettingHouseKeepingSchemaType) => {
     try {
       console.log('Price settings submitted:', data);
       form.reset();
@@ -60,24 +63,21 @@ const PriceTimeSettingSpa: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
-      <div className="bg-white rounded-lg shadow-lg flex flex-col gap-6 p-6 w-full max-w-lg relative animate-fadeIn">
-        <div>
-          <h5 className="font-medium absolute top-2 left-2">Settings</h5>
-          <button
-            onClick={onClose}
-            className="absolute top-2 right-2 text-gray-600 hover:text-black"
-          >
+      <div className="bg-white rounded-lg shadow-lg flex flex-col gap-6 p-6 w-full max-w-xl relative animate-fadeIn">
+        <div className="flex items-center justify-between">
+          <div>
+            <h5 className="font-medium ">Settings</h5>
+            <p className="text-gray-500 text-sm mt-1">
+              Edit time or price according to availability
+            </p>
+          </div>
+          {/* Close button */}
+          <button onClick={onClose} className="text-gray-600 hover:text-black">
             ✖
           </button>
-          <p className="absolute top-8 left-2 opacity-50 text-sm">
-            Edit time or price according to availability
-          </p>
         </div>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="pt-10 space-y-4"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="flex justify-between items-start">
               <div className="flex gap-4 items-center">
                 <span className="text-sm font-semibold">Price</span>
@@ -153,12 +153,15 @@ const PriceTimeSettingSpa: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               )}
             </div>
 
-            <div className="flex pt-6 px-7 justify-between items-center">
+            <div className="flex justify-between items-center">
               <FormField
                 control={form.control}
                 name="timeSlot"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col sm:flex-row gap-2">
+                  <FormItem className="flex flex-col gap-2">
+                    <FormLabel className="text-sm font-semibold text-gray-500">
+                      Select Time Slot
+                    </FormLabel>
                     <div className="w-full">
                       <FormControl>
                         <RadioGroup
@@ -196,7 +199,10 @@ const PriceTimeSettingSpa: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 control={form.control}
                 name="availability"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col sm:flex-row gap-2">
+                  <FormItem className="flex flex-col gap-2">
+                    <FormLabel className="text-sm font-semibold text-gray-500">
+                      select Availability
+                    </FormLabel>
                     <div className="w-full">
                       <FormControl>
                         <RadioGroup
@@ -210,6 +216,42 @@ const PriceTimeSettingSpa: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                             'Monday-Sunday',
                             'Only Weekends'
                           ].map((value) => (
+                            <div
+                              key={value}
+                              className="flex items-center space-x-3"
+                            >
+                              <RadioGroupItem value={value} id={value} />
+                              <label
+                                htmlFor={value}
+                                className="text-xs 2xl:text-sm text-gray-700 capitalize"
+                              >
+                                {value}
+                              </label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage className="text-[10px] mt-1" />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="availability"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col gap-2">
+                    <FormLabel className="text-sm font-semibold text-gray-500">
+                      Slot Duration
+                    </FormLabel>
+                    <div className="w-full">
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex flex-col space-y-2"
+                        >
+                          {['30 minutes', '60 Minutes', '90 Minutes', '120 Minutes'].map((value) => (
                             <div
                               key={value}
                               className="flex items-center space-x-3"
@@ -251,7 +293,7 @@ const PriceTimeSettingSpa: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                             <ChevronDown className="ml-2 mt-1 h-5 w-5 text-black" />
                           </SelectTrigger>
                           <SelectContent className="bg-[#362913] text-nowrap rounded-2xl text-white border-2 shadow-md border-white">
-                            {['Spa', 'Salon'].map((value) => (
+                            {['SPA', 'Salon'].map((value) => (
                               <SelectItem
                                 key={value}
                                 value={value}
@@ -285,7 +327,7 @@ const PriceTimeSettingSpa: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                             <ChevronDown className="ml-2 mt-1 h-5 w-5 text-black" />
                           </SelectTrigger>
                           <SelectContent className="bg-[#362913] text-nowrap rounded-2xl text-white border-2 shadow-md border-white">
-                            {['Massage', 'Hair-Cut', 'Facial'].map((value) => (
+                            {['Men', 'Women', 'Others'].map((value) => (
                               <SelectItem
                                 key={value}
                                 value={value}
@@ -339,4 +381,4 @@ const PriceTimeSettingSpa: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default PriceTimeSettingSpa;
+export default PriceTimeSettingHouseKeeping;

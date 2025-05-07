@@ -1,7 +1,7 @@
 'use client';
 import '../globals.css';
 import Link from 'next/link';
-import { LogOut, Users, Landmark } from 'lucide-react';
+import { LogOut, Users, Landmark, Component, Ticket } from 'lucide-react';
 import Providers from '../providers';
 import { NavItem } from '../nav-item';
 import logo from '../../public/assets/logo.svg';
@@ -144,7 +144,7 @@ function SuperAdminPanelSideNav() {
             href="/super-admin/coupon-management"
             label="Coupon Management"
           >
-            <RiMoneyRupeeCircleLine className="h-5 w-5 lg:h-6 lg:w-6" />
+            <Ticket className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
           <NavItem
             href="/super-admin/refund-management"
@@ -181,7 +181,7 @@ function SuperAdminPanelSideNav() {
           </div>
 
           <NavItem
-            href="/super-admin/reports-and-analytics"
+            href="/super-admin/analytics-reports"
             label="ANALYTICS & REPORTS"
           >
             <MdAnalytics className="h-5 w-5 lg:h-6 lg:w-6" />
@@ -239,7 +239,7 @@ function HotelPanelSideNav() {
             href="/coupon-management"
             label="Coupon Management"
           >
-            <RiMoneyRupeeCircleLine className="h-5 w-5 lg:h-6 lg:w-6" />
+            <Ticket className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
           <NavItem
             href="/refund-management"
@@ -257,7 +257,7 @@ function HotelPanelSideNav() {
           </NavItem>
 
           <NavItem
-            href="/super-admin/reports-and-analytics"
+            href="/analytics-reports"
             label="ANALYTICS & REPORTS"
           >
             <MdAnalytics className="h-5 w-5 lg:h-6 lg:w-6" />

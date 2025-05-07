@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Heading } from '@/components/ui/heading';
 import React from 'react';
 
 type Props = {
@@ -13,9 +12,6 @@ const FormWrapper = ({ title, children }: Props) => {
       title={title}
       className="bg-[#FAF6EF] w-full shadow-custom border-none"
     >
-      {/* <CardHeader className='py-0'>
-        <Heading title={title} className='mb-0'/>
-      </CardHeader> */}
       <CardContent>{children}</CardContent>
     </Card>
   );

@@ -1,110 +1,83 @@
 import { ColumnDef } from '@tanstack/react-table';
+import { MoveDownLeft, MoveUpRight } from 'lucide-react';  // Importing lucide-react icons
 import CellAction from './cell-action';
-import { RefundDataType } from 'app/static/PaymentManagement';
 
-// Update type to match guestDataType for better type safety
-export const columns: ColumnDef<RefundDataType>[] = [
+export const columns: ColumnDef<any>[] = [
   {
-    accessorKey: 'refundID',
-    header: 'Refund ID'
+    accessorKey: 'paymentID',
+    header: 'Payment ID',
   },
   {
-    accessorKey: 'userID',
-    header: 'User ID'
+    accessorKey: 'dateTime',
+    header: 'Date & Time',
   },
   {
-    accessorKey: 'orderID',
-    header: 'Order ID'
-  },
-  {
-    accessorKey: 'hotelDetails',
-    header: 'Hotel ID',
+    accessorKey: 'guestDetail',
+    header: 'Guest Detail',
     cell: ({ row }) => {
-      const hotelDetails = row.original.hotelDetails;
+      const { guestName, guestID } = row.original.guestDetail;
       return (
-        <div className="flex flex-col items-center">
-          <div className="flex flex-col items-start">
-            <span className="text-sm">{hotelDetails.hotelID}</span>
-            <span className="text-xs 2xl:text-sm opacity-55">
-              {hotelDetails.hotelName}
-            </span>
-          </div>
+        <div className="flex flex-col items-start">
+          <span className="text-sm">{guestID}</span>
+          <span className="text-xs opacity-55">{guestName}</span>
         </div>
       );
-    }
+    },
   },
   {
-    accessorKey: 'amount',
-    header: 'Amount'
-  },
-  {
-    accessorKey: 'statusDetails',
-    header: 'Status',
+    accessorKey: 'serviceDetails',
+    header: 'Service Details',
     cell: ({ row }) => {
-      const status = row.original.statusDetails.status;
-      const processedAt = row.original.statusDetails.processedAt;
-      switch (status) {
-        case 'INITIATED':
-          return (
-            <div className="flex flex-col items-center">
-              <div className="flex flex-col items-start">
-                {' '}
-                <span className="text-[#FC690E]">{status}</span>
-                <span className="text-xs 2xl:text-sm opacity-70">
-                  {processedAt}
-                </span>
-              </div>
-            </div>
-          );
-        case 'REJECTED':
-          return (
-            <div className="flex flex-col items-center">
-              <div className="flex flex-col items-start">
-                {' '}
-                <span className="text-[#E5252A]">{status}</span>
-                <span className="text-xs 2xl:text-sm opacity-70">
-                  {processedAt}
-                </span>
-              </div>
-            </div>
-          );
-        case 'IN-PROGRESS':
-          return (
-            <div className="flex flex-col items-center">
-              <div className="flex flex-col items-start">
-                {' '}
-                <span className="text-[#3787E3]">{status}</span>
-                <span className="text-xs 2xl:text-sm opacity-70">
-                  {processedAt}
-                </span>
-              </div>
-            </div>
-          );
-        case 'COMPLETED':
-          return (
-            <div className="flex flex-col items-center">
-              <div className="flex flex-col items-start">
-                {' '}
-                <span className="text-[#78B150]">{status}</span>
-                <span className="text-xs 2xl:text-sm opacity-70">
-                  {processedAt}
-                </span>
-              </div>
-            </div>
-          );
-        default:
-          return (
-            <div className="flex flex-col items-center">
-              <div className="flex flex-col items-start">
-                <span className="text-gray-500">{status}</span>
-                <span className="text-xs 2xl:text-sm opacity-70">
-                  {processedAt}
-                </span>
-              </div>
-            </div>
-          );
+      const { serviceID, serviceName } = row.original.serviceDetails;
+      return (
+        <div className="flex flex-col items-start">
+          <span className="text-sm">{serviceID}</span>
+          <span className="text-xs opacity-55">{serviceName}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'paymentTransaction',
+    header: 'Payment & Transactions',
+    cell: ({ row }) => {
+      const { amount, method } = row.original.paymentTransaction;
+
+      let Icon;
+      let iconColor = '';
+      if (method === 'Online') {
+        Icon = MoveUpRight;  
+        iconColor = 'text-red-500'; 
+      } else if (method === 'via cash') {
+        Icon = MoveDownLeft; 
+        iconColor = 'text-green-500';  
       }
-    }
+
+      return (
+        <div className="flex flex-col items-start">
+          <span className="text-sm">{amount}</span>
+          <span className="text-xs opacity-55 flex items-center gap-1">
+            {method} {Icon && <Icon className={`${iconColor} w-4 h-4`} />}
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'discountCoupon',
+    header: 'Discount & Coupons',
+    cell: ({ row }) => {
+      const discountCoupon = row.original.discountCoupon;
+
+      return (
+        <div className="flex items-center gap-2">
+          <span className="text-sm">{discountCoupon}</span>
+          {discountCoupon !== 'None' && (
+            <img src={'/discount.png'} alt="Discount Coupon" className="w-8 h-8 mt-1" />
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: 'actions',
@@ -114,6 +87,6 @@ export const columns: ColumnDef<RefundDataType>[] = [
       <div className="flex items-center justify-center">
         <CellAction data={row.original} />
       </div>
-    )
-  }
+    ),
+  },
 ];

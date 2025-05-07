@@ -47,7 +47,8 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
       city: guest?.guestDetails?.city || '',
       state: guest?.guestDetails?.state || '',
       pinCode: guest?.guestDetails?.pinCode || '',
-      email: guest?.contactDetails?.email || ''
+      email: guest?.contactDetails?.email || '',
+      sources: typeof guest?.guestDetails === 'string' ? guest.guestDetails : ''
     }
   });
 
@@ -126,9 +127,35 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
             onSubmit={addGuestForm.handleSubmit(onSubmit)}
             className="flex flex-col gap-4 w-full"
           >
-            <div className="grid grid-cols-3 gap-10">
-              <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col md:flex-row gap-4">
                 <FormField
+                  control={addGuestForm.control}
+                  name="phoneNo"
+                  className="w-full"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-black text-[0.8rem]">
+                        Phone Number
+                      </FormLabel>
+                      <FormControl>
+                        <div className="flex gap-1">
+                          <Input
+                            disabled={!isEnabled}
+                            type="text"
+                            placeholder="Phone Number"
+                            {...field}
+                            className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                          />
+                          {isEnabled && <span className="text-red-500">*</span>}
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  className="w-full"
                   control={addGuestForm.control}
                   name="firstName"
                   render={({ field }) => (
@@ -153,6 +180,7 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                   )}
                 />
                 <FormField
+                  className="w-full"
                   control={addGuestForm.control}
                   name="lastName"
                   render={({ field }) => (
@@ -178,83 +206,9 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                 />
               </div>
 
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col md:flex-row gap-3">
                 <FormField
-                  control={addGuestForm.control}
-                  name="phoneNo"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-black text-[0.8rem]">
-                        Phone Number
-                      </FormLabel>
-                      <FormControl>
-                        <div className="flex gap-1">
-                          <Input
-                            disabled={!isEnabled}
-                            type="text"
-                            placeholder="Phone Number"
-                            {...field}
-                            className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                          />
-                          {isEnabled && <span className="text-red-500">*</span>}
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={addGuestForm.control}
-                  name="address"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-black text-[0.8rem]">
-                        Address
-                      </FormLabel>
-                      <FormControl>
-                        <div className="flex gap-1">
-                          <Input
-                            disabled={!isEnabled}
-                            type="text"
-                            placeholder="Address"
-                            {...field}
-                            className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                          />
-                          {isEnabled && <span className="text-red-500">*</span>}
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={addGuestForm.control}
-                  name="city"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-black text-[0.8rem]">
-                        City
-                      </FormLabel>
-                      <FormControl>
-                        <div className="flex gap-1">
-                          <Input
-                            disabled={!isEnabled}
-                            type="text"
-                            placeholder="City"
-                            {...field}
-                            className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                          />
-                          {isEnabled && <span className="text-red-500">*</span>}
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="flex flex-col gap-3">
-                <FormField
+                  className="w-full"
                   control={addGuestForm.control}
                   name="email"
                   render={({ field }) => (
@@ -279,6 +233,32 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                   )}
                 />
                 <FormField
+                  className="w-full"
+                  control={addGuestForm.control}
+                  name="address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-black text-[0.8rem]">
+                        Address
+                      </FormLabel>
+                      <FormControl>
+                        <div className="flex gap-1">
+                          <Input
+                            disabled={!isEnabled}
+                            type="text"
+                            placeholder="Address"
+                            {...field}
+                            className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                          />
+                          {isEnabled && <span className="text-red-500">*</span>}
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  className="w-full"
                   control={addGuestForm.control}
                   name="state"
                   render={({ field }) => (
@@ -291,7 +271,35 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                           <Input
                             disabled={!isEnabled}
                             type="text"
-                            placeholder="State"
+                            placeholder="state"
+                            {...field}
+                            className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                          />
+                          {isEnabled && <span className="text-red-500">*</span>}
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="flex flex-col md:flex-row gap-3">
+                <FormField
+                  className="w-full"
+                  control={addGuestForm.control}
+                  name="sources"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-black text-[0.8rem]">
+                        Sources
+                      </FormLabel>
+                      <FormControl>
+                        <div className="flex gap-1">
+                          <Input
+                            disabled={!isEnabled}
+                            type="text"
+                            placeholder="sources"
                             {...field}
                             className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                           />
@@ -303,6 +311,32 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                   )}
                 />
                 <FormField
+                  className="w-full"
+                  control={addGuestForm.control}
+                  name="city"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-black text-[0.8rem]">
+                        City
+                      </FormLabel>
+                      <FormControl>
+                        <div className="flex gap-1">
+                          <Input
+                            disabled={!isEnabled}
+                            type="text"
+                            placeholder="City"
+                            {...field}
+                            className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                          />
+                          {isEnabled && <span className="text-red-500">*</span>}
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  className="w-full"
                   control={addGuestForm.control}
                   name="pinCode"
                   render={({ field }) => (
@@ -328,7 +362,7 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                 />
               </div>
             </div>
-            {mode === 'pending' && (
+            {mode === 'pending' || mode === 'add' && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-10 border-t border-dashed border-gray-400 pt-4 mt-4">
                 <div className="flex flex-col gap-4">
                   <FormItem>
@@ -338,7 +372,7 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                     <FormControl>
                       <Input
                         type="datetime-local"
-                        disabled
+                        // disabled
                         className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                       />
                     </FormControl>
@@ -352,7 +386,7 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                     <FormControl>
                       <Input
                         type="datetime-local"
-                        disabled
+                        // disabled
                         className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                       />
                     </FormControl>
@@ -367,7 +401,6 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                       <Input
                         type="text"
                         placeholder="Room Number"
-                        disabled={!isEnabled && mode !== 'pending'}
                         className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                       />
                     </FormControl>
@@ -422,18 +455,18 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
       </div>
 
       {/* {isEnabled && ( */}
-        <div className="flex items-center gap-3 py-8 justify-end w-full">
-          <Button
-            type="button"
-            onClick={() => router.back()}
-            className="btn-secondary"
-          >
-            Cancel
-          </Button>
-          <Button type="submit" className="btn-primary">
-            Save Changes
-          </Button>
-        </div>
+      <div className="flex items-center gap-3 py-8 justify-end w-full">
+        <Button
+          type="button"
+          onClick={() => router.back()}
+          className="btn-secondary"
+        >
+          Cancel
+        </Button>
+        <Button type="submit" className="btn-primary">
+          Save Changes
+        </Button>
+      </div>
       {/* )} */}
     </>
   );
