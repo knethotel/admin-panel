@@ -1,6 +1,6 @@
 'use client';
 
-import { Eye } from 'lucide-react';
+import { Eye, Trash } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { DataTable } from '@/components/ui/data-table';
 import { ColumnDef } from '@tanstack/react-table';
@@ -84,16 +84,20 @@ export default function GuestPendingPage() {
       id: 'actions',
       header: 'Action',
       cell: ({ row }) => (
-        <div className="flex justify-center">
+        <div className="flex items-center justify-center gap-2">
           <button
             className="p-2 rounded-md bg-[#F6EEE0] hover:bg-[#e6dcc4]"
             onClick={() =>
-              router.push(
-                `/guest-management/pending/view/${row.original.id}`
-              )
+              router.push(`/guest-management/pending/view/${row.original.id}`)
             }
           >
             <Eye className="h-4 w-4 text-black" />
+          </button>
+          <button
+            // onClick={() => setOpen(true)}
+            className="p-1 rounded-md group hover:bg-[#a07d3d5e]"
+          >
+            <Trash className=" w-4 text-button-dark group-hover:text-white" />
           </button>
         </div>
       )
@@ -105,7 +109,10 @@ export default function GuestPendingPage() {
       <Navbar active search />
       <div className="w-full min-h-screen pt-8 mt-14">
         <div className="container mx-auto">
-          <Heading title='Pending Pre-CheckIn Requests' className='mb-2 md:px-4'/>
+          <Heading
+            title="Pending Pre-CheckIn Requests"
+            className="mb-2 md:px-4"
+          />
           <DataTable
             columns={pendingColumns}
             data={pendingData}

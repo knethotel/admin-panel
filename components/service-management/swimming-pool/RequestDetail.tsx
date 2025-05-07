@@ -48,9 +48,9 @@ const SwimmingPoolRequestDetail = ({ requestDetails, requestId }: Props) => {
   const request = requestDetails.find((r) => r.requestID === requestId);
 
   return (
-    <div className="mt-24 bg-[#FAF6EF] rounded-md shadow-custom px-6 py-8 flex font-medium flex-col gap-14 w-full">
+    <div className="mt-24 bg-[#FAF6EF] rounded-md shadow-custom px-6 py-8 flex font-medium flex-col gap-8 w-full mb-4">
       {/* Header */}
-      <div className="flex flex-col gap-12 text-sm opacity-75">
+      <div className="flex gap-12 text-sm opacity-75">
         <p>Guest ID: {request?.guestDetails.guestID}</p>
         <p>Request ID: {request?.requestID}</p>
       </div>
@@ -136,7 +136,7 @@ const SwimmingPoolRequestDetail = ({ requestDetails, requestId }: Props) => {
                 {request?.rulesAndRegulations &&
                   Object.entries(request.rulesAndRegulations).map(
                     ([key, value]) => (
-                      <p key={key} className="mb-2">
+                      <p key={key} className="my-4">
                         <span className="font-semibold capitalize">
                           {key.replace(/([A-Z])/g, ' $1')}:
                         </span>{' '}
@@ -154,7 +154,8 @@ const SwimmingPoolRequestDetail = ({ requestDetails, requestId }: Props) => {
               <textarea
                 className="w-full p-2 border rounded-md border-none placeholder:text-sm bg-[#F6EEE0] text-gray-700"
                 placeholder="Type your message here"
-                rows={4}
+                rows={10}
+                cols={50}
               />
               <div className="flex justify-end">
                 <Button className="bg-[#A07D3D] h-8 text-white hover:outline hover:text-black">

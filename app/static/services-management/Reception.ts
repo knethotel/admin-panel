@@ -28,6 +28,7 @@ export type ReceptionDataType = {
   requestType: RequestTypeType;
   status: StatusType;
   assignedTo: string;
+  estimatedTime?: string;
 };
 export const ReceptionData: ReceptionDataType[] = [
   {

@@ -4,43 +4,46 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Heading } from '@/components/ui/heading';
-
 import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 
-import { RefundData } from 'app/static/PaymentManagement';
-import CreateRefundModal from '@/components/shared/coupon-refund-management/create_refund_modal';
+// Sample data based on the image provided
+const transactionsData = [
+  {
+    paymentID: 'RD17823450',
+    dateTime: '10-02-2025 11:00AM',
+    guestDetail: { guestName: 'MR. TIMOTHY CHALAMATE', guestID: '01953268' },
+    serviceDetails: { serviceID: 'SDB73567', serviceName: 'Housekeeping' },
+    paymentTransaction: { amount: 'INR 2341', method: 'via cash' },
+    discountCoupon: 'NEW250',
+    statusDetails: { status: 'COMPLETED', processedAt: '10-02-2025 11:05AM' },
+  },
+  {
+    paymentID: 'RD17823451',
+    dateTime: '10-02-2025 11:30AM',
+    guestDetail: { guestName: 'MR. JAMES SMITH', guestID: '01953269' },
+    serviceDetails: { serviceID: 'SDB73568', serviceName: 'Housekeeping' },
+    paymentTransaction: { amount: 'INR 2341', method: 'Online' },
+    discountCoupon: 'None',
+    statusDetails: { status: 'IN-PROGRESS', processedAt: '10-02-2025 11:35AM' },
+  },
+  {
+    paymentID: 'RD17823452',
+    dateTime: '10-02-2025 12:00PM',
+    guestDetail: { guestName: 'MR. JOHN DOE', guestID: '01953270' },
+    serviceDetails: { serviceID: 'SDB73569', serviceName: 'Room Service' },
+    paymentTransaction: { amount: 'INR 1500', method: 'via cash' },
+    discountCoupon: 'WELCOME50',
+    statusDetails: { status: 'REJECTED', processedAt: '10-02-2025 12:05PM' },
+  },
+];
 
-type ModeType = 'add_employee';
-
-export const RefundDetailsTable: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
-  const [data, setData] = useState(RefundData || []);
-  const [filteredData, setFilteredData] = useState(RefundData || []);
+export const Transactions: React.FC = () => {
+  const [data, setData] = useState(transactionsData);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [loading, setLoading] = useState<boolean>();
-  const [totalRecords, setTotalRecords] = useState(data.length || 0);
-  const [mode, setMode] = useState<ModeType>();
-
-  // const filters = [
-  //     {
-  //         label: 'Account Status',
-  //         key: 'accountStatus', // Backend key
-  //         subOptions: ['Active', 'Suspended'],
-  //     },
-  //     {
-  //         label: 'Verification Status',
-  //         key: 'verificationStatus',
-  //         subOptions: ['Verified', 'Pending', 'Rejected'],
-  //     },
-  //     {
-  //         label: 'Activity Status',
-  //         key: 'activityStatus',
-  //         subOptions: ['Active', 'Inactive'],
-  //     },
-  // ];
+  const [loading, setLoading] = useState<boolean>(false);
+  const [totalRecords, setTotalRecords] = useState(data.length);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
@@ -53,46 +56,20 @@ export const RefundDetailsTable: React.FC = () => {
     setPageNo(1); // Reset to the first page when the limit changes
   };
 
-  // Function to handle search input
-  const handleSearchChange = (searchValue: string) => {
-    if (searchValue.trim() === '') {
-      setFilteredData(data); // Reset if empty
-    } else {
-      const filtered = data.filter((item) =>
-        item.hotelDetails.hotelName
-          .toLowerCase()
-          .includes(searchValue.toLowerCase())
-      );
-      setFilteredData(filtered);
-    }
-  };
-
   return (
     <>
       <div className="flex items-start justify-start">
         <div className="w-full flex justify-between items-center px-4">
-          <Heading title={`Refunds Management`} />
-          <Button onClick={() => setIsOpen(true)} className="btn-primary">
-            Create Refund
-          </Button>
+          <Heading title="Transactions" />
         </div>
       </div>
-      <CreateRefundModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
       {loading ? (
         <span>Loading...</span>
       ) : (
         <DataTable
-          searchKey="firstName"
+          searchKey="guestName"
           columns={columns}
-          data={data} // Use filteredData instead of data while api integration
-          // onSearch={(searchValue) => {
-          //     const filtered = data.filter((item) =>
-          //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())
-          //     );
-          //     setData(filtered);
-          // }}
-          // filters={filters}
-          //   onFilterChange={handleFilterChange}
+          data={data}
         />
       )}
       <div className="flex justify-end space-x-2 px-3 py-2">
