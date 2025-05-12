@@ -30,6 +30,15 @@ export const AlertModal: React.FC<AlertModalProps> = ({
     return null;
   }
 
+  const handleLogout = () => {
+    // Remove the session and cookie
+    sessionStorage.removeItem('token');
+    document.cookie = 'token=; Max-Age=0; path=/'; // Clear the cookie
+  
+    // Redirect to login page
+    window.location.href = '/';
+  };
+
   return (
     <Modal
       title={title}
@@ -44,7 +53,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
         <Button
           disabled={loading}
           variant="destructive"
-          onClick={onConfirmAction}
+          onClick={handleLogout}
         >
           {loading ? (
             <span className="flex items-center">

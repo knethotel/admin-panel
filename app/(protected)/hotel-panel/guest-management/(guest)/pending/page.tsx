@@ -88,7 +88,7 @@ export default function GuestPendingPage() {
           <button
             className="p-2 rounded-md bg-[#F6EEE0] hover:bg-[#e6dcc4]"
             onClick={() =>
-              router.push(`/guest-management/pending/view/${row.original.id}`)
+              router.push(`/hotel-panel/guest-management/pending/view/${row.original.id}`)
             }
           >
             <Eye className="h-4 w-4 text-black" />

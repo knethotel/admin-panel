@@ -61,7 +61,7 @@ export const columns: ColumnDef<ComplaintDataType>[] = [
                 CLOSED
               </span>
               <button className="text-[#78B150] text-[10px] pr-3">
-                View Feedback
+                Give Feedback
               </button>
             </div>
           )}

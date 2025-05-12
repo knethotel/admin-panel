@@ -201,63 +201,63 @@ function HotelPanelSideNav() {
     <aside className="flex flex-col py-14 lg:py-2 2xl:py-4 h-screen p-4 pb-0 bg-coffeeLight z-40">
       <nav className="flex flex-col gap-4 items-center overflow-y-auto hide-scrollbar">
         <Link
-          href="/dashboard"
+          href="/hotel-panel/dashboard"
           className="flex items-center gap-4 p-2 text-lg lg:text-xl font-semibold"
         >
           <Image loading="lazy" src={logo} alt="KNECTHOTEL" />
         </Link>
 
         <div className="sidebar-menu h-screen w-full p-4 mb-2 rounded-2xl flex flex-col gap-3">
-          <NavItem href="/dashboard" label="Dashboard">
+          <NavItem href="/hotel-panel/dashboard" label="Dashboard">
             <MdDashboardCustomize className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
-          <NavItem href="/employee-management" label="Employee Management">
+          <NavItem href="/hotel-panel/employee-management" label="Employee Management">
             <IoIosPeople className="h-6 w-6 lg:h-7 lg:w-7" />
           </NavItem>
 
-          <NavItem href="/roles-permission" label="Roles & Permission">
+          <NavItem href="/hotel-panel/roles-permission" label="Roles & Permission">
             <BsPersonWorkspace className="h-4 w-4 lg:h-5 lg:w-5" />
           </NavItem>
 
-          <NavItem href="/guest-management" label="Guest Management">
+          <NavItem href="/hotel-panel/guest-management" label="Guest Management">
             <ImManWoman className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
-          <NavItem href="/service-management" label="Service Management">
+          <NavItem href="/hotel-panel/service-management" label="Service Management">
             <MdManageAccounts className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
-          <NavItem href="/complaint-management" label="Complaint Management">
+          <NavItem href="/hotel-panel/complaint-management" label="Complaint Management">
             <VscSettings className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
-          <NavItem href="/payment-management" label="Payment Management">
+          <NavItem href="/hotel-panel/payment-management" label="Payment Management">
             <RiMoneyRupeeCircleLine className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
           <NavItem
-            href="/coupon-management"
+            href="/hotel-panel/coupon-management"
             label="Coupon Management"
           >
             <Ticket className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
           <NavItem
-            href="/refund-management"
+            href="/hotel-panel/refund-management"
             label="Refunds Management"
           >
             <RiMoneyRupeeCircleLine className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
-          <NavItem href="/change-password" label="Change Password">
+          <NavItem href="/hotel-panel/change-password" label="Change Password">
             <TbPasswordUser className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
-          <NavItem href="/hotel-profile" label="Hotel Profile">
+          <NavItem href="/hotel-panel/hotel-profile" label="Hotel Profile">
             <Landmark className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
           <NavItem
-            href="/analytics-reports"
+            href="/hotel-panel/analytics-reports"
             label="ANALYTICS & REPORTS"
           >
             <MdAnalytics className="h-5 w-5 lg:h-6 lg:w-6" />

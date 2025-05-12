@@ -84,7 +84,7 @@ export const InRoomDiningDataTable: React.FC = () => {
         </div>
         <div className="flex justify-end px-4">
           <Button
-            onClick={() => router.push(`/service-management/inroomdining/menu`)}
+            onClick={() => router.push(`/hotel-panel/service-management/inroomdining/menu`)}
             className="btn-primary"
           >
             View Menu

@@ -3,14 +3,10 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
-import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 import { ComplaintData } from 'app/static/ComplaintData';
-import { ComplaintDataOutbox } from 'app/static/ComplaintData';
 
 export const ComplaintSuperAdminTable: React.FC = () => {
-  // const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'inbox' | 'outbox'>('inbox');
   const [data, setData] = useState(ComplaintData || []);
   const [filteredData, setFilteredData] = useState(ComplaintData || []);
   const [pageNo, setPageNo] = useState(1);
@@ -29,17 +25,6 @@ export const ComplaintSuperAdminTable: React.FC = () => {
     setPageNo(1); // Reset to the first page when the limit changes
   };
 
-  const switchTab = (tab: 'inbox' | 'outbox') => {
-    setActiveTab(tab);
-    if (tab === 'outbox') {
-      setData(ComplaintDataOutbox); // Switch to Outbox data
-      setFilteredData(ComplaintDataOutbox);
-    } else {
-      setData(ComplaintData); // Switch back to Inbox data
-      setFilteredData(ComplaintData);
-    }
-  };
-
   const tableContent = (
     <DataTable
       searchKey="complaintType"
@@ -50,24 +35,6 @@ export const ComplaintSuperAdminTable: React.FC = () => {
 
   return (
     <>
-      <div className="flex justify-end mt-6 px-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => switchTab('inbox')}
-          className={`rounded-r-none ${activeTab === 'inbox' ? 'btn-active bg-[#A07D3D] text-white hover:text-white hover:bg-[#A07D3D]' : 'bg-[#A07D3D4D] hover:bg-[#A07D3D4D] text-gray-500 hover:text-gray-500'}`}
-        >
-          Inbox
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => switchTab('outbox')}
-          className={`rounded-l-none ${activeTab === 'outbox' ? 'btn-active bg-[#A07D3D] text-white hover:text-white hover:bg-[#A07D3D]' : 'bg-[#A07D3D4D] hover:bg-[#A07D3D4D] text-gray-500 hover:text-gray-500'}`}
-        >
-          Outbox
-        </Button>
-      </div>
       <div className="flex flex-col w-full">
         {loading ? <span>Loading...</span> : tableContent}
         <div className="flex justify-end space-x-2 px-3 py-2">

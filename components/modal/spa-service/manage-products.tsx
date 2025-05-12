@@ -425,7 +425,7 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
-                  router.push('/service-management/spa/products');
+                  router.push('/hotel-panel/service-management/spa/products');
                 }}
                 className="btn-primary"
               >

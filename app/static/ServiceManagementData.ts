@@ -25,67 +25,67 @@ export const serviceManagementHomePageData: ServiceManagementHomePageDataType[] 
       id: 1,
       name: 'RECEPTION',
       imgSrc: img1,
-      href: '/service-management/reception'
+      href: '/hotel-panel/service-management/reception'
     },
     {
       id: 2,
       name: 'HOUSEKEEPING',
       imgSrc: img2,
-      href: '/service-management/housekeeping'
+      href: '/hotel-panel/service-management/housekeeping'
     },
     {
       id: 3,
       name: 'IN-ROOM DINNING',
       imgSrc: img3,
-      href: '/service-management/inroomdining'
+      href: '/hotel-panel/service-management/inroomdining'
     },
     {
       id: 4,
       name: 'GYM',
       imgSrc: img4,
-      href: '/service-management/gym'
+      href: '/hotel-panel/service-management/gym'
     },
     {
       id: 5,
       name: 'SPA',
       imgSrc: img5,
-      href: '/service-management/spa'
+      href: '/hotel-panel/service-management/spa'
     },
     {
       id: 6,
       name: 'SWIMMING POOL',
       imgSrc: img6,
-      href: '/service-management/swimmingpool'
+      href: '/hotel-panel/service-management/swimmingpool'
     },
     {
       id: 7,
       name: 'CONCIERGE SERVICE',
       imgSrc: img7,
-      href: '/service-management/conciergeservice'
+      href: '/hotel-panel/service-management/conciergeservice'
     },
     {
       id: 8,
       name: 'IN-ROOM CONTROL',
       imgSrc: img8,
-      href: '/service-management/in_room_control'
+      href: '/hotel-panel/service-management/in_room_control'
     },
     {
       id: 9,
       name: 'ORDER MANAGEMENT',
       imgSrc: img9,
-      href: '/service-management/ordermanagement'
+      href: '/hotel-panel/service-management/ordermanagement'
     },
     {
       id: 10,
       name: 'SOS MANAGEMENT',
       imgSrc: img10,
-      href: '/service-management/sosmanagement'
+      href: '/hotel-panel/service-management/sosmanagement'
     },
     {
       id: 11,
       name: 'CHAT WITH STAFF',
       imgSrc: img11,
-      href: '/service-management/chatwithstaff'
+      href: '/hotel-panel/service-management/chatwithstaff'
     }
   ];
 

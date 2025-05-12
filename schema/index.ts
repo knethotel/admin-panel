@@ -46,7 +46,11 @@ export const guestSchema = z.object({
   email: z.string().email().min(1, 'Email is required'),
   state: z.string().min(1, 'State is required'),
   pinCode: z.string().min(1, 'Pin Code is required'),
-  sources: z.string().min(1, 'Sources is required'),
+  source: z.string().min(1, 'Sources is required'),
+  receivedAmt: z.number(),
+  dueAmt: z.number(),
+  paymentMode: z.string(),
+  roomCategory: z.string(),
 });
 
 export type guestSchemaType = z.infer<typeof guestSchema>;

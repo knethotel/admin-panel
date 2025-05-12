@@ -23,6 +23,14 @@ export type GuestDataType = {
     email: string;
     mobileNo: string;
   };
+  paymentDetails: {
+    receivedAmt: number;
+    dueAmt: number;
+    paymentMode: string;
+  };
+  roomDetails: {
+    roomCategory: string;
+  };
   trackingStatus: TrackingStatusType;
   paymentStatus: PaymentStatusType;
 };
@@ -50,29 +58,13 @@ export const GuestData: GuestDataType[] = [
       email: 'johndoe@gmail.com',
       mobileNo: '9899999999'
     },
-    trackingStatus: 'under review',
-    paymentStatus: 'pending'
-  },
-  {
-    guestId: 'GD17823450',
-    checkInCheckOutDetails: {
-      checkInDate: '2022-01-01',
-      checkInTime: '10:00 AM',
-      CheckOutTime: '12:00 PM',
-      checkOutDate: '2022-01-05'
+    paymentDetails: {
+      receivedAmt: 0,
+      dueAmt: 0,
+      paymentMode: 'online'
     },
-    guestDetails: {
-      name: 'John Doe',
-      phoneNo: '1234567890',
-      roomNo: '101',
-      address: '123 Main St',
-      city: 'Los Angeles',
-      state: 'California',
-      pinCode: '90001'
-    },
-    contactDetails: {
-      email: 'johndoe@gmail.com',
-      mobileNo: '9899999999'
+    roomDetails: {
+      roomCategory: 'AC'
     },
     trackingStatus: 'under review',
     paymentStatus: 'pending'
@@ -98,29 +90,13 @@ export const GuestData: GuestDataType[] = [
       email: 'johndoe@gmail.com',
       mobileNo: '9899999999'
     },
-    trackingStatus: 'under review',
-    paymentStatus: 'pending'
-  },
-  {
-    guestId: 'GD17823450',
-    checkInCheckOutDetails: {
-      checkInDate: '2022-01-01',
-      checkInTime: '10:00 AM',
-      CheckOutTime: '12:00 PM',
-      checkOutDate: '2022-01-05'
+    paymentDetails: {
+      receivedAmt: 0,
+      dueAmt: 0,
+      paymentMode: 'online'
     },
-    guestDetails: {
-      name: 'John Doe',
-      phoneNo: '1234567890',
-      roomNo: '101',
-      address: '123 Main St',
-      city: 'Los Angeles',
-      state: 'California',
-      pinCode: '90001'
-    },
-    contactDetails: {
-      email: 'johndoe@gmail.com',
-      mobileNo: '9899999999'
+    roomDetails: {
+      roomCategory: 'AC'
     },
     trackingStatus: 'under review',
     paymentStatus: 'pending'
@@ -146,29 +122,13 @@ export const GuestData: GuestDataType[] = [
       email: 'johndoe@gmail.com',
       mobileNo: '9899999999'
     },
-    trackingStatus: 'under review',
-    paymentStatus: 'pending'
-  },
-  {
-    guestId: 'GD17823450',
-    checkInCheckOutDetails: {
-      checkInDate: '2022-01-01',
-      checkInTime: '10:00 AM',
-      CheckOutTime: '12:00 PM',
-      checkOutDate: '2022-01-05'
+    paymentDetails: {
+      receivedAmt: 0,
+      dueAmt: 0,
+      paymentMode: 'online'
     },
-    guestDetails: {
-      name: 'John Doe',
-      phoneNo: '1234567890',
-      roomNo: '101',
-      address: '123 Main St',
-      city: 'Los Angeles',
-      state: 'California',
-      pinCode: '90001'
-    },
-    contactDetails: {
-      email: 'johndoe@gmail.com',
-      mobileNo: '9899999999'
+    roomDetails: {
+      roomCategory: 'AC'
     },
     trackingStatus: 'under review',
     paymentStatus: 'pending'
@@ -194,29 +154,13 @@ export const GuestData: GuestDataType[] = [
       email: 'johndoe@gmail.com',
       mobileNo: '9899999999'
     },
-    trackingStatus: 'under review',
-    paymentStatus: 'pending'
-  },
-  {
-    guestId: 'GD17823450',
-    checkInCheckOutDetails: {
-      checkInDate: '2022-01-01',
-      checkInTime: '10:00 AM',
-      CheckOutTime: '12:00 PM',
-      checkOutDate: '2022-01-05'
+    paymentDetails: {
+      receivedAmt: 0,
+      dueAmt: 0,
+      paymentMode: 'online'
     },
-    guestDetails: {
-      name: 'John Doe',
-      phoneNo: '1234567890',
-      roomNo: '101',
-      address: '123 Main St',
-      city: 'Los Angeles',
-      state: 'California',
-      pinCode: '90001'
-    },
-    contactDetails: {
-      email: 'johndoe@gmail.com',
-      mobileNo: '9899999999'
+    roomDetails: {
+      roomCategory: 'AC'
     },
     trackingStatus: 'under review',
     paymentStatus: 'pending'
@@ -242,29 +186,13 @@ export const GuestData: GuestDataType[] = [
       email: 'johndoe@gmail.com',
       mobileNo: '9899999999'
     },
-    trackingStatus: 'under review',
-    paymentStatus: 'pending'
-  },
-  {
-    guestId: 'GD17823450',
-    checkInCheckOutDetails: {
-      checkInDate: '2022-01-01',
-      checkInTime: '10:00 AM',
-      CheckOutTime: '12:00 PM',
-      checkOutDate: '2022-01-05'
+    paymentDetails: {
+      receivedAmt: 0,
+      dueAmt: 0,
+      paymentMode: 'online'
     },
-    guestDetails: {
-      name: 'John Doe',
-      phoneNo: '1234567890',
-      roomNo: '101',
-      address: '123 Main St',
-      city: 'Los Angeles',
-      state: 'California',
-      pinCode: '90001'
-    },
-    contactDetails: {
-      email: 'johndoe@gmail.com',
-      mobileNo: '9899999999'
+    roomDetails: {
+      roomCategory: 'AC'
     },
     trackingStatus: 'under review',
     paymentStatus: 'pending'
@@ -289,6 +217,174 @@ export const GuestData: GuestDataType[] = [
     contactDetails: {
       email: 'johndoe@gmail.com',
       mobileNo: '9899999999'
+    },
+    paymentDetails: {
+      receivedAmt: 0,
+      dueAmt: 0,
+      paymentMode: 'online'
+    },
+    roomDetails: {
+      roomCategory: 'AC'
+    },
+    trackingStatus: 'under review',
+    paymentStatus: 'pending'
+  },
+  {
+    guestId: 'GD17823450',
+    checkInCheckOutDetails: {
+      checkInDate: '2022-01-01',
+      checkInTime: '10:00 AM',
+      CheckOutTime: '12:00 PM',
+      checkOutDate: '2022-01-05'
+    },
+    guestDetails: {
+      name: 'John Doe',
+      phoneNo: '1234567890',
+      roomNo: '101',
+      address: '123 Main St',
+      city: 'Los Angeles',
+      state: 'California',
+      pinCode: '90001'
+    },
+    contactDetails: {
+      email: 'johndoe@gmail.com',
+      mobileNo: '9899999999'
+    },
+    paymentDetails: {
+      receivedAmt: 0,
+      dueAmt: 0,
+      paymentMode: 'online'
+    },
+    roomDetails: {
+      roomCategory: 'AC'
+    },
+    trackingStatus: 'under review',
+    paymentStatus: 'pending'
+  },
+  {
+    guestId: 'GD17823450',
+    checkInCheckOutDetails: {
+      checkInDate: '2022-01-01',
+      checkInTime: '10:00 AM',
+      CheckOutTime: '12:00 PM',
+      checkOutDate: '2022-01-05'
+    },
+    guestDetails: {
+      name: 'John Doe',
+      phoneNo: '1234567890',
+      roomNo: '101',
+      address: '123 Main St',
+      city: 'Los Angeles',
+      state: 'California',
+      pinCode: '90001'
+    },
+    contactDetails: {
+      email: 'johndoe@gmail.com',
+      mobileNo: '9899999999'
+    },
+    paymentDetails: {
+      receivedAmt: 0,
+      dueAmt: 0,
+      paymentMode: 'online'
+    },
+    roomDetails: {
+      roomCategory: 'AC'
+    },
+    trackingStatus: 'under review',
+    paymentStatus: 'pending'
+  },
+  {
+    guestId: 'GD17823450',
+    checkInCheckOutDetails: {
+      checkInDate: '2022-01-01',
+      checkInTime: '10:00 AM',
+      CheckOutTime: '12:00 PM',
+      checkOutDate: '2022-01-05'
+    },
+    guestDetails: {
+      name: 'John Doe',
+      phoneNo: '1234567890',
+      roomNo: '101',
+      address: '123 Main St',
+      city: 'Los Angeles',
+      state: 'California',
+      pinCode: '90001'
+    },
+    contactDetails: {
+      email: 'johndoe@gmail.com',
+      mobileNo: '9899999999'
+    },
+    paymentDetails: {
+      receivedAmt: 0,
+      dueAmt: 0,
+      paymentMode: 'online'
+    },
+    roomDetails: {
+      roomCategory: 'AC'
+    },
+    trackingStatus: 'under review',
+    paymentStatus: 'pending'
+  },
+  {
+    guestId: 'GD17823450',
+    checkInCheckOutDetails: {
+      checkInDate: '2022-01-01',
+      checkInTime: '10:00 AM',
+      CheckOutTime: '12:00 PM',
+      checkOutDate: '2022-01-05'
+    },
+    guestDetails: {
+      name: 'John Doe',
+      phoneNo: '1234567890',
+      roomNo: '101',
+      address: '123 Main St',
+      city: 'Los Angeles',
+      state: 'California',
+      pinCode: '90001'
+    },
+    contactDetails: {
+      email: 'johndoe@gmail.com',
+      mobileNo: '9899999999'
+    },
+    paymentDetails: {
+      receivedAmt: 0,
+      dueAmt: 0,
+      paymentMode: 'online'
+    },
+    roomDetails: {
+      roomCategory: 'AC'
+    },
+    trackingStatus: 'under review',
+    paymentStatus: 'pending'
+  },
+  {
+    guestId: 'GD17823450',
+    checkInCheckOutDetails: {
+      checkInDate: '2022-01-01',
+      checkInTime: '10:00 AM',
+      CheckOutTime: '12:00 PM',
+      checkOutDate: '2022-01-05'
+    },
+    guestDetails: {
+      name: 'John Doe',
+      phoneNo: '1234567890',
+      roomNo: '101',
+      address: '123 Main St',
+      city: 'Los Angeles',
+      state: 'California',
+      pinCode: '90001'
+    },
+    contactDetails: {
+      email: 'johndoe@gmail.com',
+      mobileNo: '9899999999'
+    },
+    paymentDetails: {
+      receivedAmt: 0,
+      dueAmt: 0,
+      paymentMode: 'online'
+    },
+    roomDetails: {
+      roomCategory: 'AC'
     },
     trackingStatus: 'under review',
     paymentStatus: 'pending'
@@ -314,6 +410,14 @@ export const GuestData: GuestDataType[] = [
       email: 'janesmith@yahoo.com',
       mobileNo: '9876543210'
     },
+    paymentDetails: {
+      receivedAmt: 0,
+      dueAmt: 0,
+      paymentMode: 'online'
+    },
+    roomDetails: {
+      roomCategory: 'AC'
+    },
     trackingStatus: 'submitted',
     paymentStatus: 'paid'
   },
@@ -337,6 +441,14 @@ export const GuestData: GuestDataType[] = [
     contactDetails: {
       email: 'alicej@outlook.com',
       mobileNo: '8765432109'
+    },
+    paymentDetails: {
+      receivedAmt: 0,
+      dueAmt: 0,
+      paymentMode: 'online'
+    },
+    roomDetails: {
+      roomCategory: 'AC'
     },
     trackingStatus: 'pending',
     paymentStatus: 'pending'

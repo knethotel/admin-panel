@@ -70,7 +70,7 @@ export const HotelManagementHome: React.FC = () => {
             onClick={() => router.push('/super-admin/hotel-management/add')}
             className="btn-primary"
           >
-            Create Hotel ID
+            On-Board Hotel
           </Button>
           <div className='relative'>
             <Button

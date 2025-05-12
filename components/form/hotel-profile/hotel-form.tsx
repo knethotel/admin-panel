@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,6 +30,8 @@ const HotelForm = () => {
   const router = useRouter();
   const [isBrandedHotelChecked, setIsBrandedHotelChecked] = useState(false);
   const [isChainHotelChecked, setIsChainHotelChecked] = useState(false);
+   const [hotelName, setHotelName] = useState('');
+  const [subHotelName, setSubHotelName] = useState('');
 
   // Refs for file inputs
   const roomImageRef = useRef<HTMLInputElement>(null);
@@ -131,12 +133,12 @@ const HotelForm = () => {
 
   const handleBrandedHotelChange = (checked: boolean) => {
     setIsBrandedHotelChecked(checked);
-    if (checked) setIsChainHotelChecked(false); // Disable the Chain Hotel checkbox when Branded is checked
+    if (checked) setIsChainHotelChecked(false);
   };
 
   const handleChainHotelChange = (checked: boolean) => {
     setIsChainHotelChecked(checked);
-    if (checked) setIsBrandedHotelChecked(false); // Disable the Branded Hotel checkbox when Chain is checked
+    if (checked) setIsBrandedHotelChecked(false);
   };
 
   const handleImageRemove = (index: number, fieldName: string) => {
@@ -145,6 +147,10 @@ const HotelForm = () => {
       return { ...prev, [fieldName]: updatedImages }; // Update the state with the new array
     });
   };
+
+  useEffect(() => {
+    setSubHotelName(hotelName);
+  }, [hotelName]);
 
   return (
     <FormWrapper title="">
@@ -266,6 +272,11 @@ const HotelForm = () => {
                         <Input
                           placeholder="Enter hotel name"
                           {...field}
+                          value={hotelName}
+                          onChange={(e) => {
+                            setHotelName(e.target.value); 
+                            field.onChange(e.target.value);
+                          }}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
@@ -534,7 +545,7 @@ const HotelForm = () => {
               </div>
 
               {/* Show both fields when either checkbox is checked */}
-              {(isBrandedHotelChecked || isChainHotelChecked) && (
+              {(isChainHotelChecked) && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                   <>
                     <FormField
@@ -547,6 +558,7 @@ const HotelForm = () => {
                           </FormLabel>
                           <FormControl>
                             <Input
+                            placeholder='Enter Parent Hotel Name'
                               {...field}
                               className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md"
                             />
@@ -565,7 +577,14 @@ const HotelForm = () => {
                           </FormLabel>
                           <FormControl>
                             <Input
+                              placeholder="Enter sub hotel name"
                               {...field}
+                              disabled
+                              value={subHotelName} 
+                              onChange={(e) => {
+                                setSubHotelName(e.target.value); 
+                                field.onChange(e.target.value); 
+                              }}
                               className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md"
                             />
                           </FormControl>

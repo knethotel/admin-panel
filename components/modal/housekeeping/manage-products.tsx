@@ -260,7 +260,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
-                  router.push('/service-management/housekeeping/products');
+                  router.push('/hotel-panel/service-management/housekeeping/products');
                 }}
                 className="btn-primary"
               >

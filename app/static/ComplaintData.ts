@@ -135,37 +135,3 @@ export const ComplaintData: ComplaintDataType[] = [
     assignedTo: 'EMPLOYEE 2'
   }
 ];
-export const ComplaintDataOutbox: ComplaintDataType[] = [
-  {
-    complaintID: 'cd123455',
-    complaintTime: {
-      date: '12-02-2024',
-      time: '30 min ago'
-    },
-    hotelId: '01953271',
-    complaintType: 'Billing dispute',
-    status: 'OPEN',
-    assignedTo: 'EMPLOYEE 1'
-  },
-  {
-    complaintID: 'cd123458',
-    complaintTime: {
-      date: '13-02-2024',
-      time: '3 hrs ago'
-    },
-    hotelId: '01953274',
-    complaintType: 'Food quality',
-    status: 'OPEN',
-    assignedTo: 'EMPLOYEE 5'
-  },
-  {
-    complaintID: 'cd123459',
-    complaintTime: {
-      date: '14-02-2024',
-      time: '4 hrs ago'
-    },
-    hotelId: '01953275',
-    complaintType: 'Staff behavior',
-    status: 'OPEN',
-    assignedTo: 'EMPLOYEE 1'
-  },];

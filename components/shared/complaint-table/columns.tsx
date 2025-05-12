@@ -4,6 +4,7 @@ import CellAction from './cell.action';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export const columns: ColumnDef<ComplaintDataType>[] = [
   {
@@ -26,8 +27,15 @@ export const columns: ColumnDef<ComplaintDataType>[] = [
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      const status = row.original.status;
-      const [open, setOpen] = useState(false);
+      const [status, setStatus] = useState(row.original.status); 
+      const [open, setOpen] = useState(false); 
+      const router = useRouter();
+
+      // Function to handle status change to "CLOSED"
+      const handleClose = () => {
+        setStatus('CLOSED'); // Update the status to 'CLOSED'
+        setOpen(false); // Close the dropdown
+      };
 
       return (
         <div className="text-center">
@@ -35,7 +43,7 @@ export const columns: ColumnDef<ComplaintDataType>[] = [
             <DropdownMenu.Root open={open} onOpenChange={setOpen}>
               <DropdownMenu.Trigger asChild>
                 <button className="text-[#E5252A] font-medium text-sm flex items-center mx-auto gap-1">
-                  OPEN
+                  {status}
                   {open ? (
                     <ChevronUp className="h-4 w-4 text-black" />
                   ) : (
@@ -49,7 +57,10 @@ export const columns: ColumnDef<ComplaintDataType>[] = [
                   align="start"
                   className="bg-white rounded-md shadow-md text-sm z-50 px-2 py-1 w-[100px]"
                 >
-                  <DropdownMenu.Item className="text-[#78B15099] px-2 py-1 cursor-pointer outline-none">
+                  <DropdownMenu.Item
+                    className="text-[#78B15099] px-2 py-1 cursor-pointer outline-none"
+                    onClick={handleClose} // Update status to closed when clicked
+                  >
                     CLOSED
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
@@ -58,9 +69,9 @@ export const columns: ColumnDef<ComplaintDataType>[] = [
           ) : (
             <div className="flex flex-col">
               <span className="text-[#78B15099] font-medium text-sm">
-                CLOSED
+                {status}
               </span>
-              <button className="text-[#78B150] text-[10px] pr-3">
+              <button onClick={() => router.push(`/super-admin/complaint-management/view/${row.original.complaintID}`)} className="text-[#78B150] text-[10px] pr-3">
                 View Feedback
               </button>
             </div>
