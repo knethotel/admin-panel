@@ -1,4 +1,5 @@
 import GuestForm from '@/components/form/guest-management/guest-form';
+import Navbar from '@/components/Navbar';
 import React from 'react';
 type Params = {
   id: string;
@@ -10,11 +11,14 @@ const ViewGuestPage = async ({
 }) => {
   const id = (await params).id;
   return (
-    <div className="flex justify-center items-center h-screen w-full pt-8">
-      <div className="h-full w-full container">
-        <GuestForm isEnabled={false} guestId={id} mode="view" />
+    <>
+      <Navbar />
+      <div className="flex justify-center items-center h-screen w-full pt-8 mt-16">
+        <div className="h-full w-full container">
+          <GuestForm isEnabled={false} guestId={id} mode="view" />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -9,6 +9,10 @@ export const columns: ColumnDef<SubHotelDataType>[] = [
     header: 'Hotel ID'
   },
   {
+    accessorKey: 'parentHotel',
+    header: 'Parent Hotel'
+  },
+  {
     accessorKey: 'hotelName',
     header: 'Hotel Name'
   },

@@ -20,7 +20,7 @@ const CouponManagement = () => {
         <div className="flex justify-between mb-2 w-full">
           <Heading title={`Coupon Management`} className="mt-0" />
           <Button
-            onClick={() => router.push(`/coupon-management/create`)}
+            onClick={() => router.push(`/hotel-panel/coupon-management/create`)}
             className="btn-primary"
           >
             Create Coupon
@@ -57,7 +57,7 @@ const CouponManagement = () => {
                       <button
                         onClick={() =>
                           router.push(
-                            `/coupon-management/view/${coupon.id}`
+                            `/hotel-panel/coupon-management/view/${coupon.id}`
                           )
                         }
                         className="rounded-md bg-[#F6EEE0] hover:bg-[#e6dcc4]"
@@ -99,7 +99,7 @@ const CouponManagement = () => {
                       <button
                         onClick={() =>
                           router.push(
-                            `/coupon-management/view/${coupon.id}`
+                            `/hotel-panel/coupon-management/view/${coupon.id}`
                           )
                         }
                         className="rounded-md bg-[#F6EEE0] hover:bg-[#e6dcc4]"

@@ -9,7 +9,7 @@ const CellAction = (props: any) => {
 
   // Handle view transaction and redirect to the [id] page
   const handleViewTransaction = (paymentID: string) => {
-    router.push(`/payment-management/view/${paymentID}`);
+    router.push(`/hotel-panel/payment-management/view/${paymentID}`);
   };
 
   return (

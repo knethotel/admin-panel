@@ -33,7 +33,7 @@ const ComplaintManagementPage = () => {
               onClick={() => setActiveTab('admin')}
               className={`rounded-l-none ${activeTab === 'admin' ? 'btn-active bg-[#A07D3D] text-white' : 'bg-[#A07D3D4D] text-gray-500'}`}
             >
-              By Super Admin
+              To Super Admin
             </Button>
           </div>
           <Button

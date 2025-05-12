@@ -33,11 +33,11 @@ export const GuestClient: React.FC = () => {
   const handleOnClick = (actionName: string) => {
     if (actionName === 'add booking') {
       setMode('add_guest');
-      router.push(`/guest-management/add`);
+      router.push(`/hotel-panel/guest-management/add`);
     }
     if (actionName === 'view requests') {
       setMode('add_booking');
-      router.push(`/guest-management/pending`);
+      router.push(`/hotel-panel/guest-management/pending`);
     }
   };
   return (

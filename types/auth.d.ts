@@ -8,6 +8,7 @@ interface LoginResponse {
     lastName: string;
     email: string;
     role: string;
+    scope: string; 
     permissions: string[];
   };
 }

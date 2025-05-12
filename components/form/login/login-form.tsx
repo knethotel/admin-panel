@@ -1,31 +1,33 @@
 'use client';
 
-import { setSessionStorageItem } from '../../../utils/localstorage';
-import apiCall from '@/lib/axios';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Form,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-  FormField
-} from '@/components/ui/form';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { loginSchema, loginSchemaType } from 'schema';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { Eye, EyeOff, CircleX } from 'lucide-react';
+
+import { setSessionStorageItem } from 'utils/localstorage';
+import apiCall from '@/lib/axios';
+import { loginSchema,  loginSchemaType} from 'schema';
+import { 
+  Form, 
+  FormItem, 
+  FormLabel, 
+  FormControl, 
+  FormMessage, 
+  FormField 
+} from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import CardWrapper from './card-wrapper';
-import React, { useState } from 'react';
-import { Eye, EyeOff, CircleX } from 'lucide-react';
-import LoginResponse from '../../../types/auth';
-
-const DUMMY_CORRECT_PASSWORD = 'password123';
+import LoginResponse from 'types/auth';
 
 const LoginForm = () => {
-  const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<loginSchemaType>({
     resolver: zodResolver(loginSchema),
@@ -36,46 +38,62 @@ const LoginForm = () => {
     }
   });
 
-  const handleOnChangePassword = (newPassword: string) => {
-    if (newPassword === DUMMY_CORRECT_PASSWORD) {
-      setPasswordError(null);
-    }
-  };
-
   const onSubmit = async (data: loginSchemaType) => {
+    setIsLoading(true);
+    setLoginError(null);
+
     try {
       const response = await apiCall<LoginResponse>(
-        'POST',
-        'api/superAdmin/login',
+        'POST', 
+        'api/superAdmin/login', 
         {
           email: data.email,
           password: data.password
         }
       );
-      console.log(response);
 
       if (response.token && response.user) {
+        // Secure token storage
         setSessionStorageItem('admin', {
           token: response.token,
           user: response.user
         });
-      } else {
-        console.error('Missing token or user in response');
-        return;
-      }
 
-      window.location.href = '/super-admin/dashboard';
+        // Set secure cookie for middleware
+        document.cookie = `token=${response.token}; path=/; SameSite=Strict; Secure`;
+
+        // Determine redirect based on user role/scope
+        const redirectPath = determineRedirectPath(response.user);
+        router.push(redirectPath);
+      } else {
+        throw new Error('Invalid login credentials');
+      }
     } catch (error: any) {
-      setPasswordError(error.message || 'Login failed');
+      setLoginError(error.message || 'Login failed. Please try again.');
+      console.error('Login error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Determine redirect path based on user role/scope
+  const determineRedirectPath = (user: LoginResponse['user']) => {
+    switch (user.scope) {
+      case 'Super Admin':
+        return '/super-admin/dashboard';
+      case 'Hotel':
+        return '/hotel-panel/dashboard';
+      default:
+        return '/dashboard';
     }
   };
 
   const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
+    setShowPassword(prev => !prev);
   };
 
   const clearEmail = () => {
-    form.setValue('email', ''); // Clear the email field
+    form.setValue('email', '');
   };
 
   return (
@@ -83,14 +101,15 @@ const LoginForm = () => {
       <CardWrapper
         title="Sign in"
         label="Please enter your email and password to sign in."
-        incorrectPasswordMessage={passwordError}
+        incorrectPasswordMessage={loginError}
       >
         <Form {...form}>
-          <form
+          <form 
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-8 text-black"
           >
             <div className="space-y-4">
+              {/* Email Field */}
               <FormField
                 control={form.control}
                 name="email"
@@ -105,11 +124,11 @@ const LoginForm = () => {
                           type="email"
                           placeholder="Enter your email"
                           {...field}
-                          className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-25 pr-10" // Add padding-right for icon
+                          className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-25 pr-10"
                         />
                         {field.value && (
                           <button
-                            type="button" // Prevent form submission
+                            type="button"
                             onClick={clearEmail}
                             className="absolute inset-y-0 right-0 flex items-center pr-3"
                             aria-label="Clear email"
@@ -123,6 +142,8 @@ const LoginForm = () => {
                   </FormItem>
                 )}
               />
+
+              {/* Password Field */}
               <FormField
                 control={form.control}
                 name="password"
@@ -137,10 +158,6 @@ const LoginForm = () => {
                           type={showPassword ? 'text' : 'password'}
                           placeholder="Enter your password"
                           {...field}
-                          onChange={(e) => {
-                            field.onChange(e);
-                            handleOnChangePassword(e.target.value);
-                          }}
                           className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-25 pr-10"
                         />
                         <button
@@ -163,6 +180,8 @@ const LoginForm = () => {
                   </FormItem>
                 )}
               />
+
+              {/* Remember Me and Forgot Password */}
               <div className="w-full flex justify-between items-center">
                 <FormField
                   control={form.control}
@@ -191,15 +210,21 @@ const LoginForm = () => {
                   )}
                 />
                 <Link
-                  href="/resetpassword"
+                  href="/auth/resetpassword"
                   className="text-xs 2xl:text-sm text-black hover:underline"
                 >
                   Forgot Password?
                 </Link>
               </div>
             </div>
-            <Button type="submit" className="w-full btn-primary">
-              Sign in
+
+            {/* Submit Button */}
+            <Button 
+              type="submit" 
+              className="w-full btn-primary" 
+              disabled={isLoading}
+            >
+              {isLoading ? 'Signing in...' : 'Sign in'}
             </Button>
           </form>
         </Form>

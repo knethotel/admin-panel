@@ -69,7 +69,7 @@ export const EmployeeTable: React.FC = () => {
   const handleOnClick = (actionName: string) => {
     if (actionName === 'add employee') {
       setMode('add_employee');
-      router.push(`/employee-management/add`);
+      router.push(`/hotel-panel/employee-management/add`);
     }
   };
 

@@ -48,7 +48,11 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
       state: guest?.guestDetails?.state || '',
       pinCode: guest?.guestDetails?.pinCode || '',
       email: guest?.contactDetails?.email || '',
-      sources: typeof guest?.guestDetails === 'string' ? guest.guestDetails : ''
+      source: '',
+      receivedAmt: guest?.paymentDetails?.receivedAmt || 0,
+      dueAmt: guest?.paymentDetails?.dueAmt || 0,
+      paymentMode: guest?.paymentDetails?.paymentMode || '',
+      roomCategory: guest?.roomDetails?.roomCategory || ''
     }
   });
 
@@ -288,18 +292,18 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                 <FormField
                   className="w-full"
                   control={addGuestForm.control}
-                  name="sources"
+                  name="source"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-black text-[0.8rem]">
-                        Sources
+                        Source
                       </FormLabel>
                       <FormControl>
                         <div className="flex gap-1">
                           <Input
                             disabled={!isEnabled}
                             type="text"
-                            placeholder="sources"
+                            placeholder="Source"
                             {...field}
                             className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                           />
@@ -361,9 +365,126 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                   )}
                 />
               </div>
+
+              <div className="flex flex-col md:flex-row gap-3">
+                <FormField
+                  className="w-full"
+                  control={addGuestForm.control}
+                  name="receivedAmt"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-black text-[0.8rem]">
+                        Received Amount
+                      </FormLabel>
+                      <FormControl>
+                        <div className="flex gap-1">
+                          <Input
+                            disabled={!isEnabled}
+                            type="text"
+                            placeholder="0"
+                            {...field}
+                            className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  className="w-full"
+                  control={addGuestForm.control}
+                  name="dueAmt"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-black text-[0.8rem]">
+                        Due Amount
+                      </FormLabel>
+                      <FormControl>
+                        <div className="flex gap-1">
+                          <Input
+                            disabled={!isEnabled}
+                            type="text"
+                            placeholder="0"
+                            {...field}
+                            className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  className="w-full"
+                  control={addGuestForm.control}
+                  name="paymentMode"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-black text-[0.8rem]">
+                        Payment mode
+                      </FormLabel>
+                      <FormControl>
+                        <div className="flex gap-1">
+                          <Input
+                            disabled={!isEnabled}
+                            type="text"
+                            placeholder="Payment Mode"
+                            {...field}
+                            className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
-            {mode === 'pending' || mode === 'add' && (
+            {/* {(mode === 'add' || mode === 'pending') && ( */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-10 border-t border-dashed border-gray-400 pt-4 mt-4">
+                <div className="flex flex-col gap-4">
+                  <FormItem>
+                    <FormLabel className="text-black text-[0.8rem]">
+                      Assign Room Number
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Room Number"
+                        className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                      />
+                    </FormControl>
+                  </FormItem>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <FormItem>
+                    <FormLabel className="text-black text-[0.8rem]">
+                      Room Category
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Room Number"
+                        className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                      />
+                    </FormControl>
+                  </FormItem>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <FormItem>
+                    <FormLabel className="text-black text-[0.8rem]">
+                      Room Tariff
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Room Number"
+                        className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                      />
+                    </FormControl>
+                  </FormItem>
+                </div>
                 <div className="flex flex-col gap-4">
                   <FormItem>
                     <FormLabel className="text-black text-[0.8rem]">
@@ -392,22 +513,8 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                     </FormControl>
                   </FormItem>
                 </div>
-                <div className="flex flex-col gap-4">
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Assign Room Number
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Room Number"
-                        className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                      />
-                    </FormControl>
-                  </FormItem>
-                </div>
               </div>
-            )}
+            {/* )} */}
           </form>
         </Form>
       </FormWrapper>

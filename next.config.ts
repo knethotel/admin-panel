@@ -12,5 +12,20 @@ export default {
         search: ''
       }
     ]
+  },
+  async redirects() {
+    return [
+      // Redirect unauthorized or invalid routes
+      {
+        source: '/protected',
+        destination: '/auth/login',
+        permanent: false
+      },
+      {
+        source: '/unauthorized',
+        destination: '/auth/login',
+        permanent: false
+      }
+    ];
   }
 };
