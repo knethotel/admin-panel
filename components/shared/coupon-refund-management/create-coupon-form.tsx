@@ -61,8 +61,8 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
       discountAmount: 0,
       minimumSpent: '',
       couponStatus: 'active',
-      redemption: 'automatic',
-      stackable: false,
+      // redemption: 'automatic',
+      // stackable: false,
       createCode: '',
       termsAndConditions: '',
       couponImage: undefined
@@ -107,7 +107,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                               <SelectValue />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="bg-[#FAF6EF]">
+                          <SelectContent className="">
                             {['Percentage Coupons', 'Fixed Amount Coupons'].map(
                               (value) => (
                                 <SelectItem key={value} value={value}>
@@ -352,69 +352,6 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                             </div>
                           ))}
                         </RadioGroup>
-                      </FormControl>
-                      <FormMessage className="text-[10px] text-xs mt-1" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              {/* Redemption */}
-              <FormField
-                control={form.control}
-                name="redemption"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col sm:flex-row gap-2">
-                    <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 pt-1 shrink-0">
-                      Redemption
-                    </FormLabel>
-                    <div className="w-full">
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          className="flex flex-col space-y-2"
-                        >
-                          {['automatic', 'manual entry', 'promo code'].map(
-                            (value) => (
-                              <div
-                                key={value}
-                                className="flex items-center space-x-2"
-                              >
-                                <RadioGroupItem value={value} id={value} />
-                                <label
-                                  htmlFor={value}
-                                  className="text-xs 2xl:text-sm text-gray-700 capitalize"
-                                >
-                                  {value}
-                                </label>
-                              </div>
-                            )
-                          )}
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage className="text-[10px] text-xs  mt-1" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              {/* Stackable */}
-              <FormField
-                control={form.control}
-                name="stackable"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <FormLabel className="w-full sm:w-36 2xl:w-40 text-xs 2xl:text-sm font-medium text-gray-700 shrink-0">
-                      Stackable
-                    </FormLabel>
-                    <div className="w-full">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          className="bg-[#F6EEE0] border-gray-300 data-[state=checked]:bg-[#A07D3D] data-[state=checked]:border-[#A07D3D]"
-                        />
                       </FormControl>
                       <FormMessage className="text-[10px] text-xs mt-1" />
                     </div>
