@@ -335,28 +335,161 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
                 <span className="text-[#8c6b33]">{selectedRole}</span>
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {availableModules.map((permission) => (
-                  <div key={permission} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`permission-${permission}`}
-                      checked={
-                        selectedRole
-                          ? (selectedPermissions[selectedRole] || []).includes(
-                              permission
-                            )
-                          : false
-                      }
-                      onCheckedChange={() => handlePermissionChange(permission)}
-                      disabled={mode === 'view' || loading}
-                    />
-                    <label
-                      htmlFor={`permission-${permission}`}
-                      className="text-sm text-gray-700"
+                <div>
+                  {availableModules.map((permission) => (
+                    <div
+                      key={permission}
+                      className="flex text-nowrap items-center space-x-2 mb-3"
                     >
-                      {permission}
-                    </label>
+                      <Checkbox
+                        id={`permission-${permission}`}
+                        checked={
+                          selectedRole
+                            ? (
+                                selectedPermissions[selectedRole] || []
+                              ).includes(permission)
+                            : false
+                        }
+                        onCheckedChange={() =>
+                          handlePermissionChange(permission)
+                        }
+                        disabled={mode === 'view' || loading}
+                      />
+                      <label
+                        htmlFor={`permission-${permission}`}
+                        className="text-sm text-gray-700"
+                      >
+                        {permission}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Read</p>
                   </div>
-                ))}
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Read</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Read</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Read</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Read</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Read</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Read</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Read</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Read</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Read</p>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Write</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Write</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Write</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Write</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Write</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Write</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Write</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Write</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Write</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Write</p>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Status Change</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Status Change</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Status Change</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Status Change</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Status Change</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Status Change</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Status Change</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Status Change</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Status Change</p>
+                  </div>
+                  <div className="flex space-x-2 text-center mb-3">
+                    <Checkbox />
+                    <p className="font-normal text-sm">Status Change</p>
+                  </div>
+                </div>
               </div>
             </div>
           ) : (

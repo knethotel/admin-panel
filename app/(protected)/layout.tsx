@@ -212,27 +212,45 @@ function HotelPanelSideNav() {
             <MdDashboardCustomize className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
-          <NavItem href="/hotel-panel/employee-management" label="Employee Management">
-            <IoIosPeople className="h-6 w-6 lg:h-7 lg:w-7" />
-          </NavItem>
-
-          <NavItem href="/hotel-panel/roles-permission" label="Roles & Permission">
+          <NavItem
+            href="/hotel-panel/roles-permission"
+            label="Roles & Permission"
+          >
             <BsPersonWorkspace className="h-4 w-4 lg:h-5 lg:w-5" />
           </NavItem>
 
-          <NavItem href="/hotel-panel/guest-management" label="Guest Management">
+          <NavItem
+            href="/hotel-panel/employee-management"
+            label="Employee Management"
+          >
+            <IoIosPeople className="h-6 w-6 lg:h-7 lg:w-7" />
+          </NavItem>
+
+          <NavItem
+            href="/hotel-panel/guest-management"
+            label="Guest Management"
+          >
             <ImManWoman className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
-          <NavItem href="/hotel-panel/service-management" label="Service Management">
+          <NavItem
+            href="/hotel-panel/service-management"
+            label="Service Management"
+          >
             <MdManageAccounts className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
-          <NavItem href="/hotel-panel/complaint-management" label="Complaint Management">
+          <NavItem
+            href="/hotel-panel/complaint-management"
+            label="Complaint Management"
+          >
             <VscSettings className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
-          <NavItem href="/hotel-panel/payment-management" label="Payment Management">
+          <NavItem
+            href="/hotel-panel/payment-management"
+            label="Payment Management"
+          >
             <RiMoneyRupeeCircleLine className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
           <NavItem
