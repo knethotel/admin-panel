@@ -79,7 +79,7 @@ const LoginForm = () => {
   // Determine redirect path based on user role/scope
   const determineRedirectPath = (user: LoginResponse['user']) => {
     switch (user.scope) {
-      case 'Super Admin':
+      case 'Platform':
         return '/super-admin/dashboard';
       case 'Hotel':
         return '/hotel-panel/dashboard';
