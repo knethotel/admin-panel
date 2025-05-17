@@ -30,7 +30,7 @@ const HotelForm = () => {
   const router = useRouter();
   const [isBrandedHotelChecked, setIsBrandedHotelChecked] = useState(false);
   const [isChainHotelChecked, setIsChainHotelChecked] = useState(false);
-   const [hotelName, setHotelName] = useState('');
+  const [hotelName, setHotelName] = useState('');
   const [subHotelName, setSubHotelName] = useState('');
 
   // Refs for file inputs
@@ -88,7 +88,11 @@ const HotelForm = () => {
       dataPrivacyGdprCompliances: '',
       dataPrivacyGdprImage: undefined,
       internetConnectivity: false,
-      softwareCompatibility: false
+      softwareCompatibility: false,
+      allocateSubscription: '1 Year',
+      subscriptionPrice: 500,
+      netPrice: 0,
+      applyCoupon: 'Choose coupon'
     }
   });
 
@@ -167,7 +171,7 @@ const HotelForm = () => {
               render={({ field }) => (
                 <FormItem className="w-fit relative">
                   <FormLabel className="text-coffee font-medium">
-                    Upload Logo <span className="text-red-500">*</span>
+                    Upload Logo
                   </FormLabel>
                   <div className="flex items-center gap-2">
                     <div
@@ -215,7 +219,7 @@ const HotelForm = () => {
             {/* Additional Image Uploader */}
             <FormItem className="w-fit relative">
               <FormLabel className="text-coffee font-medium">
-                Upload Image <span className="text-red-500">*</span>
+                Upload Image
               </FormLabel>
               <div className="flex items-center gap-2">
                 <div
@@ -274,7 +278,7 @@ const HotelForm = () => {
                           {...field}
                           value={hotelName}
                           onChange={(e) => {
-                            setHotelName(e.target.value); 
+                            setHotelName(e.target.value);
                             field.onChange(e.target.value);
                           }}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
@@ -545,7 +549,7 @@ const HotelForm = () => {
               </div>
 
               {/* Show both fields when either checkbox is checked */}
-              {(isChainHotelChecked) && (
+              {isChainHotelChecked && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                   <>
                     <FormField
@@ -558,7 +562,7 @@ const HotelForm = () => {
                           </FormLabel>
                           <FormControl>
                             <Input
-                            placeholder='Enter Parent Hotel Name'
+                              placeholder="Enter Parent Hotel Name"
                               {...field}
                               className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md"
                             />
@@ -580,10 +584,10 @@ const HotelForm = () => {
                               placeholder="Enter sub hotel name"
                               {...field}
                               disabled
-                              value={subHotelName} 
+                              value={subHotelName}
                               onChange={(e) => {
-                                setSubHotelName(e.target.value); 
-                                field.onChange(e.target.value); 
+                                setSubHotelName(e.target.value);
+                                field.onChange(e.target.value);
                               }}
                               className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md"
                             />
@@ -606,7 +610,7 @@ const HotelForm = () => {
                   render={({ field }) => (
                     <FormItem className="w-fit relative">
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        Room Image <span className="text-red-500">*</span>
+                        Room Image
                       </FormLabel>
                       <div className="flex items-center gap-2">
                         <div
@@ -844,12 +848,12 @@ const HotelForm = () => {
                   )}
                 />
               </div>
-              <div className="grid grid-cols-1">
+              <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                 <FormField
                   control={form.control}
                   name="totalStaff"
                   render={({ field }) => (
-                    <FormItem className="w-40">
+                    <FormItem className="w-full">
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
                         Total Staff <span className="text-red-500">*</span>
                       </FormLabel>
@@ -858,6 +862,153 @@ const HotelForm = () => {
                           type="number"
                           min="1"
                           placeholder="Enter total staff"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value, 10))
+                          }
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px]" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="allocateSubscription"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Allocate Subscription{' '}
+                        <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
+                            <SelectValue placeholder="Select category" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-coffee">
+                            {['1 Month', '6 Months', '1 Year'].map((value) => (
+                              <SelectItem
+                                key={value}
+                                value={value}
+                                className="text-white"
+                              >
+                                {value}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage className="text-[10px]" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="subscriptionPrice"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Subscription Price{' '}
+                        <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min="500"
+                          placeholder="Enter Subscription Price"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value, 10))
+                          }
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px]" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="applyCoupon"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Apply Coupon
+                        <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
+                            <SelectValue placeholder="Choose coupon" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-coffee">
+                            {[
+                              {
+                                code: 'COUPON1',
+                                description: '5% off with CODE1'
+                              },
+                              {
+                                code: 'COUPON2',
+                                description: '10% off with CODE2'
+                              },
+                              {
+                                code: 'COUPON3',
+                                description: '15% off with CODE3'
+                              },
+                              {
+                                code: 'COUPON4',
+                                description: '20% off with CODE4'
+                              },
+                              {
+                                code: 'COUPON5',
+                                description: '25% off with CODE5'
+                              }
+                            ].map((coupon) => (
+                              <SelectItem
+                                key={coupon.code}
+                                value={coupon.code}
+                                className="text-white"
+                              >
+                                {coupon.description}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+
+                      {/* Display the selected coupon code */}
+                      {field.value && field.value !== 'Choose coupon' && (
+                        <div className="mt-2 text-xs text-gray-700">
+                          <span className="font-semibold">{field.value}</span>{' '}
+                          applied successfully
+                        </div>
+                      )}
+                      <FormMessage className="text-[10px]" />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="netPrice"
+                  render={({ field }) => (
+                    <FormItem className="w-fit">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Net Price
+                        <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min="0"
                           {...field}
                           onChange={(e) =>
                             field.onChange(parseInt(e.target.value, 10))

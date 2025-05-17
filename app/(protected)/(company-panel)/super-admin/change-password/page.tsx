@@ -1,4 +1,4 @@
-import ChangePasswordForm from '@/components/shared/change-password/form';
+import ChangePasswordForm from '@/components/COMPANY_COMPONENTS/change-password/form';
 import React from 'react';
 
 const ChangePasswordPage = () => {

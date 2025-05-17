@@ -23,6 +23,6 @@ export interface GetRolesResponse {
 export const getAllRoles = async (): Promise<GetRolesResponse> => {
   return await apiCall<GetRolesResponse>(
     'GET',
-    'api/superAdmin/role/get-all-roles'
+    'api/role/get-all-roles'
   );
 };
