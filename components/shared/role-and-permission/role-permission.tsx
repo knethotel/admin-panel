@@ -7,6 +7,7 @@ import { getRoleById } from '../../../lib/superAdmin/api/rolesAndPermissions/get
 
 interface Permission {
   module: string;
+  access: string[];
 }
 
 interface RoleData {
@@ -14,8 +15,13 @@ interface RoleData {
   permissions: Permission[];
 }
 
+interface PermissionWithAccess {
+  module: string;
+  access: string[];
+}
+
 type Mode = 'add' | 'edit' | 'view';
-type RolesAndPermissions = Record<string, string[]>;
+type RolesAndPermissions = Record<string, PermissionWithAccess[]>;
 
 interface ModalProps {
   isOpen: boolean;
@@ -62,7 +68,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
   const hotelModules = [
     'Dashboard',
     'Employee Management',
-    'Roles & Permissions',
+    'Roles And Permissions',
     'Guest Management',
     'Service Management',
     'Complaint Management',
@@ -99,7 +105,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
       'Roles and Permissions': 'roles-and-permissions',
       'Payment Management': 'payment-management',
       'Change Password': 'change-password',
-      'Sub Hotel Management': 'sub-hotel-management'
+      'Sub Hotel Management': 'sub-hotel-management',
     };
     return reverseMap[uiModule] || uiModule.toLowerCase().replace(/\s+/g, '-');
   };
@@ -124,10 +130,12 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
         const matchedRole: RoleData = await getRoleById(roleId);
         console.log('is super admin and role id', matchedRole);
         const formattedPermissions: RolesAndPermissions = {
-          [matchedRole.name]: matchedRole.permissions.map((p) =>
-            mapModuleName(p.module)
-          )
+          [matchedRole.name]: matchedRole.permissions.map((p) => ({
+            module: mapModuleName(p.module),
+            access: p.access || [] // make sure to include access array here
+          }))
         };
+
         setRoles([matchedRole.name]);
         setSelectedPermissions(formattedPermissions);
         setSelectedRole(matchedRole.name);
@@ -208,9 +216,26 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     if (!selectedRole || mode === 'view') return;
     setSelectedPermissions((prev) => {
       const rolePermissions = prev[selectedRole] || [];
-      const updatedPermissions = rolePermissions.includes(permission)
-        ? rolePermissions.filter((p) => p !== permission)
-        : [...rolePermissions, permission];
+
+      const permissionIndex = rolePermissions.findIndex(
+        (p) => p.module === permission
+      );
+
+      let updatedPermissions;
+
+      if (permissionIndex !== -1) {
+        // Remove the permission with matching module
+        updatedPermissions = rolePermissions.filter(
+          (p) => p.module !== permission
+        );
+      } else {
+        // Add new permission with default full access, or empty access
+        updatedPermissions = [
+          ...rolePermissions,
+          { module: permission, access: ['read', 'write', 'delete'] } // default full access
+        ];
+      }
+
       return { ...prev, [selectedRole]: updatedPermissions };
     });
   };
@@ -230,14 +255,14 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     setLoading(true);
     try {
       const apiFormattedData = Object.fromEntries(
-        Object.entries(selectedPermissions).map(([roleName, modules]) => [
+        Object.entries(selectedPermissions).map(([roleName, permissions]) => [
           roleName,
-          modules.map((module) => reverseMapModuleName(module))
+          permissions.map(({ module }) => reverseMapModuleName(module))
         ])
       );
       console.log('this data comes from form', apiFormattedData);
 
-      await onSave(apiFormattedData);
+      await onSave(selectedPermissions);
       onClose();
     } catch (err) {
       setError('Failed to save changes');
@@ -277,10 +302,10 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
                   value={role}
                   onChange={handleRoleChange}
                   className="bg-[#F6EEE0] text-gray-700 px-2 rounded-md border-none"
-                  disabled={(isSuperAdmin && mode === 'edit') || loading}
+                  disabled={loading}
                 />
               </div>
-              {(!isSuperAdmin || mode === 'add') && (
+              {(mode === 'add' || mode === 'edit') && (
                 <Button
                   type="button"
                   onClick={handleAddRole}
@@ -345,9 +370,11 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
                         id={`permission-${permission}`}
                         checked={
                           selectedRole
-                            ? (
-                                selectedPermissions[selectedRole] || []
-                              ).includes(permission)
+                            ? (selectedPermissions[selectedRole] || []).some(
+                                (p) =>
+                                  p.module.toLowerCase().trim() ===
+                                  permission.toLowerCase().trim()
+                              )
                             : false
                         }
                         onCheckedChange={() =>
@@ -364,7 +391,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
                     </div>
                   ))}
                 </div>
-                <div>
+                {/* <div>
                   <div className="flex space-x-2 text-center mb-3">
                     <Checkbox />
                     <p className="font-normal text-sm">Read</p>
@@ -489,7 +516,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
                     <Checkbox />
                     <p className="font-normal text-sm">Status Change</p>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           ) : (

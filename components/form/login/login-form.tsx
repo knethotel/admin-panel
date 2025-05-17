@@ -1,15 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { Eye, EyeOff, CircleX } from 'lucide-react';
-
-import { setSessionStorageItem } from 'utils/localstorage';
+import { setSessionStorageItem, getLocalStorageItem, setLocalStorageItem } from 'utils/localstorage';
 import apiCall from '@/lib/axios';
-import { loginSchema,  loginSchemaType} from 'schema';
+import { loginSchema, loginSchemaType } from 'schema';
 import { 
   Form, 
   FormItem, 
@@ -20,6 +19,7 @@ import {
 } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Snackbar, Alert } from '@mui/material';
 import CardWrapper from './card-wrapper';
 import LoginResponse from 'types/auth';
 
@@ -28,6 +28,7 @@ const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const form = useForm<loginSchemaType>({
     resolver: zodResolver(loginSchema),
@@ -38,9 +39,38 @@ const LoginForm = () => {
     }
   });
 
+  // Load saved credentials if "Remember me" was checked previously
+  useEffect(() => {
+    const savedCredentials = getLocalStorageItem('rememberedCredentials');
+    if (
+      savedCredentials &&
+      typeof savedCredentials === 'object' &&
+      'email' in savedCredentials &&
+      'password' in savedCredentials
+    ) {
+      const email = (savedCredentials as { email: string; password: string }).email || '';
+      const password = (savedCredentials as { email: string; password: string }).password || '';
+      
+      if (email) form.setValue('email', email);
+      if (password) form.setValue('password', password);
+      form.setValue('rememberMe', true);
+    }
+  }, [form]);
+
   const onSubmit = async (data: loginSchemaType) => {
     setIsLoading(true);
     setLoginError(null);
+
+    // Save credentials if "Remember me" is checked
+    if (data.rememberMe) {
+      setLocalStorageItem('rememberedCredentials', {
+        email: data.email,
+        password: data.password
+      });
+    } else {
+      // Clear saved credentials if "Remember me" is unchecked
+      localStorage.removeItem('rememberedCredentials');
+    }
 
     try {
       const response = await apiCall<LoginResponse>(
@@ -69,8 +99,20 @@ const LoginForm = () => {
         throw new Error('Invalid login credentials');
       }
     } catch (error: any) {
-      setLoginError(error.message || 'Login failed. Please try again.');
-      console.error('Login error:', error);
+      // Handle different types of errors with user-friendly messages
+      if (!navigator.onLine) {
+        setLoginError('No internet connection. Please check your network and try again.');
+      } else if (error.status === 404) {
+        setLoginError('Login service is currently unavailable. Please try again later or contact support.');
+      } else if (error.status === 401 || error.status === 403) {
+        setLoginError('Invalid email or password. Please check your credentials and try again.');
+      } else if (error.status >= 500) {
+        setLoginError('Server error. Our team has been notified and is working on it. Please try again later.');
+      } else {
+        setLoginError(error.message || 'Login failed. Please try again later.');
+      }
+      setSnackbarOpen(true);
+      // console.error('Login error:', error);
     } finally {
       setIsLoading(false);
     }
@@ -95,13 +137,17 @@ const LoginForm = () => {
   const clearEmail = () => {
     form.setValue('email', '');
   };
+  
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   return (
     <div className="form-background overflow-hidden flex flex-col justify-center items-center w-[90%] h-[60vh] md:w-[90vw] md:h-[70vh] lg:w-[80%] lg:h-[85%] px-4 rounded-xl md:min-w-[300px] lg:min-w-[350px]">
       <CardWrapper
         title="Sign in"
         label="Please enter your email and password to sign in."
-        incorrectPasswordMessage={loginError}
+        incorrectPasswordMessage={null}
       >
         <Form {...form}>
           <form 
@@ -125,6 +171,7 @@ const LoginForm = () => {
                           placeholder="Enter your email"
                           {...field}
                           className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-25 pr-10"
+                          autoComplete="email"
                         />
                         {field.value && (
                           <button
@@ -159,6 +206,7 @@ const LoginForm = () => {
                           placeholder="Enter your password"
                           {...field}
                           className="bg-transparent text-black border-black border-opacity-20 placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-25 pr-10"
+                          autoComplete="current-password"
                         />
                         <button
                           type="button"
@@ -210,7 +258,7 @@ const LoginForm = () => {
                   )}
                 />
                 <Link
-                  href="/auth/resetpassword"
+                  href="/resetpassword"
                   className="text-xs 2xl:text-sm text-black hover:underline"
                 >
                   Forgot Password?
@@ -228,6 +276,23 @@ const LoginForm = () => {
             </Button>
           </form>
         </Form>
+        
+        {/* Material UI Snackbar for Error Messages */}
+        <Snackbar 
+          open={snackbarOpen} 
+          autoHideDuration={6000} 
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert 
+            onClose={handleSnackbarClose} 
+            severity="error" 
+            variant="filled"
+            sx={{ width: '100%' }}
+          >
+            {loginError}
+          </Alert>
+        </Snackbar>
       </CardWrapper>
     </div>
   );

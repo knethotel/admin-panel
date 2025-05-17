@@ -50,7 +50,7 @@ export const guestSchema = z.object({
   receivedAmt: z.number(),
   dueAmt: z.number(),
   paymentMode: z.string(),
-  roomCategory: z.string(),
+  roomCategory: z.string()
 });
 
 export type guestSchemaType = z.infer<typeof guestSchema>;
@@ -172,8 +172,19 @@ export const hotelSchema = z.object({
   hotelCategory: z.enum(['3 Starr', '4 Star', '5 Star', '7 Star'], {
     errorMap: () => ({ message: 'Invalid hotel category' })
   }),
-  brandedHotel: z.boolean().optional(),  // Add this for branded hotel checkbox
-  chainHotel: z.boolean().optional(),    // Add this for chain hotel checkbox
+  allocateSubscription: z.enum(['1 Month', '6 Months', '1 Year'], {
+    errorMap: () => ({ message: 'Invalid Plan' })
+  }),
+  applyCoupon: z.enum(['Choose coupon',
+  'COUPON1',
+  'COUPON2',
+  'COUPON3',
+  'COUPON4',
+  'COUPON5'], {
+    errorMap: () => ({ message: 'Invalid coupon' })
+  }),
+  brandedHotel: z.boolean().optional(), // Add this for branded hotel checkbox
+  chainHotel: z.boolean().optional(), // Add this for chain hotel checkbox
   parentHotelName: z.string().optional(), // Add this for parent hotel name input
   subHotelName: z.string().optional(),
   city: z.enum(
@@ -522,6 +533,10 @@ export const hotelSchema = z.object({
     .nonnegative('Total staff cannot be negative')
     .min(1, 'At least one staff member is required'),
 
+  subscriptionPrice: z.number(),
+
+  netPrice: z.number(),
+
   hotelLicenseCertifications: z
     .string()
     .min(1, 'Hotel license & certifications are required'),
@@ -532,14 +547,10 @@ export const hotelSchema = z.object({
     .string()
     .min(1, 'Legal and business license is required'),
 
-  legalBusinessLicenseImage: z
-    .union([z.any(), z.string().url()])
-    .optional(),
+  legalBusinessLicenseImage: z.union([z.any(), z.string().url()]).optional(),
 
   touristLicense: z.string().min(1, 'Tourist license is required'),
-  touristLicenseImage: z
-    .union([z.any(), z.string().url()])
-    .optional(),
+  touristLicenseImage: z.union([z.any(), z.string().url()]).optional(),
 
   tanNumber: z
     .string()
@@ -554,9 +565,7 @@ export const hotelSchema = z.object({
     .string()
     .min(1, 'Data privacy & GDPR compliances are required'),
 
-  dataPrivacyGdprImage: z
-    .union([z.any(), z.string().url()])
-    .optional(),
+  dataPrivacyGdprImage: z.union([z.any(), z.string().url()]).optional(),
 
   internetConnectivity: z.boolean().default(false),
   softwareCompatibility: z.boolean().default(false)

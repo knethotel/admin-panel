@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Heading } from '@/components/ui/heading';
@@ -9,38 +9,67 @@ import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 
-import { EmployeeData } from 'app/static/EmployeeManagement';
+import { EmployeeDataType } from 'app/static/EmployeeManagement';
+import apiCall from '@/lib/axios';
 
 type ModeType = 'add_employee';
 
 export const EmployeeTable: React.FC = () => {
   const router = useRouter();
-  const [data, setData] = useState(EmployeeData || []);
-  const [filteredData, setFilteredData] = useState(EmployeeData || []);
+  const [data, setData] = useState<EmployeeDataType[]>([]);
+  const [filteredData, setFilteredData] = useState<EmployeeDataType[]>([]);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const [totalRecords, setTotalRecords] = useState(data.length || 0);
   const [mode, setMode] = useState<ModeType>();
 
-  // const filters = [
-  //     {
-  //         label: 'Account Status',
-  //         key: 'accountStatus', // Backend key
-  //         subOptions: ['Active', 'Suspended'],
-  //     },
-  //     {
-  //         label: 'Verification Status',
-  //         key: 'verificationStatus',
-  //         subOptions: ['Verified', 'Pending', 'Rejected'],
-  //     },
-  //     {
-  //         label: 'Activity Status',
-  //         key: 'activityStatus',
-  //         subOptions: ['Active', 'Inactive'],
-  //     },
-  // ];
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await apiCall<{
+          status: boolean;
+          employees: any[];
+        }>('GET', 'api/employee/');
 
+        if (response.status && Array.isArray(response.employees)) {
+          // Map API data to EmployeeDataType
+          const mappedEmployees: EmployeeDataType[] = response.employees.map(
+            (emp) => ({
+              employeeID: emp._id,
+              employeeDetails: {
+                name: emp.firstName + ' ' + emp.lastName,
+                roomNo: '', // No roomNo in API, set blank or handle separately
+                mobileNo: emp.mobileNumber || '',
+                emailID: emp.email || emp.emailID || ''
+              },
+              role: emp.roleId?.name || 'N/A',
+              status:
+                emp.status && emp.status.toUpperCase() === 'ACTIVE'
+                  ? 'ACTIVE'
+                  : 'INACTIVE'
+            })
+          );
+          setData(mappedEmployees);
+          setFilteredData(mappedEmployees);
+          setTotalRecords(mappedEmployees.length);
+        } else {
+          setError('Invalid response from server');
+        }
+      } catch (err: any) {
+        setError(err.message || 'Failed to fetch employees');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
+  
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
       setPageNo(newPage);
@@ -87,6 +116,8 @@ export const EmployeeTable: React.FC = () => {
       </div>
       {loading ? (
         <span>Loading...</span>
+      ) : error ? (
+        <span className="text-red-500">{error}</span>
       ) : (
         <DataTable
           searchKey="firstName"
