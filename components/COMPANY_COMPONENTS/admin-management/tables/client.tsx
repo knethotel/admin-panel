@@ -8,6 +8,7 @@ import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useColumns, AdminDataType } from './columns';
 import { getAllAdmins } from '@/lib/superAdmin/api/admin/getAdmins';
+import { PaginationControls } from '@/components/shared/PaginationControls';
 
 export const AdminTable: React.FC = () => {
   const router = useRouter();
@@ -118,31 +119,13 @@ export const AdminTable: React.FC = () => {
           onSearch={handleSearchChange}
         />
       )}
-      {totalRecords > 0 && (
-        <div className="flex justify-end space-x-2 px-3 py-2">
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(pageNo - 1)}
-              disabled={pageNo === 1}
-            >
-              Previous
-            </Button>
-            <span className="text-sm text-gray-600">
-              Page {pageNo} of {Math.ceil(totalRecords / limit) || 1}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(pageNo + 1)}
-              disabled={pageNo >= Math.ceil(totalRecords / limit)}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
-      )}
+      <PaginationControls
+        pageNo={pageNo}
+        totalRecords={totalRecords}
+        limit={limit}
+        filteredCount={filteredData.length}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };

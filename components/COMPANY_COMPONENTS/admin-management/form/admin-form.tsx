@@ -34,13 +34,14 @@ import { ChevronDown } from 'lucide-react';
 import { addAdmin } from '@/lib/superAdmin/api/admin/addAdmin';
 import { getAdminById } from '@/lib/superAdmin/api/admin/getAdmins';
 import { editAdmin } from '@/lib/superAdmin/api/admin/editAdmin';
+import { ToastAtTopRight } from '@/lib/sweetalert';
 
 interface Admin {
   _id: string;
   firstName: string;
   lastName: string;
   email: string;
-  phoneNo?: string;
+  mobileNumber?: string;
   roleId: string;
   status: string;
   [key: string]: any;
@@ -64,7 +65,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
       lastName: '',
       email: '',
       password: mode === 'add' ? '' : undefined, // Password only in add mode
-      phoneNo: '',
+      mobileNumber: '',
       roleId: '',
       status: 'Active' // Default to 'Active'
     }
@@ -89,9 +90,9 @@ const AdminForm = ({ adminID, mode }: Props) => {
             firstName: adminData.firstName || '',
             lastName: adminData.lastName || '',
             email: adminData.email || '',
-            password: undefined, // Exclude password in edit mode
-            phoneNo: adminData.phoneNo || '',
-            roleId: adminData.roleId || '',
+            password: undefined,
+            mobileNumber: adminData.mobileNumber || '',
+            roleId: adminData.roleId?._id || '',
             status: adminData.status || 'Active'
           });
         }
@@ -110,15 +111,16 @@ const AdminForm = ({ adminID, mode }: Props) => {
     try {
       if (mode === 'add') {
         await addAdmin(data);
-        alert('Admin added successfully!');
-        form.reset();
+        ToastAtTopRight.fire('Admin added successfully!', 'success');
+        router.push('/super-admin/admin-management');
       } else if (mode === 'edit') {
         await editAdmin(adminID!, data);
-        alert('Admin updated successfully!');
+        ToastAtTopRight.fire('Admin updated successfully!', 'success');
+        router.push('/super-admin/admin-management');
       }
     } catch (error: any) {
       console.error('Submit Error:', error);
-      alert(`Error: ${error.message}`);
+      ToastAtTopRight.fire(error.message || 'Something went wrong', 'error');
     } finally {
       setLoading(false);
     }
@@ -131,200 +133,196 @@ const AdminForm = ({ adminID, mode }: Props) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-10"
         >
-          <div className="flex flex-col gap-4">
-            {/* Upper part */}
-            <div className="flex gap-4">
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      First Name
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="text"
-                          placeholder="First Name"
-                          {...field}
-                          disabled={mode === 'view' || loading}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
-                        />
-                        <span className="text-red-500">*</span>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Last Name
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="text"
-                          placeholder="Last Name"
-                          {...field}
-                          disabled={mode === 'view' || loading}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
-                        />
-                        <span className="text-red-500">*</span>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Email
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="email"
-                          placeholder="Email ID"
-                          {...field}
-                          disabled={mode === 'view' || loading}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
-                        />
-                        <span className="text-red-500">*</span>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {mode === 'add' && (
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-black text-[0.8rem]">
-                        Password
-                      </FormLabel>
-                      <FormControl>
-                        <div className="flex gap-1">
-                          <Input
-                            type="password"
-                            placeholder="Password"
-                            {...field}
-                            disabled={loading}
-                            className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
-                          />
-                          <span className="text-red-500">*</span>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-black text-[0.8rem]">
+                    First Name
+                    <span className="text-red-500 ml-1">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex gap-1">
+                      <Input
+                        type="text"
+                        placeholder="First Name"
+                        {...field}
+                        disabled={mode === 'view' || loading}
+                        className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-            </div>
-            {/* Lower part */}
-            <div className="flex items-center gap-4">
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-black text-[0.8rem]">
+                    Last Name
+                    <span className="text-red-500 ml-1">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex gap-1">
+                      <Input
+                        type="text"
+                        placeholder="Last Name"
+                        {...field}
+                        disabled={mode === 'view' || loading}
+                        className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-black text-[0.8rem]">
+                    Email
+                    <span className="text-red-500 ml-1">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex gap-1">
+                      <Input
+                        type="email"
+                        placeholder="Email ID"
+                        {...field}
+                        disabled={mode === 'view' || loading}
+                        className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {mode === 'add' && (
               <FormField
                 control={form.control}
-                name="phoneNo"
+                name="password"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-black text-[0.8rem]">
-                      Phone Number
+                      Password
+                      <span className="text-red-500 ml-1">*</span>
                     </FormLabel>
                     <FormControl>
                       <div className="flex gap-1">
                         <Input
-                          type="text"
-                          placeholder="Phone No"
+                          type="password"
+                          placeholder="Password"
                           {...field}
-                          disabled={mode === 'view' || loading}
+                          disabled={loading}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />
-                        <span className="text-red-500">*</span>
                       </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              {/* Role Selection */}
-              <FormField
-                control={form.control}
-                name="roleId"
-                render={({ field }) => (
-                  <FormItem className="relative">
-                    <FormLabel>Select Role</FormLabel>
+            )}
+            <FormField
+              control={form.control}
+              name="mobileNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-black text-[0.8rem]">
+                    Phone Number
+                    <span className="text-red-500 ml-1">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex gap-1">
+                      <Input
+                        type="text"
+                        placeholder="Phone No"
+                        {...field}
+                        disabled={mode === 'view' || loading}
+                        className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Role Selection */}
+            <FormField
+              control={form.control}
+              name="roleId"
+              render={({ field }) => (
+                <FormItem className="relative">
+                  <FormLabel>
+                    Select Role <span className="text-red-500 ml-1">*</span>
+                  </FormLabel>
+                  <div className="flex gap-1">
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      disabled={mode === 'view' || loading}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="min-w-40 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
+                          <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {roles.map((role) => (
+                          <SelectItem key={role._id} value={role._id}>
+                            {role.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <FormMessage />
+                  <ChevronDown className="absolute right-4 top-[2.2rem] text-black w-4 h-4" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem className="relative">
+                  <FormLabel>
+                    Status <span className="text-red-500 ml-1">*</span>
+                  </FormLabel>
+                  <FormControl>
                     <div className="flex gap-1">
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
-                        disabled={loading}
+                        disabled={mode === 'view' || loading}
                       >
-                        <FormControl>
-                          <SelectTrigger className="min-w-40 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
-                            <SelectValue placeholder="Select a role" />
-                          </SelectTrigger>
-                        </FormControl>
+                        <SelectTrigger className="min-w-32 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
                         <SelectContent>
-                          {roles.map((role) => (
-                            <SelectItem key={role._id} value={role._id}>
-                              {role.name}
+                          {['Active', 'Inactive'].map((value) => (
+                            <SelectItem key={value} value={value}>
+                              {value}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
-                      <span className="text-red-500">*</span>
                     </div>
-                    <FormMessage />
-                    <ChevronDown className="absolute right-4 top-[2.2rem] text-black w-4 h-4" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem className="relative">
-                    <FormLabel>Status</FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          disabled={mode === 'view' || loading}
-                        >
-                          <SelectTrigger className="min-w-32 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
-                            <SelectValue placeholder="Select status" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {['Active', 'Inactive'].map((value) => (
-                              <SelectItem key={value} value={value}>
-                                {value}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <span className="text-red-500">*</span>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                    <ChevronDown className="absolute right-4 top-[2.2rem] text-black w-4 h-4" />
-                  </FormItem>
-                )}
-              />
-            </div>
+                  </FormControl>
+                  <FormMessage />
+                  <ChevronDown className="absolute right-4 top-[2.2rem] text-black w-4 h-4" />
+                </FormItem>
+              )}
+            />
           </div>
           {/* Buttons */}
           <div className="flex items-center gap-3">
@@ -336,7 +334,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
             >
               Cancel
             </Button>
-            <Button type="submit" className="btn-primary" disabled={loading}>
+            <Button type="submit" className="btn-primary" disabled={mode === 'view' || loading}>
               Save Changes
             </Button>
           </div>

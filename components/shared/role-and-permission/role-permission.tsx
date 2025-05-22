@@ -58,11 +58,13 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     'Roles and Permissions',
     'Guest Management',
     'Complaint Management',
+    'Subscription Management',
     'Coupon Management',
     'Refunds Management',
     'Change Password',
     'Hotel Management',
-    'Sub Hotel Management'
+    'Sub Hotel Management',
+    'Analytics Reports,'
   ];
 
   const hotelModules = [
@@ -70,12 +72,14 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     'Employee Management',
     'Roles And Permissions',
     'Guest Management',
+    'Coupons Management',
+    'Refund Management',
     'Service Management',
     'Complaint Management',
     'Payment Management',
-    'Notifications',
     'Change Password',
-    'Hotel Profile'
+    'Hotel Profile',
+    'Analytics Reports'
   ];
 
   const availableModules = isSuperAdmin ? superAdminModules : hotelModules;
@@ -93,21 +97,6 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
       'sub-hotel-management': 'Sub Hotel Management'
     };
     return moduleMap[apiModule.toLowerCase()] || apiModule;
-  };
-
-  const reverseMapModuleName = (uiModule: string): string => {
-    const reverseMap: Record<string, string> = {
-      'Hotel Management': 'hotel-management',
-      'Complaint Management': 'complaint-management',
-      'Admin Management': 'admin-management',
-      'Guest Management': 'user-management',
-      Dashboard: 'dashboard',
-      'Roles and Permissions': 'roles-and-permissions',
-      'Payment Management': 'payment-management',
-      'Change Password': 'change-password',
-      'Sub Hotel Management': 'sub-hotel-management',
-    };
-    return reverseMap[uiModule] || uiModule.toLowerCase().replace(/\s+/g, '-');
   };
 
   const fetchRoleData = useCallback(async () => {
@@ -254,18 +243,17 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
 
     setLoading(true);
     try {
-      const apiFormattedData = Object.fromEntries(
-        Object.entries(selectedPermissions).map(([roleName, permissions]) => [
-          roleName,
-          permissions.map(({ module }) => reverseMapModuleName(module))
-        ])
-      );
-      console.log('this data comes from form', apiFormattedData);
-
       await onSave(selectedPermissions);
       onClose();
-    } catch (err) {
-      setError('Failed to save changes');
+    } catch (err: any) {
+      if (
+        err?.response?.data?.message === 'Access denied' ||
+        err?.message?.toLowerCase().includes('access denied')
+      ) {
+        setError("You don't have access to perform this action.");
+      } else {
+        setError('Failed to save changes');
+      }
     } finally {
       setLoading(false);
     }
@@ -391,132 +379,6 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
                     </div>
                   ))}
                 </div>
-                {/* <div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Read</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Read</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Read</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Read</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Read</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Read</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Read</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Read</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Read</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Read</p>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Write</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Write</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Write</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Write</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Write</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Write</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Write</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Write</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Write</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Write</p>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Status Change</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Status Change</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Status Change</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Status Change</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Status Change</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Status Change</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Status Change</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Status Change</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Status Change</p>
-                  </div>
-                  <div className="flex space-x-2 text-center mb-3">
-                    <Checkbox />
-                    <p className="font-normal text-sm">Status Change</p>
-                  </div>
-                </div> */}
               </div>
             </div>
           ) : (

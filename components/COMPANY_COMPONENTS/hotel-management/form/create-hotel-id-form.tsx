@@ -144,6 +144,32 @@ const CreateHotelIdForm = ({ hotelID, isEnabled = true, mode }: Props) => {
     }
   ];
 
+  useEffect(() => {
+    if (hotelID) {
+      const fetchHotel = async () => {
+        try {
+          const response = await apiCall(
+            'GET',
+            `api/superAdmin/hotel/get-hotel/${hotelID}`
+          );
+          if (response.status && response.hotel) {
+            form.reset({
+              hotelName: response.hotel.name,
+              address: response.hotel.address,
+              contactNo: response.hotel.phoneNo,
+              email: response.hotel.email,
+              subscriptionPlan: response.hotel.subscriptionPlan
+              // ... other fields mapped accordingly
+            });
+          }
+        } catch (err) {
+          // Handle error (optional toast etc)
+        }
+      };
+      fetchHotel();
+    }
+  }, [hotelID]);
+
   return (
     <div className="flex flex-col gap-4 w-full">
       <FormWrapper title="">

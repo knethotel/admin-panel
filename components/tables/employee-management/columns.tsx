@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import CellAction from './cell-action';
 import { EmployeeDataType } from 'app/static/EmployeeManagement';
+import { StatusType } from 'app/static/Type';
 
 // Update type to match guestDataType for better type safety
 export const columns: ColumnDef<EmployeeDataType>[] = [
@@ -36,12 +37,12 @@ export const columns: ColumnDef<EmployeeDataType>[] = [
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      const status = row.original.status || 'N/A';
-      if (status === 'ACTIVE') {
-        return <div className=" font-medium text-[#78B150]">{status}</div>;
-      } else {
-        return <div className="text-[#E5252A]">{status}</div>;
-      }
+      const status: StatusType = row.original.status;
+      return status === 'Active' ? (
+        <div className="font-medium text-[#78B150]">{status.toUpperCase()}</div>
+      ) : (
+        <div className="text-[#E5252A]">{status.toUpperCase()}</div>
+      );
     }
   },
   {
@@ -50,7 +51,10 @@ export const columns: ColumnDef<EmployeeDataType>[] = [
     header: 'Actions',
     cell: ({ row }) => (
       <div className="flex items-center justify-center">
-        <CellAction data={row.original} />
+        <CellAction
+          data={row.original}
+          // onStatusChange={updateEmployeeStatus}
+        />
       </div>
     )
   }

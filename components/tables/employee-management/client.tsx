@@ -4,13 +4,15 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Heading } from '@/components/ui/heading';
-
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { columns as baseColumns } from './columns';
 import { columns } from './columns';
-
 import { EmployeeDataType } from 'app/static/EmployeeManagement';
 import apiCall from '@/lib/axios';
+import CellAction from './cell-action';
+import { StatusType } from 'app/static/Type';
+import { PaginationControls } from '@/components/shared/PaginationControls';
 
 type ModeType = 'add_employee';
 
@@ -47,10 +49,7 @@ export const EmployeeTable: React.FC = () => {
                 emailID: emp.email || emp.emailID || ''
               },
               role: emp.roleId?.name || 'N/A',
-              status:
-                emp.status && emp.status.toUpperCase() === 'ACTIVE'
-                  ? 'ACTIVE'
-                  : 'INACTIVE'
+              status: emp.status === 'Active' ? 'Active' : 'Inactive'
             })
           );
           setData(mappedEmployees);
@@ -69,7 +68,36 @@ export const EmployeeTable: React.FC = () => {
     fetchEmployees();
   }, []);
 
-  
+  const updateEmployeeStatus = (employeeID: string, newStatus: StatusType) => {
+    setData((prev) =>
+      prev.map((emp) =>
+        emp.employeeID === employeeID ? { ...emp, status: newStatus } : emp
+      )
+    );
+    setFilteredData((prev) =>
+      prev.map((emp) =>
+        emp.employeeID === employeeID ? { ...emp, status: newStatus } : emp
+      )
+    );
+  };
+
+  const columns = baseColumns.map((col) => {
+    if (col.id === 'actions') {
+      return {
+        ...col,
+        cell: ({ row }: any) => (
+          <div className="flex items-center justify-center">
+            <CellAction
+              data={row.original}
+              onStatusChange={updateEmployeeStatus}
+            />
+          </div>
+        )
+      };
+    }
+    return col;
+  });
+
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
       setPageNo(newPage);
@@ -133,29 +161,13 @@ export const EmployeeTable: React.FC = () => {
           // onFilterChange={handleFilterChange}
         />
       )}
-      <div className="flex justify-end space-x-2 px-3 py-2">
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(pageNo - 1)}
-            disabled={pageNo === 1}
-          >
-            Previous
-          </Button>
-          <span className="text-sm text-gray-600">
-            Page {pageNo} of {Math.ceil(totalRecords / limit)}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(pageNo + 1)}
-            disabled={pageNo >= Math.ceil(totalRecords / limit)}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      <PaginationControls
+        pageNo={pageNo}
+        totalRecords={totalRecords}
+        limit={limit}
+        filteredCount={filteredData.length}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };

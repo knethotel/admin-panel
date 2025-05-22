@@ -11,7 +11,7 @@ const FormWrapper = ({ title, children }: Props) => {
   return (
     <Card title={title}>
       <CardHeader>
-        <Heading title={title} />
+        <Heading title={title} className='md:mb-0'/>
       </CardHeader>
       <CardContent>{children}</CardContent>
     </Card>

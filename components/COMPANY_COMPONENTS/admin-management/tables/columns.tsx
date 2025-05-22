@@ -3,16 +3,20 @@
 import { useState, useEffect } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import CellAction from './cell-action';
-import { getAllRoles } from '@/lib/superAdmin/api/rolesAndPermissions/getAllRoles';
 
 export interface AdminDataType {
   _id: string;
   isSuperAdmin: boolean;
-  roleId: string;
+  roleId: {
+    _id: string;
+    name: string;
+  } | null;
   firstName: string;
   lastName: string;
   email: string;
+  mobileNumber: string;
   status: string;
+  scope: string;
   IsOtpVerified: boolean;
   createdAt: string;
   updatedAt: string;
@@ -21,24 +25,12 @@ export interface AdminDataType {
 
 // Custom hook to fetch roles and return columns
 export const useColumns = (): ColumnDef<AdminDataType>[] => {
-  const [roles, setRoles] = useState<any[]>([]);
-
-  // Fetch roles on mount
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const data = await getAllRoles();
-        setRoles(data.roles || []);
-      } catch (error) {
-        console.error('Failed to fetch roles:', error);
-        setRoles([]); // Fallback to empty array on error
-      }
-    };
-    fetchRoles();
-  }, []);
-
-  // Define columns using the fetched roles
   return [
+    {
+      accessorKey: 'adminId',
+      header: 'Admin ID',
+      cell: ({row}) => row.original._id || 'N/A'
+    },
     {
       accessorKey: 'firstName',
       header: 'Admin Name',
@@ -58,9 +50,9 @@ export const useColumns = (): ColumnDef<AdminDataType>[] => {
       }
     },
     {
-      accessorKey: 'phoneNo', // Note: Add to AdminDataType if used, otherwise remove
+      accessorKey: 'mobileNumber',
       header: 'Mobile no.',
-      cell: () => 'N/A'
+      cell: ({ row }) => row.original.mobileNumber || 'N/A'
     },
     {
       accessorKey: 'email',
@@ -70,11 +62,9 @@ export const useColumns = (): ColumnDef<AdminDataType>[] => {
       accessorKey: 'roleId',
       header: 'Role',
       cell: ({ row }) => {
-        const roleID = row.original.roleId || 'N/A';
-        const roleObject = roles.find((role: any) => role._id === roleID);
         return (
-          <div className="text-base bg-zinc-300/40 py-1 rounded-md">
-            {roleObject?.name || 'N/A'}
+          <div>
+            {row.original.roleId?.name || 'N/A'}
           </div>
         );
       }

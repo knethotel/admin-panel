@@ -1,4 +1,5 @@
 import AdminForm from '@/components/COMPANY_COMPONENTS/admin-management/form/admin-form';
+import Navbar from '@/components/Navbar';
 import React from 'react';
 type Params = {
   id: string;
@@ -10,8 +11,9 @@ const ViewAdminPage = async ({
 }) => {
   const id = (await params).id;
   return (
-    <div className="flex justify-center w-full pt-8">
-      <div className="w-full container py-6 flex justify-center">
+    <div className="flex flex-col w-full">
+      <Navbar />
+      <div className="sm:px-6 sm:py-0 mt-24">
         <AdminForm adminID={id} mode="view" />
       </div>
     </div>

@@ -5,7 +5,7 @@ import FormWrapper from './form-wrapper';
 import { employeeSchema, employeeSchemaType } from 'schema';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { EmployeeData } from 'app/static/EmployeeManagement';
+// import { EmployeeData } from 'app/static/EmployeeManagement';
 import {
   Form,
   FormControl,

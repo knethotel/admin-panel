@@ -172,17 +172,16 @@ export const hotelSchema = z.object({
   hotelCategory: z.enum(['3 Starr', '4 Star', '5 Star', '7 Star'], {
     errorMap: () => ({ message: 'Invalid hotel category' })
   }),
-  allocateSubscription: z.enum(['1 Month', '6 Months', '1 Year'], {
-    errorMap: () => ({ message: 'Invalid Plan' })
+  subscriptionPlan: z.enum(['Basic', 'Premium', 'Enterprise'], {
+    errorMap: () => ({ message: 'Invalid subscription plan' })
   }),
-  applyCoupon: z.enum(['Choose coupon',
-  'COUPON1',
-  'COUPON2',
-  'COUPON3',
-  'COUPON4',
-  'COUPON5'], {
-    errorMap: () => ({ message: 'Invalid coupon' })
-  }),
+  gst: z.string().min(1, 'GST is required'),
+  applyCoupon: z.enum(
+    ['Choose coupon', 'COUPON1', 'COUPON2', 'COUPON3', 'COUPON4', 'COUPON5'],
+    {
+      errorMap: () => ({ message: 'Invalid coupon' })
+    }
+  ),
   brandedHotel: z.boolean().optional(), // Add this for branded hotel checkbox
   chainHotel: z.boolean().optional(), // Add this for chain hotel checkbox
   parentHotelName: z.string().optional(), // Add this for parent hotel name input
@@ -525,6 +524,33 @@ export const hotelSchema = z.object({
     {
       errorMap: () => ({ message: 'Please select a valid serving department' })
     }
+  ),
+
+  rooms: z.array(
+    z.object({
+      roomName: z.string(),
+      roomType: z.string(),
+      features: z.array(z.string()),
+      images: z.array(z.string().url()),
+      checkInTime: z.string(),
+      checkOutTime: z.string(),
+      servingDepartment: z.array(
+        z.enum([
+          'Reception',
+          'Housekeeping',
+          'In-Room Dining',
+          'Gym',
+          'Spa',
+          'Swimming Pool',
+          'Concierge Service',
+          'In-Room Control',
+          'Order Management',
+          'SOS Management',
+          'Chat With Staff'
+        ])
+      ),
+      totalStaff: z.number().min(1)
+    })
   ),
 
   totalStaff: z

@@ -5,7 +5,6 @@ import FormWrapper from './form-wrapper';
 import { employeeSchema, employeeSchemaType } from 'schema';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { EmployeeData } from 'app/static/EmployeeManagement';
 import {
   Form,
   FormControl,
@@ -25,49 +24,110 @@ import {
 } from '@/components/ui/select';
 import { ChevronDown } from 'lucide-react';
 import { ToastAtTopRight } from '@/lib/sweetalert';
+import apiCall from '@/lib/axios';
 
 type Props = {
   employeeID?: string;
   isEnabled?: boolean;
   mode: string;
+  employeeData?: any;
 };
 
-const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
+interface Role {
+  _id: string;
+  name: string;
+}
+
+const EmployeeForm = ({ employeeID, isEnabled, mode, employeeData }: Props) => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [roles, setRoles] = useState<Role[]>([]);
   const router = useRouter();
 
-  // Get employee details using id
-  const getEmployeeDetails = (employeeID: string | undefined) => {
-    if (employeeID) {
-      return EmployeeData.find(
-        (employee) => employee.employeeID === employeeID
-      );
-    }
-    return null;
-  };
-  const employee = getEmployeeDetails(employeeID);
+  // Fetch roles when the form is opened
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const response = await apiCall<{ status: boolean; roles: Role[] }>(
+          'GET',
+          'api/role/get-all-roles'
+        );
+        if (response.status) {
+          setRoles(response.roles); // Set roles in state
+        }
+      } catch (error) {
+        console.error('Error fetching roles:', error);
+      }
+    };
+    fetchRoles();
+  }, []);
 
   const employeeForm = useForm<employeeSchemaType>({
     resolver: zodResolver(employeeSchema),
     defaultValues: {
-      firstName: employee?.employeeDetails?.name?.split(' ')[0] || '',
-      lastName: employee?.employeeDetails?.name?.split(' ')[1] || '',
-      email: employee?.employeeDetails?.emailID || '',
-      password: '',
-      phoneNo: employee?.employeeDetails?.mobileNo || '',
-      role: employee?.role || '',
-      status: 'Active'
+      firstName: employeeData?.firstName || '',
+      lastName: employeeData?.lastName || '',
+      email: employeeData?.email || '',
+      password: employeeData?.password || '',
+      phoneNo: employeeData?.mobileNumber || '',
+      role: employeeData?.roleId?._id || '',
+      status: employeeData?.status || 'Active'
     }
   });
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
   const onSubmit = async (data: employeeSchemaType) => {
-    console.log('Submitted data:', data);
-    setIsSubmitted(true);
-    ToastAtTopRight.fire({
-      icon: 'success',
-      title: 'Employee Created successfully'
-    });
+    try {
+      const payload: any = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        mobileNumber: data.phoneNo,
+        roleId: data.role,
+        status: data.status
+      };
+
+      // If not in 'edit' mode, include the password (i.e., creating a new employee)
+      if (mode !== 'edit' && data.password) {
+        payload.password = data.password;
+      }
+
+      let response;
+      if (mode === 'edit') {
+        // If editing, send PUT request (without password)
+        response = await apiCall<{ status: boolean; message: string }>(
+          'PUT',
+          `api/employee/${employeeID}`, // Employee ID for editing
+          payload
+        );
+      } else {
+        // If creating, send POST request (with password)
+        response = await apiCall<{ status: boolean; message: string }>(
+          'POST',
+          'api/employee/',
+          payload
+        );
+      }
+
+      if (response.status) {
+        setIsSubmitted(true);
+        ToastAtTopRight.fire({
+          icon: 'success',
+          title:
+            mode === 'edit'
+              ? 'Employee Updated successfully'
+              : 'Employee Created successfully'
+        });
+        router.push('/hotel-panel/employee-management');
+      }
+    } catch (err) {
+      console.error('Failed to save employee:', err);
+      ToastAtTopRight.fire({
+        icon: 'error',
+        title:
+          mode === 'edit'
+            ? 'Failed to update employee'
+            : 'Failed to create employee'
+      });
+    }
   };
 
   useEffect(() => {
@@ -87,84 +147,83 @@ const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
   }, [isSubmitted, employeeForm]);
 
   return (
-    <FormWrapper title={'Employee Profile'}>
+    <FormWrapper title={`Employee Profile ${mode === 'edit' ? 'Edit' : ''}`}>
       <Form {...employeeForm}>
         <form
           onSubmit={employeeForm.handleSubmit(onSubmit)}
           className="flex flex-col gap-10"
         >
-          <div className="flex flex-col gap-4">
-            {/* Upper part */}
-            <div className="flex gap-4">
-              <FormField
-                control={employeeForm.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      First Name
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="text"
-                          placeholder="First Name"
-                          {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
-                        />
-                        {isEnabled && <span className="text-red-500">*</span>}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={employeeForm.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Last Name
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="text"
-                          placeholder="Last Name"
-                          {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
-                        />
-                        {isEnabled && <span className="text-red-500">*</span>}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={employeeForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Email
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="email"
-                          placeholder="Email ID"
-                          {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
-                        />
-                        {isEnabled && <span className="text-red-500">*</span>}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={employeeForm.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-black text-[0.8rem]">
+                    First Name
+                    {isEnabled && <span className="text-red-500 ml-1">*</span>}
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex gap-1">
+                      <Input
+                        type="text"
+                        placeholder="First Name"
+                        {...field}
+                        className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={employeeForm.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-black text-[0.8rem]">
+                    Last Name
+                    {isEnabled && <span className="text-red-500 ml-1">*</span>}
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex gap-1">
+                      <Input
+                        type="text"
+                        placeholder="Last Name"
+                        {...field}
+                        className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={employeeForm.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-black text-[0.8rem]">
+                    Email
+                    {isEnabled && <span className="text-red-500 ml-1">*</span>}
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex gap-1">
+                      <Input
+                        type="email"
+                        placeholder="Email ID"
+                        {...field}
+                        className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {mode == 'add' && (
               <FormField
                 control={employeeForm.control}
                 name="password"
@@ -172,6 +231,9 @@ const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                   <FormItem>
                     <FormLabel className="text-black text-[0.8rem]">
                       Password
+                      {isEnabled && (
+                        <span className="text-red-500 ml-1">*</span>
+                      )}
                     </FormLabel>
                     <FormControl>
                       <div className="flex gap-1">
@@ -181,91 +243,94 @@ const EmployeeForm = ({ employeeID, isEnabled, mode }: Props) => {
                           {...field}
                           className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
                         />
-                        {isEnabled && <span className="text-red-500">*</span>}
                       </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
-            {/* Lower part */}
-            <div className="flex items-center gap-4">
-              <FormField
-                control={employeeForm.control}
-                name="phoneNo"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Phone Number
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="text"
-                          placeholder="Phone No"
-                          {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
-                        />
-                        {isEnabled && <span className="text-red-500">*</span>}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={employeeForm.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Role
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex gap-1">
-                        <Input
-                          type="text"
-                          placeholder="Role"
-                          {...field}
-                          className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
-                        />
-                        {isEnabled && <span className="text-red-500">*</span>}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={employeeForm.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem className="relative">
-                    <FormLabel>Status</FormLabel>
-                    <FormControl>
+            )}
+            <FormField
+              control={employeeForm.control}
+              name="phoneNo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-black text-[0.8rem]">
+                    Phone Number
+                    {isEnabled && <span className="text-red-500 ml-1">*</span>}
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex gap-1">
+                      <Input
+                        type="text"
+                        placeholder="Phone No"
+                        {...field}
+                        className="bg-[#F6EEE0] text-black border-none placeholder:text-black placeholder:text-xs 2xl:text-sm placeholder:opacity-45 pr-10"
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={employeeForm.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-black text-[0.8rem]">
+                    Role
+                    {isEnabled && <span className="text-red-500 ml-1">*</span>}
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex gap-1">
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
                       >
-                        <SelectTrigger className="w-28 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
-                          <SelectValue />
+                        <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
+                          <SelectValue placeholder="Select Role" />
                         </SelectTrigger>
                         <SelectContent className="bg-[#362913] rounded-2xl text-white border-2 shadow-md border-white">
-                          {['Active', 'Inactive'].map((value) => (
-                            <SelectItem key={value} value={value}>
-                              {value}
+                          {roles.map((role) => (
+                            <SelectItem key={role._id} value={role._id}>
+                              {role.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
-                    </FormControl>
-                    <FormMessage />
-                    <ChevronDown className="absolute right-1 top-[2.2rem] text-black w-4 h-4" />
-                  </FormItem>
-                )}
-              />
-            </div>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={employeeForm.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem className="relative">
+                  <FormLabel>Status</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-[#362913] rounded-2xl text-white border-2 shadow-md border-white">
+                        {['Active', 'Inactive'].map((value) => (
+                          <SelectItem key={value} value={value}>
+                            {value}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                  <ChevronDown className="absolute right-1 top-[2.2rem] text-black w-4 h-4" />
+                </FormItem>
+              )}
+            />
           </div>
           {/* Buttons */}
           <div className="flex items-center gap-3">
