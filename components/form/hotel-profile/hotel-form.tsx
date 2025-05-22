@@ -25,6 +25,8 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import { ToastAtTopRight } from '@/lib/sweetalert';
+import apiCall from '@/lib/axios';
 
 const HotelForm = () => {
   const router = useRouter();
@@ -89,26 +91,87 @@ const HotelForm = () => {
       dataPrivacyGdprImage: undefined,
       internetConnectivity: false,
       softwareCompatibility: false,
-      allocateSubscription: '1 Year',
+      subscriptionPlan: 'Premium',
       subscriptionPrice: 500,
       netPrice: 0,
       applyCoupon: 'Choose coupon'
     }
   });
 
-  const onSubmit = (data: HotelSchemaType) => {
-    console.log('Hotel Data:', data);
-    form.reset();
-    setImagePreviews({
-      logoImage: [],
-      additionalImage: [], // Reset additional image preview
-      roomImage: [],
-      hotelLicenseImage: [],
-      legalBusinessLicenseImage: [],
-      touristLicenseImage: [],
-      tanNumberImage: [],
-      dataPrivacyGdprImage: []
-    });
+  const onSubmit = async (data: HotelSchemaType) => {
+    const payload = {
+      name: data.hotelName,
+      address: data.completeAddress,
+      email: data.email,
+      phoneNo: data.number,
+      password: 'Miss@123',
+      hotelCategory: data.hotelCategory,
+      city: data.city,
+      country: data.country,
+      state: data.state,
+      pincode: data.pinCode,
+      brandedHotel: isBrandedHotelChecked,
+      parentHotel: data.parentHotelName,
+      subscriptionPlan: data.subscriptionPlan, 
+      logo: imagePreviews.logoImage?.[0] || '',
+      images: imagePreviews.additionalImage,
+      gst: data.gst,
+
+      hotelLicenseAndCertification: {
+        certificateValue: data.hotelLicenseCertifications,
+        imageUrl: imagePreviews.hotelLicenseImage?.[0] || ''
+      },
+      legalAndBusinessLicense: {
+        licenseValue: data.legalBusinessLicense,
+        imageUrl: imagePreviews.legalBusinessLicenseImage?.[0] || ''
+      },
+      touristLicense: {
+        licenseValue: data.touristLicense,
+        imageUrl: imagePreviews.touristLicenseImage?.[0] || ''
+      },
+      panNumber: {
+        numberValue: data.tanNumber,
+        imageUrl: imagePreviews.tanNumberImage?.[0] || ''
+      },
+      dataPrivacyAndGDPRCompliance: {
+        complianceValue: data.dataPrivacyGdprCompliances,
+        imageUrl: imagePreviews.dataPrivacyGdprImage?.[0] || ''
+      },
+      internetConnectivity: data.internetConnectivity,
+      softwareCompatibility: data.softwareCompatibility,
+      rooms: [
+        {
+          roomName: data.roomTypes,
+          roomType: data.roomTypes,
+          features: [data.features],
+          images: imagePreviews.roomImage,
+          checkInTime: data.checkInTime,
+          checkOutTime: data.checkOutTime,
+          servingDepartment: ['Concierge Service', 'In-Room Dining', 'Spa'],
+          totalStaff: data.totalStaff
+        }
+      ]
+    };
+
+    try {
+      const response = await apiCall(
+        'POST',
+        'api/superAdmin/hotel/add-hotel',
+        payload
+      );
+      if (response.status) {
+        ToastAtTopRight.fire('Hotel created successfully', 'success');
+        router.push('/super-admin/hotel-management');
+      } else {
+        ToastAtTopRight.fire(
+          response.message || 'Failed to create hotel',
+          'error'
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      ToastAtTopRight.fire('Server error', 'error');
+    }
   };
 
   const handleImageChange = (
@@ -875,7 +938,7 @@ const HotelForm = () => {
                 />
                 <FormField
                   control={form.control}
-                  name="allocateSubscription"
+                  name="subscriptionPlan"
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">

@@ -31,6 +31,8 @@ const RolesAndPermissionsPage = () => {
       Dashboard: 'dashboard',
       'Roles and Permissions': 'roles-and-permissions',
       'Payment Management': 'payment-management',
+      'Coupons Management': 'coupons-management',
+      'Refund Management': 'refund-management',
       'Change Password': 'change-password',
       'Sub Hotel Management': 'sub-hotel-management',
       'Roles & Permissions': 'roles-and-permissions'
@@ -136,8 +138,8 @@ const RolesAndPermissionsPage = () => {
   return (
     <div className="flex flex-col w-full">
       <Navbar active={true} search={true} />
-      <div className="flex flex-col pt-4 gap-8 container items-center py-2 text-coffee">
-        <div className="w-full flex justify-between mt-20">
+      <div className="flex flex-col pt-4 lg:px-8 gap-8 container items-center py-2 text-coffee">
+        <div className="w-full lg:container flex justify-between mt-20">
           <h2 className="text-lg font-bold">Manage Roles</h2>
           <button
             onClick={() => {
@@ -167,12 +169,12 @@ const RolesAndPermissionsPage = () => {
         />
 
         {/* Grid Layout for Roles and Permissions */}
-        <div className="w-full">
+        <div className="w-full lg:container">
           {/* Headers */}
           <div className="grid grid-cols-12 mb-4 font-bold">
             <div className="col-span-3">Role</div>
             <div className="col-span-7">Permission</div>
-            <div className="col-span-2 text-center">Action</div>
+            <div className="col-span-2 text-end">Action</div>
           </div>
 
           {/* Role rows */}
@@ -200,7 +202,7 @@ const RolesAndPermissionsPage = () => {
               </div>
 
               {/* Action column */}
-              <div className="col-span-2 flex justify-center gap-4">
+              <div className="col-span-2 flex justify-end gap-4">
                 <RiEditBoxLine
                   className="text-brown h-5 w-5 cursor-pointer"
                   onClick={() => handleEditRole(role)}

@@ -14,7 +14,7 @@ const FormWrapper = ({ title, children }: Props) => {
       className="bg-[#FAF6EF] w-full border-none shadow-custom pb-5"
     >
       <CardHeader>
-        <Heading title={title} />
+        <Heading title={title} className='md:my-0'/>
       </CardHeader>
       <CardContent>{children}</CardContent>
     </Card>

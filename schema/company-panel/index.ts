@@ -6,7 +6,7 @@ const baseAdminSchema = z.object({
   firstName: z.string().min(1, 'First Name is required'),
   lastName: z.string().min(1, 'Last Name is required'),
   email: z.string().email().min(1, 'Email is required'),
-  phoneNo: z.string().min(1, 'Phone Number is required'),
+  mobileNumber: z.string().min(1, 'Phone Number is required'),
   roleId: z.string().min(1, 'Role is required'),
   status: z.enum(['Active', 'Inactive'], {
     errorMap: () => ({ message: 'Invalid Status' })

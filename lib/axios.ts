@@ -14,7 +14,7 @@ function authRequestInterceptor(config: any) {
   return config;
 }
 export const axios = Axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}`
+  baseURL: 'http://13.127.80.211:5001'
 });
 axios.interceptors.request.use(authRequestInterceptor);
 axios.interceptors.response.use(

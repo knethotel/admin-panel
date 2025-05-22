@@ -6,11 +6,9 @@ import React from 'react';
 const HotelPage = () => {
   return (
     <div className="flex flex-col w-full">
-      <Navbar active search/>
-      <div className="w-full h-screen pt-8 mt-14">
-        <div className="h-full w-full container">
-          <HotelManagementHome />
-        </div>
+      <Navbar active search />
+      <div className="sm:px-6 sm:py-0 mt-24">
+        <HotelManagementHome />
       </div>
     </div>
   );

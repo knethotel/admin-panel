@@ -5,10 +5,8 @@ import React from 'react';
 const EmployeeManagementPage = () => {
   return (
     <div className="flex flex-col w-full">
-      {' '}
-      {/*------ Manadatory class for each page that have navbar -------*/}
       <Navbar active={true} search={true} />
-      <div className="container mt-24">
+      <div className="sm:px-6 sm:py-0 mt-20">
         <AdminTable />
       </div>
     </div>

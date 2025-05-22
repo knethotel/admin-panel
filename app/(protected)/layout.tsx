@@ -107,17 +107,17 @@ function SuperAdminPanelSideNav() {
           </NavItem>
 
           <NavItem
-            href="/super-admin/admin-management"
-            label="Admin Management"
-          >
-            <RiAdminLine className="h-5 w-5 lg:h-6 lg:w-6" />
-          </NavItem>
-
-          <NavItem
             href="/super-admin/roles-and-permissions"
             label="Roles & Permission"
           >
             <BsPersonWorkspace className="h-4 w-4 lg:h-5 lg:w-5" />
+          </NavItem>
+
+          <NavItem
+            href="/super-admin/admin-management"
+            label="Admin Management"
+          >
+            <RiAdminLine className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
           <NavItem

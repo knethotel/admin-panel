@@ -1,5 +1,5 @@
 import apiCall from '@/lib/axios';
 
 export async function editAdmin(id: string, data: any) {
-  return await apiCall('PUT', `api/superAdmin/admins/${id}`, data);
+  return await apiCall('PUT', `api/employee/${id}`, data);
 }
