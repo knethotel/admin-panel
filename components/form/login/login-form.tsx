@@ -95,6 +95,7 @@ const LoginForm = () => {
         // Determine redirect based on user role/scope
         const redirectPath = determineRedirectPath(response.user);
         router.push(redirectPath);
+        console.log('Login successful:', response);
       } else {
         throw new Error('Invalid login credentials');
       }
