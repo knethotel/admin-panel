@@ -75,7 +75,7 @@ const LoginForm = () => {
     try {
       const response = await apiCall<LoginResponse>(
         'POST', 
-        'api/superAdmin/login', 
+        'http://13.127.80.211:5001/api/superAdmin/login', 
         {
           email: data.email,
           password: data.password
