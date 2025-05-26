@@ -23,7 +23,13 @@ interface navProps {
   onSearch?: (query: string) => void; // onSearch prop
 }
 
-export default function Navbar({ active, search, searchKey, className, onSearch }: navProps) {
+export default function Navbar({
+  active,
+  search,
+  searchKey,
+  className,
+  onSearch
+}: navProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [randomColor, setRandomColor] = useState('#000000');
@@ -44,17 +50,28 @@ export default function Navbar({ active, search, searchKey, className, onSearch 
   const inputRef = useRef<HTMLInputElement>(null);
   const [filterInput, setFilterInput] = useState('');
 
+  const handleLogout = () => {
+    // Remove the session and cookie
+    sessionStorage.removeItem('token');
+    document.cookie = 'token=; Max-Age=0; path=/'; // Clear the cookie
+
+    // Redirect to login page
+    window.location.href = '/';
+  };
+
   return (
     <>
       <AlertModal
         isOpen={open}
         onCloseAction={() => setOpen(false)}
-        onConfirmAction={() => {}}
+        onConfirmAction={handleLogout}
         loading={loading}
         description="You will be logged out"
       />
 
-      <nav className={`flex items-center w-full justify-between bg-[#EFE9DF] p-4 lg:w-[calc(100%-20%)] fixed z-[20] ${className}`}>
+      <nav
+        className={`flex items-center w-full justify-between bg-[#EFE9DF] p-4 lg:w-[calc(100%-20%)] fixed z-[20] ${className}`}
+      >
         {/* Left Side */}
         <div className="flex items-center gap-2 px-2 rounded-lg">
           {active && (
@@ -79,11 +96,21 @@ export default function Navbar({ active, search, searchKey, className, onSearch 
                   side="bottom"
                   align="start"
                 >
-                  <DropdownMenuItem onClick={() => alert('Today')}>Today</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => alert('Last Week')}>Last Week</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => alert('Last Month')}>Last Month</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => alert('Last Quarter')}>Last Quarter</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => alert('Last Year')}>Last Year</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => alert('Today')}>
+                    Today
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => alert('Last Week')}>
+                    Last Week
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => alert('Last Month')}>
+                    Last Month
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => alert('Last Quarter')}>
+                    Last Quarter
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => alert('Last Year')}>
+                    Last Year
+                  </DropdownMenuItem>
 
                   {/* Custom Date Submenu */}
                   <DropdownMenu>
@@ -157,7 +184,9 @@ export default function Navbar({ active, search, searchKey, className, onSearch 
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">Shivam Kumar</p>
+                  <p className="text-sm font-medium leading-none">
+                    Shivam Kumar
+                  </p>
                   <p className="text-xs leading-none text-muted-foreground">
                     shivamjha2705@gmail.com
                   </p>

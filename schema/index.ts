@@ -147,457 +147,58 @@ export const createRefundSchema = z.object({
 export type createRefundSchemaType = z.infer<typeof createRefundSchema>;
 
 // **********Hotel Profile schema***************
-export const hotelSchema = z.object({
-  logoImage: z
-    .union([z.any(), z.string().url()])
-    .optional()
-    .refine((file) => file !== '', {
-      message: 'Logo image must not be an empty value'
-    }),
-  hotelImage: z
-    .union([z.any(), z.string().url()])
-    .optional()
-    .refine((file) => file !== '', {
-      message: 'Hotel image must not be an empty value'
-    }),
-
-  hotelName: z.string().min(1, 'Hotel name is required'),
-  number: z
-    .string()
-    .length(10, 'Phone number must be exactly 10 digits')
-    .regex(/^\d+$/, 'Phone number must contain only digits'),
-  email: z.string().email('Invalid email address').min(1, 'Email is required'),
-  completeAddress: z.string().min(1, 'Complete address is required'),
-
-  hotelCategory: z.enum(['3 Starr', '4 Star', '5 Star', '7 Star'], {
-    errorMap: () => ({ message: 'Invalid hotel category' })
-  }),
-  subscriptionPlan: z.enum(['Basic', 'Premium', 'Enterprise'], {
-    errorMap: () => ({ message: 'Invalid subscription plan' })
-  }),
-  gst: z.string().min(1, 'GST is required'),
-  applyCoupon: z.enum(
-    ['Choose coupon', 'COUPON1', 'COUPON2', 'COUPON3', 'COUPON4', 'COUPON5'],
-    {
-      errorMap: () => ({ message: 'Invalid coupon' })
-    }
-  ),
-  brandedHotel: z.boolean().optional(), // Add this for branded hotel checkbox
-  chainHotel: z.boolean().optional(), // Add this for chain hotel checkbox
-  parentHotelName: z.string().optional(), // Add this for parent hotel name input
-  subHotelName: z.string().optional(),
-  city: z.enum(
-    [
-      'Delhi',
-      'Mumbai',
-      'Bangalore',
-      'Chennai',
-      'Kolkata',
-      'Hyderabad',
-      'Ahmedabad',
-      'Pune',
-      'Jaipur',
-      'Surat',
-      'Lucknow',
-      'Kanpur',
-      'Nagpur',
-      'Visakhapatnam',
-      'Bhopal',
-      'Patna',
-      'Ludhiana',
-      'Agra',
-      'Nashik',
-      'Vadodara',
-      'Indore',
-      'Coimbatore',
-      'Kochi',
-      'Chandigarh',
-      'Guwahati'
-    ],
-    {
-      errorMap: () => ({ message: 'Please select a valid city' })
-    }
-  ),
-  country: z.enum([
-    'Afghanistan',
-    'Albania',
-    'Algeria',
-    'Andorra',
-    'Angola',
-    'Antigua and Barbuda',
-    'Argentina',
-    'Armenia',
-    'Australia',
-    'Austria',
-    'Azerbaijan',
-    'Bahamas',
-    'Bahrain',
-    'Bangladesh',
-    'Barbados',
-    'Belarus',
-    'Belgium',
-    'Belize',
-    'Benin',
-    'Bhutan',
-    'Bolivia',
-    'Bosnia and Herzegovina',
-    'Botswana',
-    'Brazil',
-    'Brunei',
-    'Bulgaria',
-    'Burkina Faso',
-    'Burundi',
-    'Cabo Verde',
-    'Cambodia',
-    'Cameroon',
-    'Canada',
-    'Central African Republic',
-    'Chad',
-    'Chile',
-    'China',
-    'Colombia',
-    'Comoros',
-    'Congo',
-    'Costa Rica',
-    'Croatia',
-    'Cuba',
-    'Cyprus',
-    'Czech Republic',
-    'Democratic Republic of the Congo',
-    'Denmark',
-    'Djibouti',
-    'Dominica',
-    'Dominican Republic',
-    'East Timor',
-    'Ecuador',
-    'Egypt',
-    'El Salvador',
-    'Equatorial Guinea',
-    'Eritrea',
-    'Estonia',
-    'Eswatini',
-    'Ethiopia',
-    'Fiji',
-    'Finland',
-    'France',
-    'Gabon',
-    'Gambia',
-    'Georgia',
-    'Germany',
-    'Ghana',
-    'Greece',
-    'Grenada',
-    'Guatemala',
-    'Guinea',
-    'Guinea-Bissau',
-    'Guyana',
-    'Haiti',
-    'Honduras',
-    'Hungary',
-    'Iceland',
-    'India',
-    'Indonesia',
-    'Iran',
-    'Iraq',
-    'Ireland',
-    'Israel',
-    'Italy',
-    'Ivory Coast',
-    'Jamaica',
-    'Japan',
-    'Jordan',
-    'Kazakhstan',
-    'Kenya',
-    'Kiribati',
-    'Kuwait',
-    'Kyrgyzstan',
-    'Laos',
-    'Latvia',
-    'Lebanon',
-    'Lesotho',
-    'Liberia',
-    'Libya',
-    'Liechtenstein',
-    'Lithuania',
-    'Luxembourg',
-    'Madagascar',
-    'Malawi',
-    'Malaysia',
-    'Maldives',
-    'Mali',
-    'Malta',
-    'Marshall Islands',
-    'Mauritania',
-    'Mauritius',
-    'Mexico',
-    'Micronesia',
-    'Moldova',
-    'Monaco',
-    'Mongolia',
-    'Montenegro',
-    'Morocco',
-    'Mozambique',
-    'Myanmar',
-    'Namibia',
-    'Nauru',
-    'Nepal',
-    'Netherlands',
-    'New Zealand',
-    'Nicaragua',
-    'Niger',
-    'Nigeria',
-    'North Korea',
-    'North Macedonia',
-    'Norway',
-    'Oman',
-    'Pakistan',
-    'Palau',
-    'Palestine',
-    'Panama',
-    'Papua New Guinea',
-    'Paraguay',
-    'Peru',
-    'Philippines',
-    'Poland',
-    'Portugal',
-    'Qatar',
-    'Romania',
-    'Russia',
-    'Rwanda',
-    'Saint Kitts and Nevis',
-    'Saint Lucia',
-    'Saint Vincent and the Grenadines',
-    'Samoa',
-    'San Marino',
-    'Sao Tome and Principe',
-    'Saudi Arabia',
-    'Senegal',
-    'Serbia',
-    'Seychelles',
-    'Sierra Leone',
-    'Singapore',
-    'Slovakia',
-    'Slovenia',
-    'Solomon Islands',
-    'Somalia',
-    'South Africa',
-    'South Korea',
-    'South Sudan',
-    'Spain',
-    'Sri Lanka',
-    'Sudan',
-    'Suriname',
-    'Sweden',
-    'Switzerland',
-    'Syria',
-    'Tajikistan',
-    'Tanzania',
-    'Thailand',
-    'Togo',
-    'Tonga',
-    'Trinidad and Tobago',
-    'Tunisia',
-    'Turkey',
-    'Turkmenistan',
-    'Tuvalu',
-    'Uganda',
-    'Ukraine',
-    'United Arab Emirates',
-    'United Kingdom',
-    'United States',
-    'Uruguay',
-    'Uzbekistan',
-    'Vanuatu',
-    'Vatican City',
-    'Venezuela',
-    'Vietnam',
-    'Yemen',
-    'Zambia',
-    'Zimbabwe'
-  ]),
-  state: z.enum(
-    [
-      'Maharashtra',
-      'Karnataka',
-      'Tamil Nadu',
-      'Delhi',
-      'Andhra Pradesh',
-      'Arunachal Pradesh',
-      'Assam',
-      'Bihar',
-      'Chhattisgarh',
-      'Goa',
-      'Gujarat',
-      'Haryana',
-      'Himachal Pradesh',
-      'Jharkhand',
-      'Kerala',
-      'Madhya Pradesh',
-      'Manipur',
-      'Meghalaya',
-      'Mizoram',
-      'Nagaland',
-      'Odisha',
-      'Punjab',
-      'Rajasthan',
-      'Sikkim',
-      'Telangana',
-      'Tripura',
-      'Uttar Pradesh',
-      'Uttarakhand',
-      'West Bengal',
-      'Andaman and Nicobar Islands',
-      'Chandigarh',
-      'Dadra and Nagar Haveli and Daman and Diu',
-      'Jammu and Kashmir',
-      'Ladakh',
-      'Lakshadweep',
-      'Puducherry'
-    ],
-    {
-      errorMap: () => ({ message: 'Please select a valid state' })
-    }
-  ),
-
-  pinCode: z
-    .string()
-    .length(6, 'Pincode must be exactly 6 digits')
-    .regex(/^\d+$/, 'Pincode must contain only digits'),
-
-  roomTypes: z.enum(
-    [
-      'Single',
-      'Double',
-      'Twin',
-      'Deluxe',
-      'Studio Room /Apartments',
-      'Junior Suits',
-      'Suite',
-      'Presidential Suite',
-      'Connecting Suite',
-      'Rooms with a View'
-    ],
-    {
-      errorMap: () => ({ message: 'Please select a valid room type' })
-    }
-  ),
-  roomImage: z.union([z.any(), z.string().url()]).optional(),
-
-  features: z.enum(['Sea Side', 'Balcony View'], {
-    errorMap: () => ({ message: 'Please select a valid feature' })
-  }),
-
-  numberOfRooms: z
-    .number()
-    .int('Number of rooms must be an integer')
-    .positive('Number of rooms must be positive')
-    .min(1, 'At least one room is required'),
-
-  checkInTime: z
-    .string()
-    .regex(
-      /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]\s?(AM|PM)$/i,
-      'Invalid time format (e.g., 12:00 PM)'
-    ),
-
-  checkOutTime: z
-    .string()
-    .regex(
-      /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]\s?(AM|PM)$/i,
-      'Invalid time format (e.g., 12:00 PM)'
-    ),
-
-  servingDepartments: z.enum(
-    [
-      'Reception',
-      'Housekeeping',
-      'In-Room Dining',
-      'Gym',
-      'Spa',
-      'Swimming Pool',
-      'Concierge Service',
-      'In-Room Control',
-      'Order Management',
-      'SOS Management',
-      'Chat With Staff'
-    ],
-    {
-      errorMap: () => ({ message: 'Please select a valid serving department' })
-    }
-  ),
-
-  rooms: z.array(
-    z.object({
-      roomName: z.string(),
-      roomType: z.string(),
-      features: z.array(z.string()),
-      images: z.array(z.string().url()),
-      checkInTime: z.string(),
-      checkOutTime: z.string(),
-      servingDepartment: z.array(
-        z.enum([
-          'Reception',
-          'Housekeeping',
-          'In-Room Dining',
-          'Gym',
-          'Spa',
-          'Swimming Pool',
-          'Concierge Service',
-          'In-Room Control',
-          'Order Management',
-          'SOS Management',
-          'Chat With Staff'
-        ])
-      ),
-      totalStaff: z.number().min(1)
-    })
-  ),
-
-  totalStaff: z
-    .number()
-    .int('Total staff must be an integer')
-    .nonnegative('Total staff cannot be negative')
-    .min(1, 'At least one staff member is required'),
-
-  subscriptionPrice: z.number(),
-
-  netPrice: z.number(),
-
-  hotelLicenseCertifications: z
-    .string()
-    .min(1, 'Hotel license & certifications are required'),
-
-  hotelLicenseImage: z.union([z.any(), z.string().url()]).optional(),
-
-  legalBusinessLicense: z
-    .string()
-    .min(1, 'Legal and business license is required'),
-
-  legalBusinessLicenseImage: z.union([z.any(), z.string().url()]).optional(),
-
-  touristLicense: z.string().min(1, 'Tourist license is required'),
-  touristLicenseImage: z.union([z.any(), z.string().url()]).optional(),
-
-  tanNumber: z
-    .string()
-    .regex(
-      /^[A-Z]{4}\d{5}[A-Z]$/,
-      'Invalid TAN number format (e.g., ABCD12345E)'
-    ),
-
-  tanNumberImage: z.union([z.any(), z.string().url()]).optional(),
-
-  dataPrivacyGdprCompliances: z
-    .string()
-    .min(1, 'Data privacy & GDPR compliances are required'),
-
-  dataPrivacyGdprImage: z.union([z.any(), z.string().url()]).optional(),
-
-  internetConnectivity: z.boolean().default(false),
-  softwareCompatibility: z.boolean().default(false)
+// Room configuration schema
+export const roomConfigSchema = z.object({
+  roomType: z.string().min(1, 'Room type is required'),
+  feature: z.string().min(1, 'Feature is required')
 });
 
-// TypeScript type inferred from the schema
+// Full hotel schema
+export const hotelSchema = z.object({
+  hotelId: z.string().min(1, 'Hotel ID is required'), // maps to "HotelId"
+  hotelName: z.string().min(1, 'Hotel name is required'), // maps to "name"
+  number: z.string().length(10, 'Phone number must be exactly 10 digits'), // maps to "phoneNo"
+  email: z.string().email('Invalid email address'),
+  completeAddress: z.string().min(1, 'Complete address is required'), // maps to "address"
+  hotelCategory: z.enum(['3 Star', '4 Star', '5 Star', '7 Star']),
+  city: z.string().min(1, 'City is required'),
+  country: z.string().min(1, 'Country is required'),
+  state: z.string().min(1, 'State is required'),
+  pinCode: z.string().min(1, 'Pincode is required'), // maps to "pincode"
+  gst: z.string().optional(), // maps to "gstDetails"
+  brandedHotel: z.boolean().optional(),
+  chainHotel: z.boolean().optional(), // mapped from string-to-boolean if needed
+  // parentHotelName: z.string().optional(), // maps to "parentHotel"
+  parentHotelId: z.string().optional(), // maps to "parentHotel"
+  // subHotelName: z.string().optional(),
+  roomImage: z.any().optional(),
+  roomConfigs: z.array(roomConfigSchema),
+  numberOfRooms: z.number().min(1),
+  checkInTime: z.string().optional(),
+  checkOutTime: z.string().optional(),
+  servingDepartments: z.array(z.string()).optional(), // maps to servingDepartment[0]
+  totalStaff: z.number().min(1),
+  hotelLicenseCertifications: z.string().optional(), // maps to "hotelLicenseAndCertification.certificateValue"
+  hotelLicenseImage: z.any().optional(),
+  legalBusinessLicense: z.string().optional(), // maps to "legalAndBusinessLicense.licenseValue"
+  legalBusinessLicenseImage: z.any().optional(),
+  touristLicense: z.string().optional(), // maps to "touristLicense.licenseValue"
+  touristLicenseImage: z.any().optional(),
+  tanNumber: z.string().optional(), // maps to "panNumber.numberValue"
+  tanNumberImage: z.any().optional(),
+  dataPrivacyGdprCompliances: z.string().optional(), // maps to "dataPrivacyAndGDPRCompliance.complianceValue"
+  dataPrivacyGdprImage: z.any().optional(),
+  subscriptionPlan: z.enum(['1 Month', '6 Months', '1 Year', 'Premium']),
+  subscriptionPrice: z.number().min(500),
+  netPrice: z.number().optional(),
+  applyCoupon: z.string().optional(),
+  logoImage: z.any().optional(),
+  additionalImage: z.any().optional(),
+  internetConnectivity: z.boolean().optional(),
+  softwareCompatibility: z.boolean().optional()
+});
+
+// Inferred type
 export type HotelSchemaType = z.infer<typeof hotelSchema>;
 
 // **********Change password schema************ //

@@ -9,7 +9,7 @@ const CreateHotelIDPage = () => {
       <Navbar />
       <div className="w-full h-screen mt-14">
         <div className="h-full w-full">
-          <HotelForm/>
+          <HotelForm mode='add'/>
         </div>
       </div>
     </div>

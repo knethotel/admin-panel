@@ -39,6 +39,17 @@ const CreateHotelIdForm = ({ hotelID, isEnabled = true, mode }: Props) => {
   const [preview, setPreview] = useState<string | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [status, setStatus] = useState<'PENDING' | 'APPROVE'>('PENDING');
+  const [licenses, setLicenses] = useState<
+    { title: string; number: string; image: string }[]
+  >([]);
+  const [roomList, setRoomList] = useState<
+    { roomName: string; roomType: string; features: string[] }[]
+  >([]);
+  const [checkInTime, setCheckInTime] = useState<string>('');
+  const [checkOutTime, setCheckOutTime] = useState<string>('');
+  const [totalStaff, setTotalStaff] = useState<number>(0);
+  const [gstDetails, setGstDetails] = useState<string>('');
+
   const [submitStatus, setSubmitStatus] = useState<
     'idle' | 'success' | 'error'
   >('idle');
@@ -144,26 +155,65 @@ const CreateHotelIdForm = ({ hotelID, isEnabled = true, mode }: Props) => {
     }
   ];
 
+  // In your useEffect fetching the hotel data, map all fields:
   useEffect(() => {
     if (hotelID) {
       const fetchHotel = async () => {
         try {
           const response = await apiCall(
             'GET',
-            `api/superAdmin/hotel/get-hotel/${hotelID}`
+            `api/hotel/get-hotel/${hotelID}`
           );
           if (response.status && response.hotel) {
+            const h = response.hotel;
             form.reset({
-              hotelName: response.hotel.name,
-              address: response.hotel.address,
-              contactNo: response.hotel.phoneNo,
-              email: response.hotel.email,
-              subscriptionPlan: response.hotel.subscriptionPlan
-              // ... other fields mapped accordingly
+              hotelID: h.HotelId || '',
+              hotelName: h.name || '',
+              address: h.address || '',
+              contactNo: h.phoneNo || '',
+              email: h.email || '',
+              subscriptionPlan: h.subscriptionPlan || '',
+              subscriptionPrice: h.subscriptionPrice || 0,
+              services:
+                h.servingDepartment?.map((service: any) =>
+                  service.toLowerCase()
+                ) || []
             });
+            setLicenses([
+              {
+                title: 'Hotel License & Certification',
+                number: h.hotelLicenseAndCertification?.certificateValue || '',
+                image: h.hotelLicenseAndCertification?.imageUrl || ''
+              },
+              {
+                title: 'Legal and Business License',
+                number: h.legalAndBusinessLicense?.licenseValue || '',
+                image: h.legalAndBusinessLicense?.imageUrl || ''
+              },
+              {
+                title: 'Tourist License',
+                number: h.touristLicense?.licenseValue || '',
+                image: h.touristLicense?.imageUrl || ''
+              },
+              {
+                title: 'PAN Number',
+                number: h.panNumber?.numberValue || '',
+                image: h.panNumber?.imageUrl || ''
+              },
+              {
+                title: 'Data Privacy & GDPR Compliances',
+                number: h.dataPrivacyAndGDPRCompliance?.complianceValue || '',
+                image: h.dataPrivacyAndGDPRCompliance?.imageUrl || ''
+              }
+            ]);
+            setRoomList(h.rooms || []);
+            setCheckInTime(h.checkInTime || '');
+            setCheckOutTime(h.checkOutTime || '');
+            setTotalStaff(h.totalStaff || 0);
+            setGstDetails(h.gstDetails || '');
           }
         } catch (err) {
-          // Handle error (optional toast etc)
+          console.error(err);
         }
       };
       fetchHotel();
@@ -184,7 +234,7 @@ const CreateHotelIdForm = ({ hotelID, isEnabled = true, mode }: Props) => {
                 BRANDED HOTEL
               </h2>
               <div>
-                {mode === 'pending' || mode === 'view' ? (
+                {mode === 'pending' ? (
                   <>
                     <div className="flex justify-end w-full mb-4 cursor-pointer">
                       <DropdownMenu.Root
@@ -229,7 +279,7 @@ const CreateHotelIdForm = ({ hotelID, isEnabled = true, mode }: Props) => {
                 ) : null}
               </div>
             </div>
-            <div className="flex flex-col gap-4 w-full px-0 md:px-10">
+            <div className="flex flex-col gap-4 w-full px-0 md:px-0">
               <div className="w-full flex justify-between items-center gap-4">
                 {/* Left part */}
                 <div className="flex flex-col gap-3 justify-center items-start">
@@ -481,16 +531,15 @@ const CreateHotelIdForm = ({ hotelID, isEnabled = true, mode }: Props) => {
                 Room types
               </div>
               <ul className="text-sm text-black space-y-1">
-                <li>Single</li>
-                <li>Double</li>
-                <li>Twin</li>
-                <li>Deluxe</li>
-                <li>Studio Room /Apartments</li>
-                <li>Junior Suits</li>
-                <li>Suite</li>
-                <li>Presidential Suite</li>
-                <li>Connecting Suite</li>
-                <li>Rooms with a View</li>
+                {roomList.length > 0 ? (
+                  roomList.map((room) => (
+                    <li key={room.roomName}>
+                      {room.roomName} - Features: {room.features.join(', ')}
+                    </li>
+                  ))
+                ) : (
+                  <li>No room data available</li>
+                )}
               </ul>
             </div>
 
@@ -511,21 +560,21 @@ const CreateHotelIdForm = ({ hotelID, isEnabled = true, mode }: Props) => {
             <div className="flex flex-col gap-3 md:gap-0 md:flex-row w-full justify-evenly">
               <div className="flex justify-between w-52 text-sm text-black">
                 <span className="font-medium">Check-in time</span>
-                <span>12:00AM</span>
+                <span>{checkInTime || 'N/A'}</span>
               </div>
               <div className="flex justify-between w-52 text-sm text-black">
                 <span className="font-medium">Number of rooms</span>
-                <span>65372</span>
+                <span>{roomList.length}</span>
               </div>
             </div>
             <div className="flex flex-col gap-3 md:gap-0 md:flex-row w-full justify-evenly">
               <div className="flex justify-between w-52 text-sm text-black">
                 <span className="font-medium">Check-out time</span>
-                <span>12:00PM</span>
+                <span>{checkOutTime || 'N/A'}</span>
               </div>
               <div className="flex justify-between w-52 text-sm text-black">
                 <span className="font-medium">Total staff</span>
-                <span>1234567</span>
+                <span>{totalStaff}</span>
               </div>
             </div>
           </div>

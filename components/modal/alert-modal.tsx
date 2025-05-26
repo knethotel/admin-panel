@@ -17,7 +17,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
   onCloseAction,
   onConfirmAction,
   loading,
-  title = 'Are you sure?',
+  title = '',
   description = 'This action cannot be undone.'
 }) => {
   const [isMounted, setIsMounted] = useState(false);
@@ -29,15 +29,6 @@ export const AlertModal: React.FC<AlertModalProps> = ({
   if (!isMounted) {
     return null;
   }
-
-  const handleLogout = () => {
-    // Remove the session and cookie
-    sessionStorage.removeItem('token');
-    document.cookie = 'token=; Max-Age=0; path=/'; // Clear the cookie
-  
-    // Redirect to login page
-    window.location.href = '/';
-  };
 
   return (
     <Modal
@@ -53,7 +44,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
         <Button
           disabled={loading}
           variant="destructive"
-          onClick={handleLogout}
+          onClick={onConfirmAction}
         >
           {loading ? (
             <span className="flex items-center">
