@@ -90,7 +90,7 @@ const LoginForm = () => {
         });
 
         // Set secure cookie for middleware
-        document.cookie = `token=${response.token}; path=/; SameSite=Strict; Secure`;
+        document.cookie = `token=${response.token}; path=/; SameSite=Lax`;
 
         // Determine redirect based on user role/scope
         const redirectPath = determineRedirectPath(response.user);
