@@ -21,15 +21,29 @@ export const HotelManagementHome: React.FC = () => {
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>();
   const [totalRecords, setTotalRecords] = useState(data.length || 0);
+  const [pendingCount, setPendingCount] = useState(0);
+
+  useEffect(() => {
+    const fetchPendingCount = async () => {
+      try {
+        const response = await apiCall('GET', 'api/hotel/pending-requests');
+        if (response.status === 'success' && Array.isArray(response.requests)) {
+          setPendingCount(response.requests.length);
+        } else {
+          setPendingCount(0);
+        }
+      } catch {
+        setPendingCount(0);
+      }
+    };
+    fetchPendingCount();
+  }, []);
 
   useEffect(() => {
     const fetchHotels = async () => {
       try {
         setLoading(true);
-        const response = await apiCall(
-          'GET',
-          'api/superAdmin/hotel/get-hotels'
-        );
+        const response = await apiCall('GET', 'api/hotel/get-hotels');
         if (response.status) {
           const hotels: HotelDataType[] = response.hotels.map((hotel: any) => ({
             hotelID: hotel._id,
@@ -103,7 +117,7 @@ export const HotelManagementHome: React.FC = () => {
               Pending Requests
             </Button>
             <span className="absolute -top-2 -right-1 text-white w-6 h-6 text-center pt-1 font-medium text-xs rounded-full bg-gradient-to-t from-[#E0363A] via-[#E0363A] to-[#E0363A]">
-              12
+              {pendingCount || 0}
             </span>
           </div>
         </div>

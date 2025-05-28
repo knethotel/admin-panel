@@ -75,7 +75,7 @@ const LoginForm = () => {
     try {
       const response = await apiCall<LoginResponse>(
         'POST', 
-        'api/superAdmin/login', 
+        'http://13.127.80.211:5001/api/superAdmin/login', 
         {
           email: data.email,
           password: data.password
@@ -95,6 +95,7 @@ const LoginForm = () => {
         // Determine redirect based on user role/scope
         const redirectPath = determineRedirectPath(response.user);
         router.push(redirectPath);
+        console.log('Login successful:', response);
       } else {
         throw new Error('Invalid login credentials');
       }

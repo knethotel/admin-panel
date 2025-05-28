@@ -7,6 +7,7 @@ import { RiEditBoxLine } from 'react-icons/ri';
 import { FaTrashAlt } from 'react-icons/fa';
 import RolesAndPermissionsModal from '@/components/shared/role-and-permission/role-permission';
 import apiCall from '@/lib/axios';
+import { ToastAtTopRight } from '@/lib/sweetalert';
 
 interface PermissionWithAccess {
   module: string;
@@ -35,11 +36,11 @@ const RolesAndPermissionsPage = () => {
       'Roles and Permissions': 'roles-and-permissions',
       'Payment Management': 'payment-management',
       'Change Password': 'change-password',
-      'Employee Management': 'employee-management',
+      'Employee Management': 'admin-management',
       'Coupons Management': 'coupons-management',
       'Refund Management': 'refund-management',
       'Service Management': 'service-management',
-      'Hotel Profile': 'hotel-profile',
+      'Hotel Profile': 'hotel-management',
       'Analytics Reports': 'analytics-reports'
     };
 
@@ -91,7 +92,7 @@ const RolesAndPermissionsPage = () => {
 
       const permissionsPayload = selectedModules.map(({ module }) => ({
         module: reverseMapModuleName(module),
-        access: ['read', 'write', 'delete'] // full access for now
+        access: ['read', 'write', 'delete']
       }));
 
       const payload = {
@@ -102,16 +103,38 @@ const RolesAndPermissionsPage = () => {
 
       if (editingRole && editingRoleId) {
         await apiCall('PUT', `api/role/update-role/${editingRoleId}`, payload);
+        ToastAtTopRight.fire({
+          icon: 'success',
+          title: 'Role updated successfully'
+        });
       } else {
-        await apiCall('POST', 'api/role/create-role', payload);
+        try {
+          await apiCall('POST', 'api/role/create-role', payload);
+          ToastAtTopRight.fire({
+            icon: 'success',
+            title: 'Role created successfully'
+          });
+        } catch (err: any) {
+          if (err?.response?.data?.message?.includes('already exists')) {
+            ToastAtTopRight.fire({
+              icon: 'error',
+              title: 'This role is already assigned'
+            });
+            return;
+          }
+          throw err;
+        }
       }
 
-      // Refresh roles list after update/create
+      // Refresh roles
       const response = await apiCall('GET', 'api/role/get-all-roles');
       const allRoles = response.roles;
 
       const formattedRoles: Record<string, PermissionWithAccess[]> = {};
+      const idsMap: Record<string, string> = {};
+
       allRoles?.forEach((role: any) => {
+        idsMap[role.name] = role._id || role.id || '';
         formattedRoles[role.name] = role.permissions.map((p: any) => ({
           module: p.module
             .replace(/-/g, ' ')
@@ -121,11 +144,15 @@ const RolesAndPermissionsPage = () => {
       });
 
       setRolesAndPermissions(formattedRoles);
+      setRoleIds(idsMap);
       setEditingRole(null);
       setEditingRoleId(null);
       setIsOpen(false);
-    } catch (err: any) {
-      throw err;
+    } catch (err) {
+      ToastAtTopRight.fire({
+        icon: 'error',
+        title: 'Failed to save changes'
+      });
     }
   };
 
@@ -149,16 +176,44 @@ const RolesAndPermissionsPage = () => {
       const updatedIds = { ...roleIds };
       delete updatedIds[role];
       setRoleIds(updatedIds);
+      ToastAtTopRight.fire({
+        icon: 'success',
+        title: 'Role deleted successfully'
+      });
     } catch (err) {
-      setErrorMessage('Failed to delete the role.');
+      ToastAtTopRight.fire({
+        icon: 'error',
+        title: 'Failed to delete the role.'
+      });
     }
   };
 
-  const handleEditRole = (role: string) => {
-    console.log('Editing role permissions:', rolesAndPermissions[role]);
-    setEditingRole(role);
-    setEditingRoleId(roleIds[role] || null);
-    setIsOpen(true);
+  const handleEditRole = async (role: string) => {
+    const roleId = roleIds[role];
+    if (!roleId) return;
+
+    try {
+      const response = await apiCall('GET', `api/role/get-role/${roleId}`);
+      const matchedRole = response.role;
+
+      const formattedPermissions: Record<string, PermissionWithAccess[]> = {
+        [matchedRole.name]: matchedRole.permissions.map((p: any) => ({
+          module: p.module
+            .replace(/-/g, ' ')
+            .replace(/\b\w/g, (l: string) => l.toUpperCase()),
+          access: p.access || []
+        }))
+      };
+
+      setEditingRole(matchedRole.name);
+      setEditingRoleId(roleId);
+      setIsOpen(true);
+    } catch (err) {
+      ToastAtTopRight.fire({
+        icon: 'error',
+        title: 'Failed to fetch role permissions'
+      });
+    }
   };
 
   return (
@@ -196,6 +251,7 @@ const RolesAndPermissionsPage = () => {
               onSave={handleSaveRolesAndPermissions}
               isSuperAdmin={false}
               roleId={editingRoleId ?? undefined}
+              panelType="hotel-panel"
             />
 
             {/* Grid Layout for Roles and Permissions */}

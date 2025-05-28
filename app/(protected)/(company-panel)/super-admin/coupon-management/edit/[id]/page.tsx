@@ -3,7 +3,7 @@ import { useParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import CreateCouponForm from '@/components/shared/coupon-refund-management/create-coupon-form';
 
-const ViewCouponPage = () => {
+const EditCouponPage = () => {
   const { id } = useParams();
   let parsedData = {};
 
@@ -16,12 +16,11 @@ const ViewCouponPage = () => {
   return (
     <div className="flex flex-col w-full">
       <Navbar />
-      <div className="w-full flex justify-center pt-6 mt-20">
-        {/* <CreateCouponForm mode="view" defaultValues={parsedData} /> */}
-        <CreateCouponForm mode="view" />
+      <div className="w-full flex justify-center pt-6 mt-16">
+        <CreateCouponForm mode="edit" couponId={id as string} />
       </div>
     </div>
   );
 };
 
-export default ViewCouponPage;
+export default EditCouponPage;

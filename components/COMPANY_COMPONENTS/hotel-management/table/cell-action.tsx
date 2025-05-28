@@ -1,5 +1,6 @@
 import { AlertModal } from '@/components/modal/alert-modal';
 import { Button } from '@/components/ui/button';
+import apiCall from '@/lib/axios';
 import { Eye, Edit, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -13,12 +14,16 @@ const CellAction = (props: any) => {
   const [open, setOpen] = useState(false);
 
   const onConfirm = async () => {
+    setLoading(true);
     try {
-      // Perform user  logic here
-    } catch (error: any) {
-      // console.error("Error deactivating user:", error);
-    } finally {
+      await apiCall('DELETE', `api/hotel/delete-hotel/${data.hotelID}`);
       setOpen(false);
+      router.push(`/super-admin/hotel-management`);
+    } catch (error) {
+      console.error('Error deleting hotel:', error);
+      // Show error toast if you want here
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -39,7 +44,7 @@ const CellAction = (props: any) => {
         onCloseAction={() => setOpen(false)}
         onConfirmAction={onConfirm}
         loading={loading}
-        description="Are you sure you want to deactivate this user?"
+        description="Are you sure you want to delet this hotel?"
       />
 
       {/* Action Buttons */}

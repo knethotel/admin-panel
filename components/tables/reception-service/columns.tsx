@@ -2,7 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import CellAction from './cell-action';
 import { ReceptionDataType } from 'app/static/services-management/Reception';
 
-export const columns = (handleAssignClick: (rowData: ReceptionDataType) => void): ColumnDef<ReceptionDataType>[] => [
+export const columns = (): ColumnDef<ReceptionDataType>[] => [
   {
     accessorKey: 'requestID',
     header: 'Request ID'
@@ -39,6 +39,14 @@ export const columns = (handleAssignClick: (rowData: ReceptionDataType) => void)
     }
   },
   {
+    accessorKey: 'requestType',
+    header: 'Request Type',
+    cell: ({ row }) => {
+      const requestType = row.original.requestType;
+      return <div className="text-sm">{requestType || 'N/A'}</div>;
+    }
+  },
+  {
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
@@ -60,14 +68,7 @@ export const columns = (handleAssignClick: (rowData: ReceptionDataType) => void)
     header: 'Assigned to',
     cell: ({ row }) => {
       const assignedTo = row.original.assignedTo;
-      return (
-        <div
-          className="text-sm cursor-pointer"
-          onClick={() => handleAssignClick(row.original)} // Open modal on click
-        >
-          {assignedTo}
-        </div>
-      );
+      return <div className="text-sm">{assignedTo || 'N/A'}</div>;
     }
   },
   {

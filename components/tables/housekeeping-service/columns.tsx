@@ -10,7 +10,7 @@ export const columns: ColumnDef<HousekeepingDataType>[] = [
   },
   {
     accessorKey: 'requestTime',
-    header: 'Request line',
+    header: 'Request Time',
     cell: ({ row }) => {
       const { date, time } = row.original.requestTime;
       return (
@@ -64,7 +64,7 @@ export const columns: ColumnDef<HousekeepingDataType>[] = [
   },
   {
     accessorKey: 'assignedTo',
-    header: 'Assigned too',
+    header: 'Assigned to',
     cell: ({ row }) => {
       const assignedTo = row.original.assignedTo;
       return <div className="text-sm">{assignedTo}</div>;

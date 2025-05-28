@@ -1,24 +1,113 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { columns } from './columns';
-import { HousekeepingData } from 'app/static/services-management/Housekeeping';
 import ToggleButton from '@/components/ui/toggleButton';
 import ManageProductsModal from '@/components/modal/housekeeping/manage-products';
 import PriceTimeSettingHouseKeeping from '@/components/modal/housekeeping/PriceTimeSetting';
+import apiCall from '@/lib/axios';
+import { columns } from './columns';
+import { PaginationControls } from '@/components/shared/PaginationControls';
+import { HousekeepingDataType } from 'app/static/services-management/Housekeeping';
+
+export interface Guest {
+  _id: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface HousekeepingRequest {
+  _id: string;
+  guest: Guest | null;
+  status: string | null;
+  requestDetail: string | null;
+  HotelId: string | null;
+  serviceType: string | null;
+  requestType: string | null;
+  items: any[];
+  requestTime: string | null;
+  __v?: number;
+}
 
 export const HousekeepingServiceTable: React.FC = () => {
   const router = useRouter();
-  const [data, setData] = useState(HousekeepingData || []);
-  const [filteredData, setFilteredData] = useState(HousekeepingData || []);
+
+  const [data, setData] = useState<HousekeepingDataType[]>([]);
+  const [filteredData, setFilteredData] = useState<HousekeepingDataType[]>([]);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [loading, setLoading] = useState<boolean>();
-  const [totalRecords, setTotalRecords] = useState(data.length || 0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [totalRecords, setTotalRecords] = useState(0);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isManageProductsModalOpen, setIsManageProductsModalOpen] =
+    useState(false);
+
+  // const capitalizeFirstLetter = (str: string) => {
+  //   if (!str) return str;
+  //   return str.charAt(0).toUpperCase() + str.slice(1);
+  // };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await apiCall(
+          'GET',
+          'api/services/housekeeping/requests'
+        );
+        if (response.success && Array.isArray(response.data)) {
+          // Map API data to table format
+          const mapped = response.data.map((item: any) => ({
+            requestID: item._id || 'N/A',
+            requestTime: {
+              date: item.requestTime
+                ? new Date(item.requestTime).toLocaleDateString()
+                : 'N/A',
+              time: item.requestTime
+                ? new Date(item.requestTime).toLocaleTimeString()
+                : 'N/A'
+            },
+            guestDetails: {
+              name: item.guest
+                ? `${item.guest.firstName || ''} ${item.guest.lastName || ''}`.trim()
+                : 'N/A',
+              guestID: item.guest?._id || 'N/A',
+              roomNo: item.roomNo || 'N/A'
+            },
+            status: item.status
+              ? item.status.charAt(0).toUpperCase() + item.status.slice(1)
+              : 'N/A',
+            assignedTo: item.assignedTo || 'N/A',
+            estimatedTime: item.estimatedTime || '',
+            requestDetail: item.requestDetail || 'N/A',
+            serviceType: item.serviceType || 'N/A',
+            requestType: item.requestType || 'N/A',
+            wakeUpTime: item.wakeUpTime || '',
+            HotelId: item.HotelId || ''
+          }));
+          setData(mapped);
+          setFilteredData(mapped);
+          setTotalRecords(mapped.length);
+        } else {
+          setData([]);
+          setFilteredData([]);
+          setTotalRecords(0);
+        }
+      } catch (error) {
+        setData([]);
+        setFilteredData([]);
+        setTotalRecords(0);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
@@ -26,26 +115,24 @@ export const HousekeepingServiceTable: React.FC = () => {
     }
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isManageProductsModalOpen, setIsManageProductsModalOpen] =
-    useState(false);
+  // const handleLimitChange = (newLimit: number) => {
+  //   setLimit(newLimit);
+  //   setPageNo(1);
+  // };
 
-  const handleLimitChange = (newLimit: number) => {
-    setLimit(newLimit);
-    setPageNo(1); // Reset to the first page when the limit changes
-  };
-
-  // Function to handle search input
   const handleSearchChange = (searchValue: string) => {
     if (searchValue.trim() === '') {
-      setFilteredData(data); // Reset if empty
+      setFilteredData(data);
     } else {
       const filtered = data.filter((item) =>
         item.guestDetails.name.toLowerCase().includes(searchValue.toLowerCase())
       );
       setFilteredData(filtered);
+      setPageNo(1);
+      setTotalRecords(filtered.length);
     }
   };
+
   return (
     <>
       <div className="w-full pt-20 flex gap-2 justify-end items-center px-4 py-2 bg-white">
@@ -58,12 +145,16 @@ export const HousekeepingServiceTable: React.FC = () => {
             <ToggleButton />
           </div>
         </div>
-        <Settings className='cursor-pointer' onClick={() => setIsModalOpen(true)} />
+        <Settings
+          className="cursor-pointer"
+          onClick={() => setIsModalOpen(true)}
+        />
         <PriceTimeSettingHouseKeeping
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />
       </div>
+
       <div className="w-full flex justify-end px-4">
         <Button
           onClick={() => setIsManageProductsModalOpen(true)}
@@ -76,46 +167,29 @@ export const HousekeepingServiceTable: React.FC = () => {
           onClose={() => setIsManageProductsModalOpen(false)}
         />
       </div>
+
       {loading ? (
         <span>Loading...</span>
+      ) : error ? (
+        <div className="text-red-500 p-4">{error}</div>
+      ) : filteredData.length === 0 ? (
+        <div className="p-4">No data available.</div>
       ) : (
         <DataTable
-          searchKey="firstName"
+          searchKey="guestDetails.name"
           columns={columns}
-          data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)} // Use filteredData instead of data while api integration
-          // onSearch={(searchValue) => {
-          //     const filtered = data.filter((item) =>
-          //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())
-          //     );
-          //     setData(filtered);
-          // }}
-          // filters={filters}
-          //   onFilterChange={handleFilterChange}
+          data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)}
+          onSearch={handleSearchChange}
         />
       )}
-      <div className="flex justify-end space-x-2 px-3 py-2">
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(pageNo - 1)}
-            disabled={pageNo === 1}
-          >
-            Previous
-          </Button>
-          <span className="text-sm text-gray-600">
-            Page {pageNo} of {Math.ceil(totalRecords / limit)}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(pageNo + 1)}
-            disabled={pageNo >= Math.ceil(totalRecords / limit)}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+
+      <PaginationControls
+        pageNo={pageNo}
+        totalRecords={totalRecords}
+        limit={limit}
+        filteredCount={filteredData.length}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };

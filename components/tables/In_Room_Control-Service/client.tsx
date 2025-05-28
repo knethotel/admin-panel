@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Settings } from 'lucide-react';
@@ -10,6 +10,8 @@ import { columns } from './columns';
 import { InRoomControlData } from 'app/static/services-management/InRoomControl';
 import ToggleButton from '@/components/ui/toggleButton';
 import PriceTimeSettingInRoomControlModal from '@/components/modal/in-room-control/PriceTimeSetting';
+import apiCall from '@/lib/axios';
+import { PaginationControls } from '@/components/shared/PaginationControls';
 
 export const InRoomControlDataTable: React.FC = () => {
   const router = useRouter();
@@ -20,24 +22,61 @@ export const InRoomControlDataTable: React.FC = () => {
   const [loading, setLoading] = useState<boolean>();
   const [totalRecords, setTotalRecords] = useState(data.length || 0);
 
-  // **********Search Filter and pagination logic************
-  // const filters = [
-  //     {
-  //         label: 'Account Status',
-  //         key: 'accountStatus', // Backend key
-  //         subOptions: ['Active', 'Suspended'],
-  //     },
-  //     {
-  //         label: 'Verification Status',
-  //         key: 'verificationStatus',
-  //         subOptions: ['Verified', 'Pending', 'Rejected'],
-  //     },
-  //     {
-  //         label: 'Activity Status',
-  //         key: 'activityStatus',
-  //         subOptions: ['Active', 'Inactive'],
-  //     },
-  // ];
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await apiCall(
+          'GET',
+          'api/services/inroomcontrol/requests/'
+        );
+        if (response.success && Array.isArray(response.data)) {
+          // Map API data to table format
+          const mapped = response.data.map((item: any) => ({
+            requestID: item._id || 'N/A',
+            requestTime: {
+              date: item.requestTime
+                ? new Date(item.requestTime).toLocaleDateString()
+                : 'N/A',
+              time: item.requestTime
+                ? new Date(item.requestTime).toLocaleTimeString()
+                : 'N/A'
+            },
+            guestDetails: {
+              name: item.guest
+                ? `${item.guest.firstName || ''} ${item.guest.lastName || ''}`.trim()
+                : 'N/A',
+              guestID: item.guest?._id || 'N/A',
+              roomNo: item.roomNo || 'N/A'
+            },
+            status: item.status
+              ? item.status.charAt(0).toUpperCase() + item.status.slice(1)
+              : 'N/A',
+            assignedTo: item.assignedTo || 'N/A',
+            estimatedTime: item.estimatedTime || '',
+            requestDetail: item.requestDetail || 'N/A',
+            requestType: item.serviceType || 'N/A',
+            wakeUpTime: item.wakeUpTime || '',
+            HotelId: item.HotelId || ''
+          }));
+          setData(mapped);
+          setFilteredData(mapped);
+          setTotalRecords(mapped.length);
+        } else {
+          setData([]);
+          setFilteredData([]);
+          setTotalRecords(0);
+        }
+      } catch (error) {
+        setData([]);
+        setFilteredData([]);
+        setTotalRecords(0);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
@@ -46,11 +85,6 @@ export const InRoomControlDataTable: React.FC = () => {
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleLimitChange = (newLimit: number) => {
-    setLimit(newLimit);
-    setPageNo(1); // Reset to the first page when the limit changes
-  };
 
   // Function to handle search input
   const handleSearchChange = (searchValue: string) => {
@@ -75,7 +109,10 @@ export const InRoomControlDataTable: React.FC = () => {
             <ToggleButton />
           </div>
         </div>
-        <Settings className='cursor-pointer' onClick={() => setIsModalOpen(true)} />
+        <Settings
+          className="cursor-pointer"
+          onClick={() => setIsModalOpen(true)}
+        />
         <PriceTimeSettingInRoomControlModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -100,29 +137,13 @@ export const InRoomControlDataTable: React.FC = () => {
         />
       )}
 
-      <div className="flex justify-end space-x-2 px-3 py-2">
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(pageNo - 1)}
-            disabled={pageNo === 1}
-          >
-            Previous
-          </Button>
-          <span className="text-sm text-gray-600">
-            Page {pageNo} of {Math.ceil(totalRecords / limit)}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(pageNo + 1)}
-            disabled={pageNo >= Math.ceil(totalRecords / limit)}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      <PaginationControls
+        totalRecords={totalRecords}
+        pageNo={pageNo}
+        limit={limit}
+        onPageChange={handlePageChange}
+        filteredCount={filteredData.length}
+      />
     </>
   );
 };

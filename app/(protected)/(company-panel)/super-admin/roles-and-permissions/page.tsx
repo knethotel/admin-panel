@@ -7,6 +7,7 @@ import Image from 'next/image';
 import plusIcon from '../../../../../public/assets/plus.png';
 import apiCall from '@/lib/axios';
 import Navbar from '@/components/Navbar';
+import { ToastAtTopRight } from '@/lib/sweetalert';
 
 interface PermissionWithAccess {
   module: string;
@@ -27,17 +28,24 @@ const RolesAndPermissionsPage = () => {
       'Hotel Management': 'hotel-management',
       'Complaint Management': 'complaint-management',
       'Admin Management': 'admin-management',
-      'Guest Management': 'user-management',
+      'Guest Management': 'guest-management',
       Dashboard: 'dashboard',
       'Roles and Permissions': 'roles-and-permissions',
       'Payment Management': 'payment-management',
       'Coupons Management': 'coupons-management',
-      'Refund Management': 'refund-management',
-      'Change Password': 'change-password',
-      'Sub Hotel Management': 'sub-hotel-management',
-      'Roles & Permissions': 'roles-and-permissions'
+      'Refunds Management': 'refund-management',
+      // 'Change Password': 'change-password',
+      // 'Sub Hotel Management': 'sub-hotel-management',
+      'Roles & Permissions': 'roles-and-permissions',
+      'Analytics Reports': 'analytics-reports',
+      'Subscription Management': 'subscription-management'
     };
-    return reverseMap[uiModule] || uiModule.toLowerCase().replace(/\s+/g, '-');
+    const result = reverseMap[uiModule];
+    if (!result) {
+      console.warn('[ReverseMap Warning] Unknown module received:', uiModule);
+    }
+
+    return result || uiModule.toLowerCase().replace(/\s+/g, '-');
   };
 
   useEffect(() => {
@@ -86,47 +94,90 @@ const RolesAndPermissionsPage = () => {
       permissions: permissionsPayload
     };
 
-    if (editingRole && editingRoleId) {
-      await apiCall('PUT', `api/role/update-role/${editingRoleId}`, payload);
-    } else {
-      await apiCall('POST', 'api/role/create-role', payload);
+    try {
+      if (editingRole && editingRoleId) {
+        await apiCall('PUT', `api/role/update-role/${editingRoleId}`, payload);
+        ToastAtTopRight.fire({
+          icon: 'success',
+          title: 'Role updated successfully'
+        });
+      } else {
+        await apiCall('POST', 'api/role/create-role', payload);
+        ToastAtTopRight.fire({
+          icon: 'success',
+          title: 'Role created successfully'
+        });
+      }
+    } catch (err: any) {
+      if (err?.response?.data?.message?.includes('already exists')) {
+        ToastAtTopRight.fire({
+          icon: 'error',
+          title: 'This role is already assigned'
+        });
+        return;
+      }
+
+      ToastAtTopRight.fire({
+        icon: 'error',
+        title: 'Failed to save role'
+      });
+      return;
     }
 
-    // Refresh roles
-    const updated = await apiCall('GET', 'api/role/get-all-roles');
-    const formatted: Record<string, PermissionWithAccess[]> = {};
-    const idsMap: Record<string, string> = {};
+    try {
+      // Refresh roles
+      const updated = await apiCall('GET', 'api/role/get-all-roles');
+      const formatted: Record<string, PermissionWithAccess[]> = {};
+      const idsMap: Record<string, string> = {};
 
-    updated.roles?.forEach((role: any) => {
-      idsMap[role.name] = role._id || role.id || '';
-      formatted[role.name] = role.permissions.map((p: any) => ({
-        module: p.module
-          .replace(/-/g, ' ')
-          .replace(/\b\w/g, (l: string) => l.toUpperCase()),
-        access: p.access || []
-      }));
-    });
+      updated.roles?.forEach((role: any) => {
+        idsMap[role.name] = role._id || role.id || '';
+        formatted[role.name] = role.permissions.map((p: any) => ({
+          module: p.module
+            .replace(/-/g, ' ')
+            .replace(/\b\w/g, (l: string) => l.toUpperCase()),
+          access: p.access || []
+        }));
+      });
 
-    setRolesAndPermissions(formatted);
-    setRoleIds(idsMap);
-    setEditingRole(null);
-    setEditingRoleId(null);
-    setIsOpen(false);
+      setRolesAndPermissions(formatted);
+      setRoleIds(idsMap);
+      setEditingRole(null);
+      setEditingRoleId(null);
+      setIsOpen(false);
+    } catch (err) {
+      ToastAtTopRight.fire({
+        icon: 'error',
+        title: 'Failed to refresh roles list'
+      });
+    }
   };
 
   const handleDeleteRole = async (role: string) => {
     const roleId = roleIds[role];
     if (!roleId) return;
 
-    await apiCall('DELETE', `api/role/delete-role/${roleId}`);
+    try {
+      await apiCall('DELETE', `api/role/delete-role/${roleId}`);
 
-    const updated = { ...rolesAndPermissions };
-    delete updated[role];
-    setRolesAndPermissions(updated);
+      const updated = { ...rolesAndPermissions };
+      delete updated[role];
+      setRolesAndPermissions(updated);
 
-    const updatedIds = { ...roleIds };
-    delete updatedIds[role];
-    setRoleIds(updatedIds);
+      const updatedIds = { ...roleIds };
+      delete updatedIds[role];
+      setRoleIds(updatedIds);
+
+      ToastAtTopRight.fire({
+        icon: 'success',
+        title: 'Role deleted successfully'
+      });
+    } catch (err) {
+      ToastAtTopRight.fire({
+        icon: 'error',
+        title: 'Failed to delete role'
+      });
+    }
   };
 
   const handleEditRole = (role: string) => {
@@ -166,6 +217,7 @@ const RolesAndPermissionsPage = () => {
           onSave={handleSave}
           isSuperAdmin={true}
           roleId={editingRoleId ?? undefined}
+          panelType="super-admin"
         />
 
         {/* Grid Layout for Roles and Permissions */}

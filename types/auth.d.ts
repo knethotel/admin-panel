@@ -1,6 +1,6 @@
 interface LoginResponse {
   status: boolean;
-  message: string;
+  // message: string;
   token: string;
   user: {
     id: string;
@@ -8,8 +8,10 @@ interface LoginResponse {
     lastName: string;
     email: string;
     role: string;
-    scope: string; 
+    scope: string;
     permissions: string[];
+    hotelId: string;
+    isSuperAdmin?: boolean;
   };
 }
 

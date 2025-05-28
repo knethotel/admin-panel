@@ -31,7 +31,54 @@ interface ModalProps {
   onSave: (data: RolesAndPermissions) => Promise<void>;
   roleId?: string;
   isSuperAdmin?: boolean;
+  panelType: 'super-admin' | 'hotel-panel';
 }
+
+const serviceManagementModules = [
+  'reception-management',
+  'housekeeping-management',
+  'in-room-dinning-management',
+  'gym-management',
+  'spa-management',
+  'swimming-pool-management',
+  'concierge-service-management',
+  'in-room-control-management',
+  'order-management',
+  'payment-management',
+  'sos-management',
+  'chat-management'
+];
+
+const capitalizeModule = (module: string) =>
+  module
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+
+const moduleMapSuperAdmin: Record<string, string> = {
+  'admin-management': 'Admin Management',
+  'hotel-management': 'Hotel Management',
+  'analytics-reports': 'Analytics Reports',
+  'subscription-management': 'Subscription Management',
+  'coupons-management': 'Coupons Management',
+  'refund-management': 'Refunds Management',
+  'complaint-management': 'Complaint Management',
+  'payment-management': 'Payment Management',
+  'guest-management': 'Guest Management',
+  'roles-and-permissions': 'Roles and Permissions',
+  dashboard: 'Dashboard'
+};
+
+const moduleMapHotelPanel: Record<string, string> = {
+  'admin-management': 'Employee Management',
+  'hotel-management': 'Hotel Profile',
+  'analytics-reports': 'Analytics Reports',
+  'coupons-management': 'Coupons Management',
+  'refund-management': 'Refunds Management',
+  'complaint-management': 'Complaint Management',
+  'payment-management': 'Payment Management',
+  'guest-management': 'Guest Management'
+};
 
 const RolesAndPermissionsModal: React.FC<ModalProps> = ({
   isOpen,
@@ -40,7 +87,8 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
   existingRolesAndPermissions = {},
   onSave,
   roleId,
-  isSuperAdmin = false
+  isSuperAdmin = false,
+  panelType
 }) => {
   const [role, setRole] = useState<string>('');
   const [roles, setRoles] = useState<string[]>([]);
@@ -59,12 +107,12 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     'Guest Management',
     'Complaint Management',
     'Subscription Management',
-    'Coupon Management',
+    'Coupons Management',
     'Refunds Management',
-    'Change Password',
+    // 'Change Password',
     'Hotel Management',
-    'Sub Hotel Management',
-    'Analytics Reports,'
+    // 'Sub Hotel Management',
+    'Analytics Reports'
   ];
 
   const hotelModules = [
@@ -74,29 +122,22 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     'Guest Management',
     'Coupons Management',
     'Refund Management',
-    'Service Management',
     'Complaint Management',
     'Payment Management',
-    'Change Password',
+    // 'Change Password',
     'Hotel Profile',
     'Analytics Reports'
   ];
 
   const availableModules = isSuperAdmin ? superAdminModules : hotelModules;
 
-  const mapModuleName = (apiModule: string): string => {
-    const moduleMap: Record<string, string> = {
-      'hotel-management': 'Hotel Management',
-      'complaint-management': 'Complaint Management',
-      'admin-management': 'Admin Management',
-      'user-management': 'Guest Management',
-      dashboard: 'Dashboard',
-      'roles-and-permissions': 'Roles and Permissions',
-      'payment-management': 'Payment Management',
-      'change-password': 'Change Password',
-      'sub-hotel-management': 'Sub Hotel Management'
-    };
-    return moduleMap[apiModule.toLowerCase()] || apiModule;
+  const mapModuleName = (
+    apiModule: string,
+    panelType: 'super-admin' | 'hotel-panel'
+  ): string => {
+    const map =
+      panelType === 'super-admin' ? moduleMapSuperAdmin : moduleMapHotelPanel;
+    return map[apiModule.toLowerCase()] || apiModule;
   };
 
   const fetchRoleData = useCallback(async () => {
@@ -120,7 +161,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
         console.log('is super admin and role id', matchedRole);
         const formattedPermissions: RolesAndPermissions = {
           [matchedRole.name]: matchedRole.permissions.map((p) => ({
-            module: mapModuleName(p.module),
+            module: mapModuleName(p.module, panelType),
             access: p.access || [] // make sure to include access array here
           }))
         };
@@ -145,7 +186,14 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
     } finally {
       setLoading(false);
     }
-  }, [isOpen, mode, roleId, isSuperAdmin, existingRolesAndPermissions]);
+  }, [
+    isOpen,
+    mode,
+    roleId,
+    isSuperAdmin,
+    existingRolesAndPermissions,
+    panelType
+  ]);
 
   useEffect(() => {
     const depsString = JSON.stringify({
@@ -153,7 +201,8 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
       mode,
       roleId,
       isSuperAdmin,
-      existingRolesAndPermissions
+      existingRolesAndPermissions,
+      panelType
     });
     if (depsString === prevFetchDepsRef.current) return;
 
@@ -203,11 +252,15 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
 
   const handlePermissionChange = (permission: string) => {
     if (!selectedRole || mode === 'view') return;
+
+    const normalize = (name: string) =>
+      name.toLowerCase().replace(/\s+/g, '-').trim();
+
     setSelectedPermissions((prev) => {
       const rolePermissions = prev[selectedRole] || [];
 
       const permissionIndex = rolePermissions.findIndex(
-        (p) => p.module === permission
+        (p) => normalize(p.module) === normalize(permission)
       );
 
       let updatedPermissions;
@@ -215,13 +268,13 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
       if (permissionIndex !== -1) {
         // Remove the permission with matching module
         updatedPermissions = rolePermissions.filter(
-          (p) => p.module !== permission
+          (p) => normalize(p.module) !== normalize(permission)
         );
       } else {
-        // Add new permission with default full access, or empty access
+        // Add new permission with default full access
         updatedPermissions = [
           ...rolePermissions,
-          { module: permission, access: ['read', 'write', 'delete'] } // default full access
+          { module: permission, access: ['read', 'write', 'delete'] }
         ];
       }
 
@@ -305,7 +358,7 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
               )}
             </div>
           )}
-          <div className="flex gap-2 py-4 overflow-x-auto hide-scrollbar">
+          <div className="flex gap-2 pb-2 overflow-x-auto hide-scrollbar">
             {roles.map((r) => (
               <div key={r} className="flex items-center gap-1">
                 <button
@@ -347,8 +400,9 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
                 Permitted modules for:{' '}
                 <span className="text-[#8c6b33]">{selectedRole}</span>
               </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                <div>
+              <div className="grid grid-cols-2">
+                {/* Main modules */}
+                <div className="">
                   {availableModules.map((permission) => (
                     <div
                       key={permission}
@@ -379,13 +433,52 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
                     </div>
                   ))}
                 </div>
+                {/* Service Management modules */}
+                {!isSuperAdmin && (
+                  <div className="col-span-1">
+                    <h3 className="font-medium mb-3">Service Management</h3>
+                    {serviceManagementModules.map((module) => (
+                      <div
+                        key={module}
+                        className="flex text-nowrap items-center space-x-2 mb-3"
+                      >
+                        <Checkbox
+                          id={`permission-${module}`}
+                          checked={
+                            selectedRole
+                              ? (selectedPermissions[selectedRole] || []).some(
+                                  (p) =>
+                                    p.module
+                                      .toLowerCase()
+                                      .replace(/\s+/g, '-')
+                                      .trim() ===
+                                    module
+                                      .toLowerCase()
+                                      .replace(/\s+/g, '-')
+                                      .trim()
+                                )
+                              : false
+                          }
+                          onCheckedChange={() => handlePermissionChange(module)}
+                          disabled={mode === 'view' || loading}
+                        />
+                        <label
+                          htmlFor={`permission-${module}`}
+                          className="text-sm text-gray-700"
+                        >
+                          {capitalizeModule(module)}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           ) : (
             mode !== 'add' && <p className="text-gray-600">No role selected</p>
           )}
           {mode !== 'view' && (
-            <div className="flex justify-end gap-3 pt-4">
+            <div className="flex justify-end gap-3">
               <Button
                 type="button"
                 onClick={onClose}
@@ -401,7 +494,11 @@ const RolesAndPermissionsModal: React.FC<ModalProps> = ({
                   Object.keys(selectedPermissions).length === 0 || loading
                 }
               >
-                {loading ? 'Saving...' : 'Save Changes'}
+                {loading
+                  ? 'Saving...'
+                  : mode === 'edit'
+                    ? 'Save Changes'
+                    : 'Create'}
               </Button>
             </div>
           )}

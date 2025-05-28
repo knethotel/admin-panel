@@ -8,6 +8,7 @@ import Image from 'next/image';
 import ToggleButton from '@/components/ui/toggleButton';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
+import { Heading } from '@/components/ui/heading';
 const ServiceManagementPage = () => {
   const router = useRouter();
   const [highlightedServiceId, setHighlightedServiceId] = useState<
@@ -32,11 +33,9 @@ const ServiceManagementPage = () => {
 
   return (
     <div className="flex flex-col w-full">
-      <Navbar active={true} search={true} />
-      <div className="overflow-hidden flex flex-col justify-evenly py-4 gap-6 mt-20">
-        <h1 className="lg:text-3xl xl:text-4xl font-bold text-[#281F0F] px-6">
-          Service Management
-        </h1>
+      <Navbar />
+      <div className="overflow-hidden flex flex-col justify-evenly py-4 gap-6 mt-14">
+        <Heading title="Service Management" className='px-6 mb-0 md:mb-0'/>
         <div className="w-full grid grid-cols-4 gap-8 px-6">
           {/* Carousel of services */}
           {serviceManagementHomePageData.map(
