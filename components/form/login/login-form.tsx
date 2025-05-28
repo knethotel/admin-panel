@@ -84,8 +84,10 @@ const LoginForm = () => {
 
       if (response.token && response.user) {
         // Secure token storage
-        setSessionStorageItem('admin', response);
-        console.log('Session storage set:', response);
+        setSessionStorageItem('admin', {
+          token: response.token,
+          user: response.user
+        });
 
         // Set secure cookie for middleware
         document.cookie = `token=${response.token}; path=/; SameSite=Lax`;
