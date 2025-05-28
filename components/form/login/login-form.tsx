@@ -75,7 +75,7 @@ const LoginForm = () => {
     try {
       const response = await apiCall<LoginResponse>(
         'POST', 
-        'http://13.127.80.211:5001/api/superAdmin/login', 
+        'api/superAdmin/login', 
         {
           email: data.email,
           password: data.password
@@ -88,7 +88,7 @@ const LoginForm = () => {
         console.log('Session storage set:', response);
 
         // Set secure cookie for middleware
-        document.cookie = `token=${response.token}; path=/; SameSite=Strict; Secure`;
+        document.cookie = `token=${response.token}; path=/; SameSite=Lax`;
 
         // Determine redirect based on user role/scope
         const redirectPath = determineRedirectPath(response.user);

@@ -631,7 +631,7 @@ export type AddItemsSchemaType = z.infer<typeof AddItemsSchema>;
 //*****************Housekeeping Service > Manage products modal form schema****************/
 
 export const ManageProductsModalFormSchema = z.object({
-  selectService: z.enum(['Laundary Service', 'Deliever Toileteries'], {
+  selectService: z.enum(['Laundary', 'Toileteries'], {
     errorMap: () => ({ message: 'Invalid Category' })
   }),
   productCategory: z

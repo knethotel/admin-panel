@@ -9,7 +9,8 @@ const ViewDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
   return (
     <div className="flex justify-center items-center h-screen w-full pt-28">
       <div className="h-full w-full container">
-        <RequestDetail requestDetails={GymServiceData} requestId={id} />
+        {/* <RequestDetail requestDetails={GymServiceData} requestId={id} /> */}
+        <RequestDetail requestId={id} />
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ const ViewCouponPage = () => {
     <div className="flex flex-col w-full">
       <Navbar />
       <div className="w-full flex justify-center pt-6 mt-16">
-        <CreateCouponForm mode="view" defaultValues={parsedData} />
+        <CreateCouponForm mode="view" />
       </div>
     </div>
   );

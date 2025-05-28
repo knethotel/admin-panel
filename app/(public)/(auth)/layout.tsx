@@ -1,7 +1,7 @@
 import Providers from 'app/providers';
 import '../../globals.css';
 export const metadata = {
-  title: 'Next.js App Router + NextAuth + Tailwind CSS',
+  title: 'KnectHotel',
   description:
     'A user admin dashboard configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, and Prettier.'
 };

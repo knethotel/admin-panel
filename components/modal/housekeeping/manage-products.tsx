@@ -39,7 +39,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const form = useForm<ManageProductsModalFormSchemaType>({
     resolver: zodResolver(ManageProductsModalFormSchema),
     defaultValues: {
-      selectService: 'Laundary Service',
+      selectService: 'Laundary',
       productCategory: '',
       productName: '',
       productImage: undefined
@@ -95,7 +95,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                             <SelectValue placeholder="Select type" />
                           </SelectTrigger>
                           <SelectContent className="bg-[#362913] rounded-2xl text-white border-2 shadow-md border-white">
-                            {['Laundary Service', 'Deliver Toiletries'].map(
+                            {['Laundary', 'Toiletries'].map(
                               (value) => (
                                 <SelectItem key={value} value={value}>
                                   {value}

@@ -7,7 +7,7 @@ const CreateCouponPage = () => {
       <div className="flex flex-col w-full">
         <Navbar />
         <div className="w-full flex justify-center pt-6 mt-20">
-          <CreateCouponForm />
+          <CreateCouponForm mode="create" />
         </div>
       </div>
     </>
