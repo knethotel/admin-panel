@@ -294,7 +294,7 @@ function HotelPanelSideNav() {
           <NavItem
             href="/hotel-panel/service-management"
             label="Service Management"
-            disabled={!hasAccess('service-management')}
+            // disabled={!hasAccess('service-management')}
           >
             <MdManageAccounts className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
