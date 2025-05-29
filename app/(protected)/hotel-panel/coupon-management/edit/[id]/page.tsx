@@ -5,13 +5,6 @@ import CreateCouponForm from '@/components/shared/coupon-refund-management/creat
 
 const EditCouponPage = () => {
   const { id } = useParams();
-  let parsedData = {};
-
-  try {
-    parsedData = JSON.parse(decodeURIComponent(id as string));
-  } catch (e) {
-    console.error('Invalid data format in URL');
-  }
 
   return (
     <div className="flex flex-col w-full">

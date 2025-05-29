@@ -145,14 +145,14 @@ export const HousekeepingServiceTable: React.FC = () => {
             <ToggleButton />
           </div>
         </div>
-        <Settings
+        {/* <Settings
           className="cursor-pointer"
           onClick={() => setIsModalOpen(true)}
         />
         <PriceTimeSettingHouseKeeping
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-        />
+        /> */}
       </div>
 
       <div className="w-full flex justify-end px-4">
@@ -173,7 +173,7 @@ export const HousekeepingServiceTable: React.FC = () => {
       ) : error ? (
         <div className="text-red-500 p-4">{error}</div>
       ) : filteredData.length === 0 ? (
-        <div className="p-4">No data available.</div>
+        <div className="p-4 text-center">No data available.</div>
       ) : (
         <DataTable
           searchKey="guestDetails.name"

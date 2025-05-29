@@ -3,11 +3,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import {
-  ManageProductsModalFormSchema,
-  ManageProductsModalFormSchemaType
-} from 'schema';
 import { PiCameraThin } from 'react-icons/pi';
+import {
+  laundryCategories,
+  laundryItems,
+  toiletriesCategories,
+  toiletriesItems
+} from 'app/static/services-management/Housekeeping';
 import {
   Form,
   FormField,
@@ -26,25 +28,39 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import { ToastAtTopRight } from '@/lib/sweetalert';
+import apiCall from '@/lib/axios';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+// create here type for the form
+type FormData = {
+  selectService: string;
+  productCategory: string;
+  productName: string;
+  productPrice: number;
+  productImage: File | null;
+};
+
 const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
   const [preview, setPreview] = useState<string | null>(null);
 
-  const form = useForm<ManageProductsModalFormSchemaType>({
-    resolver: zodResolver(ManageProductsModalFormSchema),
+  const form = useForm<FormData>({
     defaultValues: {
-      selectService: 'Laundary',
+      selectService: 'Laundry',
       productCategory: '',
       productName: '',
-      productImage: undefined
+      productImage: undefined,
+      productPrice: 0
     }
   });
+
+  const selectedService = form.watch('selectService');
+  const selectedCategory = form.watch('productCategory');
 
   useEffect(() => {
     return () => {
@@ -52,10 +68,23 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     };
   }, [preview]);
 
-  const onSubmit = (data: ManageProductsModalFormSchemaType) => {
-    console.log('Submitted Data:', data);
-    form.reset();
-    setPreview(null); // Reset preview on submit
+  const onSubmit = async (data: FormData) => {
+    const payload = {
+      serviceType: data.selectService, // 'Laundry' or 'Toiletries'
+      category: data.productCategory, // 'Men', 'Women' etc.
+      name: data.productName, // 'shirt', 'soap' etc.
+      price: Number(data.productPrice) // number
+    };
+
+    try {
+      await apiCall('POST', 'api/services/housekeeping/items', payload);
+      ToastAtTopRight.fire('Service item added successfully', 'success');
+      form.reset();
+      setPreview(null);
+      onClose();
+    } catch (err: any) {
+      ToastAtTopRight.fire(err?.message || 'Failed to save', 'error');
+    }
   };
 
   if (!isOpen) return null;
@@ -82,26 +111,24 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                   control={form.control}
                   name="selectService"
                   render={({ field }) => (
-                    <FormItem className="flex items-center gap-4">
+                    <FormItem className="flex items-center gap-1">
                       <FormLabel className="text-sm w-[129px] text-nowrap font-medium text-gray-700">
-                        Product category
+                        Select Service
                       </FormLabel>
                       <FormControl>
                         <Select
                           onValueChange={field.onChange}
                           value={field.value}
                         >
-                          <SelectTrigger className="w-48 bg-lightbrown text-gray-700 p-2 rounded-md border-none">
+                          <SelectTrigger className="w-64 bg-lightbrown text-gray-700 p-2 rounded-md border-none">
                             <SelectValue placeholder="Select type" />
                           </SelectTrigger>
                           <SelectContent className="bg-[#362913] rounded-2xl text-white border-2 shadow-md border-white">
-                            {['Laundary', 'Toiletries'].map(
-                              (value) => (
-                                <SelectItem key={value} value={value}>
-                                  {value}
-                                </SelectItem>
-                              )
-                            )}
+                            {['Laundry', 'Toiletries'].map((value) => (
+                              <SelectItem key={value} value={value}>
+                                {value}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -116,15 +143,28 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                   name="productCategory"
                   render={({ field }) => (
                     <FormItem className="flex items-center gap-4">
-                      <FormLabel className="text-sm w-40 text-nowrap font-medium text-gray-700">
-                        Product category
+                      <FormLabel className="text-sm w-40 font-medium text-gray-700">
+                        Product Category
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Enter Product Category"
-                          {...field}
-                          className="bg-[#F6EEE0] w-64 text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-sm"
-                        />
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger className="w-64 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
+                            <SelectValue placeholder="Select Category" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-[#362913] rounded-2xl text-white border-2 shadow-md border-white">
+                            {(selectedService === 'Laundry'
+                              ? laundryCategories
+                              : toiletriesCategories
+                            ).map((value) => (
+                              <SelectItem key={value} value={value}>
+                                {value}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -137,13 +177,46 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                   name="productName"
                   render={({ field }) => (
                     <FormItem className="flex items-center gap-4">
+                      <FormLabel className="text-sm w-40 font-medium text-gray-700">
+                        Product Name
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger className="w-64 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none">
+                            <SelectValue placeholder="Select Item" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-[#362913] rounded-2xl text-white border-2 shadow-md border-white">
+                            {(selectedService === 'Laundry'
+                              ? laundryItems[selectedCategory] || []
+                              : toiletriesItems[selectedCategory] || []
+                            ).map((value) => (
+                              <SelectItem key={value} value={value}>
+                                {value}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="productPrice"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center gap-4">
                       <FormLabel className="text-sm w-40 text-nowrap font-medium text-gray-700">
-                        Product name
+                        Price
                       </FormLabel>
                       <FormControl>
                         <Input
                           type="text"
-                          placeholder="Enter Product Name"
+                          placeholder="INR 100/-"
                           {...field}
                           className="bg-[#F6EEE0] w-64 text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-sm"
                         />
@@ -260,7 +333,9 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
-                  router.push('/hotel-panel/service-management/housekeeping/products');
+                  router.push(
+                    '/hotel-panel/service-management/housekeeping/products'
+                  );
                 }}
                 className="btn-primary"
               >

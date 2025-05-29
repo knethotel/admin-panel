@@ -73,6 +73,7 @@ const AssignModal = ({
       if (result.success) {
         onAssign?.(selectedEmployee);
         onClose();
+        window.location.reload();
       }
     } catch (error) {
       console.error('Error assigning request:', error);
@@ -163,6 +164,7 @@ const AssignModal = ({
             </div>
 
             <button
+              type="submit"
               onClick={handleAssign}
               className="mt-4 bg-[#A07D3D] text-white p-2 rounded-md"
               disabled={!selectedEmployee || assigning}

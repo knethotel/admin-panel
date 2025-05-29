@@ -6,7 +6,7 @@ import Providers from '../providers';
 import { NavItem } from '../nav-item';
 import logo from '../../public/assets/logo.svg';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { RiAdminLine } from 'react-icons/ri';
 import { BsPersonWorkspace } from 'react-icons/bs';
@@ -21,6 +21,7 @@ import { IoMdNotificationsOutline } from 'react-icons/io';
 import { Menu, X } from 'lucide-react';
 import { MdAnalytics } from 'react-icons/md';
 import { MdOutlineSubscriptions } from 'react-icons/md';
+import { getSessionStorageItem, setSessionStorageItem } from 'utils/localstorage';
 
 export default function RootLayout({
   children
@@ -89,7 +90,25 @@ export default function RootLayout({
 }
 
 function SuperAdminPanelSideNav() {
+  const [adminData, setAdminData] = useState<any>(null);
   const [openHotelSubMenu, setOpenHotelSubMenu] = useState(false);
+
+  useEffect(() => {
+    // This runs only on the client
+    setAdminData(getSessionStorageItem<any>('admin'));
+  }, []);
+
+  // Until adminData is loaded, render nothing or a loading state
+  if (!adminData) return null;
+
+  const allowedModules: string[] = adminData?.allowedModules || [];
+  const isSuperAdmin = adminData?.isSuperAdmin === true;
+  const permissions: string[] = adminData?.permissions || [];
+  const hasAllAccess = permissions.includes('all');
+
+  const hasAccess = (moduleName: string) => {
+    return isSuperAdmin || hasAllAccess || allowedModules.includes(moduleName);
+  };
 
   return (
     <aside className="flex flex-col py-14 lg:py-2 2xl:py-4 h-screen p-4 pb-0 bg-coffeeLight z-40">
@@ -102,13 +121,18 @@ function SuperAdminPanelSideNav() {
         </Link>
 
         <div className="sidebar-menu h-screen w-full p-4 mb-2 rounded-2xl flex flex-col gap-3">
-          <NavItem href="/super-admin/dashboard" label="Dashboard">
+          <NavItem
+            href="/super-admin/dashboard"
+            label="Dashboard"
+            disabled={!hasAccess('dashboard')}
+          >
             <MdDashboardCustomize className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
           <NavItem
             href="/super-admin/roles-and-permissions"
             label="Roles & Permission"
+            disabled={!hasAccess('roles-and-permissions')}
           >
             <BsPersonWorkspace className="h-4 w-4 lg:h-5 lg:w-5" />
           </NavItem>
@@ -116,6 +140,7 @@ function SuperAdminPanelSideNav() {
           <NavItem
             href="/super-admin/admin-management"
             label="Admin Management"
+            disabled={!hasAccess('admin-management')}
           >
             <RiAdminLine className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
@@ -123,6 +148,7 @@ function SuperAdminPanelSideNav() {
           <NavItem
             href="/super-admin/guest-management"
             label="Guest Management"
+            disabled={!hasAccess('guest-management')}
           >
             <Users className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
@@ -130,6 +156,7 @@ function SuperAdminPanelSideNav() {
           <NavItem
             href="/super-admin/subscription-management"
             label="Manage Subscription"
+            disabled={!hasAccess('subscription-management')}
           >
             <MdOutlineSubscriptions className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
@@ -137,18 +164,23 @@ function SuperAdminPanelSideNav() {
           <NavItem
             href="/super-admin/complaint-management"
             label="Complaint Management"
+            disabled={!hasAccess('complaint-management')}
           >
             <VscSettings className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
+
           <NavItem
             href="/super-admin/coupon-management"
             label="Coupon Management"
+            disabled={!hasAccess('coupons-management')}
           >
             <Ticket className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
+
           <NavItem
             href="/super-admin/refund-management"
             label="Refunds Management"
+            disabled={!hasAccess('refund-management')}
           >
             <RiMoneyRupeeCircleLine className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
@@ -162,6 +194,7 @@ function SuperAdminPanelSideNav() {
               <NavItem
                 href="/super-admin/hotel-management"
                 label="Hotel Management"
+                disabled={!hasAccess('hotel-management')}
               >
                 <Landmark className="h-5 w-5 lg:h-6 lg:w-6" />
               </NavItem>
@@ -182,7 +215,8 @@ function SuperAdminPanelSideNav() {
 
           <NavItem
             href="/super-admin/analytics-reports"
-            label="ANALYTICS & REPORTS"
+            label="Analytics & Reports"
+            disabled={!hasAccess('analytics-reports')}
           >
             <MdAnalytics className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
@@ -197,6 +231,23 @@ function SuperAdminPanelSideNav() {
 }
 
 function HotelPanelSideNav() {
+  const [adminData, setAdminData] = useState<any>(null);
+
+  useEffect(() => {
+    setAdminData(getSessionStorageItem<any>('admin'));
+  }, []);
+
+  if (!adminData) return null;
+
+  const allowedModules: string[] = adminData?.allowedModules || [];
+  const isSuperAdmin = adminData?.isSuperAdmin === true;
+  const permissions: string[] = adminData?.permissions || [];
+  const hasAllAccess = permissions.includes('all');
+
+  const hasAccess = (moduleName: string) => {
+    return isSuperAdmin || hasAllAccess || allowedModules.includes(moduleName);
+  };
+
   return (
     <aside className="flex flex-col py-14 lg:py-2 2xl:py-4 h-screen p-4 pb-0 bg-coffeeLight z-40">
       <nav className="flex flex-col gap-4 items-center overflow-y-auto hide-scrollbar">
@@ -208,13 +259,18 @@ function HotelPanelSideNav() {
         </Link>
 
         <div className="sidebar-menu h-screen w-full p-4 mb-2 rounded-2xl flex flex-col gap-3">
-          <NavItem href="/hotel-panel/dashboard" label="Dashboard">
+          <NavItem
+            href="/hotel-panel/dashboard"
+            label="Dashboard"
+            disabled={!hasAccess('dashboard')}
+          >
             <MdDashboardCustomize className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
           <NavItem
             href="/hotel-panel/roles-permission"
             label="Roles & Permission"
+            disabled={!hasAccess('roles-and-permissions')}
           >
             <BsPersonWorkspace className="h-4 w-4 lg:h-5 lg:w-5" />
           </NavItem>
@@ -222,6 +278,7 @@ function HotelPanelSideNav() {
           <NavItem
             href="/hotel-panel/employee-management"
             label="Employee Management"
+            disabled={!hasAccess('admin-management')}
           >
             <IoIosPeople className="h-6 w-6 lg:h-7 lg:w-7" />
           </NavItem>
@@ -229,6 +286,7 @@ function HotelPanelSideNav() {
           <NavItem
             href="/hotel-panel/guest-management"
             label="Guest Management"
+            disabled={!hasAccess('guest-management')}
           >
             <ImManWoman className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
@@ -236,6 +294,7 @@ function HotelPanelSideNav() {
           <NavItem
             href="/hotel-panel/service-management"
             label="Service Management"
+            // disabled={!hasAccess('service-management')}
           >
             <MdManageAccounts className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
@@ -243,6 +302,7 @@ function HotelPanelSideNav() {
           <NavItem
             href="/hotel-panel/complaint-management"
             label="Complaint Management"
+            disabled={!hasAccess('complaint-management')}
           >
             <VscSettings className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
@@ -250,33 +310,44 @@ function HotelPanelSideNav() {
           <NavItem
             href="/hotel-panel/payment-management"
             label="Payment Management"
+            disabled={!hasAccess('payment-management')}
           >
             <RiMoneyRupeeCircleLine className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
           <NavItem
             href="/hotel-panel/coupon-management"
             label="Coupon Management"
+            disabled={!hasAccess('coupons-management')}
           >
             <Ticket className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
           <NavItem
             href="/hotel-panel/refund-management"
             label="Refunds Management"
+            disabled={!hasAccess('refund-management')}
           >
             <RiMoneyRupeeCircleLine className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
-          <NavItem href="/hotel-panel/change-password" label="Change Password">
+          <NavItem
+            href="/hotel-panel/change-password"
+            label="Change Password"
+          >
             <TbPasswordUser className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
-          <NavItem href="/hotel-panel/hotel-profile" label="Hotel Profile">
+          <NavItem
+            href="/hotel-panel/hotel-profile"
+            label="Hotel Profile"
+            disabled={!hasAccess('hotel-management')}
+          >
             <Landmark className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>
 
           <NavItem
             href="/hotel-panel/analytics-reports"
-            label="ANALYTICS & REPORTS"
+            label="Analytics & Reports"
+            disabled={!hasAccess('analytics-reports')}
           >
             <MdAnalytics className="h-5 w-5 lg:h-6 lg:w-6" />
           </NavItem>

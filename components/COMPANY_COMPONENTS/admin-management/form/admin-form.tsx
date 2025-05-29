@@ -35,6 +35,7 @@ import { addAdmin } from '@/lib/superAdmin/api/admin/addAdmin';
 import { getAdminById } from '@/lib/superAdmin/api/admin/getAdmins';
 import { editAdmin } from '@/lib/superAdmin/api/admin/editAdmin';
 import { ToastAtTopRight } from '@/lib/sweetalert';
+import apiCall from '@/lib/axios';
 
 interface Admin {
   _id: string;
@@ -57,6 +58,7 @@ const AdminForm = ({ adminID, mode }: Props) => {
   const [admin, setAdminData] = useState<Admin | undefined>();
   const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(true);
+  const [employee, setEmployee] = useState<any>(null);
 
   const form = useForm<AdminSchemaType>({
     resolver: zodResolver(mode === 'add' ? addAdminSchema : editAdminSchema),
@@ -73,37 +75,32 @@ const AdminForm = ({ adminID, mode }: Props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [rolesRes, adminData] = await Promise.all([
-          getAllRoles(),
-          adminID ? getAdminById(adminID) : Promise.resolve(null)
-        ]);
-
-        if (rolesRes.status) {
-          setRoles(rolesRes.roles);
-        }
-
-        if (adminData) {
-          setAdminData(adminData);
-          form.reset({
-            firstName: adminData.firstName || '',
-            lastName: adminData.lastName || '',
-            email: adminData.email || '',
-            password: undefined,
-            mobileNumber: adminData.mobileNumber || '',
-            roleId: adminData.roleId?._id || '',
-            status: adminData.status || 'Active'
-          });
-        }
-      } catch (error) {
-        console.error('Failed to fetch data:', error);
-      } finally {
-        setLoading(false);
-      }
+      setLoading(true);
+      const [rolesRes, employeeData] = await Promise.all([
+        getAllRoles(),
+        adminID ? apiCall('GET', `api/employee/${adminID}`) : Promise.resolve(null)
+      ]);
+      if (rolesRes.status) setRoles(rolesRes.roles);
+      if (employeeData && employeeData.employee) setEmployee(employeeData.employee);
+      setLoading(false);
     };
     fetchData();
-  }, [adminID, form]);
+  }, [adminID, form, mode]);
+
+  // Reset form only after both roles and employee are loaded
+  useEffect(() => {
+    if (roles.length && employee) {
+      form.reset({
+        firstName: employee.firstName || '',
+        lastName: employee.lastName || '',
+        email: employee.email || '',
+        password: undefined,
+        mobileNumber: employee.mobileNumber || '',
+        roleId: employee.roleId?._id || '', // This should match the SelectItem value
+        status: employee.status || 'Active'
+      });
+    }
+  }, [roles, employee, form]);
 
   const onSubmit = async (data: AdminSchemaType) => {
     console.log('Form Data:', data);

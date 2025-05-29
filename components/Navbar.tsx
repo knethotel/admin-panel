@@ -14,6 +14,7 @@ import {
 } from './ui/dropdown-menu';
 import { AlertModal } from './modal/alert-modal';
 import { Input } from './ui/input';
+import { getSessionStorageItem } from 'utils/localstorage';
 
 interface navProps {
   active?: boolean;
@@ -33,8 +34,11 @@ export default function Navbar({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [randomColor, setRandomColor] = useState('#000000');
+  const [mounted, setMounted] = useState(false);
+  const admin = getSessionStorageItem<any>('admin');
 
   useEffect(() => {
+    setMounted(true);
     const generateColor = () => {
       const letters = '0123456789ABCDEF';
       let color = '#';
@@ -46,7 +50,7 @@ export default function Navbar({
     setRandomColor(generateColor());
   }, []);
 
-  const firstLetter = 'S'; // Placeholder for user initial
+  const firstLetter = mounted && admin?.user?.name ? admin.user.name.charAt(0).toUpperCase() : 'H';
   const inputRef = useRef<HTMLInputElement>(null);
   const [filterInput, setFilterInput] = useState('');
 
@@ -58,6 +62,7 @@ export default function Navbar({
     // Redirect to login page
     window.location.href = '/';
   };
+  console.log(getSessionStorageItem('admin'));
 
   return (
     <>
@@ -185,10 +190,10 @@ export default function Navbar({
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">
-                    Shivam Kumar
+                    {admin?.user?.name}
                   </p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    shivamjha2705@gmail.com
+                    {admin?.user?.email}
                   </p>
                 </div>
               </DropdownMenuLabel>

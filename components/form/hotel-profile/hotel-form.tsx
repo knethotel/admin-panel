@@ -54,6 +54,7 @@ const HotelForm = ({
   const [status, setStatus] = useState<'PENDING' | 'APPROVE'>('PENDING');
   const [hotelName, setHotelName] = useState('');
   const [subHotelName, setSubHotelName] = useState('');
+  const [fetchedHotelData, setFetchedHotelData] = useState<any>(null);
 
   // Refs for file inputs
   const roomImageRef = useRef<HTMLInputElement>(null);
@@ -131,6 +132,10 @@ const HotelForm = ({
       applyCoupon: 'Choose coupon'
     }
   });
+
+  const [selectedState, setSelectedState] = useState(
+    form.getValues('state') || ''
+  );
 
   const onSubmit = async (data: HotelSchemaType) => {
     const payload = {
@@ -338,91 +343,8 @@ const HotelForm = ({
         const idFromResponse =
           mode === 'pending' ? res.request._id : data._id || '';
 
-        form.reset({
-          hotelId: idFromResponse,
-          hotelName: data.name || '',
-          number: data.phoneNo || '',
-          email: data.email || '',
-          completeAddress: data.address || '',
-          hotelCategory: data.hotelCategory || '3 Star',
-          city: data.city || '',
-          country: data.country || '',
-          state: data.state || '',
-          pinCode: data.pincode || '',
-          gst: data.gstDetails || '',
-
-          brandedHotel: data.brandedHotel || false,
-          chainHotel: data.chainHotel === 'true', // string to boolean
-          // parentHotelName: data.parentHotel || '',
-          parentHotelId: data.parentHotel || '',
-          // subHotelName: data.name || '',
-
-          roomConfigs: data.rooms?.map((room: any) => ({
-            roomType: room.roomType,
-            feature: room.features?.[0] || ''
-          })) || [{ roomType: 'Single', feature: 'Sea Side' }],
-
-          numberOfRooms: data.rooms?.length || 1,
-          checkInTime: data.checkInTime || '',
-          checkOutTime: data.checkOutTime || '',
-          servingDepartments: data.servingDepartment || [],
-          totalStaff: data.totalStaff || 1,
-
-          hotelLicenseCertifications:
-            data.hotelLicenseAndCertification?.certificateValue || '',
-          hotelLicenseImage: undefined,
-          legalBusinessLicense:
-            data.legalAndBusinessLicense?.licenseValue || '',
-          legalBusinessLicenseImage: undefined,
-          touristLicense: data.touristLicense?.licenseValue || '',
-          touristLicenseImage: undefined,
-          tanNumber: data.panNumber?.numberValue || '',
-          tanNumberImage: undefined,
-          dataPrivacyGdprCompliances:
-            data.dataPrivacyAndGDPRCompliance?.complianceValue || '',
-          dataPrivacyGdprImage: undefined,
-
-          logoImage: undefined,
-          additionalImage: undefined,
-
-          internetConnectivity: data.internetConnectivity || false,
-          softwareCompatibility: data.softwareCompatibility || false,
-
-          subscriptionPlan: [
-            '1 Month',
-            '6 Months',
-            '1 Year',
-            'Premium'
-          ].includes(data.subscriptionPlan)
-            ? data.subscriptionPlan
-            : 'Premium',
-
-          subscriptionPrice: data.subscriptionPrice || 500,
-          netPrice: 0,
-          applyCoupon: 'Choose coupon'
-        });
-
-        // Set preview images if available
-        setImagePreviews({
-          logoImage: data.logo ? [data.logo] : [],
-          additionalImage: data.images || [],
-          roomImage: data.rooms?.[0]?.images || [],
-          hotelLicenseImage: data.hotelLicenseAndCertification?.imageUrl
-            ? [data.hotelLicenseAndCertification.imageUrl]
-            : [],
-          legalBusinessLicenseImage: data.legalAndBusinessLicense?.imageUrl
-            ? [data.legalAndBusinessLicense.imageUrl]
-            : [],
-          touristLicenseImage: data.touristLicense?.imageUrl
-            ? [data.touristLicense.imageUrl]
-            : [],
-          tanNumberImage: data.panNumber?.imageUrl
-            ? [data.panNumber.imageUrl]
-            : [],
-          dataPrivacyGdprImage: data.dataPrivacyAndGDPRCompliance?.imageUrl
-            ? [data.dataPrivacyAndGDPRCompliance.imageUrl]
-            : []
-        });
+        setSelectedState(data.state || '');
+        setFetchedHotelData(data); // Store the data, but don't reset the form yet
         console.log('Fetched hotel data:', data);
       } catch (error) {
         console.error('Failed to fetch hotel data', error);
@@ -432,14 +354,76 @@ const HotelForm = ({
     if (hotelId) fetchHotelData();
   }, [mode, hotelId]);
 
+  useEffect(() => {
+    if (fetchedHotelData && selectedState) {
+      form.reset({
+        hotelId: fetchedHotelData._id || '',
+        hotelName: fetchedHotelData.name || '',
+        number: fetchedHotelData.phoneNo || '',
+        email: fetchedHotelData.email || '',
+        completeAddress: fetchedHotelData.address || '',
+        hotelCategory: fetchedHotelData.hotelCategory || '3 Star',
+        city: fetchedHotelData.city || '',
+        country: fetchedHotelData.country || '',
+        state: fetchedHotelData.state || '',
+        pinCode: fetchedHotelData.pincode || '',
+        gst: fetchedHotelData.gstDetails || '',
+
+        brandedHotel: fetchedHotelData.brandedHotel || false,
+        chainHotel: fetchedHotelData.chainHotel === 'true', // string to boolean
+        parentHotelId: fetchedHotelData.parentHotel || '',
+        roomConfigs: fetchedHotelData.rooms?.map((room: any) => ({
+          roomType: room.roomType,
+          feature: room.features?.[0] || ''
+        })) || [{ roomType: 'Single', feature: 'Sea Side' }],
+
+        numberOfRooms: fetchedHotelData.rooms?.length || 1,
+        checkInTime: fetchedHotelData.checkInTime || '',
+        checkOutTime: fetchedHotelData.checkOutTime || '',
+        servingDepartments: fetchedHotelData.servingDepartment || [],
+        totalStaff: fetchedHotelData.totalStaff || 1,
+
+        hotelLicenseCertifications:
+          fetchedHotelData.hotelLicenseAndCertification?.certificateValue || '',
+        hotelLicenseImage: undefined,
+        legalBusinessLicense:
+          fetchedHotelData.legalAndBusinessLicense?.licenseValue || '',
+        legalBusinessLicenseImage: undefined,
+        touristLicense: fetchedHotelData.touristLicense?.licenseValue || '',
+        touristLicenseImage: undefined,
+        tanNumber: fetchedHotelData.panNumber?.numberValue || '',
+        tanNumberImage: undefined,
+        dataPrivacyGdprCompliances:
+          fetchedHotelData.dataPrivacyAndGDPRCompliance?.complianceValue || '',
+        dataPrivacyGdprImage: undefined,
+
+        logoImage: undefined,
+        additionalImage: undefined,
+
+        internetConnectivity: fetchedHotelData.internetConnectivity || false,
+        softwareCompatibility: fetchedHotelData.softwareCompatibility || false,
+
+        subscriptionPlan: [
+          '1 Month',
+          '6 Months',
+          '1 Year',
+          'Premium'
+        ].includes(fetchedHotelData.subscriptionPlan)
+          ? fetchedHotelData.subscriptionPlan
+          : 'Premium',
+
+        subscriptionPrice: fetchedHotelData.subscriptionPrice || 500,
+        netPrice: 0,
+        applyCoupon: 'Choose coupon'
+      });
+      setFetchedHotelData(null); // Reset so it doesn't run again
+    }
+  }, [selectedState, fetchedHotelData]);
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'roomConfigs'
   });
-
-  const [selectedState, setSelectedState] = useState(
-    form.getValues('state') || ''
-  );
 
   return (
     <FormWrapper title="">

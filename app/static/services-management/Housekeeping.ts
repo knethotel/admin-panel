@@ -87,3 +87,21 @@ export const HouseKeepingProductDetailsDummyData = [
     ]
   }
 ];
+
+export const laundryCategories = ['Men', 'Women', 'Kids', 'Others'];
+export const laundryItems: Record<string, string[]> = {
+  Men: ['shirt', 'tshirt', 'jeans', 'pants', 'jacket', 'shorts', 'wollens'],
+  Women: ['tops', 'jeans', 'tshirt', 'shirt', 'woolen', 'jackets'],
+  Kids: ['shorts', 'tshirts', 'jeans', 'shirt'],
+  Others: ['Undergarments', 'Camisoles']
+};
+
+export const toiletriesCategories = ['BATHROOM ESSENTIALS', 'LAVATORY ESSENTIALS'];
+export const toiletriesItems: Record<string, string[]> = {
+  'BATHROOM ESSENTIALS': [
+    'soap', 'towel', 'body wash', 'shower gel', 'Conditioner', 'face wash'
+  ],
+  'LAVATORY ESSENTIALS': [
+    'handwash', 'paper towel', 'face towel', 'hand towel', 'sleepers', 'air freshner'
+  ]
+};

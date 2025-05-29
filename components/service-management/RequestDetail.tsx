@@ -5,7 +5,7 @@ import AssignModal from '@/components/shared/AssignModal';
 
 type Props<T> = {
   requestId: string;
-  mode?: 'reception' | 'other' | 'housekeeping' | 'inroomcontrol';
+  mode?: 'reception' | 'other' | 'housekeeping' | 'inroomcontrol' | 'gym';
 };
 
 interface RequestData {
@@ -68,6 +68,18 @@ const RequestDetail = <T extends Record<string, any>>({
           }
         } catch (error) {
           console.error('Error fetching in-room control request details:', error);
+        } finally {
+          setLoading(false);
+        }
+      } else if (mode === 'gym' && requestId) {
+        setLoading(true);
+        try {
+          const result = await apiCall('GET', `api/services/facility/requests/${requestId}`);
+          if (result.success) {
+            setApiData(result.data);
+          }
+        } catch (error) {
+          console.error('Error fetching gym request details:', error);
         } finally {
           setLoading(false);
         }
