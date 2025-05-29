@@ -5,20 +5,12 @@ import CreateCouponForm from '@/components/shared/coupon-refund-management/creat
 
 const ViewCouponPage = () => {
   const { id } = useParams();
-  let parsedData = {};
-
-  try {
-    parsedData = JSON.parse(decodeURIComponent(id as string));
-  } catch (e) {
-    console.error('Invalid data format in URL');
-  }
 
   return (
     <div className="flex flex-col w-full">
       <Navbar />
       <div className="w-full flex justify-center pt-6 mt-20">
-        {/* <CreateCouponForm mode="view" defaultValues={parsedData} /> */}
-        <CreateCouponForm mode="view" />
+        <CreateCouponForm mode="view" couponId={id as string} />
       </div>
     </div>
   );

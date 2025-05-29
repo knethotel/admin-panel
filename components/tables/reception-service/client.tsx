@@ -108,14 +108,14 @@ export const ReceptionServiceTable: React.FC = () => {
             <ToggleButton />
           </div>
         </div>
-        <Settings
+        {/* <Settings
           className="cursor-pointer"
           onClick={() => setIsModalOpen(true)}
-        />
-        <PriceTimeSetting
+        /> */}
+        {/* <PriceTimeSetting
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-        />
+        /> */}
       </div>
       {loading ? (
         <span>Loading...</span>

@@ -630,25 +630,6 @@ export type AddItemsSchemaType = z.infer<typeof AddItemsSchema>;
 
 //*****************Housekeeping Service > Manage products modal form schema****************/
 
-export const ManageProductsModalFormSchema = z.object({
-  selectService: z.enum(['Laundary', 'Toileteries'], {
-    errorMap: () => ({ message: 'Invalid Category' })
-  }),
-  productCategory: z
-    .string()
-    .min(1, 'Input field must have at least 1 character.'),
-  productName: z.string().min(1, 'Input field must have at least 1 character.'),
-  productImage: z
-    .union([z.any(), z.string().url()])
-    .optional()
-    .refine((file) => file !== '', {
-      message: 'Logo image must not be an empty value'
-    })
-});
-
-export type ManageProductsModalFormSchemaType = z.infer<
-  typeof ManageProductsModalFormSchema
->;
 
 //***************Concierge Service > Manage products modal form schema****************/
 export const ConciergeManageProductsModalFormSchema = z.object({

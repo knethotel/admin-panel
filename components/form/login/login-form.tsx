@@ -83,10 +83,15 @@ const LoginForm = () => {
       );
 
       if (response.token && response.user) {
+        const isSuperAdmin = response.user?.isSuperAdmin || false;
+        const allowedModules = response.user?.permissions?.map(p => p.module) || [];
         // Secure token storage
         setSessionStorageItem('admin', {
           token: response.token,
-          user: response.user
+          user: response.user,
+          allowedModules,
+          isSuperAdmin,
+          permissions: response.user?.permissions || []
         });
 
         // Set secure cookie for middleware
@@ -96,6 +101,7 @@ const LoginForm = () => {
         const redirectPath = determineRedirectPath(response.user);
         router.push(redirectPath);
         console.log('Login successful:', response);
+        console.log('Allowed modules:', allowedModules);
       } else {
         throw new Error('Invalid login credentials');
       }

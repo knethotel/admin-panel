@@ -48,10 +48,13 @@ const defaultValues = {
   couponStatus: 'active',
   createCode: '',
   termsAndConditions: '',
-  couponImage: undefined as File | undefined,
+  couponImage: undefined as File | undefined
 };
 
-const CreateCouponForm: React.FC<CreateCouponFormProps> = ({ mode = 'create', couponId }) => {
+const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
+  mode = 'create',
+  couponId
+}) => {
   const [preview, setPreview] = useState<string | null>(null);
   const isViewMode = mode === 'view';
   const isEditMode = mode === 'edit';
@@ -68,39 +71,54 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({ mode = 'create', co
 
   // Fetch coupon data for edit mode
   useEffect(() => {
-    if (isEditMode && couponId) {
+    if ((isEditMode || isViewMode) && couponId) {
       (async () => {
         try {
-          const data = await apiCall('GET', `api/coupon/${couponId}`);
-          // Map API data to form fields
+          const res = await apiCall('GET', `api/coupon/${couponId}`);
+          const data = res.coupon;
+
           form.reset({
-            category: data.discountType === 'percentage' ? 'Percentage Coupons' : 'Fixed Amount Coupons',
-            validityFrom: data.validFrom || '',
-            validityTo: data.validUntil || '',
-            usageLimit: data.usageLimit?.toString() || '',
-            discountPercentage: data.discountType === 'percentage' ? data.value?.toString() : '',
-            discountAmount: data.discountType === 'fixed' ? Number(data.value) : 0,
-            minimumSpent: data.minimumSpend?.toString() || '',
+            category:
+              data.discountType === 'percentage'
+                ? 'Percentage Coupons'
+                : 'Fixed Amount Coupons',
+            validityFrom: data.validFrom || 'N/A',
+            validityTo: data.validUntil || 'N/A',
+            usageLimit: data.usageLimit?.toString() || 'N/A',
+            discountPercentage:
+              data.discountType === 'percentage'
+                ? data.value?.toString()
+                : 'N/A',
+            discountAmount:
+              data.discountType === 'fixed' ? Number(data.value) : 0,
+            minimumSpent: data.minimumSpend?.toString() || 'N/A',
             couponStatus: data.status?.toLowerCase() || 'active',
-            createCode: data.code || '',
-            termsAndConditions: data.termsAndConditions || '',
-            couponImage: undefined,
+            createCode: data.code || 'N/A',
+            termsAndConditions: data.termsAndConditions || 'N/A',
+            couponImage: undefined
           });
+
+          if (data.imageUrl) {
+            setPreview(data.imageUrl);
+          }
         } catch (error) {
           ToastAtTopRight.fire('Failed to fetch coupon data', 'error');
         }
       })();
     }
-    // eslint-disable-next-line
-  }, [isEditMode, couponId]);
+  }, [couponId, isEditMode, isViewMode, form]);
 
   const onSubmit = async (data: any) => {
     setLoading(true);
     try {
       const payload = {
         code: data.createCode,
-        discountType: data.category === 'Percentage Coupons' ? 'percentage' : 'fixed',
-        value: data.category === 'Percentage Coupons' ? data.discountPercentage : String(data.discountAmount),
+        discountType:
+          data.category === 'Percentage Coupons' ? 'percentage' : 'fixed',
+        value:
+          data.category === 'Percentage Coupons'
+            ? data.discountPercentage
+            : String(data.discountAmount),
         minimumSpend: Number(data.minimumSpent),
         validFrom: data.validityFrom,
         validUntil: data.validityTo,
@@ -109,7 +127,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({ mode = 'create', co
         stockable: false,
         imageUrl: '',
         termsAndConditions: data.termsAndConditions,
-        status: data.couponStatus,
+        status: data.couponStatus.charAt(0).toUpperCase() + data.couponStatus.slice(1).toLowerCase()
       };
       if (isEditMode && couponId) {
         await apiCall('PUT', `api/coupon/${couponId}`, payload);
@@ -151,7 +169,8 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({ mode = 'create', co
                       <>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value}
+                          disabled={isViewMode}
                         >
                           <FormControl>
                             <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 py-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm">
@@ -202,9 +221,15 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({ mode = 'create', co
                               <PopoverContent className="w-auto p-0">
                                 <Calendar
                                   mode="single"
-                                  selected={field.value ? new Date(field.value) : undefined}
+                                  selected={
+                                    field.value
+                                      ? new Date(field.value)
+                                      : undefined
+                                  }
                                   onSelect={(date) =>
-                                    field.onChange(date?.toISOString().split('T')[0])
+                                    field.onChange(
+                                      date?.toLocaleDateString('en-CA')
+                                    )
                                   }
                                   initialFocus
                                 />
@@ -235,9 +260,15 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({ mode = 'create', co
                               <PopoverContent className="w-auto p-0">
                                 <Calendar
                                   mode="single"
-                                  selected={field.value ? new Date(field.value) : undefined}
+                                  selected={
+                                    field.value
+                                      ? new Date(field.value)
+                                      : undefined
+                                  }
                                   onSelect={(date) =>
-                                    field.onChange(date?.toISOString().split('T')[0])
+                                    field.onChange(
+                                      date?.toLocaleDateString('en-CA')
+                                    )
                                   }
                                   initialFocus
                                 />
@@ -316,7 +347,9 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({ mode = 'create', co
                               disabled={isViewMode}
                               {...field}
                               value={field.value ?? ''}
-                              onChange={(e) => field.onChange(Number(e.target.value))}
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
                               className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                             />
                           </FormControl>
@@ -363,13 +396,20 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({ mode = 'create', co
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value}
                           className="flex flex-col space-y-2"
+                          disabled={isViewMode}
                         >
                           {['active', 'expired', 'disabled'].map((value) => (
-                            <div key={value} className="flex items-center space-x-2">
-                              <RadioGroupItem value={value} id={value} />
-                              <label htmlFor={value} className="text-xs 2xl:text-sm text-gray-700 capitalize">
+                            <div
+                              key={value}
+                              className="flex items-center space-x-2"
+                            >
+                              <RadioGroupItem value={value} id={value} disabled={isViewMode}/>
+                              <label
+                                htmlFor={value}
+                                className="text-xs 2xl:text-sm text-gray-700 capitalize"
+                              >
                                 {value}
                               </label>
                             </div>
@@ -515,6 +555,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({ mode = 'create', co
                     <div className="w-full">
                       <FormControl>
                         <textarea
+                          disabled={isViewMode}
                           {...field}
                           className="w-64 h-32 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 resize-y text-xs 2xl:text-sm"
                         />
@@ -533,8 +574,18 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({ mode = 'create', co
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="btn-primary" disabled={loading}>
-                  {loading ? (isEditMode ? 'Saving...' : 'Creating...') : isEditMode ? 'Save' : 'Create'}
+                <Button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={mode === 'view' || loading}
+                >
+                  {loading
+                    ? isEditMode
+                      ? 'Saving...'
+                      : 'Creating...'
+                    : isEditMode
+                      ? 'Save'
+                      : 'Create'}
                 </Button>
               </div>
             </div>
