@@ -32,7 +32,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
 
   return (
     <Modal
-      title={title}
+      title={title} // i want this title color to be red
       description={description}
       isOpen={isOpen}
       onCloseAction={onCloseAction}

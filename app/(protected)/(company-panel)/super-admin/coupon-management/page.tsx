@@ -7,6 +7,7 @@ import { Heading } from '@/components/ui/heading';
 import { useRouter } from 'next/navigation';
 import apiCall from '@/lib/axios';
 import Navbar from '@/components/Navbar';
+import { AlertModal } from '@/components/modal/alert-modal';
 
 interface Coupon {
   _id: string;
@@ -34,6 +35,9 @@ const CouponManagement = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [deleteCouponId, setDeleteCouponId] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -63,12 +67,18 @@ const CouponManagement = () => {
     (coupon) => coupon.discountType === 'fixed'
   );
 
-  const handleDeleteCoupon = async (couponId: string) => {
+  const handleDeleteCoupon = async () => {
+    if (!deleteCouponId) return;
+    setDeleteLoading(true);
     try {
-      await apiCall('DELETE', `api/coupon/${couponId}`);
-      setCoupons((prev) => prev.filter((c) => c._id !== couponId));
+      await apiCall('DELETE', `api/coupon/${deleteCouponId}`);
+      setCoupons((prev) => prev.filter((c) => c._id !== deleteCouponId));
+      setShowDeleteModal(false);
+      setDeleteCouponId(null);
     } catch (error) {
       console.error('Failed to delete coupon:', error);
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -133,7 +143,10 @@ const CouponManagement = () => {
                         />
                         <Trash2
                           className="h-4 w-4 cursor-pointer"
-                          onClick={() => handleDeleteCoupon(coupon._id)}
+                          onClick={() => {
+                            setDeleteCouponId(coupon._id);
+                            setShowDeleteModal(true);
+                          }}
                         />
                       </div>
                     </div>
@@ -188,7 +201,10 @@ const CouponManagement = () => {
                         />
                         <Trash2
                           className="h-4 w-4 cursor-pointer"
-                          onClick={() => handleDeleteCoupon(coupon._id)}
+                          onClick={() => {
+                            setDeleteCouponId(coupon._id);
+                            setShowDeleteModal(true);
+                          }}
                         />
                       </div>
                     </div>
@@ -201,6 +217,18 @@ const CouponManagement = () => {
           </div>
         </div>
       </div>
+      {/* Alert Modal for Delete Confirmation */}
+      <AlertModal
+        isOpen={showDeleteModal}
+        onCloseAction={() => {
+          setShowDeleteModal(false);
+          setDeleteCouponId(null);
+        }}
+        onConfirmAction={handleDeleteCoupon}
+        loading={deleteLoading}
+        title="Are you sure you want to delete?"
+        description="This action cannot be undone. The coupon will be permanently deleted."
+      />
     </div>
   );
 };

@@ -31,6 +31,8 @@ import { format } from 'date-fns';
 import { PiCameraThin } from 'react-icons/pi';
 import apiCall from '@/lib/axios';
 import { ToastAtTopRight } from '@/lib/sweetalert';
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 interface CreateCouponFormProps {
   mode?: 'create' | 'view' | 'edit';
@@ -43,13 +45,35 @@ const defaultValues = {
   validityTo: '',
   usageLimit: '',
   discountPercentage: '',
-  discountAmount: 0,
+  discountAmount: '',
   minimumSpent: '',
   couponStatus: 'active',
   createCode: '',
   termsAndConditions: '',
-  couponImage: undefined as File | undefined
+  couponImage: undefined as File | undefined,
+  discountType: ''
 };
+
+export const couponSchema = z.object({
+  category: z.string().nonempty('Category is required'),
+  validityFrom: z.string().nonempty('Start date is required'),
+  validityTo: z.string().nonempty('End date is required'),
+  usageLimit: z.string().nonempty('Usage limit is required'),
+  discountPercentage: z.string().optional(),
+  discountAmount: z.string().optional(),
+  minimumSpent: z.string().nonempty('Minimum spent is required'),
+  couponStatus: z.string().nonempty('Status is required'),
+  createCode: z.string().nonempty('Coupon code is required'),
+  termsAndConditions: z.string().nonempty('Terms and conditions are required'),
+  couponImage: z
+    .union([z.any(), z.string().url()])
+    .optional()
+    .refine((file) => file !== '', {
+      message: 'Coupon image must not be an empty value'
+    }),
+  discountType: z.string().nonempty('Discount type is required')
+  // Add more as needed
+});
 
 const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
   mode = 'create',
@@ -59,7 +83,10 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
   const isViewMode = mode === 'view';
   const isEditMode = mode === 'edit';
   const router = useRouter();
-  const form = useForm({ defaultValues });
+  const form = useForm({
+    resolver: zodResolver(couponSchema),
+    defaultValues
+  });
   const selectedCouponCategory = form.watch('category');
   const [loading, setLoading] = useState(false);
 
@@ -90,7 +117,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                 ? data.value?.toString()
                 : 'N/A',
             discountAmount:
-              data.discountType === 'fixed' ? Number(data.value) : 0,
+              data.discountType === 'fixed' ? data.value?.toString() : '',
             minimumSpent: data.minimumSpend?.toString() || 'N/A',
             couponStatus: data.status?.toLowerCase() || 'active',
             createCode: data.code || 'N/A',
@@ -127,7 +154,9 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
         stockable: false,
         imageUrl: '',
         termsAndConditions: data.termsAndConditions,
-        status: data.couponStatus.charAt(0).toUpperCase() + data.couponStatus.slice(1).toLowerCase()
+        status:
+          data.couponStatus.charAt(0).toUpperCase() +
+          data.couponStatus.slice(1).toLowerCase()
       };
       if (isEditMode && couponId) {
         await apiCall('PUT', `api/coupon/${couponId}`, payload);
@@ -150,7 +179,9 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
     <FormWrapper title="">
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(onSubmit, (errors) => {
+            ToastAtTopRight.fire('Please fix the errors in the form.', 'error');
+          })}
           className="w-full relative h-full max-w-4xl mx-auto rounded-lg"
         >
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
@@ -187,7 +218,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                             )}
                           </SelectContent>
                         </Select>
-                        <FormMessage className="text-[10px] text-xs mt-1" />
+                        <FormMessage className="text-red-500 text-xs mt-1" />
                       </>
                     )}
                   />
@@ -236,7 +267,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                               </PopoverContent>
                             </Popover>
                           </FormControl>
-                          <FormMessage className="text-[10px] text-xs mt-1" />
+                          <FormMessage className="text-red-500 text-xs mt-1" />
                         </FormItem>
                       )}
                     />
@@ -275,7 +306,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                               </PopoverContent>
                             </Popover>
                           </FormControl>
-                          <FormMessage className="text-[10px] text-xs mt-1" />
+                          <FormMessage className="text-red-500 text-xs mt-1" />
                         </FormItem>
                       )}
                     />
@@ -302,7 +333,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                             className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                           />
                         </FormControl>
-                        <FormMessage className="text-[10px] text-xs mt-1" />
+                        <FormMessage className="text-red-500 text-xs mt-1" />
                       </div>
                     </FormItem>
                   )}
@@ -325,7 +356,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                               className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                             />
                           </FormControl>
-                          <FormMessage className="text-[10px] text-xs mt-1" />
+                          <FormMessage className="text-red-500 text-xs mt-1" />
                         </div>
                       </FormItem>
                     )}
@@ -353,7 +384,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                               className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                             />
                           </FormControl>
-                          <FormMessage className="text-[10px] text-xs mt-1" />
+                          <FormMessage className="text-red-500 text-xs mt-1" />
                         </div>
                       </FormItem>
                     )}
@@ -376,7 +407,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                             className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                           />
                         </FormControl>
-                        <FormMessage className="text-[10px] text-xs mt-1" />
+                        <FormMessage className="text-red-500 text-xs mt-1" />
                       </div>
                     </FormItem>
                   )}
@@ -405,7 +436,11 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                               key={value}
                               className="flex items-center space-x-2"
                             >
-                              <RadioGroupItem value={value} id={value} disabled={isViewMode}/>
+                              <RadioGroupItem
+                                value={value}
+                                id={value}
+                                disabled={isViewMode}
+                              />
                               <label
                                 htmlFor={value}
                                 className="text-xs 2xl:text-sm text-gray-700 capitalize"
@@ -416,7 +451,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                           ))}
                         </RadioGroup>
                       </FormControl>
-                      <FormMessage className="text-[10px] text-xs mt-1" />
+                      <FormMessage className="text-red-500 text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -443,7 +478,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] text-xs mt-1" />
+                      <FormMessage className="text-red-500 text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -537,7 +572,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                           />
                         </div>
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-red-500 text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
@@ -560,7 +595,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                           className="w-64 h-32 bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 resize-y text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px] text-xs mt-1" />
+                      <FormMessage className="text-red-500 text-xs mt-1" />
                     </div>
                   </FormItem>
                 )}
