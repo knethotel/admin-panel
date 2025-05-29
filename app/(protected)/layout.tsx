@@ -215,7 +215,7 @@ function SuperAdminPanelSideNav() {
 
           <NavItem
             href="/super-admin/analytics-reports"
-            label="ANALYTICS & REPORTS"
+            label="Analytics & Reports"
             disabled={!hasAccess('analytics-reports')}
           >
             <MdAnalytics className="h-5 w-5 lg:h-6 lg:w-6" />
@@ -346,7 +346,7 @@ function HotelPanelSideNav() {
 
           <NavItem
             href="/hotel-panel/analytics-reports"
-            label="ANALYTICS & REPORTS"
+            label="Analytics & Reports"
             disabled={!hasAccess('analytics-reports')}
           >
             <MdAnalytics className="h-5 w-5 lg:h-6 lg:w-6" />
