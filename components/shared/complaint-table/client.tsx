@@ -1,41 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
-
-import { useRouter } from 'next/navigation';
 import { columns } from './columns';
-
-import { ComplaintData } from 'app/static/ComplaintData';
+import { PaginationControls } from '../PaginationControls';
+import type { ComplaintDataType } from 'app/static/ComplaintData';
+import { apiCall } from '@/lib/axios';
 
 export const ComplaintTable: React.FC = () => {
   // const router = useRouter();
-  const [data, setData] = useState(ComplaintData || []);
-  const [filteredData, setFilteredData] = useState(ComplaintData || []);
+  const [data, setData] = useState<ComplaintDataType[]>([]);
+  const [filteredData, setFilteredData] = useState<ComplaintDataType[]>([]);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>();
   const [totalRecords, setTotalRecords] = useState(data.length || 0);
-
-  // **********Search Filter and pagination logic************
-  // const filters = [
-  //     {
-  //         label: 'Account Status',
-  //         key: 'accountStatus', // Backend key
-  //         subOptions: ['Active', 'Suspended'],
-  //     },
-  //     {
-  //         label: 'Verification Status',
-  //         key: 'verificationStatus',
-  //         subOptions: ['Verified', 'Pending', 'Rejected'],
-  //     },
-  //     {
-  //         label: 'Activity Status',
-  //         key: 'activityStatus',
-  //         subOptions: ['Active', 'Inactive'],
-  //     },
-  // ];
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
@@ -48,17 +28,58 @@ export const ComplaintTable: React.FC = () => {
     setPageNo(1); // Reset to the first page when the limit changes
   };
 
-  // Function to handle search input // commented out by Jeet singh
-  // const handleSearchChange = (searchValue: string) => {
-  //   if (searchValue.trim() === '') {
-  //     setFilteredData(data); // Reset if empty
-  //   } else {
-  //     const filtered = data.filter((item) =>
-  //       item.guestDetails.name.toLowerCase().includes(searchValue.toLowerCase())
-  //     );
-  //     setFilteredData(filtered);
-  //   }
-  // };
+  const handleSearchChange = (searchValue: string) => {
+    if (searchValue.trim() === '') {
+      setFilteredData(data);
+    } else {
+      const filtered = data.filter((item) =>
+        item.complaintType.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setFilteredData(filtered);
+    }
+  };
+
+  
+  useEffect(() => {
+    const fetchComplaints = async () => {
+      try {
+        setLoading(true);
+        const res = await apiCall<{ complaints: any[] }>(
+          'GET',
+          'api/complaint/platform/complaints'
+        );
+
+        const mappedData = res.complaints.map((item): ComplaintDataType => {
+          const createdDate = new Date(item.createdAt);
+          return {
+            complaintID: item._id,
+            complaintType: item.complaintType,
+            hotelId: item.HotelId?.name || 'N/A',
+            status: (
+              item.status || 'OPEN'
+            ).toUpperCase(),
+            assignedTo: item.assignedTo
+              ? `${item.assignedTo.firstName} ${item.assignedTo.lastName}`
+              : 'Unassigned',
+            complaintTime: {
+              date: createdDate.toLocaleDateString('en-IN'),
+              time: createdDate.toLocaleTimeString('en-IN')
+            }
+          };
+        });
+
+        setData(mappedData);
+        setFilteredData(mappedData);
+        setTotalRecords(mappedData.length);
+      } catch (error: any) {
+        console.error('Failed to fetch complaints:', error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchComplaints();
+  }, []);
 
   // Table generation specifically for ComplaintData
   const tableContent = (
@@ -73,29 +94,13 @@ export const ComplaintTable: React.FC = () => {
     <>
       <div className="py-6 flex flex-col w-full">
         {loading ? <span>Loading...</span> : tableContent}
-        <div className="flex justify-end space-x-2 px-3 py-2">
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(pageNo - 1)}
-              disabled={pageNo === 1}
-            >
-              Previous
-            </Button>
-            <span className="text-sm text-gray-600">
-              Page {pageNo} of {Math.ceil(totalRecords / limit) || 1}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(pageNo + 1)}
-              disabled={pageNo >= Math.ceil(totalRecords / limit)}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
+        <PaginationControls
+          pageNo={pageNo}
+          totalRecords={totalRecords}
+          limit={limit}
+          filteredCount={filteredData.length}
+          onPageChange={handlePageChange}
+        />
       </div>
     </>
   );

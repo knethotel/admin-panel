@@ -1,12 +1,15 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { GymServiceDataType } from 'app/static/services-management/Gym'; // Corrected import
+import { GymServiceDataType } from 'app/static/services-management/Gym';
 import CellAction from './cell-action';
 
-// Updated columns to match ReceptionDataType
 export const columns: ColumnDef<GymServiceDataType>[] = [
   {
     accessorKey: 'requestID',
-    header: 'Request ID'
+    header: 'Request ID',
+    cell: ({ row }) => {
+      const id = row.original.requestID;
+      return <div className="text-sm">{id}</div>;
+    }
   },
   {
     accessorKey: 'requestTime',
@@ -29,9 +32,9 @@ export const columns: ColumnDef<GymServiceDataType>[] = [
       return (
         <div className="flex justify-center items-center">
           <div className="flex flex-col w-1/2 justify-center items-start gap-1">
-            <p className="text-sm text-gray-900">{details.name}</p>
-            <p className="text-xs text-gray-600">{details.guestID}</p>
-            <p className="text-xs text-gray-600">{details.roomNo}</p>
+            <p className="text-sm text-gray-900">{details.name || 'N/A'}</p>
+            <p className="text-xs text-gray-600">{details.guestID || 'N/A'}</p>
+            <p className="text-xs text-gray-600">{details.roomNo || 'N/A'}</p>
           </div>
         </div>
       );
@@ -50,16 +53,19 @@ export const columns: ColumnDef<GymServiceDataType>[] = [
     header: 'Status',
     cell: ({ row }) => {
       const status = row.original.status;
-      switch (status) {
-        case 'Pending':
-          return <div className="text-sm text-[#3787E3]">{status}</div>;
-        case 'In-Progress':
-          return <div className="text-sm text-[#FC690E]">{status}</div>;
-        case 'Completed':
-          return <div className="text-sm text-[#78B150]">{status}</div>;
-        default:
-          return <div className="text-sm text-gray-500">{status}</div>;
-      }
+      const getStatusColor = (status: string) => {
+        switch (status.toLowerCase()) {
+          case 'pending':
+            return 'text-[#3787E3]';
+          case 'in-progress':
+            return 'text-[#FC690E]';
+          case 'completed':
+            return 'text-[#78B150]';
+          default:
+            return 'text-gray-500';
+        }
+      };
+      return <div className={`text-sm ${getStatusColor(status)}`}>{status}</div>;
     }
   },
   {

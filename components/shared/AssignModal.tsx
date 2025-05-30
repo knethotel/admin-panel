@@ -85,7 +85,7 @@ const AssignModal = ({
   return (
     <Dialog.Root open={requestId !== undefined} onOpenChange={onClose}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-gray-600 bg-opacity-50" />
+        <Dialog.Overlay className="fixed inset-0 bg-[#F6EEE0] bg-opacity-50" />
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-md shadow-lg w-full max-w-xl">
           <Dialog.Title className="sr-only">{title}</Dialog.Title>
           <div className="flex flex-col gap-4">
@@ -124,7 +124,7 @@ const AssignModal = ({
                     <polyline points="6 9 12 15 18 9" />
                   </svg>
                 </SelectTrigger>
-                <SelectContent className="bg-[#362913] rounded-2xl text-white border-2 shadow-md border-white">
+                <SelectContent className="bg-[#362913] rounded-2xl text-white border-2 shadow-md border-white max-h-[200px] overflow-y-auto">
                   {loading ? (
                     <SelectItem value="loading" disabled>
                       Loading...

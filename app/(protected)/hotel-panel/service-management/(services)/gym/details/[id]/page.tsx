@@ -1,6 +1,5 @@
 import RequestDetail from '@/components/service-management/RequestDetail';
 import React from 'react';
-import { GymServiceData } from 'app/static/services-management/Gym';
 type Params = {
   id: string;
 };

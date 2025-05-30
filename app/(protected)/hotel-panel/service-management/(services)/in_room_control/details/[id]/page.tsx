@@ -1,6 +1,5 @@
 import RequestDetail from '@/components/service-management/RequestDetail';
 import React from 'react';
-import { InRoomControlData } from 'app/static/services-management/InRoomControl';
 type Params = {
   id: string;
 };

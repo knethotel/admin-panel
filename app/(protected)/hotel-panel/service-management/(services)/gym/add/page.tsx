@@ -1,4 +1,4 @@
-import AddFacilities from "@/components/service-management/gym/add-facilities";
+import AddFacilities from "@/components/service-management/add-gym-facilities/add-facilities";
 
 const GymAddPage = () => {
   return (

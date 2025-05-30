@@ -71,14 +71,14 @@ export const HouseKeepingProductDetailsDummyData = [
     serviceName: 'Deliver Toileteries',
     productType: [
       {
-        productTypeName: 'BATHROOM ESSENTIALS',
+        productTypeName: 'Bathroom Essentials',
         products: [
           { visibility: true, name: 'soap', price: 40, image: shirtPic },
           { visibility: true, name: 'towel', price: 299, image: shirtPic }
         ]
       },
       {
-        productTypeName: 'LAVATORY ESSENTIALS',
+        productTypeName: 'Laboratory Essentials',
         products: [
           { visibility: true, name: 'handwash', price: 67, image: shirtPic },
           { visibility: true, name: 'paper towel', price: 20, image: shirtPic }
@@ -96,12 +96,12 @@ export const laundryItems: Record<string, string[]> = {
   Others: ['Undergarments', 'Camisoles']
 };
 
-export const toiletriesCategories = ['BATHROOM ESSENTIALS', 'LAVATORY ESSENTIALS'];
+export const toiletriesCategories = ['Bathroom Essentials', 'Laboratory Essentials'];
 export const toiletriesItems: Record<string, string[]> = {
-  'BATHROOM ESSENTIALS': [
+  'Bathroom Essentials': [
     'soap', 'towel', 'body wash', 'shower gel', 'Conditioner', 'face wash'
   ],
-  'LAVATORY ESSENTIALS': [
+  'Laboratory Essentials': [
     'handwash', 'paper towel', 'face towel', 'hand towel', 'sleepers', 'air freshner'
   ]
 };

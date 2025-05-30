@@ -32,6 +32,7 @@ import apiCall from '@/lib/axios';
 import { HotelSchemaType } from 'schema';
 import { indiaCities, indiaStates } from 'app/static/Type';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { Country, State, City } from 'country-state-city';
 
 const HotelForm = ({
   mode = 'add',
@@ -55,6 +56,48 @@ const HotelForm = ({
   const [hotelName, setHotelName] = useState('');
   const [subHotelName, setSubHotelName] = useState('');
   const [fetchedHotelData, setFetchedHotelData] = useState<any>(null);
+
+  // Add state management for countries, states, and cities
+  const [countries, setCountries] = useState<any[]>([]);
+  const [states, setStates] = useState<any[]>([]);
+  const [cities, setCities] = useState<any[]>([]);
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [selectedState, setSelectedState] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
+
+  // Add a state to hold the city name from fetched data until cities are loaded
+  const [pendingCityName, setPendingCityName] = useState<string | null>(null);
+
+  // Initialize countries on component mount
+  useEffect(() => {
+    const allCountries = Country.getAllCountries();
+    // Filter only specific countries
+    const filteredCountries = allCountries.filter(country => 
+      ['IN', 'CA', 'US'].includes(country.isoCode)
+    );
+    setCountries(filteredCountries);
+  }, []);
+
+  // Update states when country changes
+  useEffect(() => {
+    if (selectedCountry) {
+      const countryStates = State.getStatesOfCountry(selectedCountry);
+      setStates(countryStates);
+    } else {
+      setStates([]);
+    }
+    setCities([]);
+  }, [selectedCountry]);
+
+  // Update cities when state changes
+  useEffect(() => {
+    if (selectedCountry && selectedState) {
+      const stateCities = City.getCitiesOfState(selectedCountry, selectedState);
+      setCities(stateCities);
+    } else {
+      setCities([]);
+    }
+  }, [selectedCountry, selectedState]);
 
   // Refs for file inputs
   const roomImageRef = useRef<HTMLInputElement>(null);
@@ -132,10 +175,6 @@ const HotelForm = ({
       applyCoupon: 'Choose coupon'
     }
   });
-
-  const [selectedState, setSelectedState] = useState(
-    form.getValues('state') || ''
-  );
 
   const onSubmit = async (data: HotelSchemaType) => {
     const payload = {
@@ -369,8 +408,13 @@ const HotelForm = ({
         pinCode: fetchedHotelData.pincode || '',
         gst: fetchedHotelData.gstDetails || '',
 
+        // Set the selected values for country, state, and city
+        ...(fetchedHotelData.country && { country: fetchedHotelData.country }),
+        ...(fetchedHotelData.state && { state: fetchedHotelData.state }),
+        ...(fetchedHotelData.city && { city: fetchedHotelData.city }),
+
         brandedHotel: fetchedHotelData.brandedHotel || false,
-        chainHotel: fetchedHotelData.chainHotel === 'true', // string to boolean
+        chainHotel: fetchedHotelData.chainHotel === 'true',
         parentHotelId: fetchedHotelData.parentHotel || '',
         roomConfigs: fetchedHotelData.rooms?.map((room: any) => ({
           roomType: room.roomType,
@@ -416,9 +460,34 @@ const HotelForm = ({
         netPrice: 0,
         applyCoupon: 'Choose coupon'
       });
-      setFetchedHotelData(null); // Reset so it doesn't run again
+
+      // Set the selected values for the dropdowns
+      if (fetchedHotelData.country) {
+        setSelectedCountry(fetchedHotelData.country);
+      }
+      if (fetchedHotelData.state) {
+        setSelectedState(fetchedHotelData.state);
+      }
+      if (fetchedHotelData.city) {
+        setPendingCityName(fetchedHotelData.city);
+      }
+
+      setFetchedHotelData(null);
     }
   }, [selectedState, fetchedHotelData]);
+
+  // When cities are loaded, if we have a pending city name, set it
+  useEffect(() => {
+    if (pendingCityName && cities.length > 0) {
+      // Check if the city exists in the loaded cities
+      const found = cities.find(city => city.name === pendingCityName);
+      if (found) {
+        form.setValue('city', pendingCityName);
+        setSelectedCity(pendingCityName);
+        setPendingCityName(null); // Clear after setting
+      }
+    }
+  }, [cities, pendingCityName, form]);
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -650,7 +719,8 @@ const HotelForm = ({
                 <FormField
                   control={form.control}
                   name="hotelName"
-                  render={({ field }) => (
+                  rules={{ required: 'Hotel name is required' }}
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
                         Hotel Name <span className="text-red-500">*</span>
@@ -667,14 +737,23 @@ const HotelForm = ({
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px]" />
+                      <FormMessage className="text-[10px]">
+                        {fieldState.error?.message}
+                      </FormMessage>
                     </FormItem>
                   )}
                 />
                 <FormField
                   control={form.control}
                   name="number"
-                  render={({ field }) => (
+                  rules={{
+                    required: 'Phone number is required',
+                    validate: {
+                      isNumber: value => /^[0-9]*$/.test(value) || 'Only enter numbers',
+                      isTenDigits: value => value.length === 10 || 'Phone number must be exactly 10 digits'
+                    }
+                  }}
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
                         Phone Number <span className="text-red-500">*</span>
@@ -685,16 +764,21 @@ const HotelForm = ({
                           {...field}
                           disabled={isDisabled}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
+                          inputMode="numeric"
+                          maxLength={10}
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px]" />
+                      <FormMessage className="text-[10px]">
+                        {fieldState.error?.message}
+                      </FormMessage>
                     </FormItem>
                   )}
                 />
                 <FormField
                   control={form.control}
                   name="email"
-                  render={({ field }) => (
+                  rules={{ required: 'Email is required' }}
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
                         Email <span className="text-red-500">*</span>
@@ -708,7 +792,9 @@ const HotelForm = ({
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px]" />
+                      <FormMessage className="text-[10px]">
+                        {fieldState.error?.message}
+                      </FormMessage>
                     </FormItem>
                   )}
                 />
@@ -717,7 +803,8 @@ const HotelForm = ({
                 <FormField
                   control={form.control}
                   name="completeAddress"
-                  render={({ field }) => (
+                  rules={{ required: 'Complete address is required' }}
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
                         Complete Address <span className="text-red-500">*</span>
@@ -730,7 +817,9 @@ const HotelForm = ({
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px]" />
+                      <FormMessage className="text-[10px]">
+                        {fieldState.error?.message}
+                      </FormMessage>
                     </FormItem>
                   )}
                 />
@@ -774,8 +863,53 @@ const HotelForm = ({
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                 <FormField
                   control={form.control}
+                  name="country"
+                  rules={{ required: 'Country is required' }}
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Country <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          value={field.value}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            setSelectedCountry(value);
+                            setSelectedState('');
+                            setSelectedCity('');
+                            form.setValue('state', '');
+                            form.setValue('city', '');
+                          }}
+                          disabled={isDisabled}
+                        >
+                          <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
+                            <SelectValue placeholder="Select country" />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-[200px] overflow-y-auto">
+                            {countries.map((country) => (
+                              <SelectItem 
+                                key={country.isoCode} 
+                                value={country.isoCode}
+                                className="cursor-pointer hover:bg-gray-100"
+                              >
+                                {country.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage className="text-[10px]">
+                        {fieldState.error?.message}
+                      </FormMessage>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
                   name="state"
-                  render={({ field }) => (
+                  rules={{ required: 'State is required' }}
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
                         State <span className="text-red-500">*</span>
@@ -784,31 +918,40 @@ const HotelForm = ({
                         <Select
                           value={field.value}
                           onValueChange={(value) => {
-                            handleStateChange(value);
                             field.onChange(value);
+                            setSelectedState(value);
+                            setSelectedCity('');
+                            form.setValue('city', '');
                           }}
-                          disabled={isDisabled}
+                          disabled={!selectedCountry || isDisabled}
                         >
                           <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
-                            <SelectValue placeholder="Select state" />
+                            <SelectValue placeholder={selectedCountry ? "Select state" : "Select country first"} />
                           </SelectTrigger>
-                          <SelectContent>
-                            {indiaStates.map((state) => (
-                              <SelectItem key={state} value={state}>
-                                {state}
+                          <SelectContent className="max-h-[200px] overflow-y-auto">
+                            {states.map((state) => (
+                              <SelectItem 
+                                key={state.isoCode} 
+                                value={state.isoCode}
+                                className="cursor-pointer hover:bg-gray-100"
+                              >
+                                {state.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-[10px]">
+                        {fieldState.error?.message}
+                      </FormMessage>
                     </FormItem>
                   )}
                 />
                 <FormField
                   control={form.control}
                   name="city"
-                  render={({ field }) => (
+                  rules={{ required: 'City is required' }}
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
                         City <span className="text-red-500">*</span>
@@ -816,67 +959,39 @@ const HotelForm = ({
                       <FormControl>
                         <Select
                           value={field.value}
-                          onValueChange={field.onChange}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            setSelectedCity(value);
+                          }}
                           disabled={!selectedState || isDisabled}
                         >
                           <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
-                            <SelectValue
-                              placeholder={
-                                selectedState
-                                  ? 'Select city'
-                                  : 'Select state first'
-                              }
-                            />
+                            <SelectValue placeholder={selectedState ? "Select city" : "Select state first"} />
                           </SelectTrigger>
-                          <SelectContent>
-                            {(indiaCities[selectedState] || []).map((city) => (
-                              <SelectItem key={city} value={city}>
-                                {city}
+                          <SelectContent className="max-h-[200px] overflow-y-auto">
+                            {cities.map((city) => (
+                              <SelectItem 
+                                key={city.name} 
+                                value={city.name}
+                                className="cursor-pointer hover:bg-gray-100"
+                              >
+                                {city.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="country"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        Country <span className="text-red-500">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          disabled={isDisabled}
-                        >
-                          <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
-                            <SelectValue placeholder="Select country" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {['India', 'United States', 'United Kingdom'].map(
-                              (value) => (
-                                <SelectItem key={value} value={value}>
-                                  {value}
-                                </SelectItem>
-                              )
-                            )}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage className="text-[10px]" />
+                      <FormMessage className="text-[10px]">
+                        {fieldState.error?.message}
+                      </FormMessage>
                     </FormItem>
                   )}
                 />
                 <FormField
                   control={form.control}
                   name="pinCode"
-                  render={({ field }) => (
+                  rules={{ required: 'Pincode is required' }}
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
                         Pincode <span className="text-red-500">*</span>
@@ -889,7 +1004,9 @@ const HotelForm = ({
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
-                      <FormMessage className="text-[10px]" />
+                      <FormMessage className="text-[10px]">
+                        {fieldState.error?.message}
+                      </FormMessage>
                     </FormItem>
                   )}
                 />
