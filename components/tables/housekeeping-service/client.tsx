@@ -138,11 +138,23 @@ export const HousekeepingServiceTable: React.FC = () => {
       <div className="w-full pt-20 flex gap-2 justify-end items-center px-4 py-2 bg-white">
         <div className="flex w-full justify-between items-center">
           <h2 className="text-coffee text-2xl font-bold">Housekeeping</h2>
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <h2 className="text-[0.8rem] font-semibold">
               AUTO ACCEPT REQUESTS
             </h2>
             <ToggleButton />
+          </div> */}
+          <div className="w-full flex justify-end px-4">
+            <Button
+              onClick={() => setIsManageProductsModalOpen(true)}
+              className="btn-primary h-8 2xl:h-9"
+            >
+              Manage Products
+            </Button>
+            <ManageProductsModal
+              isOpen={isManageProductsModalOpen}
+              onClose={() => setIsManageProductsModalOpen(false)}
+            />
           </div>
         </div>
         {/* <Settings
@@ -153,19 +165,6 @@ export const HousekeepingServiceTable: React.FC = () => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         /> */}
-      </div>
-
-      <div className="w-full flex justify-end px-4">
-        <Button
-          onClick={() => setIsManageProductsModalOpen(true)}
-          className="btn-primary h-8 2xl:h-9"
-        >
-          Manage Products
-        </Button>
-        <ManageProductsModal
-          isOpen={isManageProductsModalOpen}
-          onClose={() => setIsManageProductsModalOpen(false)}
-        />
       </div>
 
       {loading ? (

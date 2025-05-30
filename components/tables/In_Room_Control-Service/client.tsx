@@ -4,10 +4,9 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Settings } from 'lucide-react';
-
+import { InRoomControlDataType } from 'app/static/services-management/InRoomControl';
 import { useRouter } from 'next/navigation';
 import { columns } from './columns';
-import { InRoomControlData } from 'app/static/services-management/InRoomControl';
 import ToggleButton from '@/components/ui/toggleButton';
 import PriceTimeSettingInRoomControlModal from '@/components/modal/in-room-control/PriceTimeSetting';
 import apiCall from '@/lib/axios';
@@ -15,8 +14,8 @@ import { PaginationControls } from '@/components/shared/PaginationControls';
 
 export const InRoomControlDataTable: React.FC = () => {
   const router = useRouter();
-  const [data, setData] = useState(InRoomControlData || []);
-  const [filteredData, setFilteredData] = useState(InRoomControlData || []);
+  const [data, setData] = useState<InRoomControlDataType[]>([]);
+  const [filteredData, setFilteredData] = useState<InRoomControlDataType[]>([]);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>();
@@ -54,8 +53,8 @@ export const InRoomControlDataTable: React.FC = () => {
               : 'N/A',
             assignedTo: item.assignedTo || 'N/A',
             estimatedTime: item.estimatedTime || '',
-            requestDetail: item.requestDetail || 'N/A',
-            requestType: item.serviceType || 'N/A',
+            requestDetail: item.description || 'N/A',
+            requestType: item.issueType || 'N/A',
             wakeUpTime: item.wakeUpTime || '',
             HotelId: item.HotelId || ''
           }));
@@ -102,21 +101,21 @@ export const InRoomControlDataTable: React.FC = () => {
       <div className="w-full pt-20 flex items-center gap-2 justify-end px-4 py-2 bg-white">
         <div className="flex w-full justify-between items-center">
           <h2 className="text-coffee text-xl font-bold">In-room Control</h2>
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <h2 className="text-[0.8rem] font-semibold">
               AUTO ACCEPT REQUESTS
             </h2>
             <ToggleButton />
-          </div>
+          </div> */}
         </div>
-        <Settings
+        {/* <Settings
           className="cursor-pointer"
           onClick={() => setIsModalOpen(true)}
         />
         <PriceTimeSettingInRoomControlModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-        />
+        /> */}
       </div>
 
       {loading ? (

@@ -25,8 +25,16 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { ChevronDown } from 'lucide-react';
+import { useEffect } from 'react';
+import apiCall from '@/lib/axios';
 
-const ComplaintForm = ({ mode }: { mode: string }) => {
+const ComplaintForm = ({
+  mode,
+  complaintID
+}: {
+  mode: string;
+  complaintID?: string;
+}) => {
   const form = useForm<ComplaintFormSchemaType>({
     resolver: zodResolver(complaintFormSchema),
     defaultValues: {
@@ -40,6 +48,42 @@ const ComplaintForm = ({ mode }: { mode: string }) => {
       dateAndTime: '' // You might want to set a default date-time string if needed
     }
   });
+
+  useEffect(() => {
+    const fetchComplaintDetails = async () => {
+      if (mode === 'view' && complaintID) {
+        try {
+          const res = await apiCall<{ complaint: any }>(
+            'GET',
+            `api/complaint/platform/complaints/${complaintID}`
+          );
+
+          const complaint = res.complaint;
+
+          form.reset({
+            complaintID: complaint._id,
+            userID:
+              complaint.raisedByAdmin?.firstName +
+                ' ' +
+                complaint.raisedByAdmin?.lastName || '',
+            complaintCategory: complaint.complaintType,
+            description: complaint.description,
+            feedback: complaint.feedback || '',
+            status: complaint.status,
+            assignedStaff:
+              complaint.assignedTo?.firstName +
+                ' ' +
+                complaint.assignedTo?.lastName || '',
+            dateAndTime: new Date(complaint.createdAt).toLocaleString()
+          });
+        } catch (err) {
+          console.error('Failed to load complaint details:', err);
+        }
+      }
+    };
+
+    fetchComplaintDetails();
+  }, [complaintID, mode]);
 
   const onSubmit = (data: ComplaintFormSchemaType) => {
     console.log(data);

@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { columns } from './columns';
-import { ComplaintData } from 'app/static/ComplaintData';
+import { ComplaintDataType } from 'app/static/ComplaintData';
 
 export const ComplaintSuperAdminTable: React.FC = () => {
-  const [data, setData] = useState(ComplaintData || []);
-  const [filteredData, setFilteredData] = useState(ComplaintData || []);
+  const [data, setData] = useState<ComplaintDataType[]>([]);
+  const [filteredData, setFilteredData] = useState<ComplaintDataType[]>([]);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>();

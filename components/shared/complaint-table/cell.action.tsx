@@ -11,7 +11,7 @@ const CellAction = (props: any) => {
   const router = useRouter();
 
   const handleViewUser = () => {
-    router.push(`/super-admin/complaint-management/view/${data.employeeID}`);
+    router.push(`/super-admin/complaint-management/view/${data.complaintID}`);
   };
 
   return (
