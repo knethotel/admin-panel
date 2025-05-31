@@ -9,7 +9,7 @@ const AddNewComplaint = () => {
       <Navbar search />
       <div className="flex pt-8 mt-20">
         <div className="w-full max-w-6xl container py-6 flex">
-          <ComplaintForm mode="add" />
+          <ComplaintForm mode="addSuperToHotel" />
         </div>
       </div>
     </div>

@@ -52,7 +52,9 @@ export const GymServiceTable: React.FC = () => {
         requestType: item.facilityType || 'N/A',
         status:
           item.status?.charAt(0).toUpperCase() + item.status?.slice(1) || 'N/A',
-        assignedTo: item.assignedTo || 'N/A'
+        assignedTo: item.assignedTo
+          ? `${item.assignedTo.firstName} ${item.assignedTo.lastName}`
+          : 'Unassigned'
       }));
       setData(formattedData);
       setFilteredData(formattedData);

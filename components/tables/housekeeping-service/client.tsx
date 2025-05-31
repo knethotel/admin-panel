@@ -82,7 +82,9 @@ export const HousekeepingServiceTable: React.FC = () => {
             status: item.status
               ? item.status.charAt(0).toUpperCase() + item.status.slice(1)
               : 'N/A',
-            assignedTo: item.assignedTo || 'N/A',
+            assignedTo: item.assignedTo
+              ? `${item.assignedTo.firstName} ${item.assignedTo.lastName}`
+              : 'Unassigned',
             estimatedTime: item.estimatedTime || '',
             requestDetail: item.requestDetail || 'N/A',
             serviceType: item.serviceType || 'N/A',

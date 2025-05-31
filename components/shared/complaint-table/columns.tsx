@@ -51,18 +51,37 @@ export const columns: ColumnDef<ComplaintDataType>[] = [
 
       const handleStatusChange = async (newStatus: string) => {
         const formattedStatus =
-          newStatus.charAt(0).toUpperCase() + newStatus.slice(1).toLowerCase(); // Format to 'Open', 'Inprogress', etc.
+          newStatus.charAt(0).toUpperCase() + newStatus.slice(1).toLowerCase();
 
-        setStatus(newStatus.toUpperCase()); // Display version in uppercase
+        setStatus(newStatus.toUpperCase());
         setOpen(false);
         await updateComplaint(complaintID, { status: formattedStatus });
+      };
+
+      // ✅ Dynamic color class
+      const getStatusColor = (s: string) => {
+        switch (s.toUpperCase()) {
+          case 'OPEN':
+            return 'text-[#E5252A]'; // red
+          case 'INPROGRESS':
+            return 'text-yellow-600'; // yellow
+          case 'RESOLVED':
+          case 'CLOSED':
+            return 'text-green-600'; // green
+          default:
+            return 'text-black';
+        }
       };
 
       return (
         <div className="text-center">
           <DropdownMenu.Root open={open} onOpenChange={setOpen}>
             <DropdownMenu.Trigger asChild>
-              <button className="text-[#E5252A] font-medium text-sm flex items-center mx-auto gap-1">
+              <button
+                className={`${getStatusColor(
+                  status
+                )} font-medium text-sm flex items-center mx-auto gap-1`}
+              >
                 {status.toUpperCase()}
                 {open ? (
                   <ChevronUp className="h-4 w-4 text-black" />
@@ -90,14 +109,14 @@ export const columns: ColumnDef<ComplaintDataType>[] = [
             </DropdownMenu.Portal>
           </DropdownMenu.Root>
 
-          {status !== 'OPEN' && (
+          {(status === 'RESOLVED' || status === 'CLOSED') && (
             <button
               onClick={() =>
                 router.push(
                   `/super-admin/complaint-management/view/${complaintID}`
                 )
               }
-              className="text-[#78B150] text-[10px] pr-3 mt-1"
+              className="text-[#78B150] text-[10px] pr-3 mt-1 hover:underline"
             >
               View Feedback
             </button>

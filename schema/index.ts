@@ -207,7 +207,7 @@ export const changePasswordSchema = z
   .object({
     oldPassword: z
       .string()
-      .min(6, { message: 'Old password must be at least 6 characters' })
+      .min(6, 'Old password is invalid')
       .nonempty({ message: 'Old password is required' }),
 
     newPassword: z
@@ -659,7 +659,7 @@ export const SpaManageProductsModalFormSchema = z.object({
   productCategory: z
     .string()
     .min(1, 'Input field must have at least 1 character.'),
-  selectService: z.enum(['SPA SERVICE', 'SALON SERVICE'], {
+  selectService: z.enum(['Spa', 'Salon'], {
     errorMap: () => ({ message: 'Invalid Category' })
   }),
   name: z.string().min(1, 'Input field must have at least 1 character.'),

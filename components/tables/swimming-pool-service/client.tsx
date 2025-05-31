@@ -46,7 +46,7 @@ export const SwimmingpoolServiceDataTable: React.FC = () => {
       );
       setFilteredData(filtered);
     }
-  };  
+  };
 
   useEffect(() => {
     const fetchSwimmingPoolRequests = async () => {
@@ -68,10 +68,12 @@ export const SwimmingpoolServiceDataTable: React.FC = () => {
               name: `${item.guest.firstName} ${item.guest.lastName}`
             },
             requestType: 'Swimming Pool',
-            assignedTo: item.assignedTo,
+            assignedTo: item.assignedTo
+              ? `${item.assignedTo.firstName} ${item.assignedTo.lastName}`
+              : 'Unassigned',
             status: (item.status || 'Pending').replace(/^\w/, (c: any) =>
               c.toUpperCase()
-            ) as SwimmingpoolServiceDataType['status'],
+            ) as SwimmingpoolServiceDataType['status']
           })
         );
 

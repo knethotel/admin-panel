@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import apiCall from '@/lib/axios';
 import AssignModal from '@/components/shared/AssignModal';
 import ToggleButton from '@/components/ui/toggleButton';
+import { Button } from '../ui/button';
+import router from 'next/router';
 
 type Props<T> = {
   requestId: string;
@@ -37,12 +39,15 @@ interface RequestData {
     name: string;
   };
   requestTime?: string;
-  assignedTo?: string;
   effectiveCost?: string | number;
   startTime?: string;
   endTime?: string;
   requestedTimeSlot?: string;
   requestedDay?: string;
+  assignedTo?: {
+    firstName: string;
+    lastName: string;
+  };
   [key: string]: any; // Add index signature to allow additional properties
 }
 
@@ -185,22 +190,24 @@ const RequestDetail = <T extends Record<string, any>>({
       </div>
 
       {/* Guest Information */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow-sm">
-          <p className="text-sm text-gray-500 mb-1">Guest Name</p>
-          <p className="font-medium">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="flex items-center gap-4">
+          <p className="text-sm text-gray-500 text-nowrap">Guest Name</p>
+          <p className="font-medium bg-[#F6EEE0] px-3 py-2 rounded-md w-full">
             {apiData?.guest
               ? `${apiData.guest.firstName} ${apiData.guest.lastName || ''}`.trim()
               : 'N/A'}
           </p>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm">
-          <p className="text-sm text-gray-500 mb-1">Mobile Number</p>
-          <p className="font-medium">{apiData?.guest?.mobileNumber || 'N/A'}</p>
+        <div className="flex items-center gap-4">
+          <p className="text-sm text-gray-500 text-nowrap">Mobile Number</p>
+          <p className="font-medium bg-[#F6EEE0] px-3 py-2 rounded-md w-full">
+            {apiData?.guest?.mobileNumber || 'N/A'}
+          </p>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm">
-          <p className="text-sm text-gray-500 mb-1">Email</p>
-          <p className="font-medium break-all">
+        <div className="flex items-center gap-4">
+          <p className="text-sm text-gray-500">Email</p>
+          <p className="font-medium bg-[#F6EEE0] px-3 py-2 rounded-md break-all w-full">
             {apiData?.guest?.email || 'N/A'}
           </p>
         </div>
@@ -208,93 +215,112 @@ const RequestDetail = <T extends Record<string, any>>({
 
       {apiData?.requestedTimeSlot && (
         <div className="mt-4">
-          <p className="text-sm text-gray-500 mb-1">Time Slot</p>
-          <p className="font-medium">{apiData?.requestedTimeSlot || 'N/A'}</p>
+          <p className="text-sm text-gray-500">Time Slot</p>
+          <p className="font-medium bg-[#F6EEE0] px-3 py-2 rounded-md">
+            {apiData?.requestedTimeSlot || 'N/A'}
+          </p>
         </div>
       )}
 
       {/* Request Details */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        {/* Request & Response */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <p className="text-sm text-gray-500 mb-2">Request Detail</p>
-            <p className="bg-[#FAF6EF] p-3 rounded-md text-gray-800">
-              {apiData?.requestDetail || 'No details provided'}
-            </p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <p className="text-sm text-gray-500 mb-2">Response Detail</p>
-            <p className="bg-[#FAF6EF] p-3 rounded-md text-gray-800">
-              {apiData?.responseDetail || 'No response yet'}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-4">
+        <div className="flex flex-col items-start gap-4">
+          <p className="text-sm text-gray-500">Request Detail</p>
+          <textarea
+            readOnly
+            value={apiData?.requestDetail || 'No details provided'}
+            className="w-full h-24 p-3 font-medium bg-[#F6EEE0] rounded-md resize-none overflow-y-auto"
+          />
+        </div>
+        {/* Assignment & Actions */}
+        <div className="flex flex-col items-start gap-4">
+          <p className="text-sm text-gray-500">Assigned To</p>
+          <div
+            className="font-medium bg-[#F6EEE0] px-3 py-2 rounded-md cursor-pointer hover:bg-gray-100 transition-colors w-full"
+            onClick={() =>
+              (mode === 'reception' ||
+                mode === 'housekeeping' ||
+                mode === 'inroomcontrol' ||
+                mode === 'gym' ||
+                mode === 'swimmingpool') &&
+              setIsAssignModalOpen(true)
+            }
+          >
+            <p className="font-medium w-full">
+              {apiData?.assignedTo
+                ? `${apiData.assignedTo.firstName} ${apiData.assignedTo.lastName}`
+                : 'Unassigned'}
             </p>
           </div>
         </div>
-
-        {/* Assignment & Actions */}
         <div className="space-y-6">
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <p className="text-sm text-gray-500 mb-1">Request Type</p>
-            <p className="font-medium">
+          <div className="flex flex-col items-start gap-4">
+            <p className="text-sm text-gray-500">Request Type</p>
+            <p className="font-medium bg-[#F6EEE0] px-3 py-2 rounded-md w-full">
               {mode === 'gym' && apiData?.facilityType
                 ? apiData.facilityType
                 : apiData?.requestType || 'N/A'}
             </p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <p className="text-sm text-gray-500 mb-2">Assigned To</p>
-            <div
-              className="bg-[#FAF6EF] p-3 rounded-md cursor-pointer hover:bg-gray-100 transition-colors"
-              onClick={() =>
-                (mode === 'reception' ||
-                  mode === 'housekeeping' ||
-                  mode === 'inroomcontrol' ||
-                  mode === 'gym' ||
-                  mode === 'swimmingpool') &&
-                setIsAssignModalOpen(true)
-              }
-            >
-              <p className="font-medium">
-                {apiData?.assignedTo || 'Not assigned'}
-              </p>
-            </div>
-          </div>
         </div>
       </div>
 
-      {(mode === 'gym' || mode === 'swimmingpool') && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Additional Information */}
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <p className="text-sm text-gray-500 mb-1">
-              {mode === 'swimmingpool' ? 'Time Slot' : 'Request Time'}
-            </p>
-            <p className="font-medium">
-              {mode === 'swimmingpool' && apiData?.startTime && apiData?.endTime
-                ? `${apiData.startTime} - ${apiData.endTime}`
-                : apiData?.requestTime
-                  ? formatDateTime(apiData.requestTime)
-                  : 'N/A'}
-            </p>
-          </div>
-
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <p className="text-sm text-gray-500 mb-1">Request Day</p>
-            <p className="font-medium">{apiData?.requestedDay || 'N/A'}</p>
-          </div>
-
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <div className="flex justify-between items-center mb-2">
-              <p className="text-sm text-gray-500">Effective Cost</p>
-            </div>
-            <div className="bg-[#FAF6EF] p-3 rounded-md mt-2">
-              <p className="font-medium">
-                {apiData?.effectiveCost || 'No cost specified'}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="flex flex-col items-start gap-4 ">
+          <p className="text-sm text-gray-500">Response Detail</p>
+          <textarea
+            readOnly
+            value={apiData?.responseDetail || 'No response yet'}
+            className="w-full h-24 p-3 font-medium bg-[#F6EEE0] rounded-md resize-none overflow-y-auto"
+          />
+        </div>
+        {(mode === 'gym' || mode === 'swimmingpool') && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 col-span-3">
+            {/* Additional Information */}
+            <div className="flex flex-col items-start gap-4">
+              <p className="text-sm text-gray-500">
+                {mode === 'swimmingpool' ? 'Time Slot' : 'Request Time'}
+              </p>
+              <p className="font-medium bg-[#F6EEE0] px-3 py-2 rounded-md w-full">
+                {mode === 'swimmingpool' &&
+                apiData?.startTime &&
+                apiData?.endTime
+                  ? `${apiData.startTime} - ${apiData.endTime}`
+                  : apiData?.requestTime
+                    ? formatDateTime(apiData.requestTime)
+                    : 'N/A'}
               </p>
             </div>
+
+            <div className="flex flex-col items-start gap-4">
+              <p className="text-sm text-gray-500">Request Day</p>
+              <p className="font-medium bg-[#F6EEE0] px-3 py-2 rounded-md w-full">
+                {apiData?.requestedDay || 'N/A'}
+              </p>
+            </div>
+
+            <div className="flex flex-col items-start gap-4">
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-gray-500">Effective Cost</p>
+              </div>
+              <div className="font-medium bg-[#F6EEE0] px-3 py-2 rounded-md w-full">
+                <p className="font-medium">
+                  {apiData?.effectiveCost || 'No cost specified'}
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
+
+      {/* create button of close */}
+      {/* <Button
+        variant="outline"
+        onClick={() => router.back()}
+        className="mt-4"
+      >
+        Close
+      </Button> */}
 
       {/* Assign Modal - Only render when modal is open */}
       {isAssignModalOpen && (
