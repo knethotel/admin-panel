@@ -200,7 +200,7 @@ export default function Navbar({
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setOpen(true)}>
                 Log out
-                <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                {/* <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut> */}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

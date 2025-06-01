@@ -12,7 +12,7 @@ const ComplaintManagementPage = () => {
 
   const router = useRouter();
   const handleOnClick = (actionName: string) => {
-    if (actionName === 'add_admin') {
+    if (actionName === 'addSuperToHotel') {
       router.push(`complaint-management/add`);
     }
   };
@@ -24,7 +24,7 @@ const ComplaintManagementPage = () => {
         <div className="flex justify-end">
           <Button
             className="text-xs 2xl:text-sm md:text-sm btn-primary mb-4"
-            onClick={() => handleOnClick('add_admin')}
+            onClick={() => handleOnClick('addSuperToHotel')}
           >
             <Plus className="mr-2 h-4 w-4" />
             <span className="text-white group-hover:text-black">

@@ -4,6 +4,7 @@ import CellAction from './cell.action';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export const columns: ColumnDef<ComplaintDataType>[] = [
   {
@@ -13,6 +14,16 @@ export const columns: ColumnDef<ComplaintDataType>[] = [
   {
     accessorKey: 'datetime',
     header: 'Date & Time',
+    cell: ({ row }) => {
+      const date = row.original.complaintTime.date;
+      const time = row.original.complaintTime.time;
+      return (
+        <div>
+          <span>{date}</span>
+          <span>{time}</span>
+        </div>
+      );
+    }
   },
   {
     accessorKey: 'complaintType',
@@ -26,44 +37,42 @@ export const columns: ColumnDef<ComplaintDataType>[] = [
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      const status = row.original.status;
-      const [open, setOpen] = useState(false);
+      const status = row.original.status.toUpperCase();
+      const complaintID = row.original.complaintID;
+      const router = useRouter();
+
+      // Color for status text
+      const getStatusColor = (s: string) => {
+        switch (s) {
+          case 'OPEN':
+            return 'text-[#E5252A]'; // red
+          case 'INPROGRESS':
+            return 'text-yellow-600'; // yellow
+          case 'RESOLVED':
+          case 'CLOSED':
+            return 'text-green-600'; // green
+          default:
+            return 'text-black';
+        }
+      };
 
       return (
-        <div className="text-center">
-          {status === 'OPEN' ? (
-            <DropdownMenu.Root open={open} onOpenChange={setOpen}>
-              <DropdownMenu.Trigger asChild>
-                <button className="text-[#E5252A] font-medium text-sm flex items-center mx-auto gap-1">
-                  OPEN
-                  {open ? (
-                    <ChevronUp className="h-4 w-4 text-black" />
-                  ) : (
-                    <ChevronDown className="h-4 w-4 text-black" />
-                  )}
-                </button>
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Portal>
-                <DropdownMenu.Content
-                  side="bottom"
-                  align="start"
-                  className="bg-white rounded-md shadow-md text-sm z-50 px-2 py-1 w-[100px]"
-                >
-                  <DropdownMenu.Item className="text-[#78B15099] px-2 py-1 cursor-pointer outline-none">
-                    CLOSED
-                  </DropdownMenu.Item>
-                </DropdownMenu.Content>
-              </DropdownMenu.Portal>
-            </DropdownMenu.Root>
-          ) : (
-            <div className="flex flex-col">
-              <span className="text-[#78B15099] font-medium text-sm">
-                CLOSED
-              </span>
-              <button className="text-[#78B150] text-[10px] pr-3">
-                View Feedback
-              </button>
-            </div>
+        <div className="flex flex-col items-center gap-1">
+          <span className={`${getStatusColor(status)} font-medium text-sm`}>
+            {status}
+          </span>
+
+          {(status === 'RESOLVED' || status === 'CLOSED') && (
+            <button
+              onClick={() =>
+                router.push(
+                  `/super-admin/complaint-management/view/${complaintID}`
+                )
+              }
+              className="text-[#78B150] text-[10px] hover:underline"
+            >
+              View Feedback
+            </button>
           )}
         </div>
       );
@@ -71,7 +80,7 @@ export const columns: ColumnDef<ComplaintDataType>[] = [
   },
   {
     accessorKey: 'Remark',
-    header: 'Remark',
+    header: 'Remark'
   },
   {
     id: 'actions',

@@ -27,7 +27,6 @@ export const editAdminSchema = baseAdminSchema;
 
 export type AdminSchemaType = z.infer<typeof baseAdminSchema>;
 
-
 // Subscription Management Schema---------------------------------------------------------------------------------
 export const SubscriptionManagementFormSchema = z.object({
   subscriptionID: z
@@ -56,19 +55,14 @@ export type SubscriptionManagementFormSchemaType = z.infer<
 //Complaint management form schema--------------------------------------------------------------------------------
 export const complaintFormSchema = z.object({
   complaintID: z.string(),
-  userID: z.string().min(1, 'Invalid UserID'),
-  complaintCategory: z.enum(
-    ['Category 1', 'Category 2', 'Category 3', 'Category 4'],
-    {
-      errorMap: () => ({ message: 'Please select a valid complaint category' })
-    }
-  ),
+  hotelID: z.string().min(1, 'Invalid HotelID'),
+  complaintCategory:z.string().min(1, 'Enter valid input'),
   description: z.string().min(1, 'Enter valid input'),
-  feedback: z.string().min(1, 'Enter valid input'),
-  status: z.enum(['Open', 'In-Progress', 'Resolved', 'Closed'], {
-    errorMap: () => ({ message: 'Please select a valid Refund status' })
+  feedback: z.string().optional(),
+  status: z.enum(['Open', 'Inprogress', 'Resolved', 'Closed'], {
+    errorMap: () => ({ message: 'Please select a valid status' })
   }),
-  assignedStaff: z.string().min(1, 'Enter valid input'),
+  assignedStaff: z.string().optional(),
   dateAndTime: z.string().min(1, 'Enter valid value')
 });
 

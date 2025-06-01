@@ -1,46 +1,72 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Settings } from 'lucide-react';
-
-import { useRouter } from 'next/navigation';
 import { columns } from './columns';
-
-import { SpaServiceData } from 'app/static/services-management/Spa';
 import ToggleButton from '@/components/ui/toggleButton';
-import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
 import ManageProductsModal from '@/components/modal/spa-service/manage-products';
 import PriceTimeSettingSpa from '@/components/modal/spa-service/PriceTimeSetting';
+import { apiCall } from '@/lib/axios';
+import { SpaBooking, SpaBookingsResponse } from '@/types/spa-booking';
 
 export const SpaServiceDataTable: React.FC = () => {
-  const router = useRouter();
-  const [data, setData] = useState(SpaServiceData || []);
-  const [filteredData, setFilteredData] = useState(SpaServiceData || []);
+  const [data, setData] = useState<any[]>([]);
+  const [filteredData, setFilteredData] = useState<any[]>([]);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [loading, setLoading] = useState<boolean>();
-  const [totalRecords, setTotalRecords] = useState(data.length || 0);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [error, setError] = useState<string | null>(null);
 
-  // **********Search Filter and pagination logic************
-  // const filters = [
-  //     {
-  //         label: 'Account Status',
-  //         key: 'accountStatus', // Backend key
-  //         subOptions: ['Active', 'Suspended'],
-  //     },
-  //     {
-  //         label: 'Verification Status',
-  //         key: 'verificationStatus',
-  //         subOptions: ['Verified', 'Pending', 'Rejected'],
-  //     },
-  //     {
-  //         label: 'Activity Status',
-  //         key: 'activityStatus',
-  //         subOptions: ['Active', 'Inactive'],
-  //     },
-  // ];
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        setLoading(true);
+        const response = await apiCall<SpaBookingsResponse>(
+          'GET',
+          'api/services/spasalon/bookings'
+        );
+
+        if (response.success) {
+          const mappedData = response.data.map((booking: SpaBooking) => ({
+            serviceID: booking._id,
+            serviceType: booking.spaSalonProduct.serviceType,
+            requestDetail: booking.notes || 'No special requests',
+            responseDetail: '',
+            requestAssignedTo: 'Staff',
+            requestTime: {
+              date: new Date(booking.bookingDate).toLocaleDateString(),
+              time: booking.bookingTime
+            },
+            guestDetails: {
+              guestID: booking.guest._id,
+              name: `${booking.guest.firstName} ${booking.guest.lastName}`,
+              roomNo: 'N/A', // Room number not available in the API response
+              mobileNumber: 'N/A', // Mobile number not available in the API response
+              email: 'N/A' // Email not available in the API response
+            },
+            serviceCategory: booking.spaSalonProduct.productCategory,
+            duration: 'N/A', // Duration not available in the API response
+            status: booking.status.charAt(0).toUpperCase() + booking.status.slice(1).toLowerCase(),
+            assignedTo: 'Unassigned' // Assigned staff not available in the API response
+          }));
+
+          setData(mappedData);
+          setFilteredData(mappedData);
+          setTotalRecords(mappedData.length);
+        }
+      } catch (err: any) {
+        console.error('Error fetching spa bookings:', err);
+        setError(err.message || 'Failed to fetch spa bookings');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookings();
+  }, []);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
@@ -49,18 +75,16 @@ export const SpaServiceDataTable: React.FC = () => {
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isManageProductsModalOpen, setIsManageProductsModalOpen] =
-    useState(false);
+  const [isManageProductsModalOpen, setIsManageProductsModalOpen] = useState(false);
 
   const handleLimitChange = (newLimit: number) => {
     setLimit(newLimit);
-    setPageNo(1); // Reset to the first page when the limit changes
+    setPageNo(1);
   };
 
-  // Function to handle search input
   const handleSearchChange = (searchValue: string) => {
     if (searchValue.trim() === '') {
-      setFilteredData(data); // Reset if empty
+      setFilteredData(data);
     } else {
       const filtered = data.filter((item) =>
         item.guestDetails.name.toLowerCase().includes(searchValue.toLowerCase())

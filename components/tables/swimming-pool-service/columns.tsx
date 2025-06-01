@@ -19,9 +19,9 @@ export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
       return (
         <div className="flex justify-center items-center">
           <div className="flex flex-col w-1/2 justify-center items-start gap-1">
-            <p className="text-sm text-gray-900">{details.name}</p>
-            <p className="text-xs text-gray-600">{details.guestID}</p>
-            <p className="text-xs text-gray-600">{details.roomNo}</p>
+            <p className="text-sm text-gray-900">{details.name || 'N/A'}</p>
+            <p className="text-xs text-gray-600">{details.guestID || 'N/A'}</p>
+            <p className="text-xs text-gray-600">{details.roomNo || 'N/A'}</p>
           </div>
         </div>
       );
@@ -32,7 +32,7 @@ export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
     header: 'Request Type',
     cell: ({ row }) => {
       const type = row.original.requestType;
-      return <div className="text-sm">{type}</div>;
+      return <div className="text-sm">{type || 'N/A'}</div>;
     }
   },
   {
@@ -40,7 +40,7 @@ export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
     header: 'Status',
     cell: ({ row }) => {
       const status = row.original.status;
-      switch (status) {
+      switch (status || 'Pending') {
         case 'Pending':
           return <div className="text-sm text-[#3787E3]">{status}</div>;
         case 'In-Progress':
@@ -57,7 +57,7 @@ export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
     header: 'Assigned to',
     cell: ({ row }) => {
       const assignedTo = row.original.assignedTo;
-      return <div className="text-sm">{assignedTo}</div>;
+      return <div className="text-sm">{assignedTo || 'N/A'}</div>;
     }
   },
   {

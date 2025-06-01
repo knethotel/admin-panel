@@ -6,12 +6,11 @@ import React, { useState } from 'react';
 
 const CellAction = (props: any) => {
   const { data } = props;
-  console.log(data.guestId);
 
   const router = useRouter();
 
   const handleViewUser = () => {
-    router.push(`/hotel-panel/complaint-management/view/${data.employeeID}`);
+    router.push(`/hotel-panel/complaint-management/view/${data.complaintID}`);
   };
 
   return (
@@ -19,12 +18,12 @@ const CellAction = (props: any) => {
       {/* Action Buttons */}
       <div className="flex items-center space-x-4">
         <ToggleButton />
-        <button
+        <Button
           onClick={() => handleViewUser()}
-          className="p-1 rounded-md group bg-[#A07D3D1A]"
+          className="p-1 rounded-md hover:bg-[#b6a27c5e]"
         >
-          <Eye className=" w-5 text-button-dark group-hover:text-white" />
-        </button>
+          <Eye className=" w-5 text-button-dark" />
+        </Button>
       </div>
     </>
   );

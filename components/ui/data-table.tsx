@@ -57,6 +57,8 @@ interface DataTableProps<TData, TValue> {
   ) => void;
   sorting?: any;
   onSortingChange?: (sorting: any) => void;
+  currentPage?: number;
+  itemsPerPage?: number;
 }
 
 export function DataTable<TData, TValue>({
@@ -69,7 +71,9 @@ export function DataTable<TData, TValue>({
   rowNo,
   onFilterChange,
   sorting,
-  onSortingChange
+  onSortingChange,
+  currentPage = 1,
+  itemsPerPage = 10
 }: DataTableProps<TData, TValue>) {
   const [filterInput, setFilterInput] = useState('');
   const [updatedFilters, setUpdatedFilters] = useState(filters || []);
@@ -82,14 +86,21 @@ export function DataTable<TData, TValue>({
       {
         id: 'sn',
         header: 'SN',
-        cell: ({ row }) => <span>{row.index + 1}</span>, // Dynamically renders 1, 2, 3...
+        cell: ({ row }) => {
+          // Calculate the correct serial number based on current page and items per page
+          return <span>{((currentPage - 1) * itemsPerPage) + row.index + 1}</span>;
+        },
       },
       ...columns // original columns passed to DataTable
     ],
     state: {
       sorting,
-      globalFilter: filterInput
+      globalFilter: filterInput,
     },
+    // Disable built-in pagination since we're handling it manually
+    manualPagination: true,
+    pageCount: -1, // We don't need this since we're handling pagination manually
+    onPaginationChange: () => {}, // No-op since we handle pagination manually
     onSortingChange,
     onGlobalFilterChange: setFilterInput,
     getCoreRowModel: getCoreRowModel(),

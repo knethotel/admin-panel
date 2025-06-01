@@ -8,18 +8,17 @@ import { Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 
-import { GymServiceData } from 'app/static/services-management/Gym';
 import ToggleButton from '@/components/ui/toggleButton';
 import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
 import ManageProductsModal from '@/components/modal/gym/manage-products';
 import PriceTimeSettingGym from '@/components/modal/gym/PriceTimeSetting';
 import { PaginationControls } from '@/components/shared/PaginationControls';
 import apiCall from '@/lib/axios';
-
+import { GymServiceDataType } from 'app/static/services-management/Gym';
 export const GymServiceTable: React.FC = () => {
   const router = useRouter();
-  const [data, setData] = useState(GymServiceData || []);
-  const [filteredData, setFilteredData] = useState(GymServiceData || []);
+  const [data, setData] = useState<GymServiceDataType[]>([]);
+  const [filteredData, setFilteredData] = useState<GymServiceDataType[]>([]);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>();
@@ -32,12 +31,40 @@ export const GymServiceTable: React.FC = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await apiCall('get', 'api/services/facility/requests');
-      setData(response?.data || []);
-      setFilteredData(response?.data || []);
-      setTotalRecords(response?.data?.length || 0);
+      const response = await apiCall('GET', 'api/services/facility/requests');
+      // Format the data according to the API response structure
+      const formattedData = (response?.data || []).map((item: any) => ({
+        requestID: item._id || 'N/A',
+        requestDetail: item.requestDetail || 'N/A',
+        responseDetail: 'N/A',
+        requestAssignedTo: 'N/A',
+        requestTime: {
+          date: new Date(item.requestTime).toLocaleDateString() || 'N/A',
+          time: new Date(item.requestTime).toLocaleTimeString() || 'N/A'
+        },
+        guestDetails: {
+          guestID: item.guest?._id || 'N/A',
+          name: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`,
+          roomNo: 'N/A',
+          mobileNumber: 'N/A',
+          email: 'N/A'
+        },
+        requestType: item.facilityType || 'N/A',
+        status:
+          item.status?.charAt(0).toUpperCase() + item.status?.slice(1) || 'N/A',
+        assignedTo: item.assignedTo
+          ? `${item.assignedTo.firstName} ${item.assignedTo.lastName}`
+          : 'Unassigned'
+      }));
+      setData(formattedData);
+      setFilteredData(formattedData);
+      setTotalRecords(response?.data?.total || 0);
+      console.log(formattedData);
     } catch (error) {
       console.error('Failed to fetch facility requests:', error);
+      setData([]);
+      setFilteredData([]);
+      setTotalRecords(0);
     } finally {
       setLoading(false);
     }
@@ -53,22 +80,6 @@ export const GymServiceTable: React.FC = () => {
   const [isManageProductsModalOpen, setIsManageProductsModalOpen] =
     useState(false);
 
-  const handleLimitChange = (newLimit: number) => {
-    setLimit(newLimit);
-    setPageNo(1); // Reset to the first page when the limit changes
-  };
-
-  // Function to handle search input
-  const handleSearchChange = (searchValue: string) => {
-    if (searchValue.trim() === '') {
-      setFilteredData(data); // Reset if empty
-    } else {
-      const filtered = data.filter((item) =>
-        item.guestDetails.name.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      setFilteredData(filtered);
-    }
-  };
   return (
     <>
       <div className="w-full pt-20 flex items-center gap-2 justify-end px-4 py-2 bg-white">
@@ -76,12 +87,20 @@ export const GymServiceTable: React.FC = () => {
           <h2 className="text-coffee text-xl font-bold">
             Gym/Conference hall/Community hall
           </h2>
-          <div className="flex items-center gap-2">
+          <Button
+            onClick={() =>
+              router.push('/hotel-panel/service-management/gym/add')
+            }
+            className="btn-primary h-8 2xl:h-9"
+          >
+            Manage Products
+          </Button>
+          {/* <div className="flex items-center gap-2">
             <h2 className="text-[0.8rem] font-semibold">
               AUTO ACCEPT REQUESTS
             </h2>
             <ToggleButton />
-          </div>
+          </div> */}
         </div>
         {/* <Settings
           className="cursor-pointer"
@@ -93,12 +112,6 @@ export const GymServiceTable: React.FC = () => {
         /> */}
       </div>
       <div className="w-full flex justify-end px-4">
-        <Button
-          onClick={() => router.push('/hotel-panel/service-management/gym/add')}
-          className="btn-primary h-8 2xl:h-9"
-        >
-          Manage Products
-        </Button>
         {/* <ManageProductsModal
           isOpen={isManageProductsModalOpen}
           onClose={() => setIsManageProductsModalOpen(false)}

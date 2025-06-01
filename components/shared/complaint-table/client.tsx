@@ -1,44 +1,35 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
-
-import { useRouter } from 'next/navigation';
 import { columns } from './columns';
+import { Pagination, type PaginationData } from '../Pagination';
+import type { ComplaintDataType } from 'app/static/ComplaintData';
+import { apiCall } from '@/lib/axios';
 
-import { ComplaintData } from 'app/static/ComplaintData';
+interface ApiResponse {
+  complaints: any[];
+  pagination: PaginationData;
+}
 
 export const ComplaintTable: React.FC = () => {
   // const router = useRouter();
-  const [data, setData] = useState(ComplaintData || []);
-  const [filteredData, setFilteredData] = useState(ComplaintData || []);
+  const [data, setData] = useState<ComplaintDataType[]>([]);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [loading, setLoading] = useState<boolean>();
-  const [totalRecords, setTotalRecords] = useState(data.length || 0);
-
-  // **********Search Filter and pagination logic************
-  // const filters = [
-  //     {
-  //         label: 'Account Status',
-  //         key: 'accountStatus', // Backend key
-  //         subOptions: ['Active', 'Suspended'],
-  //     },
-  //     {
-  //         label: 'Verification Status',
-  //         key: 'verificationStatus',
-  //         subOptions: ['Verified', 'Pending', 'Rejected'],
-  //     },
-  //     {
-  //         label: 'Activity Status',
-  //         key: 'activityStatus',
-  //         subOptions: ['Active', 'Inactive'],
-  //     },
-  // ];
+  const [loading, setLoading] = useState<boolean>(false);
+  const [pagination, setPagination] = useState<PaginationData>({
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 1,
+    hasNextPage: false,
+    hasPrevPage: false,
+  });
 
   const handlePageChange = (newPage: number) => {
-    if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
+    if (newPage > 0 && newPage <= pagination.totalPages) {
       setPageNo(newPage);
     }
   };
@@ -48,55 +39,88 @@ export const ComplaintTable: React.FC = () => {
     setPageNo(1); // Reset to the first page when the limit changes
   };
 
-  // Function to handle search input // commented out by Jeet singh
-  // const handleSearchChange = (searchValue: string) => {
-  //   if (searchValue.trim() === '') {
-  //     setFilteredData(data); // Reset if empty
-  //   } else {
-  //     const filtered = data.filter((item) =>
-  //       item.guestDetails.name.toLowerCase().includes(searchValue.toLowerCase())
-  //     );
-  //     setFilteredData(filtered);
-  //   }
-  // };
+  const handleSearchChange = async (searchValue: string) => {
+    // Reset to first page when searching
+    setPageNo(1);
+    await fetchComplaints(1, limit, searchValue);
+  };
 
-  // Table generation specifically for ComplaintData
-  const tableContent = (
-    <DataTable
-      searchKey="complaintType"
-      columns={columns}
-      data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)} // Using the exact ComplaintData from your latest share
-    />
-  );
+  const fetchComplaints = async (page: number, pageLimit: number, search = '') => {
+    try {
+      setLoading(true);
+      const queryParams = new URLSearchParams({
+        page: page.toString(),
+        limit: pageLimit.toString(),
+        ...(search && { search })
+      });
+
+      const res = await apiCall<ApiResponse>(
+        'GET',
+        `api/complaint/platform/complaints?${queryParams}`
+      );
+
+      const mappedData = res.complaints.map((item): ComplaintDataType => {
+        const createdDate = new Date(item.createdAt);
+        return {
+          complaintID: item._id,
+          complaintType: item.complaintType,
+          hotelId: item.raisedByAdmin?._id || 'N/A',
+          status: (item.status || 'OPEN').toUpperCase(),
+          assignedTo: item.assignedTo
+            ? `${item.assignedTo.firstName} ${item.assignedTo.lastName}`
+            : 'Unassigned',
+          complaintTime: {
+            date: createdDate.toLocaleDateString('en-IN'),
+            time: createdDate.toLocaleTimeString('en-IN')
+          }
+        };
+      });
+
+      setData(mappedData);
+      setPagination({
+        total: res.pagination.total,
+        page: res.pagination.page,
+        limit: res.pagination.limit,
+        totalPages: res.pagination.totalPages,
+        hasNextPage: res.pagination.hasNextPage,
+        hasPrevPage: res.pagination.hasPrevPage,
+      });
+    } catch (error: any) {
+      console.error('Failed to fetch complaints:', error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchComplaints(pageNo, limit);
+  }, [pageNo, limit]);
 
   return (
-    <>
-      <div className="py-6 flex flex-col w-full">
-        {loading ? <span>Loading...</span> : tableContent}
-        <div className="flex justify-end space-x-2 px-3 py-2">
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(pageNo - 1)}
-              disabled={pageNo === 1}
-            >
-              Previous
-            </Button>
-            <span className="text-sm text-gray-600">
-              Page {pageNo} of {Math.ceil(totalRecords / limit) || 1}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(pageNo + 1)}
-              disabled={pageNo >= Math.ceil(totalRecords / limit)}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
-      </div>
-    </>
+    <div className="py-6 flex flex-col w-full">
+      {data.length === 0 && !loading ? (
+        <div className="text-center py-4">No complaints found.</div>
+      ) : (
+        <>
+          <DataTable
+            searchKey="complaintType"
+            columns={columns}
+            data={data}
+            onSearch={handleSearchChange}
+            currentPage={pagination.page}
+            itemsPerPage={pagination.limit}
+            // loading={loading}
+          />
+          <Pagination 
+            currentPage={pagination.page}
+            totalPages={pagination.totalPages}
+            totalItems={pagination.total}
+            itemsPerPage={pagination.limit}
+            onPageChangeAction={handlePageChange}
+            onItemsPerPageChangeAction={handleLimitChange}
+          />
+        </>
+      )}
+    </div>
   );
 };

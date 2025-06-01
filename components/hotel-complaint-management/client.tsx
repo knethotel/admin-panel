@@ -1,15 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { columns } from './columns';
-
-import { ComplaintData } from 'app/static/ComplaintData';
+import { ComplaintDataType } from 'app/static/ComplaintData';
+import apiCall from '@/lib/axios';
 
 export const ComplaintTable: React.FC = () => {
-  const [data, setData] = useState(ComplaintData || []);
-  const [filteredData, setFilteredData] = useState(ComplaintData || []);
+  const [data, setData] = useState<ComplaintDataType[]>([]);
+  const [filteredData, setFilteredData] = useState<ComplaintDataType[]>([]);
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState<boolean>();
@@ -25,6 +25,45 @@ export const ComplaintTable: React.FC = () => {
     setLimit(newLimit);
     setPageNo(1); // Reset to the first page when the limit changes
   };
+
+  useEffect(() => {
+    const fetchComplaints = async () => {
+      setLoading(true);
+      try {
+        const response = await apiCall<any>(
+          'get',
+          'api/complaint/hotel/complaints'
+        );
+        const complaints: ComplaintDataType[] = response.complaints.map(
+          (item: any) => ({
+            complaintID: item._id,
+            hotelId: item.HotelId?._id || 'N/A',
+            complaintType: item.complaintType,
+            status: item.status,
+            assignedTo: item.assignedTo?.firstName
+              ? `${item.assignedTo.firstName} ${item.assignedTo.lastName}`
+              : 'Unassigned',
+            guestId: item.raisedByGuest?._id,
+            employeeID: item.assignedTo?._id,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt,
+            description: item.description,
+            feedback: item.feedback || ''
+          })
+        );
+
+        setData(complaints);
+        setFilteredData(complaints);
+        setTotalRecords(complaints.length);
+      } catch (error) {
+        console.error('Error fetching complaints:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchComplaints();
+  }, []);
 
   const tableContent = (
     <DataTable
