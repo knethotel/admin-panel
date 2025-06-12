@@ -2,6 +2,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createRefundSchema, createRefundSchemaType } from 'schema';
+import { X } from 'lucide-react';
 import {
   Form,
   FormControl,
@@ -50,6 +51,13 @@ const CreateRefundForm = ({ onClose }: { onClose: () => void }) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full relative h-full max-w-4xl mx-auto p-4 sm:px-6 md:px-8 rounded-lg"
         >
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute top-1 right-1 text-black hover:text-yellow-950"
+          >
+            <X className="w-6 h-6" />
+          </button>
           {/* Main Grid: Two Sides */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
             {/* Left Side */}
