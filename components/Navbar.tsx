@@ -50,7 +50,10 @@ export default function Navbar({
     setRandomColor(generateColor());
   }, []);
 
-  const firstLetter = mounted && admin?.user?.name ? admin.user.name.charAt(0).toUpperCase() : 'H';
+  const firstLetter =
+    mounted && admin?.user?.name
+      ? admin.user.name.charAt(0).toUpperCase()
+      : 'H';
   const inputRef = useRef<HTMLInputElement>(null);
   const [filterInput, setFilterInput] = useState('');
 
@@ -177,10 +180,7 @@ export default function Navbar({
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <div className="flex items-center">
-                  <div
-                    className="flex items-center justify-center w-8 h-8 rounded-full"
-                    style={{ backgroundColor: randomColor, color: 'white' }}
-                  >
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full btn-primary text-white">
                     {firstLetter}
                   </div>
                 </div>

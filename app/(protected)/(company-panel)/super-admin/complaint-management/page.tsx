@@ -28,7 +28,7 @@ const ComplaintManagementPage = () => {
           >
             <Plus className="mr-2 h-4 w-4" />
             <span className="text-white group-hover:text-black">
-              New Complaint
+              Add Complaint
             </span>
           </Button>
         </div>
