@@ -13,17 +13,17 @@ const NotFound = () => {
       opacity: 1,
       y: 0,
       transition: {
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 200,
         damping: 20,
-        duration: 0.6
+        // duration: 0.6
       }
     },
     rotate: {
       rotate: [0, 10, -10, 5, -5, 0],
       transition: {
         duration: 2,
-        ease: 'easeInOut',
+        ease: 'easeInOut' as const,
         repeat: 1,
         repeatDelay: 1
       }
@@ -37,7 +37,7 @@ const NotFound = () => {
       opacity: 1,
       scale: 1,
       transition: {
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 260,
         damping: 20,
         duration: 0.8,

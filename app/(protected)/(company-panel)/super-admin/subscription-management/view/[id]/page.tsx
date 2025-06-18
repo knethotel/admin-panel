@@ -13,7 +13,7 @@ const ViewSubscriptionDetailsPage = async ({
       <Navbar active search />
       <div className="flex justify-center w-full pt-8 mt-16">
         <div className="w-full container py-6 flex justify-center">
-          <SubscriptionManagemetForm subscriptionID={id} mode="view" />
+          <SubscriptionManagemetForm id={id} mode="view" />
         </div>
       </div>
     </div>
