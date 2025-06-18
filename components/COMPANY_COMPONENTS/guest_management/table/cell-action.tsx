@@ -22,7 +22,7 @@ const CellAction = (props: any) => {
   };
 
   const handleViewUser = () => {
-    router.push(`guest-management/view/${data.guestID}`);
+    router.push(`guest-management/view/${data._id}`);
   };
 
   return (
