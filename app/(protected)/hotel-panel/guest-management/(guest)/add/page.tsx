@@ -5,7 +5,7 @@ import React from 'react';
 const AddGuestPage = () => {
   return (
     <>
-    <Navbar />
+      <Navbar />
       <div className="flex justify-center items-center h-screen w-full pt-8 mt-16">
         <div className="h-full w-full container">
           <GuestForm isEnabled={true} mode="add" />

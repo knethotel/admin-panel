@@ -1,6 +1,6 @@
 'use client';
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import FormWrapper from './form-wrapper';
 import { guestSchema, guestSchemaType } from 'schema';
 import { useForm } from 'react-hook-form';
@@ -20,22 +20,72 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Heading } from '@/components/ui/heading';
+import apiCall from '@/lib/axios';
 
 interface Props {
   guestId?: string;
   isEnabled?: boolean;
-  mode: string;
+  id?: string;
+  mode: 'add' | 'edit' | 'view' | 'pending';
 }
 
 const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
   const [images, setImages] = useState<(string | null)[]>(Array(6).fill(null));
   const [showDropdown, setShowDropdown] = useState(false);
   const [status, setStatus] = useState<'PENDING' | 'APPROVE'>('PENDING');
+  const [loading, setLoading] = useState(false);
+  const [isExistingGuest, setIsExistingGuest] = useState(false);
   const router = useRouter();
+  const id = guestId;
 
-  const guest = guestId
-    ? GuestData.find((guest) => guest.guestId === guestId)
+  const guest = id
+    ? GuestData.find((guest) => guest.guestId === id)
     : null;
+
+  useEffect(() => {
+    const fetchGuestById = async () => {
+      if (id && (mode === 'view')) {
+        try {
+          setLoading(true);
+          const res = await apiCall('GET', `/api/booking/hotel/${id}`);
+          const guest = res.booking;
+
+          if (guest) {
+            setIsExistingGuest(true);
+
+            addGuestForm.reset({
+              firstName: guest.firstName,
+              lastName: guest.lastName,
+              phoneNo: guest.phoneNumber,
+              email: guest.email,
+              address: guest.address,
+              state: guest.state,
+              city: guest.city,
+              pinCode: guest.pincode,
+              source: guest.sources,
+              receivedAmt: guest.receivedAmt || 0,
+              dueAmt: guest.dueAmt || 0,
+              paymentMode: guest.paymentMode || '',
+              roomCategory: guest.roomCategory || '',
+              checkIn: guest.checkInDate || '',
+              checkOut: guest.checkOutDate || '',
+            });
+
+            if (guest.images) {
+              setImages(guest.images);
+            }
+          }
+        } catch (err) {
+          console.error('Error fetching guest by ID:', err);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchGuestById();
+  }, [id, mode]);
+
 
   const addGuestForm = useForm<guestSchemaType>({
     resolver: zodResolver(guestSchema),
@@ -56,10 +106,128 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
     }
   });
 
-  const onSubmit = (data: guestSchemaType) => {
-    console.log(data);
-    addGuestForm.reset();
+
+  const fetchGuestByPhone = async (phone: string) => {
+    try {
+      const res = await apiCall('GET', `api/booking/fetch-guest/${phone}`);
+      if (res?.success && res?.guest) {
+        const guestData = res.guest;
+
+        // ✅ Only reset the fields your form has
+        addGuestForm.reset({
+          firstName: guestData.firstName || '',
+          lastName: guestData.lastName || '',
+          phoneNo: guestData.phoneNumber || '',
+          email: guestData.email || '',
+          address: guestData.address || '',
+          city: guestData.city || '',
+          state: guestData.state || '',
+          pinCode: guestData.pincode || '',
+          source: guestData.sources || ''
+        });
+
+      } else {
+        console.warn('Guest not found or response invalid:', res);
+      }
+    } catch (error) {
+      console.error('Error fetching guest:', error);
+    }
   };
+
+
+
+  const toUtcIso = (val: string | Date | null | undefined): string | null => {
+    if (!val) return null;
+    const date = typeof val === 'string' ? new Date(val) : val;
+    if (isNaN(date.getTime())) return null;
+    return date.toISOString();
+  };
+
+
+  useEffect(() => {
+    const fetchGuestById = async () => {
+      if (id && mode === 'edit') {
+        try {
+          setLoading(true);
+          const res = await apiCall('PUT', `/api/booking/hotel/${id}`);
+          const guest = res.booking;
+
+          if (guest) {
+            addGuestForm.reset({
+              firstName: guest.firstName || '',
+              lastName: guest.lastName || '',
+              phoneNo: guest.phoneNumber || '',
+              email: guest.email || '',
+              address: guest.address || '',
+              city: guest.city || '',
+              state: guest.state || '',
+              pinCode: guest.pincode || '',
+              source: guest.sources || '',
+              receivedAmt: guest.receivedAmt || 0,
+              dueAmt: guest.dueAmt || 0,
+              paymentMode: guest.paymentMode || '',
+              roomCategory: guest.roomCategory || '',
+              checkIn: guest.checkInDate || '',
+              checkOut: guest.checkOutDate || ''
+            });
+          } else {
+            console.warn('No guest found for id:', id);
+          }
+        } catch (error) {
+          console.error('Failed to fetch guest', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchGuestById();
+  }, [id, mode]);
+
+
+  const onSubmit = async (data: guestSchemaType) => {
+    try {
+      const payload = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phoneNumber: data.phoneNo,
+        email: data.email,
+        address: data.address,
+        state: data.state,
+        city: data.city,
+        sources: data.source,
+        pincode: data.pinCode,
+        checkIn: toUtcIso(data.checkIn),
+        checkOut: toUtcIso(data.checkOut),
+        status: 'Pending',
+        guestsCount: 1,
+        preCheckIn: false,
+        paymentStatus: 'Pending',
+        receivedAmt: data.receivedAmt || 0,
+        dueAmt: data.dueAmt || 0,
+        paymentMode: data.paymentMode || '',
+        roomCategory: data.roomCategory || '',
+      };
+
+      if (mode === 'edit' && id) {
+        const res = await apiCall('PUT', `/api/booking/hotel/${id}`, payload);
+        console.log('Booking Updated:', res.booking);
+        alert('Guest booking updated successfully!');
+      } else {
+        const res = await apiCall('POST', '/api/booking/addBooking', payload);
+        console.log('Booking Added:', res.data);
+        alert('Guest booking saved!');
+      }
+
+      addGuestForm.reset();
+      router.back();
+    } catch (err) {
+      console.error('Booking Save/Update Failed:', err);
+      alert('Failed to save booking');
+    }
+  };
+
+
 
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -94,11 +262,10 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                   >
                     <DropdownMenu.Trigger asChild className="w-full">
                       <button
-                        className={`flex items-center gap-2 px-4 py-2 rounded-md border ${
-                          status === 'PENDING'
-                            ? 'bg-red-100 text-red-700'
-                            : 'bg-green-100 text-green-700'
-                        }`}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-md border ${status === 'PENDING'
+                          ? 'bg-red-100 text-red-700'
+                          : 'bg-green-100 text-green-700'
+                          }`}
                       >
                         {status}
                         {showDropdown ? (
@@ -133,7 +300,7 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
           >
             <div className="flex flex-col gap-4">
               <div className="flex flex-col md:flex-row gap-4">
-                <FormField
+                {/* <FormField
                   control={addGuestForm.control}
                   name="phoneNo"
                   className="w-full"
@@ -157,7 +324,35 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                       <FormMessage />
                     </FormItem>
                   )}
+                /> */}
+                <FormField
+                  control={addGuestForm.control}
+                  name="phoneNo"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel className="text-black text-[0.8rem]">Phone Number</FormLabel>
+                      <FormControl>
+                        <div className="flex gap-1">
+                          <Input
+                            {...field}
+                            type="text"
+                            placeholder="Phone Number"
+                            disabled={!isEnabled}
+                            onBlur={() => {
+                              if (mode === 'add' && (field.value?.length ?? 0) >= 10) {
+                                fetchGuestByPhone(field.value!);
+                              }
+                            }}
+                            className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                          />
+                          {isEnabled && <span className="text-red-500">*</span>}
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
+
                 <FormField
                   className="w-full"
                   control={addGuestForm.control}
@@ -442,139 +637,174 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
               </div>
             </div>
             {/* {(mode === 'add' || mode === 'pending') && ( */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-10 border-t border-dashed border-gray-400 pt-4 mt-4">
-                <div className="flex flex-col gap-4">
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Assign Room Number
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Room Number"
-                        className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                      />
-                    </FormControl>
-                  </FormItem>
-                </div>
-                <div className="flex flex-col gap-4">
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Room Category
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Room Number"
-                        className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                      />
-                    </FormControl>
-                  </FormItem>
-                </div>
-                <div className="flex flex-col gap-4">
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Room Tariff
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Room Number"
-                        className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                      />
-                    </FormControl>
-                  </FormItem>
-                </div>
-                <div className="flex flex-col gap-4">
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Check-in Time
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="datetime-local"
-                        // disabled
-                        className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                      />
-                    </FormControl>
-                  </FormItem>
-                </div>
-                <div className="flex flex-col gap-4">
-                  <FormItem>
-                    <FormLabel className="text-black text-[0.8rem]">
-                      Check-out Time
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="datetime-local"
-                        // disabled
-                        className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                      />
-                    </FormControl>
-                  </FormItem>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-10 border-t border-dashed border-gray-400 pt-4 mt-4">
+              <div className="flex flex-col gap-4">
+                <FormItem>
+                  <FormLabel className="text-black text-[0.8rem]">
+                    Assign Room Number
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Room Number"
+                      className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                    />
+                  </FormControl>
+                </FormItem>
               </div>
+              <div className="flex flex-col gap-4">
+                <FormItem>
+                  <FormLabel className="text-black text-[0.8rem]">
+                    Room Category
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Room Number"
+                      className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                    />
+                  </FormControl>
+                </FormItem>
+              </div>
+              <div className="flex flex-col gap-4">
+                <FormItem>
+                  <FormLabel className="text-black text-[0.8rem]">
+                    Room Tariff
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Room Number"
+                      className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                    />
+                  </FormControl>
+                </FormItem>
+              </div>
+              {/* <div className="flex flex-col gap-4">
+                <FormItem>
+                  <FormLabel className="text-black text-[0.8rem]">
+                    Check-in Time
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="datetime-local"
+                      // disabled
+                      className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                    />
+                  </FormControl>
+                </FormItem>
+              </div> */}
+              <FormField
+                control={addGuestForm.control}
+                name="checkIn"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-black text-[0.8rem]">Check-in Time</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="datetime-local"
+                        {...field}
+                        value={field.value ?? ''} // ✅ convert null to empty string
+                        disabled={!isEnabled}
+                        className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                      />
+
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={addGuestForm.control}
+                name="checkOut"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-black text-[0.8rem]">Check-out Time</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="datetime-local"
+                        {...field}
+                        value={field.value ?? ''} // ✅ convert null to empty string
+                        disabled={!isEnabled}
+                        className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                      />
+
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+            </div>
+            {/* )} */}
+
+
+            <div className="flex flex-col items-start w-full mt-8 pb-4">
+              <FormWrapper
+                title={
+                  mode === 'edit' ? 'Upload Document' : 'Identification Document'
+                }
+              >
+                <h2 className="text-3xl text-gray-700 font-semibold mb-4">
+                  {mode === 'edit' ? 'Upload Document' : 'Identification Document'}
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
+                  {images.map((img, index) => (
+                    <div
+                      key={index}
+                      className="relative rounded-sm w-full h-40 md:h-56 bg-[#D9D9D9] overflow-hidden"
+                    >
+                      <label className="w-full h-full block cursor-pointer">
+                        <input
+                          type="file"
+                          disabled={!isEnabled}
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => handleImageChange(e, index)}
+                        />
+                        {img ? (
+                          <Image
+                            src={img}
+                            alt={`Uploaded ${index + 1}`}
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-sm text-gray-600">
+                            Upload Image
+                          </div>
+                        )}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </FormWrapper>
+            </div>
+
+            {/* {isEnabled && ( */}
+            <div className="flex items-center gap-3 py-8 justify-end w-full">
+              <Button
+                type="button"
+                onClick={() => router.back()}
+                className="btn-secondary"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                className="btn-primary"
+                onClick={addGuestForm.handleSubmit(onSubmit)}
+              >
+                Save Changes
+              </Button>
+
+
+            </div>
             {/* )} */}
           </form>
         </Form>
       </FormWrapper>
-
-      <div className="flex flex-col items-start w-full mt-8 pb-4">
-        <FormWrapper
-          title={
-            mode === 'edit' ? 'Upload Document' : 'Identification Document'
-          }
-        >
-          <h2 className="text-3xl text-gray-700 font-semibold mb-4">
-            {mode === 'edit' ? 'Upload Document' : 'Identification Document'}
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
-            {images.map((img, index) => (
-              <div
-                key={index}
-                className="relative rounded-sm w-full h-40 md:h-56 bg-[#D9D9D9] overflow-hidden"
-              >
-                <label className="w-full h-full block cursor-pointer">
-                  <input
-                    type="file"
-                    disabled={!isEnabled}
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => handleImageChange(e, index)}
-                  />
-                  {img ? (
-                    <Image
-                      src={img}
-                      alt={`Uploaded ${index + 1}`}
-                      fill
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-sm text-gray-600">
-                      Upload Image
-                    </div>
-                  )}
-                </label>
-              </div>
-            ))}
-          </div>
-        </FormWrapper>
-      </div>
-
-      {/* {isEnabled && ( */}
-      <div className="flex items-center gap-3 py-8 justify-end w-full">
-        <Button
-          type="button"
-          onClick={() => router.back()}
-          className="btn-secondary"
-        >
-          Cancel
-        </Button>
-        <Button type="submit" className="btn-primary">
-          Save Changes
-        </Button>
-      </div>
-      {/* )} */}
     </>
   );
 };

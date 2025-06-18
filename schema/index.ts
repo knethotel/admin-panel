@@ -37,21 +37,38 @@ export type setNewPasswordSchemaType = z.infer<typeof setNewPasswordSchema>;
 // *****************Add guest and Add booking form schema and type*******************
 
 // Add guest schema and type
+
 export const guestSchema = z.object({
-  firstName: z.string().min(1, 'First Name is required'),
-  lastName: z.string().min(1, 'Last Name is required'),
-  phoneNo: z.string().min(1, 'Phone Number is required'),
-  address: z.string().min(1, 'Address is required'),
-  city: z.string().min(1, 'City is required'),
-  email: z.string().email().min(1, 'Email is required'),
-  state: z.string().min(1, 'State is required'),
-  pinCode: z.string().min(1, 'Pin Code is required'),
-  source: z.string().min(1, 'Sources is required'),
-  receivedAmt: z.number(),
-  dueAmt: z.number(),
-  paymentMode: z.string(),
-  roomCategory: z.string()
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  phoneNo: z.string().optional(),
+  email: z.string().optional(),
+  address: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  pinCode: z.string().optional(),
+  source: z.string().optional(),
+
+  receivedAmt: z.preprocess(val => val === '' ? 0 : Number(val), z.number()).optional(),
+  dueAmt: z.preprocess(val => val === '' ? 0 : Number(val), z.number()).optional(),
+  paymentMode: z.string().optional(),
+
+  roomCategory: z.string().optional(),
+  roomNumber: z.string().optional(),
+  roomTariff: z.preprocess(val => val === '' ? 0 : Number(val), z.number()).optional(),
+
+  checkIn: z.preprocess(
+    (val) => typeof val === 'string' && val.trim() !== '' ? val : null,
+    z.union([z.string(), z.null()])
+  ).optional(),
+
+  checkOut: z.preprocess(
+    (val) => typeof val === 'string' && val.trim() !== '' ? val : null,
+    z.union([z.string(), z.null()])
+  ).optional()
 });
+
+
 
 export type guestSchemaType = z.infer<typeof guestSchema>;
 
