@@ -6,6 +6,8 @@ type CellActionProps = {
   data: {
     subscriptionID: string;
     [key: string]: any;
+    uniqueId: string;
+    _id: string;
   };
 };
 
@@ -13,8 +15,8 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
 
   const handleViewUser = () => {
-    if (data?.subscriptionID) {
-      router.push(`/super-admin/subscription-management/view/${data.subscriptionID}`);
+    if (data?._id) {
+      router.push(`/super-admin/subscription-management/view/${data._id}`);
     } else {
       console.error('subscriptionID is missing in data');
     }

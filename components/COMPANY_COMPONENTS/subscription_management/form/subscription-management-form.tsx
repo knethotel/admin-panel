@@ -1,9 +1,7 @@
+
 'use client';
-import React, { useState } from 'react';
-import {
-  SubscriptionManagementFormSchema,
-  SubscriptionManagementFormSchemaType
-} from 'schema/company-panel';
+import React, { useEffect, useState } from 'react';
+import { z } from 'zod';
 import {
   Form,
   FormControl,
@@ -13,77 +11,81 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FieldValues, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import FormWrapper from './form-wrapper';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import apiCall from '@/lib/axios';
 
-// Define the props type, including the new data prop
-type Props = {
-  subscriptionID?: string;
-  mode?: string;
-  data?: Partial<SubscriptionManagementFormSchemaType>;
-};
+// ✅ ZOD Schema
+const SubscriptionManagementFormSchema = z.object({
+  planName: z.string().min(1, 'Plan name is required'),
+  planDuration: z.preprocess(val => Number(val), z.number()),
+  planType: z.string().min(1, 'Plan type is required'),
+  description: z.string().min(1, 'Description is required'),
+  cost: z.union([z.string(), z.number()]).transform(Number)
+});
 
-// Dummy data for testing
-const dummyData: SubscriptionManagementFormSchemaType = {
-  subscriptionID: 'SUB123',
-  planName: 'Premium Plan',
-  planDuration: '12 months',
-  planType: 'Monthly',
-  description: 'A premium subscription with full access.',
-  status: 'Active',
-  cost: 99.99
-};
+type SubscriptionManagementFormSchemaType = z.infer<typeof SubscriptionManagementFormSchema>;
 
-const SubscriptionManagementForm: React.FC<Props> = ({
-  subscriptionID,
-  mode,
-  data
-}) => {
+interface Props {
+  mode?: 'add' | 'edit' | 'view';
+  uniqueId?: string;
+  id?: string;
+}
+
+const SubscriptionManagementForm: React.FC<Props> = ({ id, mode = 'view' }) => {
   const router = useRouter();
-  const [submitStatus, setSubmitStatus] = useState<
-    'idle' | 'success' | 'error'
-  >('idle');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Use prop data if provided, otherwise fall back to dummy data
-  const defaultValues = data ? { ...dummyData, ...data } : dummyData;
-
-  const form = useForm<SubscriptionManagementFormSchemaType & FieldValues>({
+  const form = useForm<SubscriptionManagementFormSchemaType>({
     resolver: zodResolver(SubscriptionManagementFormSchema),
     defaultValues: {
-      subscriptionID: defaultValues.subscriptionID || '',
-      planName: defaultValues.planName || '',
-      planDuration: defaultValues.planDuration || '',
-      planType: defaultValues.planType || '',
-      description: defaultValues.description || '',
-      status: defaultValues.status || '',
-      cost: defaultValues.cost || 0
+      planName: '',
+      planDuration: 0,
+      planType: '',
+      description: '',
+      cost: 0
     }
   });
 
-  const onSubmit = (formData: SubscriptionManagementFormSchemaType) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      if ((mode === 'edit' || mode === 'view') && id) {
+        try {
+          const res = await apiCall('GET', `/api/subscription/${id}`);
+          const data = res?.data;
+
+          if (data) {
+            form.reset({
+              planName: data.planName,
+              planDuration: Number(data.planDuration),
+              planType: data.planType,
+              description: data.description,
+              cost: Number(data.cost)
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching subscription:', error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [mode, id, form]);
+
+  const onSubmit = async (formData: SubscriptionManagementFormSchemaType) => {
     setIsSubmitting(true);
     try {
-      console.log(formData);
-      setSubmitStatus('success');
+      await apiCall('POST', '/api/subscription', formData);
+      router.back();
     } catch (error) {
-      console.log('Error occurred: ', error);
-      setSubmitStatus('error');
+      console.error('Submission error:', error);
     } finally {
       setIsSubmitting(false);
     }
-    form.reset();
   };
 
   return (
@@ -93,56 +95,31 @@ const SubscriptionManagementForm: React.FC<Props> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-8 py-7 px-2"
         >
-          {/* Main Container for Two Parts */}
           <div className="flex flex-row gap-8">
-            {/* First Part */}
+            {/* Left Column */}
             <div className="w-1/2 flex flex-col gap-6">
-              {/* Subscription ID and Plan Name */}
-              <div className="flex justify-between gap-4">
-                <FormField
-                  control={form.control}
-                  name="subscriptionID"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-start w-full">
-                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        Subscription ID
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          {...field}
-                          placeholder="Enter Subscription ID"
-                          disabled={mode === 'view'}
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="planName"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-start w-full">
-                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        Plan Name
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          {...field}
-                          placeholder="Enter Plan Name"
-                          disabled={mode === 'view'}
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              {/* Description */}
+              <FormField
+                control={form.control}
+                name="planName"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col items-start w-full">
+                    <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                      Plan Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        disabled={mode === 'view' || isSubmitting}
+                        {...field}
+                        placeholder="Enter Plan Name"
+                        className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 text-xs 2xl:text-sm border-none rounded-md focus:ring-0"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-[10px] mt-1" />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="description"
@@ -153,10 +130,10 @@ const SubscriptionManagementForm: React.FC<Props> = ({
                     </FormLabel>
                     <FormControl>
                       <Textarea
+                        disabled={mode === 'view' || isSubmitting}
                         {...field}
                         placeholder="Enter Description"
-                        disabled={mode === 'view'}
-                        className="w-full h-44 placeholder:opacity-65 min-h-[80px] p-2 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm resize-y"
+                        className="w-full h-44 min-h-[80px] p-2 bg-[#F6EEE0] text-gray-900 text-xs 2xl:text-sm border-none rounded-md resize-y focus:ring-0"
                       />
                     </FormControl>
                     <FormMessage className="text-[10px] mt-1" />
@@ -165,9 +142,8 @@ const SubscriptionManagementForm: React.FC<Props> = ({
               />
             </div>
 
-            {/* Second Part */}
+            {/* Right Column */}
             <div className="w-1/2 flex flex-col gap-6">
-              {/* Plan Duration and Plan Type */}
               <div className="flex justify-between gap-4">
                 <FormField
                   control={form.control}
@@ -179,11 +155,12 @@ const SubscriptionManagementForm: React.FC<Props> = ({
                       </FormLabel>
                       <FormControl>
                         <Input
-                          type="text"
+                          type="number"
+                          disabled={mode === 'view' || isSubmitting}
                           {...field}
+                          value={field.value ?? ''}
                           placeholder="Enter Plan Duration"
-                          disabled={mode === 'view'}
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 text-xs 2xl:text-sm border-none rounded-md focus:ring-0"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -200,11 +177,11 @@ const SubscriptionManagementForm: React.FC<Props> = ({
                       </FormLabel>
                       <FormControl>
                         <Input
+                          disabled={mode === 'view' || isSubmitting}
                           type="text"
                           {...field}
                           placeholder="Enter Plan Type"
-                          disabled={mode === 'view'}
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 text-xs 2xl:text-sm border-none rounded-md focus:ring-0"
                         />
                       </FormControl>
                       <FormMessage className="text-[10px] mt-1" />
@@ -212,78 +189,32 @@ const SubscriptionManagementForm: React.FC<Props> = ({
                   )}
                 />
               </div>
-              {/* Status and Cost */}
-              <div className="flex justify-between gap-4">
-                <FormField
-                  control={form.control}
-                  name="status"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-start w-full">
-                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        Status
-                      </FormLabel>
-                      <FormControl>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          disabled={mode === 'view'}
-                        >
-                          <SelectTrigger className="w-full text-left bg-[#F6EEE0] hover:text-black border-opacity-45 text-black h-8 text-xs 2xl:text-sm">
-                            <SelectValue placeholder="Select Status" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {['Active', 'Inactive', 'Cancelled', 'Expired'].map(
-                              (status, index) => (
-                                <SelectItem key={index} value={status}>
-                                  {status}
-                                </SelectItem>
-                              )
-                            )}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="cost"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-start w-full">
-                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        Cost
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          placeholder="Enter Cost"
-                          disabled={mode === 'view'}
-                          className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px] mt-1" />
-                    </FormItem>
-                  )}
-                />
-              </div>
+
+              <FormField
+                control={form.control}
+                name="cost"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col items-start w-full">
+                    <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                      Cost
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        disabled={mode === 'view' || isSubmitting}
+                        {...field}
+                        value={field.value ?? ''}
+                        placeholder="Enter Cost"
+                        className="w-full placeholder:opacity-65 h-8 px-2 py-1 bg-[#F6EEE0] text-gray-900 text-xs 2xl:text-sm border-none rounded-md focus:ring-0"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-[10px] mt-1" />
+                  </FormItem>
+                )}
+              />
             </div>
           </div>
 
-          {/* Payment Type */}
-          <div className="flex w-full items-center justify-start">
-            <div className="flex flex-col items-start">
-              <span className="text-xs 2xl:text-sm font-medium">
-                Payment Type
-              </span>
-              <span className="text-xs 2xl:text-sm opacity-60">
-                Auto Renewal
-              </span>
-            </div>
-          </div>
-
-          {/* Buttons */}
           <div className="flex items-center justify-start w-full pt-6 gap-3">
             <Button
               type="button"
@@ -292,13 +223,15 @@ const SubscriptionManagementForm: React.FC<Props> = ({
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              className="bg-[#A07D3D] h-8 px-2 text-sm text-white hover:text-black hover:outline hover:outline-black"
-              disabled={isSubmitting}
-            >
-              Save Changes
-            </Button>
+            {mode !== 'view' && (
+              <Button
+                type="submit"
+                className="bg-[#A07D3D] h-8 px-2 text-sm text-white hover:text-black hover:outline hover:outline-black"
+                disabled={isSubmitting}
+              >
+                Save
+              </Button>
+            )}
           </div>
         </form>
       </Form>
@@ -307,16 +240,3 @@ const SubscriptionManagementForm: React.FC<Props> = ({
 };
 
 export default SubscriptionManagementForm;
-
-// Example usage with dummy data (for testing)
-const ExampleParentComponent: React.FC = () => {
-  return (
-    <SubscriptionManagementForm
-      subscriptionID="SUB123"
-      mode="edit"
-      data={dummyData}
-    />
-  );
-};
-
-export { ExampleParentComponent };
