@@ -153,16 +153,50 @@ export const GuestClient: React.FC = () => {
     }
   };
 
-  const handleOnClick = (actionName: string) => {
+  const handleOnClick = async (actionName: string) => {
     if (actionName === 'add booking') {
       setMode('add_guest');
       router.push(`/hotel-panel/guest-management/add`);
     }
+
     if (actionName === 'view requests') {
       setMode('add_booking');
-      router.push(`/hotel-panel/guest-management/pending`);
+      try {
+        setLoading(true);
+        const res = await apiCall('GET', `api/booking/preCheckIns`);
+        if (res?.success) {
+          const bookings = res.bookings.map((booking: any) => ({
+            _id: booking._id,
+            guestId: booking.guest,
+            uniqueId: booking.uniqueId,
+            checkInDate: new Date(booking.checkInDate).toLocaleDateString(),
+            checkInTime: new Date(booking.checkInDate).toLocaleTimeString(),
+            checkOutDate: new Date(booking.checkOutDate).toLocaleDateString(),
+            checkOutTime: new Date(booking.checkOutDate).toLocaleTimeString(),
+            guestName: `${booking.firstName} ${booking.lastName}`,
+            roomNo: booking.assignedRoomNumber || 'N/A',
+            email: booking.email,
+            phoneNumber: booking.phoneNumber,
+            paymentStatus: booking.paymentStatus || 'N/A',
+          }));
+
+          setData(bookings);
+          setFilteredData(bookings);
+          setTotalRecords(bookings.length);
+          setPageNo(1);
+        } else {
+          setError('Failed to load pre-check-ins');
+        }
+      } catch (err) {
+        console.error('Error loading pre-check-ins:', err);
+        setError('Something went wrong');
+      } finally {
+        setLoading(false);
+      }
     }
   };
+
+
 
   return (
     <>

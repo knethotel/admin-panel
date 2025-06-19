@@ -33,6 +33,19 @@ import { HotelSchemaType } from 'schema';
 import { indiaCities, indiaStates } from 'app/static/Type';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
+interface SubscriptionPlan {
+  _id: string;
+  planName: string;
+  cost: number;
+}
+
+interface Coupon {
+  _id: string;
+  code: string;
+  description: string;
+  value: number;
+}
+
 const HotelForm = ({
   mode = 'add',
   hotelId
@@ -55,6 +68,10 @@ const HotelForm = ({
   const [hotelName, setHotelName] = useState('');
   const [subHotelName, setSubHotelName] = useState('');
   const [fetchedHotelData, setFetchedHotelData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>([]);
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [selectedPlan, setSelectedPlan] = useState<any>(null);
 
   // Refs for file inputs
   const roomImageRef = useRef<HTMLInputElement>(null);
@@ -129,7 +146,8 @@ const HotelForm = ({
       subscriptionPlan: 'Premium',
       subscriptionPrice: 500,
       netPrice: 0,
-      applyCoupon: 'Choose coupon'
+      applyCoupon: 'Choose coupon',
+      subscriptionStartDate: '',
     }
   });
 
@@ -185,13 +203,13 @@ const HotelForm = ({
       softwareCompatibility: data.softwareCompatibility,
       rooms: data.roomConfigs
         ? data.roomConfigs.map((room: any) => ({
-            roomName: room.roomType,
-            roomType: room.roomType,
-            features: [room.feature],
-            images: imagePreviews.roomImage,
-            servingDepartment: ['Concierge Service', 'In-Room Dining', 'Spa'],
-            totalStaff: data.totalStaff
-          }))
+          roomName: room.roomType,
+          roomType: room.roomType,
+          features: [room.feature],
+          images: imagePreviews.roomImage,
+          servingDepartment: ['Concierge Service', 'In-Room Dining', 'Spa'],
+          totalStaff: data.totalStaff
+        }))
         : []
     };
 
@@ -425,6 +443,69 @@ const HotelForm = ({
     name: 'roomConfigs'
   });
 
+  const fetchSubscriptionPlans = async () => {
+    setIsLoading(true);
+    try {
+      const response = await apiCall('GET', 'api/subscription/');
+      if (response.success && response.data) {
+        // Store the plans with their cost and plan name
+        setSubscriptionPlans(response.data);
+        console.log("API Response:", response);
+      } else {
+        console.error('Failed to fetch subscription plans:', response);
+        setSubscriptionPlans([]);
+      }
+    } catch (error) {
+      console.error('Error fetching subscription plans:', error);
+      setSubscriptionPlans([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSubscriptionPlans();
+  }, []);
+
+  // Handle subscription plan selection
+  const handleSubscriptionPlanChange = (value: string) => {
+    const selectedPlan = subscriptionPlans.find(plan => plan.planName === value);
+    if (selectedPlan) {
+      form.setValue('subscriptionPrice', selectedPlan.cost);
+    }
+  };
+
+  const fetchCoupons = async () => {
+    setIsLoading(true);
+    try {
+      const response = await apiCall('GET', 'api/coupon');
+      if (response.success && response.coupons) {
+        setCoupons(response.coupons); // Store the coupons in state
+      } else {
+        console.error('Failed to fetch coupons:', response);
+        setCoupons([]); // Handle failure gracefully
+      }
+    } catch (error) {
+      console.error('Error fetching coupons:', error);
+      setCoupons([]); // Set empty array if error occurs
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCoupons();
+  }, []);
+
+  const handleCouponChange = (value: string) => {
+    const selectedCoupon = coupons.find(coupon => coupon.code === value);
+    if (selectedCoupon) {
+      // Set the coupon code and value in the form
+      form.setValue('applyCoupon', selectedCoupon.code);
+      form.setValue('subscriptionPrice', selectedCoupon.value);
+    }
+  };
+
   return (
     <FormWrapper title="">
       <Form {...form}>
@@ -452,11 +533,11 @@ const HotelForm = ({
                           }
                         >
                           {imagePreviews.roomImage &&
-                          imagePreviews.roomImage.length > 0 ? (
+                            imagePreviews.roomImage.length > 0 ? (
                             <img
                               src={
                                 imagePreviews.roomImage[
-                                  imagePreviews.roomImage.length - 1
+                                imagePreviews.roomImage.length - 1
                                 ]
                               }
                               alt="Room Preview"
@@ -478,11 +559,10 @@ const HotelForm = ({
                           />
                         </FormControl>
                         <Upload
-                          className={`absolute left-20 z-20 h-3 w-3 2xl:h-4 2xl:w-4 ${
-                            imagePreviews.roomImage && !isDisabled
-                              ? 'text-black cursor-pointer'
-                              : 'text-gray-400 cursor-not-allowed'
-                          }`}
+                          className={`absolute left-20 z-20 h-3 w-3 2xl:h-4 2xl:w-4 ${imagePreviews.roomImage && !isDisabled
+                            ? 'text-black cursor-pointer'
+                            : 'text-gray-400 cursor-not-allowed'
+                            }`}
                           onClick={() =>
                             imagePreviews.roomImage &&
                             !isDisabled &&
@@ -537,7 +617,7 @@ const HotelForm = ({
                         }
                       >
                         {imagePreviews.logoImage &&
-                        imagePreviews.logoImage.length > 0 ? (
+                          imagePreviews.logoImage.length > 0 ? (
                           <img
                             src={imagePreviews.logoImage[0]}
                             alt="Logo Preview"
@@ -559,11 +639,10 @@ const HotelForm = ({
                         />
                       </FormControl>
                       <Upload
-                        className={`absolute left-20 z-20 h-3 w-3 2xl:h-4 2xl:w-4 ${
-                          imagePreviews.logoImage && !isDisabled
-                            ? 'text-black cursor-pointer'
-                            : 'text-gray-400 cursor-not-allowed'
-                        }`}
+                        className={`absolute left-20 z-20 h-3 w-3 2xl:h-4 2xl:w-4 ${imagePreviews.logoImage && !isDisabled
+                          ? 'text-black cursor-pointer'
+                          : 'text-gray-400 cursor-not-allowed'
+                          }`}
                         onClick={() =>
                           imagePreviews.logoImage &&
                           !isDisabled &&
@@ -590,11 +669,10 @@ const HotelForm = ({
                       >
                         <DropdownMenu.Trigger asChild className="w-full">
                           <button
-                            className={`flex items-center gap-2 px-4 py-2 rounded-md border ${
-                              status === 'PENDING'
-                                ? 'bg-red-100 text-red-700'
-                                : 'bg-green-100 text-green-700'
-                            }`}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-md border ${status === 'PENDING'
+                              ? 'bg-red-100 text-red-700'
+                              : 'bg-green-100 text-green-700'
+                              }`}
                           >
                             {status}
                             {showDropdown ? (
@@ -1236,7 +1314,7 @@ const HotelForm = ({
                 />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="subscriptionPlan"
                   render={({ field }) => (
@@ -1270,7 +1348,40 @@ const HotelForm = ({
                       <FormMessage className="text-[10px]" />
                     </FormItem>
                   )}
-                />
+                /> */}
+                {/* <FormField control={form.control} name="subscriptionPlan" render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                      Allocate Subscription{' '}
+                      <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={isDisabled || isLoading}
+                      >
+                        <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
+                          <SelectValue placeholder="Select category" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-coffee">
+                          {isLoading ? (
+                            <SelectItem value="loading" className="text-white" disabled>
+                              Loading...
+                            </SelectItem>
+                          ) : (
+                            subscriptionPlans.map((plan, index) => (
+                              <SelectItem key={index} value={plan} className="text-white">
+                                {plan}
+                              </SelectItem>
+                            ))
+                          )}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage className="text-[10px]" />
+                  </FormItem>
+                )} />
                 <FormField
                   control={form.control}
                   name="subscriptionPrice"
@@ -1296,6 +1407,72 @@ const HotelForm = ({
                       <FormMessage className="text-[10px]" />
                     </FormItem>
                   )}
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="subscriptionPlan"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Allocate Subscription{' '}
+                        <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          value={field.value}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            handleSubscriptionPlanChange(value); // Update subscription price on plan change
+                          }}
+                          disabled={isDisabled || isLoading}
+                        >
+                          <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
+                            <SelectValue placeholder="Select category" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-coffee">
+                            {isLoading ? (
+                              <SelectItem value="loading" className="text-white" disabled>
+                                Loading...
+                              </SelectItem>
+                            ) : (
+                              subscriptionPlans.map((plan) => (
+                                <SelectItem key={plan._id || plan.planName} value={plan.planName} className="text-white">
+                                  {plan.planName}
+                                </SelectItem>
+                              ))
+                            )}
+                          </SelectContent>
+
+                        </Select>
+                      </FormControl>
+                      <FormMessage className="text-[10px]" />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Subscription Price (Auto-filled based on selected plan) */}
+                <FormField
+                  control={form.control}
+                  name="subscriptionPrice"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Subscription Price{' '}
+                        <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min="0"
+                          placeholder="Enter Subscription Price"
+                          {...field}
+                          disabled={isDisabled}
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px]" />
+                    </FormItem>
+                  )}
                 />
                 <FormField
                   control={form.control}
@@ -1307,55 +1484,31 @@ const HotelForm = ({
                       </FormLabel>
                       <FormControl>
                         <Select
-                          onValueChange={field.onChange}
                           value={field.value}
-                          disabled={isDisabled}
+                          onValueChange={(value) => {
+                            field.onChange(value); // Update the value in the form
+                            handleCouponChange(value); // Set coupon details
+                          }}
+                          disabled={isDisabled || isLoading}
                         >
                           <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
                             <SelectValue placeholder="Choose coupon" />
                           </SelectTrigger>
                           <SelectContent className="bg-coffee">
-                            {[
-                              {
-                                code: 'COUPON1',
-                                description: '5% off with CODE1'
-                              },
-                              {
-                                code: 'COUPON2',
-                                description: '10% off with CODE2'
-                              },
-                              {
-                                code: 'COUPON3',
-                                description: '15% off with CODE3'
-                              },
-                              {
-                                code: 'COUPON4',
-                                description: '20% off with CODE4'
-                              },
-                              {
-                                code: 'COUPON5',
-                                description: '25% off with CODE5'
-                              }
-                            ].map((coupon) => (
-                              <SelectItem
-                                key={coupon.code}
-                                value={coupon.code}
-                                className="text-white"
-                              >
-                                {coupon.description}
+                            {isLoading ? (
+                              <SelectItem value="loading" className="text-white" disabled>
+                                Loading...
                               </SelectItem>
-                            ))}
+                            ) : (
+                              coupons.map((coupon) => (
+                                <SelectItem key={coupon._id} value={coupon.code} className="text-white">
+                                  {coupon.code} - {coupon.description} (Discount: ₹{coupon.value})
+                                </SelectItem>
+                              ))
+                            )}
                           </SelectContent>
                         </Select>
                       </FormControl>
-
-                      {/* Display the selected coupon code */}
-                      {field.value && field.value !== 'Choose coupon' && (
-                        <div className="mt-2 text-xs text-gray-700">
-                          <span className="font-semibold">{field.value}</span>{' '}
-                          applied successfully
-                        </div>
-                      )}
                       <FormMessage className="text-[10px]" />
                     </FormItem>
                   )}
@@ -1377,6 +1530,28 @@ const HotelForm = ({
                           // onChange={(e) =>
                           //   field.onChange(parseInt(e.target.value, 10))
                           // }
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-[10px]" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="subscriptionStartDate"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Subscription Start Date{' '}
+                        <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="date"
+                          {...field}
+                          value={field.value || ''} // Ensure it's controlled
+                          disabled={isDisabled}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
@@ -1425,7 +1600,7 @@ const HotelForm = ({
                         }
                       >
                         {imagePreviews.hotelLicenseImage &&
-                        imagePreviews.hotelLicenseImage.length > 0 ? (
+                          imagePreviews.hotelLicenseImage.length > 0 ? (
                           <img
                             src={imagePreviews.hotelLicenseImage[0]}
                             alt="Hotel License Preview"
@@ -1452,11 +1627,10 @@ const HotelForm = ({
                         />
                       </FormControl>
                       <Upload
-                        className={`absolute left-20 z-20 h-3 w-3 2xl:h-4 2xl:w-4 ${
-                          imagePreviews.hotelLicenseImage && !isDisabled
-                            ? 'text-black cursor-pointer'
-                            : 'text-gray-400 cursor-not-allowed'
-                        }`}
+                        className={`absolute left-20 z-20 h-3 w-3 2xl:h-4 2xl:w-4 ${imagePreviews.hotelLicenseImage && !isDisabled
+                          ? 'text-black cursor-pointer'
+                          : 'text-gray-400 cursor-not-allowed'
+                          }`}
                         onClick={() =>
                           imagePreviews.hotelLicenseImage &&
                           !isDisabled &&
@@ -1505,7 +1679,7 @@ const HotelForm = ({
                         }
                       >
                         {imagePreviews.legalBusinessLicenseImage &&
-                        imagePreviews.legalBusinessLicenseImage.length > 0 ? (
+                          imagePreviews.legalBusinessLicenseImage.length > 0 ? (
                           <img
                             src={imagePreviews.legalBusinessLicenseImage[0]}
                             alt="Business License Preview"
@@ -1531,11 +1705,10 @@ const HotelForm = ({
                         />
                       </FormControl>
                       <Upload
-                        className={`absolute left-20 z-20 h-3 w-3 2xl:h-4 2xl:w-4 ${
-                          imagePreviews.legalBusinessLicenseImage && !isDisabled
-                            ? 'text-black cursor-pointer'
-                            : 'text-gray-400 cursor-not-allowed'
-                        }`}
+                        className={`absolute left-20 z-20 h-3 w-3 2xl:h-4 2xl:w-4 ${imagePreviews.legalBusinessLicenseImage && !isDisabled
+                          ? 'text-black cursor-pointer'
+                          : 'text-gray-400 cursor-not-allowed'
+                          }`}
                         onClick={() =>
                           imagePreviews.legalBusinessLicenseImage &&
                           !isDisabled &&
@@ -1584,7 +1757,7 @@ const HotelForm = ({
                         }
                       >
                         {imagePreviews.touristLicenseImage &&
-                        imagePreviews.touristLicenseImage.length > 0 ? (
+                          imagePreviews.touristLicenseImage.length > 0 ? (
                           <img
                             src={imagePreviews.touristLicenseImage[0]}
                             alt="Tourist License Preview"
@@ -1610,11 +1783,10 @@ const HotelForm = ({
                         />
                       </FormControl>
                       <Upload
-                        className={`absolute left-20 z-20 h-3 w-3 2xl:h-4 2xl:w-4 ${
-                          imagePreviews.touristLicenseImage && !isDisabled
-                            ? 'text-black cursor-pointer'
-                            : 'text-gray-400 cursor-not-allowed'
-                        }`}
+                        className={`absolute left-20 z-20 h-3 w-3 2xl:h-4 2xl:w-4 ${imagePreviews.touristLicenseImage && !isDisabled
+                          ? 'text-black cursor-pointer'
+                          : 'text-gray-400 cursor-not-allowed'
+                          }`}
                         onClick={() =>
                           imagePreviews.touristLicenseImage &&
                           !isDisabled &&
@@ -1662,7 +1834,7 @@ const HotelForm = ({
                         }
                       >
                         {imagePreviews.tanNumberImage &&
-                        imagePreviews.tanNumberImage.length > 0 ? (
+                          imagePreviews.tanNumberImage.length > 0 ? (
                           <img
                             src={imagePreviews.tanNumberImage[0]}
                             alt="TAN Number Preview"
@@ -1688,11 +1860,10 @@ const HotelForm = ({
                         />
                       </FormControl>
                       <Upload
-                        className={`absolute left-20 z-20 h-3 w-3 2xl:h-4 2xl:w-4 ${
-                          imagePreviews.tanNumberImage && !isDisabled
-                            ? 'text-black cursor-pointer'
-                            : 'text-gray-400 cursor-not-allowed'
-                        }`}
+                        className={`absolute left-20 z-20 h-3 w-3 2xl:h-4 2xl:w-4 ${imagePreviews.tanNumberImage && !isDisabled
+                          ? 'text-black cursor-pointer'
+                          : 'text-gray-400 cursor-not-allowed'
+                          }`}
                         onClick={() =>
                           imagePreviews.tanNumberImage &&
                           !isDisabled &&
@@ -1741,7 +1912,7 @@ const HotelForm = ({
                         }
                       >
                         {imagePreviews.dataPrivacyGdprImage &&
-                        imagePreviews.dataPrivacyGdprImage.length > 0 ? (
+                          imagePreviews.dataPrivacyGdprImage.length > 0 ? (
                           <img
                             src={imagePreviews.dataPrivacyGdprImage[0]}
                             alt="GDPR Compliance Preview"
@@ -1767,11 +1938,10 @@ const HotelForm = ({
                         />
                       </FormControl>
                       <Upload
-                        className={`absolute left-20 z-20 h-3 w-3 2xl:h-4 2xl:w-4 ${
-                          imagePreviews.dataPrivacyGdprImage && !isDisabled
-                            ? 'text-black cursor-pointer'
-                            : 'text-gray-400 cursor-not-allowed'
-                        }`}
+                        className={`absolute left-20 z-20 h-3 w-3 2xl:h-4 2xl:w-4 ${imagePreviews.dataPrivacyGdprImage && !isDisabled
+                          ? 'text-black cursor-pointer'
+                          : 'text-gray-400 cursor-not-allowed'
+                          }`}
                         onClick={() =>
                           imagePreviews.dataPrivacyGdprImage &&
                           !isDisabled &&

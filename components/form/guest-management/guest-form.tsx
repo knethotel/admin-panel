@@ -113,7 +113,7 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
       if (res?.success && res?.guest) {
         const guestData = res.guest;
 
-        // ✅ Only reset the fields your form has
+        //Only reset the fields your form has
         addGuestForm.reset({
           firstName: guestData.firstName || '',
           lastName: guestData.lastName || '',
@@ -143,51 +143,57 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
     return date.toISOString();
   };
 
+  const toDatetimeLocal = (dateStr: string | Date): string => {
+    const date = typeof dateStr === 'string' ? new Date(dateStr) : dateStr;
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  };
 
-  useEffect(() => {
-    const fetchGuestById = async () => {
-      if (id && mode === 'edit') {
-        try {
-          setLoading(true);
-          const res = await apiCall('PUT', `/api/booking/hotel/${id}`);
-          const guest = res.booking;
 
-          if (guest) {
-            addGuestForm.reset({
-              firstName: guest.firstName || '',
-              lastName: guest.lastName || '',
-              phoneNo: guest.phoneNumber || '',
-              email: guest.email || '',
-              address: guest.address || '',
-              city: guest.city || '',
-              state: guest.state || '',
-              pinCode: guest.pincode || '',
-              source: guest.sources || '',
-              receivedAmt: guest.receivedAmt || 0,
-              dueAmt: guest.dueAmt || 0,
-              paymentMode: guest.paymentMode || '',
-              roomCategory: guest.roomCategory || '',
-              checkIn: guest.checkInDate || '',
-              checkOut: guest.checkOutDate || ''
-            });
-          } else {
-            console.warn('No guest found for id:', id);
-          }
-        } catch (error) {
-          console.error('Failed to fetch guest', error);
-        } finally {
-          setLoading(false);
+  const fetchGuestById = async () => {
+    if (id && mode === 'edit') {
+      try {
+        setLoading(true);
+        const res = await apiCall('PUT', `/api/booking/hotel/${id}`);
+        const guest = res.booking;
+
+        if (guest) {
+          addGuestForm.reset({
+            firstName: guest.firstName || '',
+            lastName: guest.lastName || '',
+            phoneNo: guest.phoneNumber || '',
+            email: guest.email || '',
+            address: guest.address || '',
+            city: guest.city || '',
+            state: guest.state || '',
+            pinCode: guest.pincode || '',
+            source: guest.sources || '',
+            receivedAmt: guest.receivedAmt || 0,
+            dueAmt: guest.dueAmt || 0,
+            paymentMode: guest.paymentMode || '',
+            roomCategory: guest.roomCategory || '',
+            checkIn: guest.checkInDate || '',
+            checkOut: guest.checkOutDate || ''
+          });
         }
+      } catch (err) {
+        console.error('Failed to fetch guest', err);
+      } finally {
+        setLoading(false);
       }
-    };
+    }
+  };
 
+  // keep this useEffect
+  useEffect(() => {
     fetchGuestById();
   }, [id, mode]);
 
 
   const onSubmit = async (data: guestSchemaType) => {
     try {
-      const payload = {
+      // Construct the common data
+      const baseData = {
         firstName: data.firstName,
         lastName: data.lastName,
         phoneNumber: data.phoneNo,
@@ -210,10 +216,39 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
       };
 
       if (mode === 'edit' && id) {
+        // For UPDATE
+        const payload = {
+          updates: baseData
+        };
+
         const res = await apiCall('PUT', `/api/booking/hotel/${id}`, payload);
         console.log('Booking Updated:', res.booking);
         alert('Guest booking updated successfully!');
+        fetchGuestById();
       } else {
+        // For CREATE
+        const payload = {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          phoneNumber: data.phoneNo,
+          email: data.email,
+          address: data.address,
+          state: data.state,
+          city: data.city,
+          sources: data.source,
+          pincode: data.pinCode,
+          checkIn: toUtcIso(data.checkIn),
+          checkOut: toUtcIso(data.checkOut),
+          status: 'Pending',
+          guestsCount: 1,
+          preCheckIn: false,
+          paymentStatus: 'Pending',
+          receivedAmt: data.receivedAmt || 0,
+          dueAmt: data.dueAmt || 0,
+          paymentMode: data.paymentMode || '',
+          roomCategory: data.roomCategory || '',
+        };
+
         const res = await apiCall('POST', '/api/booking/addBooking', payload);
         console.log('Booking Added:', res.data);
         alert('Guest booking saved!');
@@ -299,54 +334,26 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
             className="flex flex-col gap-4 w-full"
           >
             <div className="flex flex-col gap-4">
-              <div className="flex flex-col md:flex-row gap-4">
-                {/* <FormField
-                  control={addGuestForm.control}
-                  name="phoneNo"
-                  className="w-full"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-black text-[0.8rem]">
-                        Phone Number
-                      </FormLabel>
-                      <FormControl>
-                        <div className="flex gap-1">
-                          <Input
-                            disabled={!isEnabled}
-                            type="text"
-                            placeholder="Phone Number"
-                            {...field}
-                            className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                          />
-                          {isEnabled && <span className="text-red-500">*</span>}
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
                 <FormField
                   control={addGuestForm.control}
                   name="phoneNo"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <FormLabel className="text-black text-[0.8rem]">Phone Number</FormLabel>
+                      <FormLabel className="text-black text-sm">Phone Number</FormLabel>
                       <FormControl>
-                        <div className="flex gap-1">
-                          <Input
-                            {...field}
-                            type="text"
-                            placeholder="Phone Number"
-                            disabled={!isEnabled}
-                            onBlur={() => {
-                              if (mode === 'add' && (field.value?.length ?? 0) >= 10) {
-                                fetchGuestByPhone(field.value!);
-                              }
-                            }}
-                            className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                          />
-                          {isEnabled && <span className="text-red-500">*</span>}
-                        </div>
+                        <Input
+                          {...field}
+                          type="text"
+                          placeholder="Phone Number"
+                          disabled={!isEnabled}
+                          onBlur={() => {
+                            if (mode === 'add' && (field.value?.length ?? 0) >= 10) {
+                              fetchGuestByPhone(field.value!);
+                            }
+                          }}
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -354,56 +361,46 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                 />
 
                 <FormField
-                  className="w-full"
                   control={addGuestForm.control}
                   name="firstName"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-black text-[0.8rem]">
-                        First Name
-                      </FormLabel>
+                    <FormItem className="w-full">
+                      <FormLabel className="text-black text-sm">First Name</FormLabel>
                       <FormControl>
-                        <div className="flex gap-1">
-                          <Input
-                            disabled={!isEnabled}
-                            type="text"
-                            placeholder="First Name"
-                            {...field}
-                            className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                          />
-                          {isEnabled && <span className="text-red-500">*</span>}
-                        </div>
+                        <Input
+                          {...field}
+                          type="text"
+                          placeholder="First Name"
+                          disabled={!isEnabled}
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 <FormField
-                  className="w-full"
                   control={addGuestForm.control}
                   name="lastName"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-black text-[0.8rem]">
-                        Last Name
-                      </FormLabel>
+                    <FormItem className="w-full">
+                      <FormLabel className="text-black text-sm">Last Name</FormLabel>
                       <FormControl>
-                        <div className="flex gap-1">
-                          <Input
-                            disabled={!isEnabled}
-                            type="text"
-                            placeholder="Last Name"
-                            {...field}
-                            className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                          />
-                          {isEnabled && <span className="text-red-500">*</span>}
-                        </div>
+                        <Input
+                          {...field}
+                          type="text"
+                          placeholder="Last Name"
+                          disabled={!isEnabled}
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
+
 
               <div className="flex flex-col md:flex-row gap-3">
                 <FormField
@@ -704,7 +701,7 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                       <Input
                         type="datetime-local"
                         {...field}
-                        value={field.value ?? ''} // ✅ convert null to empty string
+                        value={field.value ? toDatetimeLocal(field.value) : ''}
                         disabled={!isEnabled}
                         className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                       />
@@ -725,7 +722,7 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                       <Input
                         type="datetime-local"
                         {...field}
-                        value={field.value ?? ''} // ✅ convert null to empty string
+                        value={field.value ? toDatetimeLocal(field.value) : ''}
                         disabled={!isEnabled}
                         className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                       />
