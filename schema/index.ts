@@ -212,7 +212,8 @@ export const hotelSchema = z.object({
   logoImage: z.any().optional(),
   additionalImage: z.any().optional(),
   internetConnectivity: z.boolean().optional(),
-  softwareCompatibility: z.boolean().optional()
+  softwareCompatibility: z.boolean().optional(),
+  subscriptionStartDate: z.string().min(1, 'Subscription start date is required'),
 });
 
 // Inferred type
