@@ -205,10 +205,11 @@ export const hotelSchema = z.object({
   tanNumberImage: z.any().optional(),
   dataPrivacyGdprCompliances: z.string().optional(), // maps to "dataPrivacyAndGDPRCompliance.complianceValue"
   dataPrivacyGdprImage: z.any().optional(),
-  subscriptionPlan: z.enum(['1 Month', '6 Months', '1 Year', 'Premium']),
-  subscriptionPrice: z.number().min(500),
+   subscriptionPlan: z.string(),// This should hold the plan's _id (string)
+  subscriptionPrice: z.number(),
   netPrice: z.number().optional(),
   applyCoupon: z.string().optional(),
+  subscriptionPlanName: z.string(),
   logoImage: z.any().optional(),
   additionalImage: z.any().optional(),
   internetConnectivity: z.boolean().optional(),
@@ -620,11 +621,7 @@ export const AddItemsSchema = z.object({
     .transform((val) => (val === '' ? 0 : parseFloat(val)))
     .refine((val) => val > 0, { message: 'Price must be greater than 0' })
     .or(z.number().min(1, { message: 'Price must be greater than 0' })),
-  type: z.enum(['Vegetarian', 'Non-Vegeterian'], {
-    errorMap: () => ({
-      message: 'Not a valid type'
-    })
-  }),
+  type: z.enum(['Vegetarian', 'Non-Vegetarian']),
   visibility: z.boolean(),
   itemImage: z
     .custom<File | undefined>(
