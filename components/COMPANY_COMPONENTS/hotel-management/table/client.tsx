@@ -39,14 +39,19 @@ export const HotelManagementHome: React.FC = () => {
     fetchPendingCount();
   }, []);
 
+
   useEffect(() => {
     const fetchHotels = async () => {
       try {
         setLoading(true);
-        const response = await apiCall('GET', 'api/hotel/get-hotels');
+        const response = await apiCall(
+          'GET',
+          `api/hotel/get-hotels?page=${pageNo}&limit=${limit}`
+        );
+
         if (response.status) {
           const hotels: HotelDataType[] = response.hotels.map((hotel: any) => ({
-            hotelID: hotel._id,
+            hotelID: hotel.HotelId,
             hotelName: hotel.name,
             mobileNo: hotel.phoneNo || 'N/A',
             email: hotel.email,
@@ -60,7 +65,7 @@ export const HotelManagementHome: React.FC = () => {
 
           setData(hotels);
           setFilteredData(hotels);
-          setTotalRecords(hotels.length);
+          setTotalRecords(response.totalHotels);
         } else {
           ToastAtTopRight.fire('Failed to fetch hotels', 'error');
         }
@@ -70,8 +75,10 @@ export const HotelManagementHome: React.FC = () => {
         setLoading(false);
       }
     };
+
     fetchHotels();
-  }, []);
+  }, [pageNo, limit]);
+
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
@@ -84,16 +91,13 @@ export const HotelManagementHome: React.FC = () => {
     setPageNo(1); // Reset to the first page when the limit changes
   };
 
-  // Function to handle search input
   const handleSearchChange = (searchValue: string) => {
-    if (searchValue.trim() === '') {
-      setFilteredData(data);
-    } else {
-      const filtered = data.filter((item) =>
-        item.hotelName.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      setFilteredData(filtered);
-    }
+    const filtered = data.filter((item) =>
+      item.hotelName.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setFilteredData(filtered);
+    setTotalRecords(filtered.length);
+    setPageNo(1);
   };
 
   return (
@@ -128,7 +132,7 @@ export const HotelManagementHome: React.FC = () => {
         <DataTable
           searchKey="hotelName"
           columns={columns}
-          data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)}
+          data={filteredData}
           onSearch={handleSearchChange}
         />
       )}

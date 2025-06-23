@@ -162,11 +162,11 @@ const RequestDetail = <T extends Record<string, any>>({
             <div className="space-y-8">
               <div className="flex flex-col gap-2 items-start text-sm">
                 <span className="opacity-75">Request Assigned to</span>{' '}
-                <div 
+                <div
                   className="bg-[#F6EEE0] rounded-md px-10 py-1 cursor-pointer hover:bg-[#F0E6D6] transition-colors"
                   onClick={() => (mode === 'reception' || mode === 'housekeeping' || mode === 'inroomcontrol') && setIsAssignModalOpen(true)}
                 >
-                    {apiData?.assignedTo || 'N/A'}
+                  {apiData?.assignedTo || 'N/A'}
                 </div>
               </div>
               <div className="flex flex-col gap-2 items-start text-sm">

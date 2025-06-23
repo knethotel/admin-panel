@@ -205,10 +205,27 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 />
 
                 {/* Visibility */}
-                <div className="flex gap-[87px]">
+                {/* <div className="flex gap-[87px]">
                   <span>Visibility</span>
                   <ToggleButton />
-                </div>
+                </div> */}
+                <FormField
+                  control={addItemForm.control}
+                  name="visibility"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center gap-[87px]">
+                      <FormLabel>Visibility</FormLabel>
+                      <FormControl>
+                        <ToggleButton
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+
               </div>
 
               {/* Product Image Upload */}
@@ -275,23 +292,13 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                               onChange={(e) => {
                                 const file = e.target.files?.[0];
                                 if (file) {
-                                  if (!file.type.startsWith('image/')) {
-                                    alert('Please upload an image file.');
-                                    return;
-                                  }
-                                  if (file.size > 5 * 1024 * 1024) {
-                                    alert('File size exceeds 5MB.');
-                                    return;
-                                  }
-                                  if (preview) URL.revokeObjectURL(preview);
-                                  const imageUrl = URL.createObjectURL(file);
-                                  setPreview(imageUrl);
                                   field.onChange(file);
                                 } else {
                                   setPreview(null);
                                   field.onChange(undefined);
                                 }
                               }}
+
                               className="hidden"
                               id="fileUpload"
                             />

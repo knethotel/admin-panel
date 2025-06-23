@@ -213,6 +213,8 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
         dueAmt: data.dueAmt || 0,
         paymentMode: data.paymentMode || '',
         roomCategory: data.roomCategory || '',
+        roomNumber: data.roomNumber || '',
+        roomTariff: data.roomTariff || '',
       };
 
       if (mode === 'edit' && id) {
@@ -247,6 +249,8 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
           dueAmt: data.dueAmt || 0,
           paymentMode: data.paymentMode || '',
           roomCategory: data.roomCategory || '',
+          roomNumber: data.roomNumber || '',  // Add room number here
+          roomTariff: data.roomTariff || '',
         };
 
         const res = await apiCall('POST', '/api/booking/addBooking', payload);

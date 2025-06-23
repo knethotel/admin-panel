@@ -81,7 +81,7 @@ const HotelForm = ({
   const tanNumberImageRef = useRef<HTMLInputElement>(null);
   const dataPrivacyGdprImageRef = useRef<HTMLInputElement>(null);
   const logoImageRef = useRef<HTMLInputElement>(null);
-  const additionalImageRef = useRef<HTMLInputElement>(null); // New ref for additional image
+  const additionalImageRef = useRef<HTMLInputElement>(null);
 
   const servingDepartmentOptions = [
     'Reception',
@@ -93,17 +93,16 @@ const HotelForm = ({
   const handleStateChange = (state: string) => {
     form.setValue('state', state);
     setSelectedState(state);
-    // optionally reset city on state change
     form.setValue('city', '');
   };
 
   // State for image previews
   const [imagePreviews, setImagePreviews] = useState<{
-    [key: string]: string[]; // Ensure it's an array for each key
+    [key: string]: string[];
   }>({
     logoImage: [],
     additionalImage: [],
-    roomImage: [], // Initialize as an empty array
+    roomImage: [],
     hotelLicenseImage: [],
     legalBusinessLicenseImage: [],
     touristLicenseImage: [],
@@ -112,7 +111,6 @@ const HotelForm = ({
   });
 
   const form = useForm<HotelSchemaType>({
-    // resolver: zodResolver(hotelSchema),
     defaultValues: {
       hotelName: '',
       number: '',
@@ -144,7 +142,7 @@ const HotelForm = ({
       internetConnectivity: false,
       softwareCompatibility: false,
       subscriptionPlan: 'Premium',
-      subscriptionPrice: 500,
+      subscriptionPrice: 0,
       netPrice: 0,
       applyCoupon: 'Choose coupon',
       subscriptionStartDate: '',
@@ -155,7 +153,18 @@ const HotelForm = ({
     form.getValues('state') || ''
   );
 
+
   const onSubmit = async (data: HotelSchemaType) => {
+    const subscriptionStartDate = new Date(data.subscriptionStartDate);
+
+    if (isNaN(subscriptionStartDate.getTime())) {
+      ToastAtTopRight.fire('Invalid Subscription Start Date', 'error');
+      return;
+    }
+
+    const formattedStartDate = subscriptionStartDate.toISOString().split('T')[0];
+    console.log("Formatted Subscription Start Date:", formattedStartDate);
+
     const payload = {
       name: data.hotelName,
       address: data.completeAddress,
@@ -170,11 +179,13 @@ const HotelForm = ({
       chainHotel: isChainHotelChecked,
       parentHotel: isChainHotelChecked ? data.parentHotelId : undefined,
       parentHotelId: data.parentHotelId || '',
-      // subHotelName: '',
       checkInTime: data.checkInTime,
+      subscriptionStartDate: formattedStartDate,
+      subscriptionPrice: data.subscriptionPrice,
+      subscriptionPlanName: data.subscriptionPlanName,
+      netPrice: data.netPrice,
       checkOutTime: data.checkOutTime,
       brandedHotel: isBrandedHotelChecked,
-      // parentHotel: isChainHotelChecked ? data.parentHotelName : '',
       subscriptionPlan: data.subscriptionPlan,
       logo: imagePreviews.logoImage?.[0] || '',
       images: imagePreviews.additionalImage,
@@ -208,15 +219,14 @@ const HotelForm = ({
           features: [room.feature],
           images: imagePreviews.roomImage,
           servingDepartment: ['Concierge Service', 'In-Room Dining', 'Spa'],
-          totalStaff: data.totalStaff
+          totalStaff: data.totalStaff,
         }))
         : []
     };
+    console.log("Payload:", payload);
 
-    if (
-      isChainHotelChecked &&
-      (!data.parentHotelId || data.parentHotelId.trim() === '')
-    ) {
+    // Validate parentHotelId when chain hotel is selected
+    if (isChainHotelChecked && (!data.parentHotelId || data.parentHotelId.trim() === '')) {
       ToastAtTopRight.fire(
         'Please enter Parent Hotel ID when Chain Hotel is selected',
         'error'
@@ -224,6 +234,7 @@ const HotelForm = ({
       return;
     }
 
+    // Determine URL and HTTP method based on mode
     const url =
       mode === 'edit'
         ? `api/hotel/update-hotel/${hotelId}`
@@ -233,11 +244,11 @@ const HotelForm = ({
 
     try {
       const response = await apiCall(method, url, payload);
+
+      // Check response status and handle success/failure
       if (response.status) {
         ToastAtTopRight.fire(
-          mode === 'edit'
-            ? 'Profile updated successfully'
-            : 'Hotel created successfully',
+          mode === 'edit' ? 'Profile updated successfully' : 'Hotel created successfully',
           'success'
         );
         if (mode === 'add') {
@@ -319,25 +330,14 @@ const HotelForm = ({
 
   const handleChainHotelChange = (checked: boolean) => {
     setIsChainHotelChecked(checked);
-    // if (checked) {
-    //   setIsBrandedHotelChecked(false);
-    //   // Update parent hotel name ONLY
-    //   form.setValue('parentHotelName', form.getValues('hotelName'));
-    // }
   };
 
   const handleImageRemove = (index: number, fieldName: string) => {
     setImagePreviews((prev) => {
-      const updatedImages = prev[fieldName].filter((_, i) => i !== index); // Filter out the image at index
-      return { ...prev, [fieldName]: updatedImages }; // Update the state with the new array
+      const updatedImages = prev[fieldName].filter((_, i) => i !== index);
+      return { ...prev, [fieldName]: updatedImages };
     });
   };
-
-  // useEffect(() => {
-  //   if (isChainHotelChecked) {
-  //     form.setValue('parentHotelName', form.getValues('hotelName'));
-  //   }
-  // }, [hotelName, isChainHotelChecked]);
 
   useEffect(() => {
     const fetchHotelData = async () => {
@@ -362,7 +362,7 @@ const HotelForm = ({
           mode === 'pending' ? res.request._id : data._id || '';
 
         setSelectedState(data.state || '');
-        setFetchedHotelData(data); // Store the data, but don't reset the form yet
+        setFetchedHotelData(data);
         console.log('Fetched hotel data:', data);
       } catch (error) {
         console.error('Failed to fetch hotel data', error);
@@ -430,11 +430,11 @@ const HotelForm = ({
           ? fetchedHotelData.subscriptionPlan
           : 'Premium',
 
-        subscriptionPrice: fetchedHotelData.subscriptionPrice || 500,
+        subscriptionPrice: fetchedHotelData.subscriptionPrice || 0,
         netPrice: 0,
         applyCoupon: 'Choose coupon'
       });
-      setFetchedHotelData(null); // Reset so it doesn't run again
+      setFetchedHotelData(null);
     }
   }, [selectedState, fetchedHotelData]);
 
@@ -446,11 +446,10 @@ const HotelForm = ({
   const fetchSubscriptionPlans = async () => {
     setIsLoading(true);
     try {
-      const response = await apiCall('GET', 'api/subscription/');
+      const response = await apiCall('GET', 'api/subscription');
+      console.log("API Response:", response);  // Debugging
       if (response.success && response.data) {
-        // Store the plans with their cost and plan name
         setSubscriptionPlans(response.data);
-        console.log("API Response:", response);
       } else {
         console.error('Failed to fetch subscription plans:', response);
         setSubscriptionPlans([]);
@@ -463,17 +462,56 @@ const HotelForm = ({
     }
   };
 
+
   useEffect(() => {
     fetchSubscriptionPlans();
   }, []);
 
-  // Handle subscription plan selection
   const handleSubscriptionPlanChange = (value: string) => {
-    const selectedPlan = subscriptionPlans.find(plan => plan.planName === value);
+    const selectedPlan = subscriptionPlans.find(plan => plan._id === value);
+
     if (selectedPlan) {
       form.setValue('subscriptionPrice', selectedPlan.cost);
+      form.setValue('subscriptionPlan', selectedPlan._id);
+      form.setValue('subscriptionPlanName', selectedPlan.planName);
     }
   };
+
+  const calculateNetPrice = async () => {
+    const subscriptionPlan = form.getValues('subscriptionPlan');
+    const couponCode = form.getValues('applyCoupon');
+
+    if (!subscriptionPlan || !couponCode || couponCode === 'Choose coupon') return;
+
+    try {
+      const response = await apiCall('POST', 'api/hotel/calculateNetPrice', {
+        subscriptionPlan,
+        couponCode,
+      });
+
+      if (response.success && typeof response.netPrice === 'number') {
+        form.setValue('netPrice', response.netPrice);
+      } else {
+        ToastAtTopRight.fire(response.message || 'Failed to calculate net price', 'error');
+      }
+    } catch (error) {
+      console.error('Net price calculation failed:', error);
+      ToastAtTopRight.fire('Server error while calculating net price', 'error');
+    }
+  };
+
+
+  useEffect(() => {
+    const subId = form.watch('subscriptionPlan');
+    const coupon = form.watch('applyCoupon');
+
+    if (subId) {
+      calculateNetPrice();
+    }
+  }, [form.watch('subscriptionPlan'), form.watch('applyCoupon')]);
+
+
+
 
   const fetchCoupons = async () => {
     setIsLoading(true);
@@ -502,7 +540,6 @@ const HotelForm = ({
     if (selectedCoupon) {
       // Set the coupon code and value in the form
       form.setValue('applyCoupon', selectedCoupon.code);
-      form.setValue('subscriptionPrice', selectedCoupon.value);
     }
   };
 
@@ -1314,100 +1351,7 @@ const HotelForm = ({
                 />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                {/* <FormField
-                  control={form.control}
-                  name="subscriptionPlan"
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        Allocate Subscription{' '}
-                        <span className="text-red-500">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          disabled={isDisabled}
-                        >
-                          <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
-                            <SelectValue placeholder="Select category" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-coffee">
-                            {['1 Month', '6 Months', '1 Year'].map((value) => (
-                              <SelectItem
-                                key={value}
-                                value={value}
-                                className="text-white"
-                              >
-                                {value}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage className="text-[10px]" />
-                    </FormItem>
-                  )}
-                /> */}
-                {/* <FormField control={form.control} name="subscriptionPlan" render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                      Allocate Subscription{' '}
-                      <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        disabled={isDisabled || isLoading}
-                      >
-                        <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-coffee">
-                          {isLoading ? (
-                            <SelectItem value="loading" className="text-white" disabled>
-                              Loading...
-                            </SelectItem>
-                          ) : (
-                            subscriptionPlans.map((plan, index) => (
-                              <SelectItem key={index} value={plan} className="text-white">
-                                {plan}
-                              </SelectItem>
-                            ))
-                          )}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage className="text-[10px]" />
-                  </FormItem>
-                )} />
-                <FormField
-                  control={form.control}
-                  name="subscriptionPrice"
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        Subscription Price{' '}
-                        <span className="text-red-500">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="500"
-                          placeholder="Enter Subscription Price"
-                          {...field}
-                          disabled={isDisabled}
-                          // onChange={(e) =>
-                          //   field.onChange(parseInt(e.target.value, 10))
-                          // }
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px]" />
-                    </FormItem>
-                  )}
-                /> */}
+
                 <FormField
                   control={form.control}
                   name="subscriptionPlan"
@@ -1422,7 +1366,7 @@ const HotelForm = ({
                           value={field.value}
                           onValueChange={(value) => {
                             field.onChange(value);
-                            handleSubscriptionPlanChange(value); // Update subscription price on plan change
+                            handleSubscriptionPlanChange(value);
                           }}
                           disabled={isDisabled || isLoading}
                         >
@@ -1436,13 +1380,12 @@ const HotelForm = ({
                               </SelectItem>
                             ) : (
                               subscriptionPlans.map((plan) => (
-                                <SelectItem key={plan._id || plan.planName} value={plan.planName} className="text-white">
+                                <SelectItem key={plan._id} value={plan._id} className="text-white">
                                   {plan.planName}
                                 </SelectItem>
                               ))
                             )}
                           </SelectContent>
-
                         </Select>
                       </FormControl>
                       <FormMessage className="text-[10px]" />
@@ -1465,7 +1408,7 @@ const HotelForm = ({
                           type="number"
                           min="0"
                           placeholder="Enter Subscription Price"
-                          {...field}
+                          {...field}  // Ensure this is connected to the form control
                           disabled={isDisabled}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
@@ -1474,6 +1417,9 @@ const HotelForm = ({
                     </FormItem>
                   )}
                 />
+
+
+
                 <FormField
                   control={form.control}
                   name="applyCoupon"
@@ -1486,8 +1432,8 @@ const HotelForm = ({
                         <Select
                           value={field.value}
                           onValueChange={(value) => {
-                            field.onChange(value); // Update the value in the form
-                            handleCouponChange(value); // Set coupon details
+                            field.onChange(value);
+                            handleCouponChange(value);
                           }}
                           disabled={isDisabled || isLoading}
                         >
@@ -1514,43 +1460,43 @@ const HotelForm = ({
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="netPrice"
-                  render={({ field }) => (
-                    <FormItem className="w-fit">
-                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        Net Price
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="0"
-                          {...field}
-                          // onChange={(e) =>
-                          //   field.onChange(parseInt(e.target.value, 10))
-                          // }
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[10px]" />
-                    </FormItem>
-                  )}
-                />
+                {form.watch('applyCoupon') !== 'Choose coupon' && (
+                  <FormField
+                    control={form.control}
+                    name="netPrice"
+                    render={({ field }) => (
+                      <FormItem className="w-fit">
+                        <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                          Net Price
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            min="0"
+                            {...field}
+                            readOnly
+                            className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-[10px]" />
+                      </FormItem>
+                    )}
+                  />
+                )}
+
                 <FormField
                   control={form.control}
                   name="subscriptionStartDate"
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        Subscription Start Date{' '}
-                        <span className="text-red-500">*</span>
+                        Subscription Start Date <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
                           type="date"
                           {...field}
-                          value={field.value || ''} // Ensure it's controlled
+                          value={field.value || ''}  // Ensure it's controlled
                           disabled={isDisabled}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
@@ -1559,6 +1505,9 @@ const HotelForm = ({
                     </FormItem>
                   )}
                 />
+
+
+
               </div>
             </div>
 
