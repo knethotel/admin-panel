@@ -53,6 +53,7 @@ export const InRoomControlDataTable: React.FC = () => {
               ? item.status.charAt(0).toUpperCase() + item.status.slice(1)
               : 'N/A',
             assignedTo: item.assignedTo || 'N/A',
+            serviceID: item._id,
             estimatedTime: item.estimatedTime || '',
             requestDetail: item.requestDetail || 'N/A',
             requestType: item.serviceType || 'N/A',
@@ -126,14 +127,14 @@ export const InRoomControlDataTable: React.FC = () => {
           searchKey="firstName"
           columns={columns}
           data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)} // Use filteredData instead of data while api integration
-          // onSearch={(searchValue) => {
-          //     const filtered = data.filter((item) =>
-          //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())
-          //     );
-          //     setData(filtered);
-          // }}
-          // filters={filters}
-          //   onFilterChange={handleFilterChange}
+        // onSearch={(searchValue) => {
+        //     const filtered = data.filter((item) =>
+        //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())
+        //     );
+        //     setData(filtered);
+        // }}
+        // filters={filters}
+        //   onFilterChange={handleFilterChange}
         />
       )}
 

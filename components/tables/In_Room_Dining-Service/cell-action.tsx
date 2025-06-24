@@ -22,7 +22,8 @@ const CellAction = (props: any) => {
   };
 
   const handleViewUser = () => {
-    router.push(`/hotel-panel/service-management/inroomdining/details/${data.requestID}`);
+    router.push(`/hotel-panel/service-management/inroomdining/details/${data?.serviceID}`);
+    console.log("requestID:", data);
   };
 
   return (

@@ -5,11 +5,12 @@ type Params = {
   id: string;
 };
 const ViewDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
-  const id = (await params).id;
+  const { id } = await params;
+  console.log(id)
   return (
     <div className="flex justify-center items-center h-screen w-full pt-28">
       <div className="h-full w-full container">
-        <RequestDetail mode="inroomcontrol" requestId={id} />
+        <RequestDetail requestId={id} mode="inroomcontrol" />
       </div>
     </div>
   );

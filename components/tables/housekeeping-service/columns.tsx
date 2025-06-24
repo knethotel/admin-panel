@@ -22,7 +22,7 @@ export const columns: ColumnDef<HousekeepingDataType>[] = [
     }
   },
   {
-    accessorKey: 'guestDetails',
+    accessorKey: 'guestDetails', // Ensure this is correct
     header: 'Guest Details',
     cell: ({ row }) => {
       const details = row.original.guestDetails;
