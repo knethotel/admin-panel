@@ -5,7 +5,7 @@ import AssignModal from '@/components/shared/AssignModal';
 
 type Props<T> = {
   requestId: string;
-  mode?: 'reception' | 'other' | 'housekeeping' | 'inroomcontrol' | 'gym';
+  mode?: 'reception' | 'other' | 'housekeeping' | 'inroomcontrol' | 'gym' | 'inroomdining';
 };
 
 interface RequestData {
@@ -75,6 +75,19 @@ const RequestDetail = <T extends Record<string, any>>({
         setLoading(true);
         try {
           const result = await apiCall('GET', `api/services/facility/requests/${requestId}`);
+          if (result.success) {
+            setApiData(result.data);
+          }
+        } catch (error) {
+          console.error('Error fetching gym request details:', error);
+        } finally {
+          setLoading(false);
+        }
+      } else if (mode === 'inroomdining' && requestId) {
+        setLoading(true);
+        try {
+          const result = await apiCall('GET', `api/services/inroomdining/bookings/${requestId}`);
+          console.log('API Response:', result);
           if (result.success) {
             setApiData(result.data);
           }
@@ -164,9 +177,9 @@ const RequestDetail = <T extends Record<string, any>>({
                 <span className="opacity-75">Request Assigned to</span>{' '}
                 <div
                   className="bg-[#F6EEE0] rounded-md px-10 py-1 cursor-pointer hover:bg-[#F0E6D6] transition-colors"
-                  onClick={() => (mode === 'reception' || mode === 'housekeeping' || mode === 'inroomcontrol') && setIsAssignModalOpen(true)}
+                  onClick={() => (mode === 'reception' || mode === 'housekeeping' || mode === 'inroomcontrol' || mode === 'inroomdining') && setIsAssignModalOpen(true)}
                 >
-                  {apiData?.assignedTo || 'N/A'}
+                  {'N/A'}
                 </div>
               </div>
               <div className="flex flex-col gap-2 items-start text-sm">

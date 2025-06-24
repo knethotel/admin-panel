@@ -62,6 +62,10 @@ export const columns: ColumnDef<InRoomControlDataType>[] = [
     }
   },
   {
+    accessorKey: 'serviceID',
+    header: 'Service ID'
+  },
+  {
     accessorKey: 'assignedTo',
     header: 'Assigned to',
     cell: ({ row }) => {

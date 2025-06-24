@@ -84,39 +84,41 @@
 
 
 // components/tables/gym-service/columns.ts
+// components/tables/gym-service/columns.ts
 import { ColumnDef } from '@tanstack/react-table';
 import { GymServiceDataType } from 'app/static/services-management/Gym';
 import CellAction from './cell-action';
 
 export const columns: ColumnDef<GymServiceDataType>[] = [
   {
-    accessorKey: 'uniqueId',
+    accessorKey: 'requestID',
     header: 'Request ID'
   },
   {
     accessorKey: 'requestTime',
     header: 'Request Time',
     cell: ({ row }) => {
-      const dateObj = new Date(row.original.requestTime);
+      const { date, time } = row.original.requestTime;
       return (
-        <div className="flex flex-col">
-          <p className="text-xs">{dateObj.toLocaleDateString()}</p>
-          <p className="text-xs opacity-60">{dateObj.toLocaleTimeString()}</p>
+        <div className="flex flex-col justify-center">
+          <p className="text-xs 2xl:text-sm opacity-50">{date}</p>
+          <p className="text-xs 2xl:text-sm opacity-50">{time}</p>
         </div>
       );
     }
   },
   {
-    accessorKey: 'guest',
-    header: 'Guest',
+    accessorKey: 'guestDetails', // Ensure this is correct
+    header: 'Guest Details',
     cell: ({ row }) => {
-      const guest = row.original.guest;
+      const details = row.original.guestDetails;
       return (
-        <div className="flex flex-col">
-          <p className="text-sm font-medium">
-            {guest.firstName} {guest.lastName}
-          </p>
-          <p className="text-xs text-muted">ID: {guest._id}</p>
+        <div className="flex justify-center items-center">
+          <div className="flex flex-col w-1/2 justify-center items-start gap-1">
+            <p className="text-sm text-gray-900">{details.name}</p>
+            <p className="text-xs text-gray-600">{details.guestID}</p>
+            <p className="text-xs text-gray-600">{details.roomNo}</p>
+          </div>
         </div>
       );
     }

@@ -144,25 +144,59 @@ export const GymServiceTable: React.FC = () => {
   const [pageNo, setPageNo] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState(false);
+  const [totalRecords, setTotalRecords] = useState(0);
+
+
 
   useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await apiCall('GET', 'api/services/facility/requests');
+        if (response.success && Array.isArray(response.data)) {
+          // Map API data to table format
+          const mapped = response.data.map((item: any) => ({
+            requestID: item.uniqueId || 'N/A',
+            serviceID: item._id,
+            requestTime: {
+              date: item.requestTime ? new Date(item.requestTime).toLocaleDateString() : 'N/A',
+              time: item.requestTime ? new Date(item.requestTime).toLocaleTimeString() : 'N/A',
+            },
+            guestDetails: {
+              name: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`.trim(),
+              guestID: item.guest?._id || 'N/A',
+              roomNo: item.slot?.roomNo || 'N/A', // Assuming roomNo can be derived from the slot or other data
+            },
+            status: item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : 'N/A', // Capitalize first letter
+            assignedTo: item.assignedTo ? `${item.assignedTo.firstName || ''} ${item.assignedTo.lastName || ''}` : 'N/A',
+            estimatedTime: item.slot?.startTime ? item.slot.startTime : 'N/A', // Assuming estimated time comes from the slot
+            requestDetail: item.requestDetail || 'N/A',
+            facilityType: item.facilityType || 'N/A', // 'Gym', 'ConferenceHall', 'CommunityHall'
+            requestType: item.requestType || 'N/A', // Add requestType if needed, can be fetched from data
+            wakeUpTime: item.slot?.endTime || 'N/A', // Assuming wakeUpTime or similar information
+            HotelId: item.HotelId || 'N/A',
+          }));
+
+          setData(mapped);
+          setFilteredData(mapped);
+          setTotalRecords(mapped.length);
+        } else {
+          setData([]);
+          setFilteredData([]);
+          setTotalRecords(0);
+        }
+      } catch (error) {
+        console.error(error);
+        setData([]);
+        setFilteredData([]);
+        setTotalRecords(0);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchData();
   }, []);
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const response = await apiCall('GET', 'api/services/facility/requests');
-      const records: GymServiceDataType[] = response?.data || [];
-      console.log(response?.data)
-      setData(records);
-      setFilteredData(records);
-    } catch (err) {
-      console.error('Failed to fetch:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= Math.ceil(filteredData.length / limit)) {

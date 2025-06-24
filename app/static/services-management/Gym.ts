@@ -7,14 +7,20 @@ type StatusType = 'Pending' | 'In-Progress' | 'Completed';
 export type GymServiceDataType = {
   _id: string;
   uniqueId: string;
+  requestID: string;
   requestDetail: string;
   paymentStatus: string;
   facilityType: 'Gym' | 'ConferenceHall' | 'CommunityHall';
-  requestTime: string;
-  guest: {
-    _id: string;
-    firstName: string;
-    lastName: string;
+  requestTime: {
+    date: string;
+    time: string;
+  };
+  guestDetails: {
+    guestID: string;
+    roomNo: string;
+    mobileNumber: string;
+    email: string;
+    name: string;
   };
   slot: {
     dayOfWeek: string;

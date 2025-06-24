@@ -11,6 +11,7 @@ export type HousekeepingDataType = {
   requestID: string;
   requestDetail: string;
   responseDetail: string;
+  _id: string;
   requestAssignedTo: string;
   requestTime: {
     date: string;
@@ -18,10 +19,10 @@ export type HousekeepingDataType = {
   };
   guestDetails: {
     guestID: string;
-    name: string;
     roomNo: string;
     mobileNumber: string;
     email: string;
+    name: string;
   };
   requestType: RequestTypeType;
   status: StatusType;
