@@ -1,3 +1,77 @@
+// 'use client';
+// import { zodResolver } from '@hookform/resolvers/zod';
+// import React, { useEffect, useState } from 'react';
+// import { useForm } from 'react-hook-form';
+// import { useRouter } from 'next/navigation';
+// import {
+//   SpaManageProductsModalFormSchema,
+//   SpaManageProductsModalFormSchemaType
+// } from 'schema';
+// import { PiCameraThin } from 'react-icons/pi';
+// import {
+//   Form,
+//   FormField,
+//   FormItem,
+//   FormLabel,
+//   FormControl,
+//   FormMessage
+// } from '../../ui/form';
+// import { Input } from '../../ui/input';
+// import { Button } from '../../ui/button';
+// import { ArrowDown, ChevronDown, X } from 'lucide-react';
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue
+// } from '@/components/ui/select';
+// import { Textarea } from '@/components/ui/textarea';
+
+// interface ModalProps {
+//   isOpen: boolean;
+//   onClose: () => void;
+// }
+
+// const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
+//   const router = useRouter();
+//   // Separate state for each image preview
+//   const [productPreview, setProductPreview] = useState<string | null>(null);
+//   const [additionalServicePreview, setAdditionalServicePreview] = useState<
+//     string | null
+//   >(null);
+
+//   // Cleanup for both previews
+//   useEffect(() => {
+//     return () => {
+//       if (productPreview) URL.revokeObjectURL(productPreview);
+//       if (additionalServicePreview)
+//         URL.revokeObjectURL(additionalServicePreview);
+//     };
+//   }, [productPreview, additionalServicePreview]);
+
+//   const form = useForm<SpaManageProductsModalFormSchemaType>({
+//     resolver: zodResolver(SpaManageProductsModalFormSchema),
+//     defaultValues: {
+//       productCategory: '',
+//       selectService: 'SPA SERVICE',
+//       name: '',
+//       description: '',
+//       productImage: undefined,
+//       additionalService: '',
+//       additionalServicePrice: 0,
+//       additionalServiceImage: undefined
+//     }
+//   });
+
+//   const onSubmit = (data: SpaManageProductsModalFormSchemaType) => {
+//     console.log('Submitted Data:', data);
+//     form.reset();
+//     setProductPreview(null);
+//     setAdditionalServicePreview(null);
+//   };
+
+//   if (!isOpen) return null;
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useEffect, useState } from 'react';
@@ -18,7 +92,7 @@ import {
 } from '../../ui/form';
 import { Input } from '../../ui/input';
 import { Button } from '../../ui/button';
-import { ArrowDown, ChevronDown, X } from 'lucide-react';
+import { ChevronDown, X } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -27,6 +101,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import apiCall from '@/lib/axios';
 
 interface ModalProps {
   isOpen: boolean;
@@ -35,18 +110,13 @@ interface ModalProps {
 
 const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
-  // Separate state for each image preview
   const [productPreview, setProductPreview] = useState<string | null>(null);
-  const [additionalServicePreview, setAdditionalServicePreview] = useState<
-    string | null
-  >(null);
+  const [additionalServicePreview, setAdditionalServicePreview] = useState<string | null>(null);
 
-  // Cleanup for both previews
   useEffect(() => {
     return () => {
       if (productPreview) URL.revokeObjectURL(productPreview);
-      if (additionalServicePreview)
-        URL.revokeObjectURL(additionalServicePreview);
+      if (additionalServicePreview) URL.revokeObjectURL(additionalServicePreview);
     };
   }, [productPreview, additionalServicePreview]);
 
@@ -64,15 +134,45 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     }
   });
 
-  const onSubmit = (data: SpaManageProductsModalFormSchemaType) => {
-    console.log('Submitted Data:', data);
-    form.reset();
-    setProductPreview(null);
-    setAdditionalServicePreview(null);
+  const onSubmit = async (data: SpaManageProductsModalFormSchemaType) => {
+    try {
+      const payload = {
+        serviceType: data.selectService === 'SPA SERVICE' ? 'Spa' : 'Salon',
+        productCategory: data.productCategory,
+        productName: data.name,
+        description: data.description,
+        price: data.additionalServicePrice,
+        // skip image fields for now unless your backend accepts base64 or URLs
+        additionalServices: data.additionalService
+          ? [
+            {
+              name: data.additionalService,
+              price: data.additionalServicePrice
+            }
+          ]
+          : []
+      };
+
+      const response = await apiCall('POST', 'api/services/spasalon/products', payload);
+
+      if (response?.success) {
+        alert('Product added successfully');
+        form.reset();
+        setProductPreview(null);
+        setAdditionalServicePreview(null);
+        onClose();
+      } else {
+        alert(response?.message || 'Something went wrong');
+      }
+    } catch (error) {
+      console.error('Error submitting product:', error);
+      alert('Submission failed. Please try again.');
+    }
   };
 
-  if (!isOpen) return null;
 
+
+  if (!isOpen) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
       <div className="bg-[#FAF6EF] rounded-lg shadow-lg pt-4 pb-8 w-full max-w-5xl relative animate-fadeIn">

@@ -4,18 +4,28 @@ import ConciergeServiceRequestDetail from '@/components/service-management/conci
 type Params = {
   id: string;
 };
-const ViewDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
-  const id = (await params).id;
+// const ViewDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
+//   const id = (await params).id;
+//   return (
+//     <div className="flex justify-center items-center h-full w-full pt-3">
+//       <div className="h-full w-full container">
+//         <ConciergeServiceRequestDetail
+//           requestDetails={ConciergeServiceData}
+//           requestId={id}
+//         />
+//       </div>
+//     </div>
+//   );
+// };
+
+const ViewDetails = async ({ params }: { params: Promise<{ serviceID: string }> }) => {
+  const { serviceID } = await params;
   return (
-    <div className="flex justify-center items-center h-full w-full pt-3">
+    <div className="flex justify-center items-center h-screen w-full pt-28">
       <div className="h-full w-full container">
-        <ConciergeServiceRequestDetail
-          requestDetails={ConciergeServiceData}
-          requestId={id}
-        />
+        <ConciergeServiceRequestDetail serviceID={serviceID} />
       </div>
     </div>
   );
 };
-
 export default ViewDetails;

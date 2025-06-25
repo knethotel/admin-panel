@@ -1,56 +1,90 @@
+
 // 'use client';
 
-// import { useState } from 'react';
+// import { useState, useEffect } from 'react';
 // import { Button } from '@/components/ui/button';
 // import { DataTable } from '@/components/ui/data-table';
 // import { Settings } from 'lucide-react';
-
 // import { useRouter } from 'next/navigation';
 // import { columns } from './columns';
 
-// import { SpaServiceData } from 'app/static/services-management/Spa';
+// import axios from 'axios';
 // import ToggleButton from '@/components/ui/toggleButton';
-// import PriceTimeSetting from '@/components/modal/PriceTimeSetting';
-// import ManageProductsModal from '@/components/modal/spa-service/manage-products';
 // import PriceTimeSettingSpa from '@/components/modal/spa-service/PriceTimeSetting';
+// import ManageProductsModal from '@/components/modal/spa-service/manage-products';
+// import apiCall from '@/lib/axios';
 
 // export const SpaServiceDataTable: React.FC = () => {
 //   const router = useRouter();
-//   const [data, setData] = useState(SpaServiceData || []);
-//   const [filteredData, setFilteredData] = useState(SpaServiceData || []);
+//   const [data, setData] = useState<any[]>([]);
+//   const [filteredData, setFilteredData] = useState<any[]>([]);
 //   const [pageNo, setPageNo] = useState(1);
 //   const [limit, setLimit] = useState(10);
-//   const [loading, setLoading] = useState<boolean>();
-//   const [totalRecords, setTotalRecords] = useState(data.length || 0);
+//   const [loading, setLoading] = useState<boolean>(true);
+//   const [totalRecords, setTotalRecords] = useState(0);
 
-//   // **********Search Filter and pagination logic************
-//   // const filters = [
-//   //     {
-//   //         label: 'Account Status',
-//   //         key: 'accountStatus', // Backend key
-//   //         subOptions: ['Active', 'Suspended'],
-//   //     },
-//   //     {
-//   //         label: 'Verification Status',
-//   //         key: 'verificationStatus',
-//   //         subOptions: ['Verified', 'Pending', 'Rejected'],
-//   //     },
-//   //     {
-//   //         label: 'Activity Status',
-//   //         key: 'activityStatus',
-//   //         subOptions: ['Active', 'Inactive'],
-//   //     },
-//   // ];
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [isManageProductsModalOpen, setIsManageProductsModalOpen] =
+//     useState(false);
+
+//   // Fetch data from API
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       setLoading(true);
+//       try {
+//         const response = await apiCall('GET', 'api/services/reception/requests');
+//         if (response.success && Array.isArray(response.data)) {
+//           // Map API data to table format
+//           const mapped = response.data.map((item: any) => ({
+//             serviceID: item._id || 'N/A',
+//             requestTime: {
+//               date: item.requestTime ? new Date(item.requestTime).toLocaleDateString() : 'N/A',
+//               time: item.requestTime ? new Date(item.requestTime).toLocaleTimeString() : 'N/A',
+//             },
+//             guestDetails: {
+//               name: item.guest ? `${item.guest.firstName || ''} ${item.guest.lastName || ''}`.trim() : 'N/A',
+//               guestID: item.guest?._id || 'N/A',
+//               roomNo: item.roomNo || 'N/A',
+//             },
+//             status: item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : 'N/A',
+//             assignedTo: item.assignedTo || 'N/A',
+//             estimatedTime: item.estimatedTime || '',
+//             requestDetail: item.requestDetail || 'N/A',
+//             serviceType: item.serviceType || 'N/A',
+//             requestType: item.requestType || 'N/A',
+//             uniqueId: item.uniqueId || 'N/A',
+//             wakeUpTime: item.wakeUpTime || '',
+//             HotelId: item.HotelId || '',
+//           }));
+//           setData(mapped);
+//           setFilteredData(mapped);
+//           setTotalRecords(mapped.length);
+//         } else {
+//           setData([]);
+//           setFilteredData([]);
+//           setTotalRecords(0);
+//         }
+//       } catch (error) {
+//         setData([]);
+//         setFilteredData([]);
+//         setTotalRecords(0);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchData();
+//   }, []);
+
+//   // Call fetchData when the component mounts
+//   // useEffect(() => {
+//   //   fetchData();
+//   // }, []);
 
 //   const handlePageChange = (newPage: number) => {
 //     if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
 //       setPageNo(newPage);
 //     }
 //   };
-
-//   const [isModalOpen, setIsModalOpen] = useState(false);
-//   const [isManageProductsModalOpen, setIsManageProductsModalOpen] =
-//     useState(false);
 
 //   const handleLimitChange = (newLimit: number) => {
 //     setLimit(newLimit);
@@ -63,29 +97,29 @@
 //       setFilteredData(data); // Reset if empty
 //     } else {
 //       const filtered = data.filter((item) =>
-//         item.guestDetails.name.toLowerCase().includes(searchValue.toLowerCase())
+//         item.guestName.toLowerCase().includes(searchValue.toLowerCase())
 //       );
 //       setFilteredData(filtered);
 //     }
 //   };
+
+//   // Check filteredData before rendering
+//   console.log('Filtered Data:', filteredData);  // Log filteredData
+
 //   return (
 //     <>
 //       <div className="w-full pt-20 flex items-center gap-2 justify-end px-4 py-2 bg-white">
 //         <div className="flex w-full justify-between items-center">
 //           <h2 className="text-coffee text-xl font-bold">Spa/Salon</h2>
 //           <div className="flex items-center gap-2">
-//             <h2 className="text-[0.8rem] font-semibold">
-//               AUTO ACCEPT REQUESTS
-//             </h2>
+//             <h2 className="text-[0.8rem] font-semibold">AUTO ACCEPT REQUESTS</h2>
 //             <ToggleButton />
 //           </div>
 //         </div>
-//         <Settings className='cursor-pointer' onClick={() => setIsModalOpen(true)} />
-//         <PriceTimeSettingSpa
-//           isOpen={isModalOpen}
-//           onClose={() => setIsModalOpen(false)}
-//         />
+//         <Settings className="cursor-pointer" onClick={() => setIsModalOpen(true)} />
+//         <PriceTimeSettingSpa isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 //       </div>
+
 //       <div className="w-full flex justify-end px-4">
 //         <Button
 //           onClick={() => setIsManageProductsModalOpen(true)}
@@ -98,23 +132,20 @@
 //           onClose={() => setIsManageProductsModalOpen(false)}
 //         />
 //       </div>
+
 //       {loading ? (
 //         <span>Loading...</span>
+//       ) : filteredData.length === 0 ? (
+//         <span>No data available</span>
 //       ) : (
 //         <DataTable
-//           searchKey="firstName"
+//           searchKey="guestName"
 //           columns={columns}
-//           data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)} // Use filteredData instead of data while api integration
-//           // onSearch={(searchValue) => {
-//           //     const filtered = data.filter((item) =>
-//           //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())
-//           //     );
-//           //     setData(filtered);
-//           // }}
-//           // filters={filters}
-//           //   onFilterChange={handleFilterChange}
+//           data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)}
 //         />
 //       )}
+
+
 //       <div className="flex justify-end space-x-2 px-3 py-2">
 //         <div className="space-x-2">
 //           <Button
@@ -152,7 +183,6 @@ import { Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 
-import axios from 'axios';
 import ToggleButton from '@/components/ui/toggleButton';
 import PriceTimeSettingSpa from '@/components/modal/spa-service/PriceTimeSetting';
 import ManageProductsModal from '@/components/modal/spa-service/manage-products';
@@ -168,47 +198,41 @@ export const SpaServiceDataTable: React.FC = () => {
   const [totalRecords, setTotalRecords] = useState(0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isManageProductsModalOpen, setIsManageProductsModalOpen] =
-    useState(false);
+  const [isManageProductsModalOpen, setIsManageProductsModalOpen] = useState(false);
 
-  // Fetch data from API
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchBookings = async () => {
       setLoading(true);
       try {
-        const response = await apiCall('GET', 'api/services/reception/requests');
+        const response = await apiCall('GET', `api/services/spasalon/bookings?page=${pageNo}&limit=${limit}`);
         if (response.success && Array.isArray(response.data)) {
-          // Map API data to table format
           const mapped = response.data.map((item: any) => ({
-            requestID: item._id || 'N/A',
-            requestTime: {
-              date: item.requestTime ? new Date(item.requestTime).toLocaleDateString() : 'N/A',
-              time: item.requestTime ? new Date(item.requestTime).toLocaleTimeString() : 'N/A',
-            },
-            guestDetails: {
-              name: item.guest ? `${item.guest.firstName || ''} ${item.guest.lastName || ''}`.trim() : 'N/A',
-              guestID: item.guest?._id || 'N/A',
-              roomNo: item.roomNo || 'N/A',
-            },
-            status: item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : 'N/A',
-            assignedTo: item.assignedTo || 'N/A',
-            estimatedTime: item.estimatedTime || '',
-            requestDetail: item.requestDetail || 'N/A',
-            serviceType: item.serviceType || 'N/A',
-            requestType: item.requestType || 'N/A',
-            uniqueId: item.uniqueId || 'N/A',
-            wakeUpTime: item.wakeUpTime || '',
-            HotelId: item.HotelId || '',
+            // bookingID: item._id,
+            serviceID: item._id || 'N/A',
+            guestName: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`.trim(),
+            serviceType: item.spaSalonProduct?.serviceType || 'N/A',
+            productName: item.spaSalonProduct?.productName || 'N/A',
+            productCategory: item.spaSalonProduct?.productCategory || 'N/A',
+            bookingDate: item.bookingDate ? new Date(item.bookingDate).toLocaleDateString() : 'N/A',
+            bookingTime: item.bookingTime || 'N/A',
+            status: item.status || 'N/A',
+            paymentStatus: item.paymentStatus || 'N/A',
+            amount: item.amount?.finalAmount || 0,
+            description: item.description || item.notes || '-',
+            uniqueId: item.uniqueId || '',
+            assignedTo: item.assignedTo ? `${item.assignedTo.firstName || ''} ${item.assignedTo.lastName || ''}` : 'Unassigned',
+            estimatedDeliveryTime: item.estimatedDeliveryTime ? new Date(item.estimatedDeliveryTime).toLocaleString() : '',
           }));
           setData(mapped);
           setFilteredData(mapped);
-          setTotalRecords(mapped.length);
+          setTotalRecords(response.total || mapped.length); // assuming pagination
         } else {
           setData([]);
           setFilteredData([]);
           setTotalRecords(0);
         }
       } catch (error) {
+        console.error('Failed to fetch bookings:', error);
         setData([]);
         setFilteredData([]);
         setTotalRecords(0);
@@ -216,13 +240,9 @@ export const SpaServiceDataTable: React.FC = () => {
         setLoading(false);
       }
     };
-    fetchData();
-  }, []);
 
-  // Call fetchData when the component mounts
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+    fetchBookings();
+  }, [pageNo, limit]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= Math.ceil(totalRecords / limit)) {
@@ -230,25 +250,18 @@ export const SpaServiceDataTable: React.FC = () => {
     }
   };
 
-  const handleLimitChange = (newLimit: number) => {
-    setLimit(newLimit);
-    setPageNo(1); // Reset to the first page when the limit changes
-  };
-
-  // Function to handle search input
   const handleSearchChange = (searchValue: string) => {
-    if (searchValue.trim() === '') {
-      setFilteredData(data); // Reset if empty
+    if (!searchValue.trim()) {
+      setFilteredData(data);
     } else {
-      const filtered = data.filter((item) =>
-        item.guestName.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      setFilteredData(filtered);
+      const lower = searchValue.toLowerCase();
+      setFilteredData(data.filter((item) =>
+        item.guestName.toLowerCase().includes(lower) ||
+        item.productName.toLowerCase().includes(lower) ||
+        item.uniqueId.toLowerCase().includes(lower)
+      ));
     }
   };
-
-  // Check filteredData before rendering
-  console.log('Filtered Data:', filteredData);  // Log filteredData
 
   return (
     <>
@@ -278,9 +291,9 @@ export const SpaServiceDataTable: React.FC = () => {
       </div>
 
       {loading ? (
-        <span>Loading...</span>
+        <span className="px-4 py-8">Loading...</span>
       ) : filteredData.length === 0 ? (
-        <span>No data available</span>
+        <span className="px-4 py-8">No bookings found.</span>
       ) : (
         <DataTable
           searchKey="guestName"
@@ -288,7 +301,6 @@ export const SpaServiceDataTable: React.FC = () => {
           data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)}
         />
       )}
-
 
       <div className="flex justify-end space-x-2 px-3 py-2">
         <div className="space-x-2">

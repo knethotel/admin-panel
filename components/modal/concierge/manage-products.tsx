@@ -283,7 +283,7 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
-                  router.push('/hotel-panel/service-management/concierge/products');
+                  router.push('/hotel-panel/service-management/conciergeservice/products');
                 }}
                 className="btn-primary"
               >
