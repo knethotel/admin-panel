@@ -22,7 +22,13 @@ interface RequestData {
   requestAssignedTo?: string;
   estimatedDeliveryTime?: string;
   requestType: string;
-  assignedTo?: string;
+  assignedTo?: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    mobileNumber?: string;
+  };
+
 }
 
 const RequestDetail = <T extends Record<string, any>>({
@@ -177,9 +183,16 @@ const RequestDetail = <T extends Record<string, any>>({
                 <span className="opacity-75">Request Assigned to</span>{' '}
                 <div
                   className="bg-[#F6EEE0] rounded-md px-10 py-1 cursor-pointer hover:bg-[#F0E6D6] transition-colors"
-                  onClick={() => (mode === 'reception' || mode === 'housekeeping' || mode === 'inroomcontrol' || mode === 'inroomdining') && setIsAssignModalOpen(true)}
+                  onClick={() =>
+                    (mode === 'reception' ||
+                      mode === 'housekeeping' ||
+                      mode === 'inroomcontrol' ||
+                      mode === 'inroomdining') && setIsAssignModalOpen(true)
+                  }
                 >
-                  {'N/A'}
+                  {apiData?.assignedTo?.firstName
+                    ? `${apiData.assignedTo.firstName} ${apiData.assignedTo.lastName}`
+                    : 'N/A'}
                 </div>
               </div>
               <div className="flex flex-col gap-2 items-start text-sm">

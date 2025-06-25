@@ -68,7 +68,7 @@ export const columns = (): ColumnDef<ReceptionDataType>[] => [
     header: 'Assigned to',
     cell: ({ row }) => {
       const assignedTo = row.original.assignedTo;
-      return <div className="text-sm">{assignedTo || 'N/A'}</div>;
+      return <div className="text-sm">{assignedTo}</div>;
     }
   },
   {

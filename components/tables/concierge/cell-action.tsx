@@ -23,7 +23,7 @@ const CellAction = (props: any) => {
 
   const handleViewUser = () => {
     router.push(
-      `/hotel-panel/service-management/conciergeservice/details/${data.requestID}`
+      `/hotel-panel/service-management/conciergeservice/details/${data.serviceID}`
     );
   };
 

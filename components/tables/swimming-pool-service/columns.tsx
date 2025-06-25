@@ -1,73 +1,181 @@
+// import { ColumnDef } from '@tanstack/react-table';
+// import { SwimmingpoolServiceDataType } from 'app/static/services-management/SwimmingPool';
+// import CellAction from './cell-action';
+// // Updated columns to match
+// export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
+//   {
+//     accessorKey: 'requestID',
+//     header: 'Request ID'
+//   },
+//   {
+//     accessorKey: 'requestTime',
+//     header: 'Request Time'
+//   },
+//   {
+//     accessorKey: 'guestDetails',
+//     header: 'Guest Details',
+//     cell: ({ row }) => {
+//       const details = row.original.guestDetails;
+//       return (
+//         <div className="flex justify-center items-center">
+//           <div className="flex flex-col w-1/2 justify-center items-start gap-1">
+//             <p className="text-sm text-gray-900">{details.name}</p>
+//             <p className="text-xs text-gray-600">{details.guestID}</p>
+//             <p className="text-xs text-gray-600">{details.roomNo}</p>
+//           </div>
+//         </div>
+//       );
+//     }
+//   },
+//   {
+//     accessorKey: 'requestType',
+//     header: 'Request Type',
+//     cell: ({ row }) => {
+//       const type = row.original.requestType;
+//       return <div className="text-sm">{type}</div>;
+//     }
+//   },
+//   {
+//     accessorKey: 'status',
+//     header: 'Status',
+//     cell: ({ row }) => {
+//       const status = row.original.status;
+//       switch (status) {
+//         case 'Pending':
+//           return <div className="text-sm text-[#3787E3]">{status}</div>;
+//         case 'In-Progress':
+//           return <div className="text-sm text-[#FC690E]">{status}</div>;
+//         case 'Completed':
+//           return <div className="text-sm text-[#78B150]">{status}</div>;
+//         default:
+//           return <div className="text-sm text-gray-500">{status}</div>;
+//       }
+//     }
+//   },
+//   {
+//     accessorKey: 'assignedTo',
+//     header: 'Assigned to',
+//     cell: ({ row }) => {
+//       const assignedTo = row.original.assignedTo;
+//       return <div className="text-sm">{assignedTo}</div>;
+//     }
+//   },
+//   {
+//     accessorKey: 'actions',
+//     id: 'actions',
+//     header: 'Actions',
+//     cell: ({ row }) => (
+//       <div className="flex items-center justify-center">
+//         <CellAction data={row.original} />
+//       </div>
+//     )
+//   }
+// ];
+
+
 import { ColumnDef } from '@tanstack/react-table';
-import { SwimmingpoolServiceDataType } from 'app/static/services-management/SwimmingPool';
 import CellAction from './cell-action';
-// Updated columns to match
+
+export type SwimmingpoolServiceDataType = {
+  requestID: string;
+  poolID: string;
+  uniqueId: string;
+  requestDetail: string;
+  responseDetail: string;
+  requestAssignedTo: string;
+  requestTime: {
+    date: string;
+    time: string;
+  };
+  guestDetails: {
+    guestID: string;
+    name: string;
+    roomNo: string;
+    mobileNumber: string;
+    email: string;
+  };
+  requestType: string;
+  status: string;
+  assignedTo: string;
+  requestedTimeSlot: string;
+  effectiveCost: string;
+  paymentStatus: string;
+  rulesAndRegulations: string;
+};
+
 export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
   {
-    accessorKey: 'requestID',
-    header: 'Request ID'
+    accessorKey: 'uniqueId',
+    header: 'Request ID',
+    cell: ({ row }) => (
+      <div className="text-sm font-medium text-gray-900">{row.original.uniqueId}</div>
+    ),
   },
   {
     accessorKey: 'requestTime',
-    header: 'Request Time'
-  },
-  {
-    accessorKey: 'guestDetails',
-    header: 'Guest Details',
+    header: 'Request Time',
     cell: ({ row }) => {
-      const details = row.original.guestDetails;
+      const { date, time } = row.original.requestTime;
       return (
         <div className="flex justify-center items-center">
           <div className="flex flex-col w-1/2 justify-center items-start gap-1">
-            <p className="text-sm text-gray-900">{details.name}</p>
-            <p className="text-xs text-gray-600">{details.guestID}</p>
-            <p className="text-xs text-gray-600">{details.roomNo}</p>
+            <p className="text-xs opacity-50">{date}</p>
+            <p className="text-xs opacity-50">{time}</p>
           </div>
         </div>
       );
     }
   },
   {
-    accessorKey: 'requestType',
-    header: 'Request Type',
+    accessorKey: 'guestDetails',
+    header: 'Guest Details',
     cell: ({ row }) => {
-      const type = row.original.requestType;
-      return <div className="text-sm">{type}</div>;
-    }
+      const guest = row.original.guestDetails || {};
+      return (
+        <div className="flex flex-col gap-[2px] text-sm text-gray-700">
+          <span className="font-medium text-gray-900">{guest.name || 'N/A'}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'requestDetail',
+    header: 'Request Detail',
+    cell: ({ row }) => (
+      <div className="text-sm text-gray-800">{row.original.requestDetail || '-'}</div>
+    ),
   },
   {
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      const status = row.original.status;
-      switch (status) {
-        case 'Pending':
-          return <div className="text-sm text-[#3787E3]">{status}</div>;
-        case 'In-Progress':
-          return <div className="text-sm text-[#FC690E]">{status}</div>;
-        case 'Completed':
-          return <div className="text-sm text-[#78B150]">{status}</div>;
-        default:
-          return <div className="text-sm text-gray-500">{status}</div>;
-      }
-    }
+      const status = row.original.status || 'Unknown';
+      const colorMap: Record<string, string> = {
+        Pending: '#3787E3',
+        'In-Progress': '#FC690E',
+        Completed: '#78B150',
+      };
+      return (
+        <span className="text-sm font-medium" style={{ color: colorMap[status] || '#6B7280' }}>
+          {status}
+        </span>
+      );
+    },
   },
   {
-    accessorKey: 'assignedTo',
-    header: 'Assigned to',
-    cell: ({ row }) => {
-      const assignedTo = row.original.assignedTo;
-      return <div className="text-sm">{assignedTo}</div>;
-    }
+    accessorKey: 'paymentStatus',
+    header: 'Payment Status',
+    cell: ({ row }) => (
+      <div className="text-sm text-gray-800">{row.original.paymentStatus || 'Unassigned'}</div>
+    ),
   },
   {
-    accessorKey: 'actions',
     id: 'actions',
     header: 'Actions',
     cell: ({ row }) => (
-      <div className="flex items-center justify-center">
+      <div className="flex justify-center">
         <CellAction data={row.original} />
       </div>
-    )
-  }
+    ),
+  },
 ];
