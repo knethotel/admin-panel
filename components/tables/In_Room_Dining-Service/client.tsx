@@ -133,19 +133,56 @@ import apiCall from '@/lib/axios';
 
 export type InRoomDiningDataType = {
   orderID: string;
+  serviceID: string;
+
   requestTime: {
     date: string;
     time: string;
   };
+
   guestDetails: {
     name: string;
     guestID: string;
     roomNo: string;
+    phoneNumber?: string;
   };
-  serviceID: string;
+
   orderStatus: string;
   assignedTo: string;
+
+  // ✅ Additional fields
+  paymentStatus?: string;
+  specialInstructions?: string;
+
+  amount?: {
+    subtotal: number;
+    discount: number;
+    finalAmount: number;
+  };
+
+  coupon?: {
+    code: string;
+    type: string;
+    value: number;
+  };
+
+  orderedItems?: {
+    _id: string;
+    quantity: number;
+    product: {
+      _id: string;
+      productName: string;
+      productType: string;
+      HotelId: string;
+    };
+  }[];
+
+  transaction?: string;
+  paymentDate?: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
+
 
 
 export const InRoomDiningDataTable: React.FC = () => {
@@ -179,22 +216,76 @@ export const InRoomDiningDataTable: React.FC = () => {
       );
 
       if (res?.success && Array.isArray(res.data)) {
+        // const formatted = res.data.map((item: any): InRoomDiningDataType => ({
+        //   orderID: item.uniqueId || 'N/A',
+        //   requestTime: formatDateTime(item.requestTime || item.createdAt),
+        //   guestDetails: {
+        //     name: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`,
+        //     guestID: item.guest?._id || 'N/A',
+        //     roomNo: item.assignedRoomNumber || 'N/A'
+        //   },
+        //   serviceID: item._id,
+        //   orderStatus: mapOrderStatus(item.status),
+        //   assignedTo: item.assignedTo
+        //     ? `${item.assignedTo.firstName || ''} ${item.assignedTo.lastName || ''}`.trim()
+        //     : 'N/A',
+        // }));
+
         const formatted = res.data.map((item: any): InRoomDiningDataType => ({
-          orderID: item.uniqueId || 'N/A',
-          requestTime: formatDateTime(item.requestTime || item.createdAt),
-          guestDetails: {
-            name: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`,
-            guestID: item.guest?._id || 'N/A',
-            roomNo: item.assignedRoomNumber || 'N/A'
-          },
           serviceID: item._id,
+          orderID: item.uniqueId || 'N/A',
+
+          requestTime: formatDateTime(item.requestTime || item.createdAt),
+
+          guestDetails: {
+            name: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`.trim(),
+            guestID: item.guest?._id || 'N/A',
+            roomNo: item.guest?.assignedRoomNumber || 'N/A',
+            phoneNumber: item.guest?.phoneNumber || 'N/A',
+          },
+
+          assignedTo: item.assignedTo
+            ? `${item.assignedTo.firstName || ''} ${item.assignedTo.lastName || ''}`.trim()
+            : 'N/A',
+
           orderStatus: mapOrderStatus(item.status),
-          assignedTo: item.assignedTo || 'Not Assigned'
+          paymentStatus: item.paymentStatus || 'N/A',
+          specialInstructions: item.specialInstructions || 'N/A',
+
+          amount: {
+            subtotal: item.amount?.subtotal ?? 0,
+            discount: item.amount?.discount ?? 0,
+            finalAmount: item.amount?.finalAmount ?? 0,
+          },
+
+          coupon: {
+            code: item.coupon?.code || 'N/A',
+            type: item.coupon?.type || 'N/A',
+            value: item.coupon?.value ?? 0,
+          },
+
+          orderedItems: (item.orderedItems || []).map((ordered: any) => ({
+            _id: ordered._id,
+            quantity: ordered.quantity,
+            product: {
+              _id: ordered.product?._id || 'N/A',
+              productName: ordered.product?.productName || 'N/A',
+              productType: ordered.product?.productType || 'N/A',
+              HotelId: ordered.product?.HotelId || item.HotelId || 'N/A',
+            },
+          })),
+
+          transaction: item.transaction || 'N/A',
+          paymentDate: item.paymentDate || null,
+
+          createdAt: item.createdAt || null,
+          updatedAt: item.updatedAt || null,
         }));
+
 
         setData(formatted);
         setFilteredData(formatted);
-        setTotalRecords(res.totalRecords ?? res.data.length);
+        setTotalRecords(res.total ?? res.data.length);
       } else {
         setError('Failed to load bookings');
       }
@@ -277,7 +368,7 @@ export const InRoomDiningDataTable: React.FC = () => {
         <DataTable
           searchKey="guestDetails.name"
           columns={columns}
-          data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)}
+          data={filteredData}
           onSearch={handleSearchChange}
         />
       )}

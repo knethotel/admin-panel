@@ -9,25 +9,67 @@ type StatusType = 'Pending' | 'In-Progress' | 'Completed';
 
 export type HousekeepingDataType = {
   requestID: string;
+  uniqueId?: string;
+  _id: string;
+
   requestDetail: string;
   responseDetail: string;
-  _id: string;
   requestAssignedTo: string;
+
   requestTime: {
     date: string;
     time: string;
   };
+
+  createdAt?: {
+    date: string;
+    time: string;
+  };
+
+  updatedAt?: {
+    date: string;
+    time: string;
+  };
+
   guestDetails: {
     guestID: string;
     roomNo: string;
     mobileNumber: string;
     email: string;
     name: string;
+    phoneNumber?: string;
   };
+
   requestType: RequestTypeType;
+  serviceType?: string;
+  wakeUpTime?: string;
   status: StatusType;
   assignedTo: string;
+  estimatedTime?: string;
+  paymentStatus?: string;
+  HotelId?: string;
+
+  transaction?: string;
+
+  amount?: {
+    subtotal: number;
+    discount: number;
+    finalAmount: number;
+  };
+
+  coupon?: {
+    code: string;
+    type: string;
+    value: number;
+  };
+
+  items?: {
+    item: string;
+    quantity: number;
+    _id: string;
+  }[];
 };
+
 
 /// Product details dummy data
 

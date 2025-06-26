@@ -209,7 +209,7 @@ export const OrderManagementDataTable: React.FC = () => {
     try {
       const response = await apiCall('GET', 'api/services/orders');
 
-      const dataArray = response?.serviceRequests; // ✅ Correct key
+      const dataArray = response?.serviceRequests;
 
       if (Array.isArray(dataArray)) {
         const mapped = dataArray.map((item: any) => ({
@@ -293,7 +293,7 @@ export const OrderManagementDataTable: React.FC = () => {
         <DataTable
           searchKey="guestDetails.name"
           columns={columns}
-          data={filteredData}
+          data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)}
           onSearch={handleSearchChange}
         />
       )}

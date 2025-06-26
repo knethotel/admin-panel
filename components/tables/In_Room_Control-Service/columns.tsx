@@ -1,10 +1,11 @@
+
 // import { ColumnDef } from '@tanstack/react-table';
-// import { InRoomControlDataType } from 'app/static/services-management/InRoomControl';
+// import { InRoomControlDataType } from '@/components/tables/In_Room_Control-Service/client';
 // import CellAction from './cell-action';
-// // Updated columns to match
-// export const columns: ColumnDef<InRoomControlDataType>[] = [
+
+// export const columns: ColumnDef<InRoomControlDataType, any>[] = [
 //   {
-//     accessorKey: 'requestID',
+//     accessorKey: 'orderID',
 //     header: 'Request ID'
 //   },
 //   {
@@ -62,8 +63,8 @@
 //     }
 //   },
 //   {
-//     accessorKey: 'serviceID',
-//     header: 'Service ID'
+//     accessorKey: 'issueType',
+//     header: 'Issue Type'
 //   },
 //   {
 //     accessorKey: 'assignedTo',
@@ -93,7 +94,8 @@ import CellAction from './cell-action';
 export const columns: ColumnDef<InRoomControlDataType, any>[] = [
   {
     accessorKey: 'orderID',
-    header: 'Request ID'
+    header: 'Request ID',
+    cell: ({ row }) => <div className="text-sm">{row.original.orderID}</div>
   },
   {
     accessorKey: 'requestTime',
@@ -114,55 +116,80 @@ export const columns: ColumnDef<InRoomControlDataType, any>[] = [
     cell: ({ row }) => {
       const details = row.original.guestDetails;
       return (
-        <div className="flex justify-center items-center">
-          <div className="flex flex-col w-1/2 justify-center items-start gap-1">
+        <div className="flex justify-center items-start">
+          <div className="flex flex-col w-full gap-1">
             <p className="text-sm text-gray-900">{details.name}</p>
-            <p className="text-xs text-gray-600">{details.guestID}</p>
-            <p className="text-xs text-gray-600">{details.roomNo}</p>
+            <p className="text-xs text-gray-600">Room: {details.roomNo}</p>
+            <p className="text-xs text-gray-600">Phone: {details.phoneNumber}</p>
           </div>
         </div>
       );
     }
   },
   {
-    accessorKey: 'requestType',
-    header: 'Request Type',
-    cell: ({ row }) => {
-      const type = row.original.requestType;
-      return <div className="text-sm">{type}</div>;
-    }
+    accessorKey: 'issueType',
+    header: 'Issue Type',
+    cell: ({ row }) => <div className="text-sm">{row.original.issueType}</div>
+  },
+  {
+    accessorKey: 'estimatedDeliveryTime',
+    header: 'Estimated Delivery Time',
+    cell: ({ row }) => (
+      <div className="text-sm">
+        {row.original.estimatedDeliveryTime
+          ? new Date(row.original.estimatedDeliveryTime).toLocaleString()
+          : '-'}
+      </div>
+    )
+  },
+  {
+    accessorKey: 'assignedTo',
+    header: 'Assigned To',
+    cell: ({ row }) => (
+      <div className="flex flex-col text-sm">
+        <span>{row.original.assignedTo}</span>
+        <span className="text-xs text-gray-500">{row.original.assignedToMobile}</span>
+      </div>
+    )
   },
   {
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
       const status = row.original.status;
-      switch (status) {
-        case 'Pending':
-          return <div className="text-sm text-[#3787E3]">{status}</div>;
-        case 'In-Progress':
-          return <div className="text-sm text-[#FC690E]">{status}</div>;
-        case 'Completed':
-          return <div className="text-sm text-[#78B150]">{status}</div>;
-        default:
-          return <div className="text-sm text-gray-500">{status}</div>;
-      }
+      const colorMap: Record<string, string> = {
+        Pending: '#3787E3',
+        'In-Progress': '#FC690E',
+        Completed: '#78B150'
+      };
+      return (
+        <span className="text-sm font-medium" style={{ color: colorMap[status] || '#6B7280' }}>
+          {status}
+        </span>
+      );
     }
   },
   {
-    accessorKey: 'issueType',
-    header: 'Issue Type'
+    accessorKey: 'paymentStatus',
+    header: 'Payment',
+    cell: ({ row }) => <div className="text-sm">{row.original.paymentStatus}</div>
   },
   {
-    accessorKey: 'assignedTo',
-    header: 'Assigned to',
-    cell: ({ row }) => {
-      const assignedTo = row.original.assignedTo;
-      return <div className="text-sm">{assignedTo}</div>;
-    }
+    accessorKey: 'description',
+    header: 'Description',
+    cell: ({ row }) => <div className="text-sm">{row.original.description}</div>
   },
   {
-    accessorKey: 'actions',
+    accessorKey: 'createdAt',
+    header: 'Created At',
+    cell: ({ row }) => <div className="text-xs">{row.original.createdAt}</div>
+  },
+  {
+    accessorKey: 'updatedAt',
+    header: 'Updated At',
+    cell: ({ row }) => <div className="text-xs">{row.original.updatedAt}</div>
+  },
+  {
     id: 'actions',
     header: 'Actions',
     cell: ({ row }) => (

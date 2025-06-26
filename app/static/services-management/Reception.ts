@@ -11,6 +11,7 @@ type StatusType = 'Pending' | 'In-Progress' | 'Completed';
 
 export type ReceptionDataType = {
   requestID: string;
+  orderID: string;
   requestDetail: string;
   responseDetail: string;
   requestAssignedTo: string;
@@ -18,15 +19,27 @@ export type ReceptionDataType = {
     date: string;
     time: string;
   };
+  createdAt: {
+    date: string;
+    time: string;
+  };
+  updatedAt: {
+    date: string;
+    time: string;
+  };
   guestDetails: {
-    guestID: string;
     name: string;
     roomNo: string;
-    mobileNumber: string;
     email: string;
+    phoneNumber?: string; 
   };
   requestType: RequestTypeType;
+  serviceType?: string;
   status: StatusType;
   assignedTo: string;
   estimatedTime?: string;
+  wakeUpTime?: string;
+  paymentStatus?: string;
+  HotelId?: string;
 };
+

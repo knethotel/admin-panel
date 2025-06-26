@@ -170,26 +170,68 @@ export const ConciergeServiceTable: React.FC = () => {
     try {
       const res = await apiCall('GET', `/api/services/concierge/requests`);
       if (res?.success) {
+        // const mapped = res.data.map((item: any) => ({
+        //   serviceID: item._id,
+        //   uniqueId: item.uniqueId || '',
+        //   guestDetails: {
+        //     name: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`.trim(),
+        //     guestID: item.guest?._id || '',
+        //     roomNo: item.roomNo || 'N/A',
+        //   },
+        //   requestDetail: item.requestDetail || '-',
+        //   paymentStatus: item.paymentStatus || 'N/A',
+        //   status: item.status || 'N/A',
+        //   requestType: item.requestType || '',
+        //   conciergeItem: item.conciergeItem || {},
+        //   amount: item.amount?.finalAmount || 0,
+        //   requestTime: {
+        //     date: item.requestTime ? new Date(item.requestTime).toLocaleDateString() : 'N/A',
+        //     time: item.requestTime ? new Date(item.requestTime).toLocaleTimeString() : 'N/A',
+        //   },
+        //   transactionID: item.transaction || '',
+        // }));
+
         const mapped = res.data.map((item: any) => ({
-          serviceID: item._id,
+          serviceID: item._id || '',
           uniqueId: item.uniqueId || '',
+
           guestDetails: {
             name: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`.trim(),
             guestID: item.guest?._id || '',
-            roomNo: item.roomNo || 'N/A',
+            roomNo: item.guest?.assignedRoomNumber || item.roomNo || 'N/A',
+            phoneNumber: item.guest?.phoneNumber || 'N/A',
           },
+
           requestDetail: item.requestDetail || '-',
           paymentStatus: item.paymentStatus || 'N/A',
-          status: item.status || 'N/A',
+          status: item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : 'N/A',
           requestType: item.requestType || '',
           conciergeItem: item.conciergeItem || {},
           amount: item.amount?.finalAmount || 0,
+          location: item.location || '-',
+
           requestTime: {
-            date: item.requestTime ? new Date(item.requestTime).toLocaleDateString() : 'N/A',
-            time: item.requestTime ? new Date(item.requestTime).toLocaleTimeString() : 'N/A',
+            date: item.requestTime
+              ? new Date(item.requestTime).toLocaleDateString()
+              : 'N/A',
+            time: item.requestTime
+              ? new Date(item.requestTime).toLocaleTimeString()
+              : 'N/A',
           },
-          transactionID: item.transaction || '',
+
+          bookingDate: item.date
+            ? new Date(item.date).toLocaleDateString()
+            : 'N/A',
+
+          hotelId: typeof item.HotelId === 'object' ? item.HotelId._id || item.HotelId : item.HotelId || '',
+          createdAt: item.createdAt
+            ? new Date(item.createdAt).toLocaleString()
+            : '',
+          updatedAt: item.updatedAt
+            ? new Date(item.updatedAt).toLocaleString()
+            : '',
         }));
+
         setData(mapped);
         setFilteredData(mapped);
         setTotalRecords(res.total || mapped.length);

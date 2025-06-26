@@ -35,18 +35,17 @@ const ServiceManagementPage = () => {
     <div className="flex flex-col w-full">
       <Navbar />
       <div className="overflow-hidden flex flex-col justify-evenly py-4 gap-6 mt-14">
-        <Heading title="Service Management" className='px-6 mb-0 md:mb-0'/>
+        <Heading title="Service Management" className='px-6 mb-0 md:mb-0' />
         <div className="w-full grid grid-cols-4 gap-8 px-6">
           {/* Carousel of services */}
           {serviceManagementHomePageData.map(
             (item: ServiceManagementHomePageDataType) => (
               <div
                 key={item.id}
-                className={`flex flex-col gap-2 group cursor-pointer ${
-                  highlightedServiceId === item.id
+                className={`flex flex-col gap-2 group cursor-pointer ${highlightedServiceId === item.id
                     ? 'shadow-sm bg-gray-100 rounded-md'
                     : ''
-                }`}
+                  }`}
               >
                 {/* image */}
                 <div onClick={() => handleNavigation(item.href, item.id)}>

@@ -163,28 +163,47 @@ import { columns } from './columns';
 import apiCall from '@/lib/axios';
 
 export type InRoomControlDataType = {
+
   requestID: string;
   orderID: string;
+  serviceID: string;
+  uniqueId: string;
+
   requestTime: {
     date: string;
     time: string;
   };
+  estimatedTime: string;
+  estimatedDeliveryTime?: string;
+
+  wakeUpTime: string;
+
+
   guestDetails: {
     name: string;
     guestID: string;
     roomNo: string;
+    phoneNumber?: string;
   };
+
   status: string;
   assignedTo: string;
-  serviceID: string;
-  estimatedTime: string;
-  uniqueId: string;
-  requestDetail: string;
-  issueType: string;
+  assignedToMobile?: string;
+
   requestType: string;
-  wakeUpTime: string;
+  issueType: string;
+  requestDetail: string;
+
+
   HotelId: string;
+
+
+  paymentStatus?: string;
+  description?: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
+
 
 export const InRoomControlDataTable: React.FC = () => {
   const router = useRouter();
@@ -212,29 +231,79 @@ export const InRoomControlDataTable: React.FC = () => {
         const response = await apiCall('GET', 'api/services/inroomcontrol/requests');
         if (response.success && Array.isArray(response.data)) {
           // Map API data to table format
+          // const mapped = response.data.map((item: any) => ({
+          //   requestID: item._id || 'N/A',
+          //   orderID: item.uniqueId || 'N/A',
+          //   // serviceID: item._id,
+          //   requestTime: {
+          //     date: item.requestTime ? new Date(item.requestTime).toLocaleDateString() : 'N/A',
+          //     time: item.requestTime ? new Date(item.requestTime).toLocaleTimeString() : 'N/A'
+          //   },
+          //   guestDetails: {
+          //     // Ensure guestDetails.name is a string
+          //     name: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`.trim(),
+          //     guestID: item.guest?._id || 'N/A',
+          //     roomNo: item.roomNo || 'N/A',
+          //   },
+          //   status: item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : 'N/A',
+          //   assignedTo: `${item.assignedTo?.firstName || ''} ${item.assignedTo?.lastName || ''}` || 'N/A',
+          //   estimatedTime: item.estimatedTime || '',
+          //   requestDetail: item.requestDetail || 'N/A',
+          //   issueType: item.issueType || 'N/A',
+          //   requestType: item.requestType || 'N/A',
+          //   wakeUpTime: item.wakeUpTime || '',
+          //   HotelId: item.HotelId || '',
+          // }));
+
           const mapped = response.data.map((item: any) => ({
             requestID: item._id || 'N/A',
             orderID: item.uniqueId || 'N/A',
-            // serviceID: item._id,
+            serviceID: item._id || 'N/A',
+
             requestTime: {
-              date: item.requestTime ? new Date(item.requestTime).toLocaleDateString() : 'N/A',
-              time: item.requestTime ? new Date(item.requestTime).toLocaleTimeString() : 'N/A'
+              date: item.requestTime
+                ? new Date(item.requestTime).toLocaleDateString()
+                : 'N/A',
+              time: item.requestTime
+                ? new Date(item.requestTime).toLocaleTimeString()
+                : 'N/A',
             },
+
             guestDetails: {
-              // Ensure guestDetails.name is a string
               name: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`.trim(),
               guestID: item.guest?._id || 'N/A',
-              roomNo: item.roomNo || 'N/A',
+              roomNo: item.guest?.assignedRoomNumber || item.roomNo || 'N/A',
+              phoneNumber: item.guest?.phoneNumber || 'N/A',
             },
-            status: item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : 'N/A',
-            assignedTo: `${item.assignedTo?.firstName || ''} ${item.assignedTo?.lastName || ''}` || 'N/A',
+
+            status: item.status
+              ? item.status.charAt(0).toUpperCase() + item.status.slice(1)
+              : 'N/A',
+
+            assignedTo: `${item.assignedTo?.firstName || ''} ${item.assignedTo?.lastName || ''}`.trim() || 'Unassigned',
+            assignedToMobile: item.assignedTo?.mobileNumber || 'N/A',
+
             estimatedTime: item.estimatedTime || '',
+            estimatedDeliveryTime: item.estimatedDeliveryTime || '',
+
             requestDetail: item.requestDetail || 'N/A',
             issueType: item.issueType || 'N/A',
             requestType: item.requestType || 'N/A',
             wakeUpTime: item.wakeUpTime || '',
-            HotelId: item.HotelId || '',
+            HotelId: item.HotelId || 'N/A',
+
+            description: item.description || '-',
+            paymentStatus: item.paymentStatus || 'N/A',
+
+            createdAt: item.createdAt
+              ? new Date(item.createdAt).toLocaleString()
+              : 'N/A',
+
+            updatedAt: item.updatedAt
+              ? new Date(item.updatedAt).toLocaleString()
+              : 'N/A',
           }));
+
 
           setData(mapped);
           setFilteredData(mapped);

@@ -10,6 +10,11 @@ export type GymServiceDataType = {
   requestID: string;
   requestDetail: string;
   paymentStatus: string;
+  paymentDate: string;
+  transaction: string;
+  facility: string;
+  HotelId: string;
+  requestType: string;
   facilityType: 'Gym' | 'ConferenceHall' | 'CommunityHall';
   requestTime: {
     date: string;
@@ -18,7 +23,7 @@ export type GymServiceDataType = {
   guestDetails: {
     guestID: string;
     roomNo: string;
-    mobileNumber: string;
+    phoneNumber: string;
     email: string;
     name: string;
   };
@@ -34,6 +39,7 @@ export type GymServiceDataType = {
   createdAt: string;
   updatedAt: string;
 };
+
 
 
 // export const GymServiceData: GymServiceDataType[] = [
