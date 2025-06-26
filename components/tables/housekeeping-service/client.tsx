@@ -304,28 +304,81 @@ export const HousekeepingServiceTable: React.FC = () => {
         const response = await apiCall('GET', 'api/services/housekeeping/requests');
         if (response.success && Array.isArray(response.data)) {
           // Map API data to table format
+          // const mapped = response.data.map((item: any) => ({
+          //   requestID: item._id || 'N/A',
+          //   // serviceID: item._id,
+          //   requestTime: {
+          //     date: item.requestTime ? new Date(item.requestTime).toLocaleDateString() : 'N/A',
+          //     time: item.requestTime ? new Date(item.requestTime).toLocaleTimeString() : 'N/A'
+          //   },
+          //   guestDetails: {
+          //     // Ensure guestDetails.name is a string
+          //     name: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`.trim(),
+          //     guestID: item.guest?._id || 'N/A',
+          //     roomNo: item.roomNo || 'N/A',
+          //   },
+          //   status: item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : 'N/A',
+          //   assignedTo: `${item.assignedTo?.firstName || ''} ${item.assignedTo?.lastName || ''}` || 'N/A',
+          //   estimatedTime: item.estimatedTime || '',
+          //   requestDetail: item.requestDetail || 'N/A',
+          //   serviceType: item.serviceType || 'N/A',
+          //   requestType: item.requestType || 'N/A',
+          //   wakeUpTime: item.wakeUpTime || '',
+          //   HotelId: item.HotelId || '',
+          // }));
+
           const mapped = response.data.map((item: any) => ({
             requestID: item._id || 'N/A',
-            // serviceID: item._id,
+            uniqueId: item.uniqueId || 'N/A',
+
             requestTime: {
               date: item.requestTime ? new Date(item.requestTime).toLocaleDateString() : 'N/A',
               time: item.requestTime ? new Date(item.requestTime).toLocaleTimeString() : 'N/A'
             },
+
+            createdAt: {
+              date: item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'N/A',
+              time: item.createdAt ? new Date(item.createdAt).toLocaleTimeString() : 'N/A'
+            },
+
+            updatedAt: {
+              date: item.updatedAt ? new Date(item.updatedAt).toLocaleDateString() : 'N/A',
+              time: item.updatedAt ? new Date(item.updatedAt).toLocaleTimeString() : 'N/A'
+            },
+
             guestDetails: {
-              // Ensure guestDetails.name is a string
               name: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`.trim(),
               guestID: item.guest?._id || 'N/A',
-              roomNo: item.roomNo || 'N/A',
+              phoneNumber: item.guest?.phoneNumber || 'N/A',
+              roomNo: item.guest?.assignedRoomNumber || 'N/A',
             },
+
             status: item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : 'N/A',
             assignedTo: `${item.assignedTo?.firstName || ''} ${item.assignedTo?.lastName || ''}` || 'N/A',
-            estimatedTime: item.estimatedTime || '',
+            estimatedTime: item.estimatedDeliveryTime || '',
             requestDetail: item.requestDetail || 'N/A',
-            serviceType: item.serviceType || 'N/A',
             requestType: item.requestType || 'N/A',
-            wakeUpTime: item.wakeUpTime || '',
-            HotelId: item.HotelId || '',
+            paymentStatus: item.paymentStatus || 'N/A',
+
+            amount: {
+              subtotal: item.amount?.subtotal || 0,
+              discount: item.amount?.discount || 0,
+              finalAmount: item.amount?.finalAmount || 0,
+            },
+
+            coupon: {
+              code: item.coupon?.code || 'N/A',
+              type: item.coupon?.type || 'N/A',
+              value: item.coupon?.value || 0,
+            },
+
+            items: item.items?.map((itm: any) => ({
+              item: itm.item,
+              quantity: itm.quantity,
+              _id: itm._id
+            })) || [],
           }));
+
 
           setData(mapped);
           setFilteredData(mapped);

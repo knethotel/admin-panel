@@ -173,28 +173,84 @@ export const SwimmingpoolServiceDataTable: React.FC = () => {
       try {
         const response = await apiCall('GET', `/api/services/swimming-pool/requests?page=${pageNo}&limit=${limit}`);
         if (response.success && Array.isArray(response.data)) {
+          // const mapped = response.data.map((item: any) => ({
+          //   serviceID: item._id || 'N/A',
+          //   guestName: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`.trim(),
+          //   requestTime: {
+          //     date: item.requestTime ? new Date(item.requestTime).toLocaleDateString() : 'N/A',
+          //     time: item.requestTime ? new Date(item.requestTime).toLocaleTimeString() : 'N/A',
+          //   },
+          //   guestDetails: {
+          //     name: item.guest ? `${item.guest.firstName || ''} ${item.guest.lastName || ''}`.trim() : 'N/A',
+          //     guestID: item.guest?._id || 'N/A',
+          //     roomNo: item.roomNo || 'N/A',
+          //   },
+          //   bookingDate: item.bookingDate ? new Date(item.bookingDate).toLocaleDateString() : 'N/A',
+          //   startTime: item.startTime || 'N/A',
+          //   endTime: item.endTime || 'N/A',
+          //   status: item.status || 'N/A',
+          //   paymentStatus: item.paymentStatus || 'N/A',
+          //   amount: item.amount?.finalAmount || 0,
+          //   requestDetail: item.requestDetail || '-',
+          //   uniqueId: item.uniqueId || '',
+          //   transaction: item.transaction || 'N/A',
+          // }));
+
           const mapped = response.data.map((item: any) => ({
+            // Identifiers
             serviceID: item._id || 'N/A',
-            guestName: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`.trim(),
+            uniqueId: item.uniqueId || 'N/A',
+            transaction: item.transaction || 'N/A',
+
+            // Hotel reference
+            HotelId: item.HotelId || 'N/A',
+
+            // Timestamps
             requestTime: {
               date: item.requestTime ? new Date(item.requestTime).toLocaleDateString() : 'N/A',
               time: item.requestTime ? new Date(item.requestTime).toLocaleTimeString() : 'N/A',
             },
-            guestDetails: {
-              name: item.guest ? `${item.guest.firstName || ''} ${item.guest.lastName || ''}`.trim() : 'N/A',
-              guestID: item.guest?._id || 'N/A',
-              roomNo: item.roomNo || 'N/A',
-            },
             bookingDate: item.bookingDate ? new Date(item.bookingDate).toLocaleDateString() : 'N/A',
-            startTime: item.startTime || 'N/A',
-            endTime: item.endTime || 'N/A',
-            status: item.status || 'N/A',
+            bookingTime: item.bookingTime || `${item.startTime || 'N/A'} - ${item.endTime || 'N/A'}`,
+            paymentDate: item.paymentDate ? new Date(item.paymentDate).toLocaleString() : 'N/A',
+            createdAt: item.createdAt ? new Date(item.createdAt).toLocaleString() : 'N/A',
+            updatedAt: item.updatedAt ? new Date(item.updatedAt).toLocaleString() : 'N/A',
+
+            // Guest info
+            guestDetails: {
+              guestID: item.guest?._id || 'N/A',
+              name: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`.trim() || 'N/A',
+              phoneNumber: item.guest?.phoneNumber || 'N/A',
+              roomNo: item.guest?.assignedRoomNumber || item.roomNo || 'N/A',
+            },
+
+            // Status & assignment
+            status: item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : 'N/A',
             paymentStatus: item.paymentStatus || 'N/A',
-            amount: item.amount?.finalAmount || 0,
-            requestDetail: item.requestDetail || '-',
-            uniqueId: item.uniqueId || '',
-            transaction: item.transaction || 'N/A',
+
+            // Service details
+            requestDetail: item.requestDetail || item.description || 'N/A',
+            description: item.description || item.requestDetail || 'N/A',
+            issueType: item.issueType || 'N/A',
+            requestType: item.requestType || 'N/A',
+            wakeUpTime: item.wakeUpTime || 'N/A',
+            estimatedTime: item.estimatedTime || 'N/A',
+
+            // Financials
+            amount: {
+              subtotal: item.amount?.subtotal ?? 0,
+              discount: item.amount?.discount ?? 0,
+              finalAmount: item.amount?.finalAmount ?? 0,
+            },
+            additionalServicesSelected: item.additionalServicesSelected || [],
+
+            // Convenience fields
+            guestName: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`.trim() || 'N/A',
+            assignedTo: item.assignedTo
+              ? `${item.assignedTo.firstName || ''} ${item.assignedTo.lastName || ''}`.trim()
+              : 'Unassigned',
           }));
+
           setData(mapped);
           setFilteredData(mapped);
           setTotalRecords(response.total || mapped.length);

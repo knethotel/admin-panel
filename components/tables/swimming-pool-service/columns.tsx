@@ -1,76 +1,4 @@
-// import { ColumnDef } from '@tanstack/react-table';
-// import { SwimmingpoolServiceDataType } from 'app/static/services-management/SwimmingPool';
-// import CellAction from './cell-action';
-// // Updated columns to match
-// export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
-//   {
-//     accessorKey: 'requestID',
-//     header: 'Request ID'
-//   },
-//   {
-//     accessorKey: 'requestTime',
-//     header: 'Request Time'
-//   },
-//   {
-//     accessorKey: 'guestDetails',
-//     header: 'Guest Details',
-//     cell: ({ row }) => {
-//       const details = row.original.guestDetails;
-//       return (
-//         <div className="flex justify-center items-center">
-//           <div className="flex flex-col w-1/2 justify-center items-start gap-1">
-//             <p className="text-sm text-gray-900">{details.name}</p>
-//             <p className="text-xs text-gray-600">{details.guestID}</p>
-//             <p className="text-xs text-gray-600">{details.roomNo}</p>
-//           </div>
-//         </div>
-//       );
-//     }
-//   },
-//   {
-//     accessorKey: 'requestType',
-//     header: 'Request Type',
-//     cell: ({ row }) => {
-//       const type = row.original.requestType;
-//       return <div className="text-sm">{type}</div>;
-//     }
-//   },
-//   {
-//     accessorKey: 'status',
-//     header: 'Status',
-//     cell: ({ row }) => {
-//       const status = row.original.status;
-//       switch (status) {
-//         case 'Pending':
-//           return <div className="text-sm text-[#3787E3]">{status}</div>;
-//         case 'In-Progress':
-//           return <div className="text-sm text-[#FC690E]">{status}</div>;
-//         case 'Completed':
-//           return <div className="text-sm text-[#78B150]">{status}</div>;
-//         default:
-//           return <div className="text-sm text-gray-500">{status}</div>;
-//       }
-//     }
-//   },
-//   {
-//     accessorKey: 'assignedTo',
-//     header: 'Assigned to',
-//     cell: ({ row }) => {
-//       const assignedTo = row.original.assignedTo;
-//       return <div className="text-sm">{assignedTo}</div>;
-//     }
-//   },
-//   {
-//     accessorKey: 'actions',
-//     id: 'actions',
-//     header: 'Actions',
-//     cell: ({ row }) => (
-//       <div className="flex items-center justify-center">
-//         <CellAction data={row.original} />
-//       </div>
-//     )
-//   }
-// ];
+
 
 
 import { ColumnDef } from '@tanstack/react-table';
@@ -83,17 +11,26 @@ export type SwimmingpoolServiceDataType = {
   requestDetail: string;
   responseDetail: string;
   requestAssignedTo: string;
+
   requestTime: {
     date: string;
     time: string;
   };
+  amount: {
+    subtotal: number;
+    discount: number;
+    finalAmount: number;
+  };
+
+
   guestDetails: {
     guestID: string;
     name: string;
     roomNo: string;
-    mobileNumber: string;
+    phoneNumber: string;
     email: string;
   };
+
   requestType: string;
   status: string;
   assignedTo: string;
@@ -101,7 +38,16 @@ export type SwimmingpoolServiceDataType = {
   effectiveCost: string;
   paymentStatus: string;
   rulesAndRegulations: string;
+
+  // Newly added fields
+  hotelId: string;
+  bookingDate: string;
+  paymentDate: string;
+  createdAt: string;
+  updatedAt: string;
+  additionalServicesSelected: string[];
 };
+
 
 export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
   {
@@ -117,23 +63,24 @@ export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
     cell: ({ row }) => {
       const { date, time } = row.original.requestTime;
       return (
-        <div className="flex justify-center items-center">
-          <div className="flex flex-col w-1/2 justify-center items-start gap-1">
-            <p className="text-xs opacity-50">{date}</p>
-            <p className="text-xs opacity-50">{time}</p>
-          </div>
+        <div className="flex flex-col gap-[2px] text-xs text-gray-700">
+          <span>{date}</span>
+          <span>{time}</span>
         </div>
       );
-    }
+    },
   },
   {
     accessorKey: 'guestDetails',
     header: 'Guest Details',
     cell: ({ row }) => {
-      const guest = row.original.guestDetails || {};
+      const guest = row.original.guestDetails;
       return (
-        <div className="flex flex-col gap-[2px] text-sm text-gray-700">
-          <span className="font-medium text-gray-900">{guest.name || 'N/A'}</span>
+        <div className="flex flex-col gap-[1px] text-xs text-gray-800">
+          <span className="font-medium text-gray-900">{guest.name}</span>
+          <span>Room: {guest.roomNo}</span>
+          <span>Phone: {guest.phoneNumber}</span>
+          <span>Email: {guest.email}</span>
         </div>
       );
     },
@@ -149,7 +96,7 @@ export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      const status = row.original.status || 'Unknown';
+      const status = row.original.status;
       const colorMap: Record<string, string> = {
         Pending: '#3787E3',
         'In-Progress': '#FC690E',
@@ -166,7 +113,64 @@ export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
     accessorKey: 'paymentStatus',
     header: 'Payment Status',
     cell: ({ row }) => (
-      <div className="text-sm text-gray-800">{row.original.paymentStatus || 'Unassigned'}</div>
+      <div className="text-sm">{row.original.paymentStatus || 'Unpaid'}</div>
+    ),
+  },
+  {
+    accessorKey: 'amount',
+    header: 'Amount',
+    cell: ({ row }) => {
+      const amt = row.original?.amount;
+      return amt ? (
+        <div className="flex flex-col text-xs">
+          <span>Subtotal: ₹{amt.subtotal ?? 0}</span>
+          <span>Discount: ₹{amt.discount ?? 0}</span>
+          <span>Total: ₹{amt.finalAmount ?? 0}</span>
+        </div>
+      ) : (
+        <span className="text-xs text-gray-500">N/A</span>
+      );
+    }
+  },
+  {
+    accessorKey: 'bookingDate',
+    header: 'Booking Date',
+    cell: ({ row }) => (
+      <div className="text-sm">{row.original.bookingDate}</div>
+    ),
+  },
+  {
+    accessorKey: 'paymentDate',
+    header: 'Payment Date',
+    cell: ({ row }) => (
+      <div className="text-sm">{row.original.paymentDate}</div>
+    ),
+  },
+  {
+    accessorKey: 'createdAt',
+    header: 'Created At',
+    cell: ({ row }) => (
+      <div className="text-xs">{row.original.createdAt}</div>
+    ),
+  },
+  {
+    accessorKey: 'updatedAt',
+    header: 'Updated At',
+    cell: ({ row }) => (
+      <div className="text-xs">{row.original.updatedAt}</div>
+    ),
+  },
+  {
+    accessorKey: 'additionalServicesSelected',
+    header: 'Add-on Services',
+    cell: ({ row }) => (
+      <ul className="text-xs list-disc list-inside text-gray-700">
+        {row.original.additionalServicesSelected?.length > 0
+          ? row.original.additionalServicesSelected.map((service, idx) => (
+            <li key={idx}>{service}</li>
+          ))
+          : 'None'}
+      </ul>
     ),
   },
   {
@@ -179,3 +183,4 @@ export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
     ),
   },
 ];
+

@@ -41,7 +41,7 @@ export const serviceManagementHomePageData: ServiceManagementHomePageDataType[] 
     },
     {
       id: 4,
-      name: 'GYM',
+      name: 'GYM / COMMUNITY / CONFERENCE HALL',
       imgSrc: img4,
       href: '/hotel-panel/service-management/gym'
     },

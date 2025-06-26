@@ -32,27 +32,38 @@ export const ReceptionServiceTable: React.FC = () => {
       try {
         const response = await apiCall('GET', 'api/services/reception/requests');
         if (response.success && Array.isArray(response.data)) {
-          // Map API data to table format
           const mapped = response.data.map((item: any) => ({
             requestID: item._id || 'N/A',
+            orderID: item.uniqueId || 'N/A',
             requestTime: {
               date: item.requestTime ? new Date(item.requestTime).toLocaleDateString() : 'N/A',
               time: item.requestTime ? new Date(item.requestTime).toLocaleTimeString() : 'N/A',
             },
+            createdAt: {
+              date: item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'N/A',
+              time: item.createdAt ? new Date(item.createdAt).toLocaleTimeString() : 'N/A',
+            },
+            updatedAt: {
+              date: item.updatedAt ? new Date(item.updatedAt).toLocaleDateString() : 'N/A',
+              time: item.updatedAt ? new Date(item.updatedAt).toLocaleTimeString() : 'N/A',
+            },
             guestDetails: {
               name: item.guest ? `${item.guest.firstName || ''} ${item.guest.lastName || ''}`.trim() : 'N/A',
-              guestID: item.guest?._id || 'N/A',
-              roomNo: item.roomNo || 'N/A',
+              phoneNumber: item.guest?.phoneNumber || 'N/A',
+              roomNo: item.guest?.assignedRoomNumber || 'N/A',
             },
             status: item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : 'N/A',
-            assignedTo: item.assignedTo || 'N/A',
+            assignedTo: item.assignedTo
+              ? `${item.assignedTo.firstName || ''} ${item.assignedTo.lastName || ''}`.trim()
+              : 'N/A',
             estimatedTime: item.estimatedTime || '',
             requestDetail: item.requestDetail || 'N/A',
-            serviceType: item.serviceType || 'N/A',
+            serviceType: item.status || 'N/A',
             requestType: item.requestType || 'N/A',
             wakeUpTime: item.wakeUpTime || '',
-            HotelId: item.HotelId || '',
+            paymentStatus: item.paymentStatus || 'N/A',
           }));
+
           setData(mapped);
           setFilteredData(mapped);
           setTotalRecords(mapped.length);
