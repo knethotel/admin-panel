@@ -1,92 +1,12 @@
 
-// import { ColumnDef } from '@tanstack/react-table';
-// import { InRoomDiningDataType } from '@/components/tables/In_Room_Dining-Service/client';
-// import CellAction from './cell-action';
 
-// export const columns: ColumnDef<InRoomDiningDataType, any>[] = [
-//   {
-//     accessorKey: 'orderID',
-//     header: 'Order ID'
-//   },
-//   {
-//     accessorKey: 'requestTime',
-//     header: 'Request Time',
-//     cell: ({ row }) => {
-//       const { date, time } = row.original.requestTime;
-//       return (
-//         <div className="flex flex-col justify-center">
-//           <p className="text-xs 2xl:text-sm opacity-50">{date}</p>
-//           <p className="text-xs 2xl:text-sm opacity-50">{time}</p>
-//         </div>
-//       );
-//     }
-//   },
-//   {
-//     accessorKey: 'guestDetails',
-//     header: 'Guest Details',
-//     cell: ({ row }) => {
-//       const details = row.original.guestDetails;
-//       return (
-//         <div className="flex justify-center items-center">
-//           <div className="flex flex-col w-1/2 justify-center items-start gap-1">
-//             <p className="text-sm text-gray-900">{details.name}</p>
-//             <p className="text-xs text-gray-600">{details.guestID}</p>
-//             <p className="text-xs text-gray-600">{details.roomNo}</p>
-//           </div>
-//         </div>
-//       );
-//     }
-//   },
-//   {
-//     accessorKey: 'serviceID',
-//     header: 'Service ID'
-//   },
-//   {
-//     accessorKey: 'orderStatus',
-//     header: 'Order Status',
-//     cell: ({ row }) => {
-//       const status = row.original.orderStatus;
-//       switch (status) {
-//         case 'Order in Transit':
-//           return <div className="text-sm text-[#3787E3]">{status}</div>;
-//         case 'Order is Preparing':
-//         case 'Order is Picked up':
-//           return <div className="text-sm text-[#FC690E]">{status}</div>;
-//         case 'Order placed':
-//           return <div className="text-sm text-[#78B150]">{status}</div>;
-//         case 'Undelivered':
-//           return <div className="text-sm text-[#FB1218]">{status}</div>;
-//         case 'Order Delivered':
-//           return <div className="text-sm text-[#3787E3]">{status}</div>;
-//         default:
-//           return <div className="text-sm text-gray-500">{status}</div>;
-//       }
-//     }
-//   },
-//   {
-//     accessorKey: 'assignedTo',
-//     header: 'Assigned to',
-//     cell: ({ row }) => {
-//       const assignedTo = row.original.assignedTo;
-//       return <div className="text-sm">{assignedTo}</div>;
-//     }
-//   },
-//   {
-//     accessorKey: 'actions',
-//     id: 'actions',
-//     header: 'Actions',
-//     cell: ({ row }) => (
-//       <div className="flex justify-center">
-//         <CellAction data={row.original} />
-//       </div>
-//     )
-//   }
-// ];
-
+'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
 import { InRoomDiningDataType } from '@/components/tables/In_Room_Dining-Service/client';
 import CellAction from './cell-action';
+import apiCall from '@/lib/axios';
+import { useState } from 'react';
 
 export const columns: ColumnDef<InRoomDiningDataType, any>[] = [
   {
@@ -121,26 +41,74 @@ export const columns: ColumnDef<InRoomDiningDataType, any>[] = [
     }
   },
   {
-    accessorKey: 'orderStatus',
-    header: 'Order Status',
+    accessorKey: 'status',
+    header: 'Status',
     cell: ({ row }) => {
-      const status = row.original.orderStatus;
-      const baseClass = 'text-sm';
-      switch (status) {
-        case 'Order in Transit':
-          return <div className={`${baseClass} text-[#3787E3]`}>{status}</div>;
-        case 'Order is Preparing':
-        case 'Order is Picked up':
-          return <div className={`${baseClass} text-[#FC690E]`}>{status}</div>;
-        case 'Order placed':
-          return <div className={`${baseClass} text-[#78B150]`}>{status}</div>;
-        case 'Undelivered':
-          return <div className={`${baseClass} text-[#FB1218]`}>{status}</div>;
-        case 'Order Delivered':
-          return <div className={`${baseClass} text-[#3787E3]`}>{status}</div>;
-        default:
-          return <div className={`${baseClass} text-gray-500`}>{status}</div>;
-      }
+      const [updating, setUpdating] = useState(false);
+      const validStatuses = ['Pending', 'In-Progress', 'Completed'] as const;
+      type ValidStatus = typeof validStatuses[number];
+
+      const getSafeStatus = (status: string): ValidStatus =>
+        validStatuses.includes(status as ValidStatus) ? (status as ValidStatus) : 'Pending';
+
+      const [status, setStatus] = useState<ValidStatus>(getSafeStatus(row.original.status));
+      const serviceId = row.original.serviceID;
+
+      const statusMap = {
+        Pending: 'pending',
+        'In-Progress': 'in-progress',
+        Completed: 'completed'
+      } as const;
+
+      const statusOptions: Array<keyof typeof statusMap> = ['Pending', 'In-Progress', 'Completed'];
+
+      const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newStatus = e.target.value as keyof typeof statusMap;
+        setUpdating(true);
+
+        try {
+          const data = await apiCall('PATCH', `/api/services/status/${serviceId}`, {
+            status: statusMap[newStatus]
+          });
+
+          if (
+            data.success ||
+            data.status === 'ok' ||
+            data.message?.toLowerCase().includes('status updated')
+          ) {
+            setStatus(newStatus); // or router.refresh();
+          } else {
+            console.error('Failed to update status:', data.message || data);
+          }
+        } catch (error) {
+          console.error('Error updating status:', error);
+        } finally {
+          setUpdating(false);
+        }
+      };
+
+
+      return (
+        <select
+          value={status}
+          onChange={handleStatusChange}
+          disabled={updating}
+          className={`text-sm px-2 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring ${status === 'Pending'
+            ? 'text-[#3787E3]'
+            : status === 'In-Progress'
+              ? 'text-[#FC690E]'
+              : status === 'Completed'
+                ? 'text-[#78B150]'
+                : 'text-gray-500'
+            }`}
+        >
+          {statusOptions.map(option => (
+            <option key={option} value={option} className="text-black">
+              {option}
+            </option>
+          ))}
+        </select>
+      );
     }
   },
   {

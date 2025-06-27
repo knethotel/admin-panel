@@ -8,6 +8,7 @@ export type GymServiceDataType = {
   _id: string;
   uniqueId: string;
   requestID: string;
+  serviceID: string;
   requestDetail: string;
   paymentStatus: string;
   paymentDate: string;
