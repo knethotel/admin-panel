@@ -215,6 +215,13 @@ export const hotelSchema = z.object({
   internetConnectivity: z.boolean().optional(),
   softwareCompatibility: z.boolean().optional(),
   subscriptionStartDate: z.string().min(1, 'Subscription start date is required'),
+  subscriptionEndDate: z.string().min(1, 'Subscription start date is required'),
+  wifi: z.object({
+  wifiName: z.string().optional(),
+  password: z.string().optional(),
+  scanner: z.string().optional()
+}),
+aboutUs: z.string().optional(),
 });
 
 // Inferred type

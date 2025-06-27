@@ -10,6 +10,7 @@ type RequestTypeType =
 type StatusType = 'Pending' | 'In-Progress' | 'Completed';
 
 export type ReceptionDataType = {
+  _id: string;
   requestID: string;
   orderID: string;
   requestDetail: string;

@@ -33,20 +33,8 @@ import { HotelSchemaType } from 'schema';
 import { indiaCities, indiaStates } from 'app/static/Type';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
-interface SubscriptionPlan {
-  _id: string;
-  planName: string;
-  cost: number;
-}
 
-interface Coupon {
-  _id: string;
-  code: string;
-  description: string;
-  value: number;
-}
-
-const HotelForm = ({
+const HotelFormProfile = ({
   mode = 'add',
   hotelId
 }: {
@@ -66,12 +54,7 @@ const HotelForm = ({
   const [showDropdown, setShowDropdown] = useState(false);
   const [status, setStatus] = useState<'PENDING' | 'APPROVE'>('PENDING');
   const [hotelName, setHotelName] = useState('');
-  const [subHotelName, setSubHotelName] = useState('');
   const [fetchedHotelData, setFetchedHotelData] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>([]);
-  const [coupons, setCoupons] = useState<Coupon[]>([]);
-  const [selectedPlan, setSelectedPlan] = useState<any>(null);
 
   // Refs for file inputs
   const roomImageRef = useRef<HTMLInputElement>(null);
@@ -87,7 +70,13 @@ const HotelForm = ({
     'Reception',
     'Housekeeping',
     'In-Room Dining',
-    'Gym'
+    'GYM / COMMUNITY / CONFERENCE HALL',
+    'SPA',
+    'SWIMMING POOL',
+    'CONCIERGE SERVICE',
+    'IN-ROOM CONTROL',
+    'ORDER MANAGEMENT',
+
   ];
 
   const handleStateChange = (state: string) => {
@@ -159,125 +148,6 @@ const HotelForm = ({
   const [selectedState, setSelectedState] = useState(
     form.getValues('state') || ''
   );
-
-
-  const onSubmit = async (data: HotelSchemaType) => {
-    const subscriptionStartDate = new Date(data.subscriptionStartDate);
-    const subscriptionEndDate = new Date(data.subscriptionEndDate);
-
-    if (isNaN(subscriptionStartDate.getTime())) {
-      ToastAtTopRight.fire('Invalid Subscription Start Date', 'error');
-      return;
-    }
-
-    const formattedStartDate = subscriptionStartDate.toISOString().split('T')[0];
-    const formattedEndDate = subscriptionEndDate.toISOString().split('T')[0];
-
-    const payload = {
-      name: data.hotelName,
-      address: data.completeAddress,
-      email: data.email,
-      phoneNo: data.number,
-      password: 'Miss@123',
-      hotelCategory: data.hotelCategory,
-      city: data.city,
-      country: data.country,
-      state: data.state,
-      pincode: data.pinCode,
-      chainHotel: isChainHotelChecked,
-      parentHotel: isChainHotelChecked ? data.parentHotelId : undefined,
-      parentHotelId: data.parentHotelId || '',
-      checkInTime: data.checkInTime,
-      subscriptionStartDate: formattedStartDate,
-      subscriptionEndtDate: formattedEndDate,
-      subscriptionPrice: data.subscriptionPrice,
-      subscriptionPlanName: data.subscriptionPlanName,
-      netPrice: data.netPrice,
-      checkOutTime: data.checkOutTime,
-      brandedHotel: isBrandedHotelChecked,
-      subscriptionPlan: data.subscriptionPlan,
-      logo: imagePreviews.logoImage?.[0] || '',
-      images: imagePreviews.additionalImage,
-      gst: data.gst,
-      hotelLicenseAndCertification: {
-        certificateValue: data.hotelLicenseCertifications,
-        imageUrl: imagePreviews.hotelLicenseImage?.[0] || ''
-      },
-      legalAndBusinessLicense: {
-        licenseValue: data.legalBusinessLicense,
-        imageUrl: imagePreviews.legalBusinessLicenseImage?.[0] || ''
-      },
-      touristLicense: {
-        licenseValue: data.touristLicense,
-        imageUrl: imagePreviews.touristLicenseImage?.[0] || ''
-      },
-      panNumber: {
-        numberValue: data.tanNumber,
-        imageUrl: imagePreviews.tanNumberImage?.[0] || ''
-      },
-      dataPrivacyAndGDPRCompliance: {
-        complianceValue: data.dataPrivacyGdprCompliances,
-        imageUrl: imagePreviews.dataPrivacyGdprImage?.[0] || ''
-      },
-      internetConnectivity: data.internetConnectivity,
-      softwareCompatibility: data.softwareCompatibility,
-      rooms: data.roomConfigs
-        ? data.roomConfigs.map((room: any) => ({
-          roomName: room.roomType,
-          roomType: room.roomType,
-          features: [room.feature],
-          images: imagePreviews.roomImage,
-          servingDepartment: ['Concierge Service', 'In-Room Dining', 'Spa'],
-          totalStaff: data.totalStaff,
-        }))
-        : [],
-      wifi: {
-        wifiName: fetchedHotelData?.wifi?.wifiName || '',
-        password: fetchedHotelData?.wifi?.password || '',
-        scanner: fetchedHotelData?.wifi?.scanner || ''
-      },
-      aboutUs: fetchedHotelData.aboutUs || '',
-    };
-    console.log("Payload:", payload);
-
-    // Validate parentHotelId when chain hotel is selected
-    if (isChainHotelChecked && (!data.parentHotelId || data.parentHotelId.trim() === '')) {
-      ToastAtTopRight.fire(
-        'Please enter Parent Hotel ID when Chain Hotel is selected',
-        'error'
-      );
-      return;
-    }
-
-    // Determine URL and HTTP method based on mode
-    const url =
-      mode === 'edit'
-        ? `api/hotel/update-hotel/${hotelId}`
-        : 'api/hotel/add-hotel';
-
-    const method = mode === 'edit' ? 'PUT' : 'POST';
-
-    try {
-      const response = await apiCall(method, url, payload);
-
-      // Check response status and handle success/failure
-      if (response.status) {
-        ToastAtTopRight.fire(
-          mode === 'edit' ? 'Profile updated successfully' : 'Hotel created successfully',
-          'success'
-        );
-        if (mode === 'add') {
-          router.push('/super-admin/hotel-management');
-        }
-        console.log('Hotel data:', response);
-      } else {
-        ToastAtTopRight.fire(response.message || 'Operation failed', 'error');
-      }
-    } catch (error) {
-      console.error(error);
-      ToastAtTopRight.fire('Server error', 'error');
-    }
-  };
 
   const approveRequest = async () => {
     if (!hotelId) {
@@ -354,117 +224,165 @@ const HotelForm = ({
     });
   };
 
+  useEffect(() => {
+    const fetchHotelData = async () => {
+      try {
+        let res;
+
+        if (mode === 'pending') {
+          res = await apiCall('GET', `api/hotel/pending-request/${hotelId}`);
+        } else if (mode === 'edit' || mode === 'view') {
+          res = await apiCall('GET', `api/hotel/get-hotel/${hotelId}`);
+        } else {
+          return;
+        }
+        const data = mode === 'pending' ? res.request.hotelData : res.hotel;
+
+        if (!data) {
+          console.error('Hotel data not found in response:', res);
+          return;
+        }
+
+        const idFromResponse =
+          mode === 'pending' ? res.request._id : data._id || '';
+
+        setSelectedState(data.state || '');
+        setFetchedHotelData(data);
+        console.log('Fetched hotel data:', data);
+      } catch (error) {
+        console.error('Failed to fetch hotel data', error);
+      }
+    };
+
+    if (hotelId) fetchHotelData();
+  }, [mode, hotelId]);
+
+  useEffect(() => {
+    if (fetchedHotelData && selectedState) {
+      form.reset({
+        hotelId: fetchedHotelData._id || '',
+        hotelName: fetchedHotelData.name || '',
+        number: fetchedHotelData.phoneNo || '',
+        email: fetchedHotelData.email || '',
+        completeAddress: fetchedHotelData.address || '',
+        hotelCategory: fetchedHotelData.hotelCategory || '3 Star',
+        city: fetchedHotelData.city || '',
+        country: fetchedHotelData.country || '',
+        state: fetchedHotelData.state || '',
+        pinCode: fetchedHotelData.pincode || '',
+        gst: '', // fill later if needed
+
+        brandedHotel: fetchedHotelData.brandedHotel || false,
+        chainHotel: fetchedHotelData.chainHotel === 'true',
+        parentHotelId: fetchedHotelData.parentHotel || '',
+
+        roomConfigs: fetchedHotelData.rooms?.map((room: any) => ({
+          roomType: room.roomType || '',
+          feature: room.features?.[0] || ''
+        })) || [{ roomType: 'Single', feature: 'Sea Side' }],
+
+        numberOfRooms: fetchedHotelData.rooms?.length || 1,
+        checkInTime: fetchedHotelData.checkInTime || '',
+        checkOutTime: fetchedHotelData.checkOutTime || '',
+        servingDepartments: fetchedHotelData.servingDepartment || [],
+        totalStaff: fetchedHotelData.totalStaff || 1,
+
+        hotelLicenseCertifications: fetchedHotelData.hotelLicenseAndCertification?.certificateValue || '',
+        hotelLicenseImage: undefined,
+
+        legalBusinessLicense: fetchedHotelData.legalAndBusinessLicense?.licenseValue || '',
+        legalBusinessLicenseImage: undefined,
+
+        touristLicense: fetchedHotelData.touristLicense?.licenseValue || '',
+        touristLicenseImage: undefined,
+
+        tanNumber: fetchedHotelData.panNumber?.numberValue || '',
+        tanNumberImage: undefined,
+
+        dataPrivacyGdprCompliances: fetchedHotelData.dataPrivacyAndGDPRCompliance?.complianceValue || '',
+        dataPrivacyGdprImage: undefined,
+
+        logoImage: undefined,
+        additionalImage: undefined,
+
+        internetConnectivity: fetchedHotelData.internetConnectivity || false,
+        softwareCompatibility: fetchedHotelData.softwareCompatibility || false,
+
+        subscriptionPlan: fetchedHotelData.subscriptionPlan || 'Premium',
+        subscriptionPrice: fetchedHotelData.subscriptionPrice || 0,
+        netPrice: fetchedHotelData.subscriptionPrice || 0, // assuming initial = subscriptionPrice
+        applyCoupon: 'Choose coupon',
+        subscriptionStartDate: fetchedHotelData.subscriptionStartDate
+          ? fetchedHotelData.subscriptionStartDate.split('T')[0] // convert to YYYY-MM-DD
+          : '',
+        subscriptionEndDate: fetchedHotelData.subscriptionEndDate
+          ? fetchedHotelData.subscriptionEndDate.split('T')[0] // convert to YYYY-MM-DD
+          : '',
+        wifi: {
+          wifiName: fetchedHotelData?.wifi?.wifiName || '',
+          password: fetchedHotelData?.wifi?.password || '',
+          scanner: fetchedHotelData?.wifi?.scanner || ''
+        },
+        aboutUs: fetchedHotelData.aboutUs || '',
+
+      });
+
+      // Load image previews from S3 URLs
+      setImagePreviews({
+        logoImage: fetchedHotelData.logo ? [fetchedHotelData.logo] : [],
+        roomImage: fetchedHotelData.images || [],
+        hotelLicenseImage: fetchedHotelData.hotelLicenseAndCertification?.imageUrl
+          ? [fetchedHotelData.hotelLicenseAndCertification.imageUrl]
+          : [],
+        legalBusinessLicenseImage: fetchedHotelData.legalAndBusinessLicense?.imageUrl
+          ? [fetchedHotelData.legalAndBusinessLicense.imageUrl]
+          : [],
+        touristLicenseImage: fetchedHotelData.touristLicense?.imageUrl
+          ? [fetchedHotelData.touristLicense.imageUrl]
+          : [],
+        tanNumberImage: fetchedHotelData.panNumber?.imageUrl
+          ? [fetchedHotelData.panNumber.imageUrl]
+          : [],
+        dataPrivacyGdprImage: fetchedHotelData.dataPrivacyAndGDPRCompliance?.imageUrl
+          ? [fetchedHotelData.dataPrivacyAndGDPRCompliance.imageUrl]
+          : [],
+        additionalImage: [],
+      });
+
+      setIsBrandedHotelChecked(fetchedHotelData.brandedHotel || false);
+      setIsChainHotelChecked(fetchedHotelData.chainHotel === 'true');
+      setFetchedHotelData(null);
+    }
+  }, [selectedState, fetchedHotelData]);
+
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'roomConfigs'
   });
 
-  const fetchSubscriptionPlans = async () => {
-    setIsLoading(true);
+  const handleUpdate = async (data: HotelSchemaType) => {
     try {
-      const response = await apiCall('GET', 'api/subscription');
-      console.log("API Response:", response);  // Debugging
-      if (response.success && response.data) {
-        setSubscriptionPlans(response.data);
+      const response = await apiCall('PUT', 'api/hotel/update-profile', data);
+
+      if (response?.data) {
+        console.log('Updated Data:', response.data);
+        ToastAtTopRight.fire('Hotel updated successfully!', 'success');
       } else {
-        console.error('Failed to fetch subscription plans:', response);
-        setSubscriptionPlans([]);
+        ToastAtTopRight.fire('Failed to update hotel', 'error');
       }
-    } catch (error) {
-      console.error('Error fetching subscription plans:', error);
-      setSubscriptionPlans([]);
-    } finally {
-      setIsLoading(false);
+    } catch (err) {
+      console.error('Update Error:', err);
+      ToastAtTopRight.fire('Something went wrong!', 'error');
     }
   };
 
-
-  useEffect(() => {
-    fetchSubscriptionPlans();
-  }, []);
-
-  const handleSubscriptionPlanChange = (value: string) => {
-    const selectedPlan = subscriptionPlans.find(plan => plan._id === value);
-
-    if (selectedPlan) {
-      form.setValue('subscriptionPrice', selectedPlan.cost);
-      form.setValue('subscriptionPlan', selectedPlan._id);
-      form.setValue('subscriptionPlanName', selectedPlan.planName);
-    }
-  };
-
-  const calculateNetPrice = async () => {
-    const subscriptionPlan = form.getValues('subscriptionPlan');
-    const couponCode = form.getValues('applyCoupon');
-
-    if (!subscriptionPlan || !couponCode || couponCode === 'Choose coupon') return;
-
-    try {
-      const response = await apiCall('POST', 'api/hotel/calculateNetPrice', {
-        subscriptionPlan,
-        couponCode,
-      });
-
-      if (response.success && typeof response.netPrice === 'number') {
-        form.setValue('netPrice', response.netPrice);
-      } else {
-        ToastAtTopRight.fire(response.message || 'Failed to calculate net price', 'error');
-      }
-    } catch (error) {
-      console.error('Net price calculation failed:', error);
-      ToastAtTopRight.fire('Server error while calculating net price', 'error');
-    }
-  };
-
-
-  useEffect(() => {
-    const subId = form.watch('subscriptionPlan');
-    const coupon = form.watch('applyCoupon');
-
-    if (subId) {
-      calculateNetPrice();
-    }
-  }, [form.watch('subscriptionPlan'), form.watch('applyCoupon')]);
-
-
-
-
-  const fetchCoupons = async () => {
-    setIsLoading(true);
-    try {
-      const response = await apiCall('GET', 'api/coupon');
-      if (response.success && response.coupons) {
-        setCoupons(response.coupons); // Store the coupons in state
-      } else {
-        console.error('Failed to fetch coupons:', response);
-        setCoupons([]); // Handle failure gracefully
-      }
-    } catch (error) {
-      console.error('Error fetching coupons:', error);
-      setCoupons([]); // Set empty array if error occurs
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCoupons();
-  }, []);
-
-  const handleCouponChange = (value: string) => {
-    const selectedCoupon = coupons.find(coupon => coupon.code === value);
-    if (selectedCoupon) {
-      // Set the coupon code and value in the form
-      form.setValue('applyCoupon', selectedCoupon.code);
-    }
-  };
 
   return (
     <FormWrapper title="">
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(handleUpdate)}
           className="w-full flex flex-col gap-3 bg-inherit mx-auto"
         >
           {mode !== 'pending' && (
@@ -656,29 +574,7 @@ const HotelForm = ({
                 ) : null}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {/* {isMode(['edit']) && (
-                  <FormField
-                    control={form.control}
-                    name="hotelId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                          Hotel ID
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Hotel ID"
-                            {...field}
-                            value={field.value} // Use form value, not hotelId prop
-                            disabled={mode === 'edit'}
-                            className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
-                          />
-                        </FormControl>
-                        <FormMessage className="text-[10px]" />
-                      </FormItem>
-                    )}
-                  />
-                )} */}
+
                 <FormField
                   control={form.control}
                   name="hotelName"
@@ -695,7 +591,7 @@ const HotelForm = ({
                             field.onChange(e);
                             setHotelName(e.target.value);
                           }}
-                          disabled={isDisabled}
+                          disabled={true}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
@@ -715,7 +611,7 @@ const HotelForm = ({
                         <Input
                           placeholder="Enter phone number"
                           {...field}
-                          disabled={isDisabled}
+                          disabled={true}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
@@ -736,7 +632,7 @@ const HotelForm = ({
                           type="email"
                           placeholder="Enter email"
                           {...field}
-                          disabled={isDisabled}
+                          disabled={true}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
@@ -758,7 +654,7 @@ const HotelForm = ({
                         <Input
                           placeholder="Enter address"
                           {...field}
-                          disabled={isDisabled}
+                          disabled={true}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
@@ -778,7 +674,7 @@ const HotelForm = ({
                         <Select
                           onValueChange={field.onChange}
                           value={field.value}
-                          disabled={isDisabled}
+                          disabled={true}
                         >
                           <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
                             <SelectValue placeholder="Select category" />
@@ -819,7 +715,7 @@ const HotelForm = ({
                             handleStateChange(value);
                             field.onChange(value);
                           }}
-                          disabled={isDisabled}
+                          disabled={true}
                         >
                           <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
                             <SelectValue placeholder="Select state" />
@@ -885,7 +781,7 @@ const HotelForm = ({
                         <Select
                           onValueChange={field.onChange}
                           value={field.value}
-                          disabled={isDisabled}
+                          disabled={true}
                         >
                           <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
                             <SelectValue placeholder="Select country" />
@@ -917,7 +813,7 @@ const HotelForm = ({
                         <Input
                           placeholder="Enter pincode"
                           {...field}
-                          disabled={isDisabled}
+                          disabled={true}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
@@ -946,6 +842,7 @@ const HotelForm = ({
                     </FormItem>
                   )}
                 />
+
               </div>
 
               {mode == 'add' && (
@@ -1020,31 +917,6 @@ const HotelForm = ({
                         </FormItem>
                       )}
                     />
-                    {/* <FormField
-                      control={form.control}
-                      name="subHotelName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                            Sub Hotel Name
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Enter sub hotel name"
-                              {...field}
-                              // disabled
-                              // value={subHotelName}
-                              onChange={(e) => {
-                                setSubHotelName(e.target.value);
-                                field.onChange(e.target.value);
-                              }}
-                              className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md"
-                            />
-                          </FormControl>
-                          <FormMessage className="text-[10px]" />
-                        </FormItem>
-                      )}
-                    /> */}
                   </>
                 </div>
               )}
@@ -1243,28 +1115,47 @@ const HotelForm = ({
                     };
 
                     return (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">
-                          Serving Departments
-                        </FormLabel>
-                        <div className="flex flex-wrap gap-3 text-gray-700 text-sm font-light">
-                          {servingDepartmentOptions.map((option) => (
-                            <label
-                              key={option}
-                              className="inline-flex items-center gap-2 cursor-pointer"
-                            >
-                              <input
-                                type="checkbox"
-                                checked={selectedDepartments.includes(option)}
-                                onChange={() => toggleOption(option)}
-                                disabled={isDisabled}
-                                className="form-checkbox"
-                              />
-                              <span>{option}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </FormItem>
+                      <FormField
+                        control={form.control}
+                        name="servingDepartments"
+                        className="col-span-2 mb-2"
+                        render={({ field }) => {
+                          const selectedDepartments = field.value || [];
+
+                          const toggleOption = (option: string) => {
+                            const newValue = selectedDepartments.includes(option)
+                              ? selectedDepartments.filter((v) => v !== option)
+                              : [...selectedDepartments, option];
+                            field.onChange(newValue);
+                          };
+
+                          return (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-gray-700">
+                                Serving Departments
+                              </FormLabel>
+                              <div className="flex flex-wrap gap-3 text-gray-700 text-sm font-light">
+                                {servingDepartmentOptions.map((option) => (
+                                  <label
+                                    key={option}
+                                    className="inline-flex items-center gap-2 cursor-pointer"
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      checked={selectedDepartments.includes(option)}
+                                      onChange={() => toggleOption(option)}
+                                      disabled={isDisabled}
+                                      className="form-checkbox"
+                                    />
+                                    <span>{option}</span>
+                                  </label>
+                                ))}
+                              </div>
+                            </FormItem>
+                          );
+                        }}
+                      />
+
                     );
                   }}
                 />
@@ -1367,60 +1258,38 @@ const HotelForm = ({
                   control={form.control}
                   name="subscriptionPlan"
                   render={({ field }) => (
-                    <FormItem className="w-full">
+                    <FormItem>
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        Allocate Subscription{' '}
-                        <span className="text-red-500">*</span>
+                        Subscription Plan
                       </FormLabel>
                       <FormControl>
-                        <Select
-                          value={field.value}
-                          onValueChange={(value) => {
-                            field.onChange(value);
-                            handleSubscriptionPlanChange(value);
-                          }}
-                          disabled={isDisabled || isLoading}
-                        >
-                          <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
-                            <SelectValue placeholder="Select category" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-coffee">
-                            {isLoading ? (
-                              <SelectItem value="loading" className="text-white" disabled>
-                                Loading...
-                              </SelectItem>
-                            ) : (
-                              subscriptionPlans.map((plan) => (
-                                <SelectItem key={plan._id} value={plan._id} className="text-white">
-                                  {plan.planName}
-                                </SelectItem>
-                              ))
-                            )}
-                          </SelectContent>
-                        </Select>
+                        <Input
+                          placeholder="e.g., Basic / Premium"
+                          {...field}
+                          disabled={true}
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
+                        />
                       </FormControl>
                       <FormMessage className="text-[10px]" />
                     </FormItem>
                   )}
                 />
 
-                {/* Subscription Price (Auto-filled based on selected plan) */}
+
                 <FormField
                   control={form.control}
-                  name="subscriptionPrice"
+                  name="netPrice"
                   render={({ field }) => (
-                    <FormItem className="w-full">
+                    <FormItem>
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        Subscription Price{' '}
-                        <span className="text-red-500">*</span>
+                        Net Price
                       </FormLabel>
                       <FormControl>
                         <Input
                           type="number"
-                          min="0"
-                          placeholder="Enter Subscription Price"
-                          {...field}  // Ensure this is connected to the form control
-                          disabled={isDisabled}
+                          placeholder="e.g., 1500"
+                          {...field}
+                          disabled={true}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
@@ -1433,89 +1302,27 @@ const HotelForm = ({
 
                 <FormField
                   control={form.control}
-                  name="applyCoupon"
+                  name="subscriptionPrice"
                   render={({ field }) => (
-                    <FormItem className="w-full relative">
+                    <FormItem>
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        Apply Coupon
+                        Subscription Price <span className="text-red-500">*</span>
                       </FormLabel>
-                      <div className="relative">
-                        <FormControl>
-                          <Select
-                            value={field.value}
-                            onValueChange={(value) => {
-                              field.onChange(value);
-                              handleCouponChange(value);
-                            }}
-                            disabled={isDisabled || isLoading}
-                          >
-                            <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm pr-8">
-                              <SelectValue placeholder="Choose coupon" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-coffee">
-                              {isLoading ? (
-                                <SelectItem value="loading" className="text-white" disabled>
-                                  Loading...
-                                </SelectItem>
-                              ) : (
-                                coupons.map((coupon) => (
-                                  <SelectItem
-                                    key={coupon._id}
-                                    value={coupon.code}
-                                    className="text-white"
-                                  >
-                                    {coupon.code} - {coupon.description} (₹{coupon.value})
-                                  </SelectItem>
-                                ))
-                              )}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-
-                        {/* Clear Button */}
-                        {field.value && field.value !== 'Choose coupon' && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              field.onChange('Choose coupon');
-                              handleCouponChange('Choose coupon');
-                            }}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-red-500 text-xs"
-                            disabled={isDisabled || isLoading}
-                          >
-                            ✕
-                          </button>
-                        )}
-                      </div>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min="0"
+                          placeholder="Auto-filled from plan"
+                          {...field}
+                          disabled={true}
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
+                        />
+                      </FormControl>
                       <FormMessage className="text-[10px]" />
                     </FormItem>
                   )}
                 />
 
-
-                {form.watch('applyCoupon') !== 'Choose coupon' && (
-                  <FormField
-                    control={form.control}
-                    name="netPrice"
-                    render={({ field }) => (
-                      <FormItem className="w-fit">
-                        <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                          Net Price
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            min="0"
-                            {...field}
-                            readOnly
-                            className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
-                          />
-                        </FormControl>
-                        <FormMessage className="text-[10px]" />
-                      </FormItem>
-                    )}
-                  />
-                )}
 
                 <FormField
                   control={form.control}
@@ -1530,7 +1337,7 @@ const HotelForm = ({
                           type="date"
                           {...field}
                           value={field.value || ''}  // Ensure it's controlled
-                          disabled={isDisabled}
+                          disabled={true}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
@@ -1551,7 +1358,7 @@ const HotelForm = ({
                           type="date"
                           {...field}
                           value={field.value || ''}  // Ensure it's controlled
-                          disabled={isDisabled}
+                          disabled={true}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />
                       </FormControl>
@@ -1559,6 +1366,7 @@ const HotelForm = ({
                     </FormItem>
                   )}
                 />
+
 
 
               </div>
@@ -2026,7 +1834,7 @@ const HotelForm = ({
             >
               Cancel
             </Button>
-            {mode !== 'pending' && (
+            {/* {mode !== 'pending' && (
               <Button
                 type="submit"
                 disabled={isDisabled}
@@ -2034,7 +1842,17 @@ const HotelForm = ({
               >
                 {isMode(['edit', 'view']) ? 'Save Changes' : 'Create'}
               </Button>
+            )} */}
+            {mode === 'edit' && (
+              <Button
+                type="submit"
+                disabled={isDisabled}
+                className="btn-primary text-xs 2xl:text-sm"
+              >
+                Update Profile
+              </Button>
             )}
+
           </div>
         </form>
       </Form>
@@ -2042,4 +1860,4 @@ const HotelForm = ({
   );
 };
 
-export default HotelForm;
+export default HotelFormProfile;

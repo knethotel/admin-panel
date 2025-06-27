@@ -147,7 +147,7 @@ export type InRoomDiningDataType = {
     phoneNumber?: string;
   };
 
-  orderStatus: string;
+  status: string;
   assignedTo: string;
 
   // ✅ Additional fields
@@ -216,20 +216,6 @@ export const InRoomDiningDataTable: React.FC = () => {
       );
 
       if (res?.success && Array.isArray(res.data)) {
-        // const formatted = res.data.map((item: any): InRoomDiningDataType => ({
-        //   orderID: item.uniqueId || 'N/A',
-        //   requestTime: formatDateTime(item.requestTime || item.createdAt),
-        //   guestDetails: {
-        //     name: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`,
-        //     guestID: item.guest?._id || 'N/A',
-        //     roomNo: item.assignedRoomNumber || 'N/A'
-        //   },
-        //   serviceID: item._id,
-        //   orderStatus: mapOrderStatus(item.status),
-        //   assignedTo: item.assignedTo
-        //     ? `${item.assignedTo.firstName || ''} ${item.assignedTo.lastName || ''}`.trim()
-        //     : 'N/A',
-        // }));
 
         const formatted = res.data.map((item: any): InRoomDiningDataType => ({
           serviceID: item._id,
@@ -248,7 +234,7 @@ export const InRoomDiningDataTable: React.FC = () => {
             ? `${item.assignedTo.firstName || ''} ${item.assignedTo.lastName || ''}`.trim()
             : 'N/A',
 
-          orderStatus: mapOrderStatus(item.status),
+          status: mapOrderStatus(item.status),
           paymentStatus: item.paymentStatus || 'N/A',
           specialInstructions: item.specialInstructions || 'N/A',
 

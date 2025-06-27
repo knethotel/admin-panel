@@ -3,6 +3,8 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { GymServiceDataType } from 'app/static/services-management/Gym';
 import CellAction from './cell-action';
+import apiCall from '@/lib/axios';
+import { useState } from 'react';
 
 export const columns: ColumnDef<GymServiceDataType>[] = [
   {
@@ -47,14 +49,71 @@ export const columns: ColumnDef<GymServiceDataType>[] = [
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      const status = row.original.status;
-      const color =
-        status === 'pending'
-          ? 'text-yellow-600'
-          : status === 'completed'
-            ? 'text-green-600'
-            : 'text-blue-600';
-      return <div className={`text-sm font-medium ${color}`}>{status}</div>;
+      const [updating, setUpdating] = useState(false);
+      const validStatuses = ['Pending', 'In-Progress', 'Completed'] as const;
+      type ValidStatus = typeof validStatuses[number];
+
+      const getSafeStatus = (status: string): ValidStatus =>
+        validStatuses.includes(status as ValidStatus) ? (status as ValidStatus) : 'Pending';
+
+      const [status, setStatus] = useState<ValidStatus>(getSafeStatus(row.original.status));
+      const serviceId = row.original.serviceID;
+
+      const statusMap = {
+        Pending: 'pending',
+        'In-Progress': 'in-progress',
+        Completed: 'completed'
+      } as const;
+
+      const statusOptions: Array<keyof typeof statusMap> = ['Pending', 'In-Progress', 'Completed'];
+
+      const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newStatus = e.target.value as keyof typeof statusMap;
+        setUpdating(true);
+
+        try {
+          const data = await apiCall('PATCH', `/api/services/status/${serviceId}`, {
+            status: statusMap[newStatus]
+          });
+
+          if (
+            data.success ||
+            data.status === 'ok' ||
+            data.message?.toLowerCase().includes('status updated')
+          ) {
+            setStatus(newStatus); // or router.refresh();
+          } else {
+            console.error('Failed to update status:', data.message || data);
+          }
+        } catch (error) {
+          console.error('Error updating status:', error);
+        } finally {
+          setUpdating(false);
+        }
+      };
+
+
+      return (
+        <select
+          value={status}
+          onChange={handleStatusChange}
+          disabled={updating}
+          className={`text-sm px-2 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring ${status === 'Pending'
+            ? 'text-[#3787E3]'
+            : status === 'In-Progress'
+              ? 'text-[#FC690E]'
+              : status === 'Completed'
+                ? 'text-[#78B150]'
+                : 'text-gray-500'
+            }`}
+        >
+          {statusOptions.map(option => (
+            <option key={option} value={option} className="text-black">
+              {option}
+            </option>
+          ))}
+        </select>
+      );
     }
   },
   {
