@@ -76,6 +76,9 @@ const HotelFormProfile = ({
     'CONCIERGE SERVICE',
     'IN-ROOM CONTROL',
     'ORDER MANAGEMENT',
+    'SOS MANAGEMENT',
+    'CHAT WITH STAFF',
+    'PAYMENT',
 
   ];
 

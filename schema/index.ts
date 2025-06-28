@@ -213,6 +213,7 @@ export const hotelSchema = z.object({
   logoImage: z.any().optional(),
   additionalImage: z.any().optional(),
   internetConnectivity: z.boolean().optional(),
+  status: z.enum(['Active', 'Inactive']),
   softwareCompatibility: z.boolean().optional(),
   subscriptionStartDate: z.string().min(1, 'Subscription start date is required'),
   subscriptionEndDate: z.string().min(1, 'Subscription start date is required'),

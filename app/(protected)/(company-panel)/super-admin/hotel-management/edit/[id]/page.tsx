@@ -6,9 +6,9 @@ import HotelForm from '@/components/form/hotel-profile/hotel-form';
 const EditHotelDetailsPage = async ({
   params
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ hotelId: string }>;
 }) => {
-  const id = (await params).id;
+  const id = (await params).hotelId;
   return (
     <div className="flex flex-col w-full">
       <Navbar />

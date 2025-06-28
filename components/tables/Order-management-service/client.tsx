@@ -179,7 +179,7 @@ export type OrderManagementDataType = {
     roomNo: string;
   };
   serviceID: string;
-  orderStatus: string;
+  status: string;
   assignedTo: string;
 };
 
@@ -213,15 +213,15 @@ export const OrderManagementDataTable: React.FC = () => {
 
       if (Array.isArray(dataArray)) {
         const mapped = dataArray.map((item: any) => ({
-          orderID: item.uniqueId || item._id,
+          orderID: item.uniqueId,
           requestTime: formatDateTime(item.requestTime || item.createdAt),
           guestDetails: {
             name: `${item.guest?.firstName || ''} ${item.guest?.lastName || ''}`.trim(),
             guestID: item.guest?._id || '-',
             roomNo: item.guest?.roomNumber || '-' // optional
           },
-          serviceID: item._id || '-',
-          orderStatus: item.status || 'Unknown',
+          serviceID: item._id,
+          status: item.status || 'Unknown',
           assignedTo: item.assignedTo
             ? `${item.assignedTo.firstName || ''} ${item.assignedTo.lastName || ''}`
             : 'Not Assigned'
