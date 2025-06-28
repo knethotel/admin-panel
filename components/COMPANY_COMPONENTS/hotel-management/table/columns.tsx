@@ -5,7 +5,7 @@ import { HotelDataType } from 'app/static/company-panel/HotelManagement';
 // Update type to match guestDataType for better type safety
 export const columns: ColumnDef<HotelDataType>[] = [
   {
-    accessorKey: 'hotelID',
+    accessorKey: 'serviceID',
     header: 'Hotel ID'
   },
   {

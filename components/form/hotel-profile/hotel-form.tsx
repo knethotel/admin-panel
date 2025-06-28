@@ -48,7 +48,7 @@ interface Coupon {
 
 const HotelForm = ({
   mode = 'add',
-  hotelId
+  hotelId,
 }: {
   mode: 'add' | 'edit' | 'view' | 'pending';
   hotelId?: string;
@@ -87,7 +87,15 @@ const HotelForm = ({
     'Reception',
     'Housekeeping',
     'In-Room Dining',
-    'Gym'
+    'GYM / COMMUNITY / CONFERENCE HALL',
+    'SPA',
+    'SWIMMING POOL',
+    'CONCIERGE SERVICE',
+    'IN-ROOM CONTROL',
+    'ORDER MANAGEMENT',
+    'SOS MANAGEMENT',
+    'CHAT WITH STAFF',
+    'PAYMENT',
   ];
 
   const handleStateChange = (state: string) => {
@@ -96,7 +104,7 @@ const HotelForm = ({
     form.setValue('city', '');
   };
 
-  // State for image previews
+  // State for image previews 
   const [imagePreviews, setImagePreviews] = useState<{
     [key: string]: string[];
   }>({
@@ -127,7 +135,7 @@ const HotelForm = ({
       numberOfRooms: 1,
       checkInTime: '12:00',
       checkOutTime: '11:00',
-      servingDepartments: [''],
+      servingDepartments: [],
       totalStaff: 1,
       hotelLicenseCertifications: '',
       hotelLicenseImage: undefined,
@@ -146,13 +154,13 @@ const HotelForm = ({
       netPrice: 0,
       applyCoupon: 'Choose coupon',
       subscriptionStartDate: '',
-      subscriptionEndDate: '',
+      // subscriptionEndDate: '',
+      aboutUs: fetchedHotelData?.aboutUs || '',
       wifi: {
-        wifiName: '',
-        password: '',
-        scanner: ''
+        wifiName: fetchedHotelData?.wifi?.wifiName || '',
+        password: fetchedHotelData?.wifi?.password || '',
+        scanner: fetchedHotelData?.wifi?.scanner || '',
       },
-      aboutUs: '',
     }
   });
 
@@ -163,7 +171,7 @@ const HotelForm = ({
 
   const onSubmit = async (data: HotelSchemaType) => {
     const subscriptionStartDate = new Date(data.subscriptionStartDate);
-    const subscriptionEndDate = new Date(data.subscriptionEndDate);
+    // const subscriptionEndDate = new Date(data.subscriptionEndDate);
 
     if (isNaN(subscriptionStartDate.getTime())) {
       ToastAtTopRight.fire('Invalid Subscription Start Date', 'error');
@@ -171,7 +179,7 @@ const HotelForm = ({
     }
 
     const formattedStartDate = subscriptionStartDate.toISOString().split('T')[0];
-    const formattedEndDate = subscriptionEndDate.toISOString().split('T')[0];
+    // const formattedEndDate = subscriptionEndDate.toISOString().split('T')[0];
 
     const payload = {
       name: data.hotelName,
@@ -187,9 +195,11 @@ const HotelForm = ({
       chainHotel: isChainHotelChecked,
       parentHotel: isChainHotelChecked ? data.parentHotelId : undefined,
       parentHotelId: data.parentHotelId || '',
+      // servingDepartment: ['Reception', 'Housekeeping', 'In-Room Dining', 'GYM / COMMUNITY / CONFERENCE HALL', 'SPA', 'SWIMMING POOL', 'CONCIERGE SERVICE', 'IN-ROOM CONTROL', 'ORDER MANAGEMENT', 'SOS MANAGEMENT', 'CHAT WITH STAFF', 'PAYMENT'],
+
       checkInTime: data.checkInTime,
       subscriptionStartDate: formattedStartDate,
-      subscriptionEndtDate: formattedEndDate,
+      // subscriptionEndtDate: formattedEndDate,
       subscriptionPrice: data.subscriptionPrice,
       subscriptionPlanName: data.subscriptionPlanName,
       netPrice: data.netPrice,
@@ -236,7 +246,7 @@ const HotelForm = ({
         password: fetchedHotelData?.wifi?.password || '',
         scanner: fetchedHotelData?.wifi?.scanner || ''
       },
-      aboutUs: fetchedHotelData.aboutUs || '',
+      aboutUs: fetchedHotelData?.aboutUs || '',
     };
     console.log("Payload:", payload);
 
@@ -256,6 +266,8 @@ const HotelForm = ({
         : 'api/hotel/add-hotel';
 
     const method = mode === 'edit' ? 'PUT' : 'POST';
+
+    console.log('hotel id', url)
 
     try {
       const response = await apiCall(method, url, payload);
@@ -1102,23 +1114,40 @@ const HotelForm = ({
                 <FormField
                   control={form.control}
                   name="wifi.scanner"
-                  render={({ field }) => (
+                  render={({ field: { onChange, value, ...rest } }) => (
                     <FormItem>
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        WiFi Scanner Link
+                        Upload WiFi Scanner Image
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Paste QR link or scanner info"
-                          {...field}
-                          disabled={isDisabled}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none text-xs 2xl:text-sm"
-                        />
+                        <div className="flex items-center gap-3">
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                onChange(file); // Store the file in form state
+                              }
+                            }}
+                            disabled={isDisabled}
+                            className="bg-[#F6EEE0] p-2 rounded-md border-none text-black text-xs 2xl:text-sm w-full"
+                            {...rest}
+                          />
+                          {value && typeof value !== 'string' && (
+                            <img
+                              src={URL.createObjectURL(value)}
+                              alt="Preview"
+                              className="h-10 w-10 rounded object-cover border"
+                            />
+                          )}
+                        </div>
                       </FormControl>
                       <FormMessage className="text-[10px]" />
                     </FormItem>
                   )}
                 />
+
               </div>
             </div>
 
@@ -1268,6 +1297,7 @@ const HotelForm = ({
                     );
                   }}
                 />
+
                 <FormField
                   control={form.control}
                   name="numberOfRooms"
@@ -1538,7 +1568,30 @@ const HotelForm = ({
                     </FormItem>
                   )}
                 />
+
                 <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem className="w-fit">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Status
+                      </FormLabel>
+                      <FormControl>
+                        <select
+                          {...field}
+                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
+                        >
+                          <option value="Active">Active</option>
+                          <option value="Inactive">Inactive</option>
+                        </select>
+                      </FormControl>
+                      <FormMessage className="text-[10px]" />
+                    </FormItem>
+                  )}
+                />
+
+                {/* <FormField
                   control={form.control}
                   name="subscriptionEndDate"
                   render={({ field }) => (
@@ -1558,7 +1611,7 @@ const HotelForm = ({
                       <FormMessage className="text-[10px]" />
                     </FormItem>
                   )}
-                />
+                /> */}
 
 
               </div>

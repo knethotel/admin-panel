@@ -51,7 +51,8 @@ export const HotelManagementHome: React.FC = () => {
 
         if (response.status) {
           const hotels: HotelDataType[] = response.hotels.map((hotel: any) => ({
-            hotelID: hotel.HotelId,
+            hotelID: hotel._id || '',
+            serviceID: hotel.HotelId,
             hotelName: hotel.name,
             mobileNo: hotel.phoneNo || 'N/A',
             email: hotel.email,
