@@ -205,7 +205,7 @@ export const hotelSchema = z.object({
   tanNumberImage: z.any().optional(),
   dataPrivacyGdprCompliances: z.string().optional(), // maps to "dataPrivacyAndGDPRCompliance.complianceValue"
   dataPrivacyGdprImage: z.any().optional(),
-   subscriptionPlan: z.string(),// This should hold the plan's _id (string)
+  subscriptionPlan: z.string(),// This should hold the plan's _id (string)
   subscriptionPrice: z.number(),
   netPrice: z.number().optional(),
   applyCoupon: z.string().optional(),
@@ -663,6 +663,12 @@ export const ConciergeManageProductsModalFormSchema = z.object({
     errorMap: () => ({ message: 'Invalid Category' })
   }),
   name: z.string().min(1, 'Input field must have at least 1 character.'),
+  distance: z
+  .string()
+  .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
+    message: 'Distance must be a positive number'
+  }),
+
   description: z.string().min(1, 'Input field must have at least 1 character.'),
   productImage: z
     .union([z.any(), z.string().url()])
@@ -686,6 +692,12 @@ export const SpaManageProductsModalFormSchema = z.object({
     errorMap: () => ({ message: 'Invalid Category' })
   }),
   name: z.string().min(1, 'Input field must have at least 1 character.'),
+  distance: z
+  .string()
+  .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
+    message: 'Distance must be a positive number'
+  }),
+
   description: z.string().min(1, 'Input field must have at least 1 character.'),
   productImage: z
     .union([z.any(), z.string().url()])
