@@ -222,7 +222,7 @@ export const hotelSchema = z.object({
   password: z.string().optional(),
   scanner: z.string().optional()
 }),
-aboutUs: z.string().optional(),
+about: z.string().optional(),
 });
 
 // Inferred type

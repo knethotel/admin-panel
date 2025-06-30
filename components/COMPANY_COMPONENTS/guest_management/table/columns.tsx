@@ -72,11 +72,12 @@ import CellAction from './cell-action';
 export interface GuestDetailsDataType {
   _id: string;
   firstName: string;
+  uniqueId: string;
   lastName: string;
   phoneNumber: string;
   assignedRoomNumber: string;
-  checkIn: string;
-  checkOut: string;
+  checkInDate: string;
+  checkOutDate: string;
   paymentStatus: string;
   status: string;
   sources?: string;
@@ -95,7 +96,7 @@ const formatDateTime = (isoString: string) => {
 
 export const columns: ColumnDef<GuestDetailsDataType>[] = [
   {
-    accessorKey: '_id',
+    accessorKey: 'uniqueId',
     header: 'Booking ID',
   },
   {
@@ -116,20 +117,20 @@ export const columns: ColumnDef<GuestDetailsDataType>[] = [
     header: 'Room',
   },
   {
-    accessorKey: 'checkIn',
+    accessorKey: 'checkInDate',
     header: 'Check-In',
     cell: ({ row }) => (
       <div className="text-success text-xs 2xl:text-sm">
-        {formatDateTime(row.original.checkIn)}
+        {formatDateTime(row.original.checkInDate)}
       </div>
     ),
   },
   {
-    accessorKey: 'checkOut',
+    accessorKey: 'checkOutDate',
     header: 'Check-Out',
     cell: ({ row }) => (
       <div className="text-warning text-xs 2xl:text-sm">
-        {formatDateTime(row.original.checkOut)}
+        {formatDateTime(row.original.checkOutDate)}
       </div>
     ),
   },

@@ -132,11 +132,11 @@ const HotelForm = ({
       parentHotelId: '',
       roomImage: undefined,
       roomConfigs: [{ roomType: 'Single', feature: 'Sea Side' }],
-      numberOfRooms: 1,
+      numberOfRooms: 0,
       checkInTime: '12:00',
       checkOutTime: '11:00',
       servingDepartments: [],
-      totalStaff: 1,
+      totalStaff: 0,
       hotelLicenseCertifications: '',
       hotelLicenseImage: undefined,
       legalBusinessLicense: '',
@@ -155,7 +155,7 @@ const HotelForm = ({
       applyCoupon: 'Choose coupon',
       subscriptionStartDate: '',
       // subscriptionEndDate: '',
-      aboutUs: fetchedHotelData?.aboutUs || '',
+      about: fetchedHotelData?.about || '',
       wifi: {
         wifiName: fetchedHotelData?.wifi?.wifiName || '',
         password: fetchedHotelData?.wifi?.password || '',
@@ -206,6 +206,7 @@ const HotelForm = ({
       checkOutTime: data.checkOutTime,
       brandedHotel: isBrandedHotelChecked,
       subscriptionPlan: data.subscriptionPlan,
+      servingDepartment: data.servingDepartments,
       logo: imagePreviews.logoImage?.[0] || '',
       images: imagePreviews.additionalImage,
       gst: data.gst,
@@ -237,7 +238,6 @@ const HotelForm = ({
           roomType: room.roomType,
           features: [room.feature],
           images: imagePreviews.roomImage,
-          servingDepartment: data.servingDepartments,
           totalStaff: data.totalStaff,
         }))
         : [],
@@ -246,7 +246,7 @@ const HotelForm = ({
         password: data?.wifi?.password || '',
         scanner: data?.wifi?.scanner || ''
       },
-      aboutUs: data?.aboutUs || '',
+      about: data?.about || '',
     };
     console.log("Payload:", payload);
 
@@ -470,6 +470,16 @@ const HotelForm = ({
       // Set the coupon code and value in the form
       form.setValue('applyCoupon', selectedCoupon.code);
     }
+  };
+
+  const generateHourlyOptions = () => {
+    const options: string[] = [];
+    for (let hour = 0; hour < 24; hour++) {
+      const suffix = hour < 12 ? 'AM' : 'PM';
+      const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+      options.push(`${formattedHour}:00 ${suffix}`);
+    }
+    return options;
   };
 
   return (
@@ -939,7 +949,7 @@ const HotelForm = ({
                 />
                 <FormField
                   control={form.control}
-                  name="aboutUs"
+                  name="about"
                   render={({ field }) => (
                     <FormItem className="col-span-1 sm:col-span-2">
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
@@ -1214,7 +1224,7 @@ const HotelForm = ({
                                 <SelectValue placeholder="Feature" />
                               </SelectTrigger>
                               <SelectContent>
-                                {['Sea Side', 'Balcony View'].map((feat) => (
+                                {['Sea Side', 'Balcony View', 'lake view', 'mountain view', 'road view'].map((feat) => (
                                   <SelectItem key={feat} value={feat}>
                                     {feat}
                                   </SelectItem>
@@ -1301,7 +1311,7 @@ const HotelForm = ({
                       <FormControl>
                         <Input
                           type="number"
-                          min="1"
+                          min="0"
                           placeholder="Enter number of rooms"
                           {...field}
                           disabled={isDisabled}
@@ -1326,7 +1336,7 @@ const HotelForm = ({
                       <FormControl>
                         <Input
                           type="number"
-                          min="1"
+                          min="0"
                           placeholder="Enter total staff"
                           {...field}
                           disabled={isDisabled}
@@ -1342,7 +1352,7 @@ const HotelForm = ({
                 />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="checkInTime"
                   render={({ field }) => (
@@ -1361,7 +1371,38 @@ const HotelForm = ({
                       <FormMessage className="text-[10px]" />
                     </FormItem>
                   )}
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="checkInTime"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Check-in Time
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          disabled={isDisabled}
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm">
+                            <SelectValue placeholder="Select check-in time" />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-60 overflow-y-auto">
+                            {generateHourlyOptions().map((time) => (
+                              <SelectItem key={time} value={time}>
+                                {time}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage className="text-[10px]" />
+                    </FormItem>
+                  )}
                 />
+
                 <FormField
                   control={form.control}
                   name="checkOutTime"
@@ -1371,17 +1412,27 @@ const HotelForm = ({
                         Check-out Time
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="e.g., 11:00 AM"
-                          {...field}
-                          disabled={isDisabled}
-                          className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
-                        />
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger
+                            disabled={isDisabled}
+                            className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
+                          >
+                            <SelectValue placeholder="Select check-out time" />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-60 overflow-y-auto">
+                            {generateHourlyOptions().map((time) => (
+                              <SelectItem key={time} value={time}>
+                                {time}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage className="text-[10px]" />
                     </FormItem>
                   )}
                 />
+
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
 
@@ -1551,7 +1602,8 @@ const HotelForm = ({
                         <Input
                           type="date"
                           {...field}
-                          value={field.value || ''}  // Ensure it's controlled
+                          value={field.value || ''}
+                          min={new Date().toISOString().split('T')[0]} // Ensure it's controlled
                           disabled={isDisabled}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm"
                         />

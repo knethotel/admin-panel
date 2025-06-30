@@ -7,6 +7,7 @@ import CellAction from './cell-action';
 export interface AdminDataType {
   _id: string;
   isSuperAdmin: boolean;
+  uniqueId: string;
   roleId: {
     _id: string;
     name: string;
@@ -29,7 +30,7 @@ export const useColumns = (): ColumnDef<AdminDataType>[] => {
     {
       accessorKey: 'adminId',
       header: 'Admin ID',
-      cell: ({row}) => row.original._id || 'N/A'
+      cell: ({ row }) => row.original.uniqueId || 'N/A'
     },
     {
       accessorKey: 'firstName',

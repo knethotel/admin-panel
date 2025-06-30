@@ -224,18 +224,18 @@ type GuestDetailsApiResponse = {
   lastName: string;
   email: string;
   phoneNumber: string;
-  checkIn: string;
-  checkOut: string;
+  checkInDate: string;
+  checkOutDate: string;
   assignedRoomNumber: string;
+  state: string;
   paymentStatus: string;
   status: string;
   specialRequests: string;
-  hotelName?: string;
+  guestsCount?: number;
   guestImage?: string;
-  cardNumber?: string;
-  dob?: string;
+  pincode?: string;
   anniversary?: string;
-  roomCategory?: string;
+  address?: string;
 };
 
 const GuestDetails: React.FC<Props> = ({ guestID }) => {
@@ -300,10 +300,10 @@ const GuestDetails: React.FC<Props> = ({ guestID }) => {
                   ['First Name', guest?.firstName],
                   ['Phone Number', guest?.phoneNumber],
                   ['Room Number', guest?.assignedRoomNumber],
-                  ['Room Category', guest?.roomCategory],
-                  ['Card Number', guest?.cardNumber],
-                  ['D.O.B', guest?.dob],
-                  ['Anniversary', guest?.anniversary]
+                  ['Address', guest?.address],
+                  ['State', guest?.state],
+                  ['Pincode', guest?.pincode],
+                  ['Payment Status', guest?.paymentStatus],
                 ].map(([label, value]) => (
                   <div className="flex gap-5 group" key={label}>
                     <span className="text-sm w-32 text-start">{label}</span>
@@ -316,11 +316,12 @@ const GuestDetails: React.FC<Props> = ({ guestID }) => {
 
               <div className="flex flex-col gap-4 items-end">
                 {[
-                  ['Hotel Name', guest?.hotelName],
+                  ['Guest Count', guest?.guestsCount],
                   ['Last Name', guest?.lastName],
                   ['Email', guest?.email],
-                  ['Check-in Time', formatDateTime(guest?.checkIn)],
-                  ['Check-out Time', formatDateTime(guest?.checkOut)]
+                  ['Status', guest?.status],
+                  ['Check-in Time', formatDateTime(guest?.checkInDate)],
+                  ['Check-out Time', formatDateTime(guest?.checkOutDate)]
                 ].map(([label, value]) => (
                   <div className="flex gap-5 group" key={label}>
                     <span className="text-sm w-32 text-start">{label}</span>

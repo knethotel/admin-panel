@@ -18,6 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import apiCall from '@/lib/axios';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // ✅ ZOD Schema
 const SubscriptionManagementFormSchema = z.object({
@@ -151,7 +152,7 @@ const SubscriptionManagementForm: React.FC<Props> = ({ id, mode = 'view' }) => {
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-start w-full">
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
-                        Plan Duration
+                        Plan Duration(Month)
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -167,7 +168,7 @@ const SubscriptionManagementForm: React.FC<Props> = ({ id, mode = 'view' }) => {
                     </FormItem>
                   )}
                 />
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="planType"
                   render={({ field }) => (
@@ -187,7 +188,38 @@ const SubscriptionManagementForm: React.FC<Props> = ({ id, mode = 'view' }) => {
                       <FormMessage className="text-[10px] mt-1" />
                     </FormItem>
                   )}
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="planType"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start w-full">
+                      <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
+                        Plan Type
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          disabled={mode === 'view' || isSubmitting}
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger className="w-full h-8 px-2 py-1 text-gray-900 text-xs 2xl:text-sm border-none rounded-md focus:ring-0 placeholder:opacity-65">
+                            <SelectValue placeholder="Select Plan Type" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-[#FAF6EF] text-gray-900 text-sm rounded-md shadow-md">
+                            {['Monthly', 'Quarterly', 'Semi Annual', 'Annual'].map((item) => (
+                              <SelectItem key={item} value={item}>
+                                {item}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage className="text-[10px] mt-1" />
+                    </FormItem>
+                  )}
                 />
+
               </div>
 
               <FormField

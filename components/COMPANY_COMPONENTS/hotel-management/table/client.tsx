@@ -57,7 +57,9 @@ export const HotelManagementHome: React.FC = () => {
             mobileNo: hotel.phoneNo || 'N/A',
             email: hotel.email,
             subscriptionDetails: {
-              planName: hotel.subscriptionPlan || 'N/A',
+              subscriptionPlan: hotel.subscriptionPlan || 'N/A',
+              subscriptionEndDate: hotel.subscriptionEndDate || 'N/A',
+              subscriptionPrice: hotel.subscriptionPrice || 'N/A',
               cost: 0
             },
             status:

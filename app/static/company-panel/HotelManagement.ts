@@ -7,8 +7,9 @@ export type HotelDataType = {
   mobileNo: string;
   email: string;
   subscriptionDetails: {
-    planName: string;
-    cost: number;
+    subscriptionEndDate: string;
+  subscriptionPrice: number;
+  subscriptionPlan: string;
   };
   status: 'ACTIVE' | 'INACTIVE';
 };

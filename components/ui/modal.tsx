@@ -32,7 +32,7 @@ export const Modal: React.FC<ModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onChange}>
       <DialogContent className="max-w-lg bg-offWhite border border-coffee">
         <DialogHeader>
-          <DialogTitle className="text-red-500 mb-2">{title}</DialogTitle>
+          <DialogTitle className="text-[rgb(160,125,61)] mb-2">{title}</DialogTitle>
           <DialogDescription className="text-black">
             {description}
           </DialogDescription>

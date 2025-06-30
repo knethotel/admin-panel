@@ -67,20 +67,20 @@ const HotelFormProfile = ({
   const additionalImageRef = useRef<HTMLInputElement>(null);
 
   const servingDepartmentOptions = [
-    'Reception',
-    'Housekeeping',
-    'In-Room Dining',
-    'GYM / COMMUNITY / CONFERENCE HALL',
-    'SPA',
-    'SWIMMING POOL',
-    'CONCIERGE SERVICE',
-    'IN-ROOM CONTROL',
-    'ORDER MANAGEMENT',
-    'SOS MANAGEMENT',
-    'CHAT WITH STAFF',
-    'PAYMENT',
-
+    { label: 'Reception', value: 'reception' },
+    { label: 'Housekeeping', value: 'housekeeping' },
+    { label: 'In-Room Dining', value: 'inroomdining' },
+    { label: 'GYM / COMMUNITY / CONFERENCE HALL', value: 'gymcommunityconferencehall' },
+    { label: 'SPA', value: 'spa' },
+    { label: 'SWIMMING POOL', value: 'swimmingpool' },
+    { label: 'CONCIERGE SERVICE', value: 'conciergeservice' },
+    { label: 'IN-ROOM CONTROL', value: 'inroomcontrol' },
+    { label: 'ORDER MANAGEMENT', value: 'ordermanagement' },
+    { label: 'SOS MANAGEMENT', value: 'sosmanagement' },
+    { label: 'CHAT WITH STAFF', value: 'chat' },
+    { label: 'PAYMENT', value: 'payment' },
   ];
+
 
   const handleStateChange = (state: string) => {
     form.setValue('state', state);
@@ -144,7 +144,7 @@ const HotelFormProfile = ({
         password: '',
         scanner: ''
       },
-      aboutUs: '',
+      about: '',
     }
   });
 
@@ -326,7 +326,7 @@ const HotelFormProfile = ({
           password: fetchedHotelData?.wifi?.password || '',
           scanner: fetchedHotelData?.wifi?.scanner || ''
         },
-        aboutUs: fetchedHotelData.aboutUs || '',
+        about: fetchedHotelData.about || '',
 
       });
 
@@ -826,7 +826,7 @@ const HotelFormProfile = ({
                 />
                 <FormField
                   control={form.control}
-                  name="aboutUs"
+                  name="about"
                   render={({ field }) => (
                     <FormItem className="col-span-1 sm:col-span-2">
                       <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
@@ -837,7 +837,7 @@ const HotelFormProfile = ({
                           {...field}
                           rows={5}
                           placeholder="Write something about the hotel..."
-                          disabled={isDisabled}
+                          disabled={true}
                           className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none focus:ring-0 text-xs 2xl:text-sm resize-none"
                         />
                       </FormControl>
@@ -1121,36 +1121,31 @@ const HotelFormProfile = ({
                       <FormField
                         control={form.control}
                         name="servingDepartments"
-                        className="col-span-2 mb-2"
                         render={({ field }) => {
-                          const selectedDepartments = field.value || [];
+                          const selectedDepartments: string[] = field.value || [];
 
-                          const toggleOption = (option: string) => {
-                            const newValue = selectedDepartments.includes(option)
-                              ? selectedDepartments.filter((v) => v !== option)
-                              : [...selectedDepartments, option];
+                          const toggleOption = (value: string) => {
+                            const newValue = selectedDepartments.includes(value)
+                              ? selectedDepartments.filter((v) => v !== value)
+                              : [...selectedDepartments, value];
                             field.onChange(newValue);
                           };
 
                           return (
                             <FormItem>
-                              <FormLabel className="text-sm font-medium text-gray-700">
+                              <FormLabel className="text-xs 2xl:text-sm font-medium text-gray-700">
                                 Serving Departments
                               </FormLabel>
-                              <div className="flex flex-wrap gap-3 text-gray-700 text-sm font-light">
-                                {servingDepartmentOptions.map((option) => (
-                                  <label
-                                    key={option}
-                                    className="inline-flex items-center gap-2 cursor-pointer"
-                                  >
+                              <div className="flex flex-wrap gap-3 text-sm">
+                                {servingDepartmentOptions.map(({ label, value }) => (
+                                  <label key={value} className="inline-flex text-gray-700 items-center gap-2">
                                     <input
                                       type="checkbox"
-                                      checked={selectedDepartments.includes(option)}
-                                      onChange={() => toggleOption(option)}
+                                      checked={selectedDepartments.includes(value)}
+                                      onChange={() => toggleOption(value)}
                                       disabled={isDisabled}
-                                      className="form-checkbox"
                                     />
-                                    <span>{option}</span>
+                                    <span>{label}</span>
                                   </label>
                                 ))}
                               </div>
@@ -1158,6 +1153,7 @@ const HotelFormProfile = ({
                           );
                         }}
                       />
+
 
                     );
                   }}
