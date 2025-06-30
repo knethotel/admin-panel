@@ -154,12 +154,12 @@ export type Subscription = {
 };
 
 export const columns: ColumnDef<Subscription>[] = [
-  {
-    header: 'SN',
-    accessorFn: (_row, index) => index + 1,
-    id: 'serialNumber',
-    cell: ({ row }) => <div>{row.index + 1}</div>
-  },
+  // {
+  //   header: 'SN',
+  //   accessorFn: (_row, index) => index + 1,
+  //   id: 'serialNumber',
+  //   cell: ({ row }) => <div>{row.index + 1}</div>
+  // },
   {
     header: 'Subscription ID',
     accessorKey: 'uniqueId'

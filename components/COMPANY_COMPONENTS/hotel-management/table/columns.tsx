@@ -31,8 +31,19 @@ export const columns: ColumnDef<HotelDataType>[] = [
       return (
         <div className="flex items-center justify-center">
           <div className="flex flex-col items-start">
-            <span>{details.planName}</span>
-            <span className="opacity-60">INR-{details.cost}/month</span>
+            <span>{details.subscriptionPlan}</span>
+            <span>
+              {new Date(details.subscriptionEndDate).toLocaleString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+              })}
+            </span>
+
+            <span className="opacity-60">INR-{details.subscriptionPrice}/month</span>
           </div>
         </div>
       );
