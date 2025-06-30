@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import apiCall from '@/lib/axios';
 
 interface ModalProps {
   isOpen: boolean;
@@ -49,15 +50,42 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       selectService: 'Nearby Attractions',
       name: '',
       description: '',
+      distance: '',
       productImage: undefined
     }
   });
 
-  const onSubmit = (data: ConciergeManageProductsModalFormSchemaType) => {
-    console.log('Submitted Data:', data);
-    form.reset();
-    setPreview(null);
+  const onSubmit = async (data: ConciergeManageProductsModalFormSchemaType) => {
+    try {
+      const payload = {
+        name: data.name,
+        description: data.description,
+        category: data.productCategory,
+        serviceType: data.selectService === 'Nearby Attractions'
+          ? 'Nearby Attraction'
+          : 'Nearby Cafe & Restaurant',
+        distance: parseFloat(data.distance as string),
+        // imageUrl: uploadedImageUrl, 
+        // HotelId: hotelId,
+
+      };
+
+      const response = await apiCall('POST', 'api/services/concierge/items', payload);
+
+      if (response?.success) {
+        alert('Concierge item added successfully');
+        form.reset();
+        setPreview(null);
+        onClose();
+      } else {
+        alert(response?.message || 'Something went wrong');
+      }
+    } catch (error) {
+      console.error('Error submitting concierge item:', error);
+      alert('Submission failed. Please try again.');
+    }
   };
+
 
   if (!isOpen) return null;
 
@@ -184,6 +212,30 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
               {/* Product Image Upload */}
               <div className="w-[30%]">
+                <FormField
+                  control={form.control}
+                  name="distance"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center gap-4">
+                      <FormLabel className="text-sm w-40 font-medium text-gray-700">
+                        Distance (km)
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          placeholder="Enter distance"
+                          {...field}
+                          className="bg-[#F6EEE0] w-64 text-gray-700 p-2 rounded-md"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+
                 <FormField
                   control={form.control}
                   name="productImage"

@@ -237,16 +237,16 @@ const HotelForm = ({
           roomType: room.roomType,
           features: [room.feature],
           images: imagePreviews.roomImage,
-          servingDepartment: ['Concierge Service', 'In-Room Dining', 'Spa'],
+          servingDepartment: data.servingDepartments,
           totalStaff: data.totalStaff,
         }))
         : [],
       wifi: {
-        wifiName: fetchedHotelData?.wifi?.wifiName || '',
-        password: fetchedHotelData?.wifi?.password || '',
-        scanner: fetchedHotelData?.wifi?.scanner || ''
+        wifiName: data?.wifi?.wifiName || '',
+        password: data?.wifi?.password || '',
+        scanner: data?.wifi?.scanner || ''
       },
-      aboutUs: fetchedHotelData?.aboutUs || '',
+      aboutUs: data?.aboutUs || '',
     };
     console.log("Payload:", payload);
 
@@ -1258,10 +1258,7 @@ const HotelForm = ({
                 <FormField
                   control={form.control}
                   name="servingDepartments"
-                  className="col-span-2 mb-2"
                   render={({ field }) => {
-                    // field.value should be string[] now
-                    // Initialize field.value as array if undefined
                     const selectedDepartments = field.value || [];
 
                     const toggleOption = (option: string) => {
@@ -1273,21 +1270,15 @@ const HotelForm = ({
 
                     return (
                       <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">
-                          Serving Departments
-                        </FormLabel>
-                        <div className="flex flex-wrap gap-3 text-gray-700 text-sm font-light">
+                        <FormLabel>Serving Departments</FormLabel>
+                        <div className="flex flex-wrap gap-3 text-sm">
                           {servingDepartmentOptions.map((option) => (
-                            <label
-                              key={option}
-                              className="inline-flex items-center gap-2 cursor-pointer"
-                            >
+                            <label key={option} className="inline-flex text-gray-700 items-center gap-2">
                               <input
                                 type="checkbox"
                                 checked={selectedDepartments.includes(option)}
                                 onChange={() => toggleOption(option)}
                                 disabled={isDisabled}
-                                className="form-checkbox"
                               />
                               <span>{option}</span>
                             </label>
@@ -1297,6 +1288,7 @@ const HotelForm = ({
                     );
                   }}
                 />
+
 
                 <FormField
                   control={form.control}
