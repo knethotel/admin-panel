@@ -84,19 +84,20 @@ const HotelForm = ({
   const additionalImageRef = useRef<HTMLInputElement>(null);
 
   const servingDepartmentOptions = [
-    'Reception',
-    'Housekeeping',
-    'In-Room Dining',
-    'GYM / COMMUNITY / CONFERENCE HALL',
-    'SPA',
-    'SWIMMING POOL',
-    'CONCIERGE SERVICE',
-    'IN-ROOM CONTROL',
-    'ORDER MANAGEMENT',
-    'SOS MANAGEMENT',
-    'CHAT WITH STAFF',
-    'PAYMENT',
+    { label: 'Reception', value: 'reception' },
+    { label: 'Housekeeping', value: 'housekeeping' },
+    { label: 'In-Room Dining', value: 'inroomdining' },
+    { label: 'GYM / COMMUNITY / CONFERENCE HALL', value: 'gymcommunityconferencehall' },
+    { label: 'SPA', value: 'spa' },
+    { label: 'SWIMMING POOL', value: 'swimmingpool' },
+    { label: 'CONCIERGE SERVICE', value: 'conciergeservice' },
+    { label: 'IN-ROOM CONTROL', value: 'inroomcontrol' },
+    { label: 'ORDER MANAGEMENT', value: 'ordermanagement' },
+    { label: 'SOS MANAGEMENT', value: 'sosmanagement' },
+    { label: 'CHAT WITH STAFF', value: 'chat' },
+    { label: 'PAYMENT', value: 'payment' },
   ];
+
 
   const handleStateChange = (state: string) => {
     form.setValue('state', state);
@@ -190,6 +191,7 @@ const HotelForm = ({
       hotelCategory: data.hotelCategory,
       city: data.city,
       country: data.country,
+      numberOfRooms: data.numberOfRooms,
       state: data.state,
       pincode: data.pinCode,
       chainHotel: isChainHotelChecked,
@@ -291,6 +293,80 @@ const HotelForm = ({
     }
   };
 
+
+
+  useEffect(() => {
+    if ((mode === 'edit' || mode === 'view') && hotelId) {
+      const fetchHotel = async () => {
+        try {
+          const res = await apiCall('GET', `api/hotel/get-hotel/${hotelId}`);
+
+          if (!res?.hotel) {
+            ToastAtTopRight.fire('Hotel not found', 'error');
+            return;
+          }
+
+          form.reset({
+            hotelName: res.hotel.name || '',
+            completeAddress: res.hotel.address || '',
+            email: res.hotel.email || '',
+            number: res.hotel.phoneNo || '',
+            hotelCategory: res.hotel.hotelCategory || '',
+            city: res.hotel.city || '',
+            state: res.hotel.state || '',
+            country: res.hotel.country || '',
+            pinCode: res.hotel.pincode || '',
+            parentHotelId: res.hotel.parentHotelId || '',
+            checkInTime: res.hotel.checkInTime || '',
+            checkOutTime: res.hotel.checkOutTime || '',
+            numberOfRooms: res.hotel.numberOfRooms || '',
+            subscriptionStartDate: res.hotel.subscriptionStartDate?.split('T')[0] || '',
+            subscriptionPlan: res.hotel.subscriptionPlan || '',
+            subscriptionPlanName: res.hotel.subscriptionPlanName || '',
+            subscriptionPrice: res.hotel.subscriptionPrice || 0,
+            netPrice: res.hotel.netPrice || 0,
+            gst: res.hotel.gst || '',
+            about: res.hotel.about || '',
+            servingDepartments: res.hotel.servingDepartment || [],
+            internetConnectivity: res.hotel.internetConnectivity || false,
+            softwareCompatibility: res.hotel.softwareCompatibility || false,
+            wifi: res.hotel.wifi || { wifiName: '', password: '', scanner: {} },
+            roomConfigs: res.hotel.rooms?.map((room: any) => ({
+              roomType: room.roomType,
+              totalStaff: room.totalStaff,
+              feature: room.features?.[0] || '',
+            })) || [],
+            hotelLicenseCertifications: res.hotel.hotelLicenseAndCertification?.certificateValue || '',
+            legalBusinessLicense: res.hotel.legalAndBusinessLicense?.licenseValue || '',
+            touristLicense: res.hotel.touristLicense?.licenseValue || '',
+            dataPrivacyGdprCompliances: res.hotel.dataPrivacyAndGDPRCompliance?.complianceValue || '',
+            tanNumber: res.hotel.panNumber?.numberValue || '',
+          });
+
+          // Set images
+          setImagePreviews({
+            logoImage: res.hotel.logo ? [res.hotel.logo] : [],
+            additionalImage: res.hotel.images || [],
+            hotelLicenseImage: res.hotel.hotelLicenseAndCertification?.imageUrl ? [res.hotel.hotelLicenseAndCertification.imageUrl] : [],
+            legalBusinessLicenseImage: res.hotel.legalAndBusinessLicense?.imageUrl ? [res.hotel.legalAndBusinessLicense.imageUrl] : [],
+            touristLicenseImage: res.hotel.touristLicense?.imageUrl ? [res.hotel.touristLicense.imageUrl] : [],
+            tanNumberImage: res.hotel.panNumber?.imageUrl ? [res.hotel.panNumber.imageUrl] : [],
+            dataPrivacyGdprImage: res.hotel.dataPrivacyAndGDPRCompliance?.imageUrl ? [res.hotel.dataPrivacyAndGDPRCompliance.imageUrl] : [],
+            roomImage: res.hotel.rooms?.[0]?.images || [],
+          });
+
+        } catch (err: any) {
+          console.error('❌ Error loading hotel:', err?.response || err?.message || err);
+          ToastAtTopRight.fire('Failed to load hotel', 'error');
+        }
+      };
+
+      fetchHotel();
+    }
+  }, [mode, hotelId]);
+
+
+
   const approveRequest = async () => {
     if (!hotelId) {
       ToastAtTopRight.fire('Hotel request ID missing', 'error');
@@ -376,7 +452,6 @@ const HotelForm = ({
     setIsLoading(true);
     try {
       const response = await apiCall('GET', 'api/subscription');
-      console.log("API Response:", response);  // Debugging
       if (response.success && response.data) {
         setSubscriptionPlans(response.data);
       } else {
@@ -1265,7 +1340,7 @@ const HotelForm = ({
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="servingDepartments"
                   render={({ field }) => {
@@ -1297,7 +1372,41 @@ const HotelForm = ({
                       </FormItem>
                     );
                   }}
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="servingDepartments"
+                  render={({ field }) => {
+                    const selectedDepartments = field.value || [];
+
+                    const toggleOption = (value: string) => {
+                      const newValue = selectedDepartments.includes(value)
+                        ? selectedDepartments.filter((v) => v !== value)
+                        : [...selectedDepartments, value];
+                      field.onChange(newValue);
+                    };
+
+                    return (
+                      <FormItem>
+                        <FormLabel>Serving Departments</FormLabel>
+                        <div className="flex flex-wrap gap-3 text-sm">
+                          {servingDepartmentOptions.map((option) => (
+                            <label key={option.value} className="inline-flex text-gray-700 items-center gap-2">
+                              <input
+                                type="checkbox"
+                                checked={selectedDepartments.includes(option.value)}
+                                onChange={() => toggleOption(option.value)}
+                                disabled={isDisabled}
+                              />
+                              <span>{option.label}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </FormItem>
+                    );
+                  }}
                 />
+
 
 
                 <FormField
