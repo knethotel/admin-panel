@@ -180,7 +180,8 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit, (errors) => {
-            ToastAtTopRight.fire('Please fix the errors in the form.', 'error');
+            // ToastAtTopRight.fire('Please fix the errors in the form.', 'error');
+
           })}
           className="w-full relative h-full max-w-4xl mx-auto rounded-lg"
         >
@@ -262,6 +263,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                                       date?.toLocaleDateString('en-CA')
                                     )
                                   }
+                                  disabled={{ before: new Date() }}
                                   initialFocus
                                 />
                               </PopoverContent>
@@ -301,6 +303,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                                       date?.toLocaleDateString('en-CA')
                                     )
                                   }
+                                  disabled={{ before: new Date() }}
                                   initialFocus
                                 />
                               </PopoverContent>
@@ -379,7 +382,7 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
                               {...field}
                               value={field.value ?? ''}
                               onChange={(e) =>
-                                field.onChange(Number(e.target.value))
+                                field.onChange((e.target.value))
                               }
                               className="w-full bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
                             />

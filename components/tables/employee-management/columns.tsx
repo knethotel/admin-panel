@@ -6,7 +6,7 @@ import { StatusType } from 'app/static/Type';
 // Update type to match guestDataType for better type safety
 export const columns: ColumnDef<EmployeeDataType>[] = [
   {
-    accessorKey: 'employeeID',
+    accessorKey: 'requestID',
     header: 'Employee ID'
   },
   {
@@ -53,7 +53,7 @@ export const columns: ColumnDef<EmployeeDataType>[] = [
       <div className="flex items-center justify-center">
         <CellAction
           data={row.original}
-          // onStatusChange={updateEmployeeStatus}
+        // onStatusChange={updateEmployeeStatus}
         />
       </div>
     )
