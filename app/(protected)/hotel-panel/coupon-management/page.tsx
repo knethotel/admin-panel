@@ -114,7 +114,7 @@ const CouponManagement = () => {
                       key={coupon._id}
                       className="relative h-36 rounded-lg bg-white shadow"
                     >
-                      <Image
+                      {/* <Image
                         src={coupon.imageUrl || '/placeholder-coupon.png'}
                         alt={`${coupon.code} coupon`}
                         fill
@@ -123,7 +123,14 @@ const CouponManagement = () => {
                           const target = e.target as HTMLImageElement;
                           target.src = '/placeholder-coupon.png';
                         }}
+                      /> */}
+                      <Image
+                        src={coupon.imageUrl || '/placeholder-coupon.png'}
+                        alt="Coupon"
+                        fill
+                        className="object-cover rounded-t-lg"
                       />
+
                       <div className="absolute bottom-0 left-0 right-0 bg-[#281F0F] text-white rounded-b-lg">
                         <div className="p-2 pb-4 flex-col gap-1">
                           <h4 className="text-sm font-semibold">
@@ -182,7 +189,7 @@ const CouponManagement = () => {
                       key={coupon._id}
                       className="relative h-36 rounded-lg bg-white shadow"
                     >
-                      <Image
+                      {/* <Image
                         src={coupon.imageUrl || '/placeholder-coupon.png'}
                         alt={`${coupon.code} coupon`}
                         fill
@@ -191,7 +198,14 @@ const CouponManagement = () => {
                           const target = e.target as HTMLImageElement;
                           target.src = '/placeholder-coupon.png';
                         }}
+                      /> */}
+                      <Image
+                        src={coupon.imageUrl || '/placeholder-coupon.png'}
+                        alt="Coupon"
+                        fill
+                        className="object-cover rounded-t-lg"
                       />
+
                       <div className="absolute bottom-0 left-0 right-0 bg-[#281F0F] text-white rounded-b-lg">
                         <div className="p-2 pb-4 flex-col gap-1">
                           <h4 className="text-sm font-semibold">
