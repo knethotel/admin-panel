@@ -15,6 +15,7 @@ import img11 from '../../public/assets/service_management_page_images/chat.svg';
 export type ServiceManagementHomePageDataType = {
   id: number;
   name: string;
+  displayName: string;
   imgSrc: StaticImageData;
   href: string;
 };
@@ -22,71 +23,82 @@ export type ServiceManagementHomePageDataType = {
 export const serviceManagementHomePageData: ServiceManagementHomePageDataType[] =
   [
     {
-      id: 1,
-      name: 'RECEPTION',
-      imgSrc: img1,
-      href: '/hotel-panel/service-management/reception'
-    },
-    {
-      id: 2,
-      name: 'HOUSEKEEPING',
-      imgSrc: img2,
-      href: '/hotel-panel/service-management/housekeeping'
-    },
-    {
-      id: 3,
-      name: 'IN-ROOM DINNING',
-      imgSrc: img3,
-      href: '/hotel-panel/service-management/inroomdining'
-    },
-    {
-      id: 4,
-      name: 'GYM / COMMUNITY / CONFERENCE HALL',
-      imgSrc: img4,
-      href: '/hotel-panel/service-management/gym'
-    },
-    {
-      id: 5,
-      name: 'SPA',
-      imgSrc: img5,
-      href: '/hotel-panel/service-management/spa'
-    },
-    {
-      id: 6,
-      name: 'SWIMMING POOL',
-      imgSrc: img6,
-      href: '/hotel-panel/service-management/swimmingpool'
-    },
-    {
-      id: 7,
-      name: 'CONCIERGE SERVICE',
-      imgSrc: img7,
-      href: '/hotel-panel/service-management/conciergeservice'
-    },
-    {
-      id: 8,
-      name: 'IN-ROOM CONTROL',
-      imgSrc: img8,
-      href: '/hotel-panel/service-management/in_room_control'
-    },
-    {
-      id: 9,
-      name: 'ORDER MANAGEMENT',
-      imgSrc: img9,
-      href: '/hotel-panel/service-management/ordermanagement'
-    },
-    {
-      id: 10,
-      name: 'SOS MANAGEMENT',
-      imgSrc: img10,
-      href: '/hotel-panel/service-management/sosmanagement'
-    },
-    {
-      id: 11,
-      name: 'CHAT WITH STAFF',
-      imgSrc: img11,
-      href: '/hotel-panel/service-management/chatwithstaff'
-    }
+    id: 1,
+    name: 'reception',
+    displayName: 'Reception',
+    imgSrc: img1,
+    href: '/hotel-panel/service-management/reception',
+  },
+  {
+    id: 2,
+    name: 'housekeeping',
+    displayName: 'Housekeeping',
+    imgSrc: img2,
+    href: '/hotel-panel/service-management/housekeeping',
+  },
+  {
+    id: 3,
+    name: 'inroomdining',
+    displayName: 'In-Room Dining',
+    imgSrc: img3,
+    href: '/hotel-panel/service-management/inroomdining',
+  },
+  {
+    id: 4,
+    name: 'gym',
+    displayName: 'Gym / Community / Conference Hall',
+    imgSrc: img4,
+    href: '/hotel-panel/service-management/gym',
+  },
+  {
+    id: 5,
+    name: 'spa',
+    displayName: 'Spa/Salon',
+    imgSrc: img5,
+    href: '/hotel-panel/service-management/spa',
+  },
+  {
+    id: 6,
+    name: 'swimmingpool',
+    displayName: 'Swimming Pool',
+    imgSrc: img6,
+    href: '/hotel-panel/service-management/swimmingpool',
+  },
+  {
+    id: 7,
+    name: 'conciergeservice',
+    displayName: 'Concierge Service',
+    imgSrc: img7,
+    href: '/hotel-panel/service-management/conciergeservice',
+  },
+  {
+    id: 8,
+    name: 'in_room_control',
+    displayName: 'In-room Control',
+    imgSrc: img8,
+    href: '/hotel-panel/service-management/in_room_control',
+  },
+  {
+    id: 9,
+    name: 'ordermanagement',
+    displayName: 'Order Management',
+    imgSrc: img9,
+    href: '/hotel-panel/service-management/ordermanagement',
+  },
+  {
+    id: 10,
+    name: 'sos',
+    displayName: 'SOS MANAGEMENT',
+    imgSrc: img10,
+    href: '/hotel-panel/service-management/sosmanagement',
+  },
+  {
+    id: 11,
+    name: 'chat',
+    displayName: 'CHAT WITH STAFF',
+    imgSrc: img11,
+    href: '/hotel-panel/service-management/chatwithstaff',
+  },
   ];
 
 //************************Notification details dummy data

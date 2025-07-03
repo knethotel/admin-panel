@@ -72,7 +72,7 @@ export const NotificationsTable: React.FC = () => {
             <h2 className="text-[0.8rem] font-semibold">
               AUTO ACCEPT REQUESTS
             </h2>
-            <ToggleButton />
+            {/* <ToggleButton /> */}
           </div>
         </div>
         <Settings className='cursor-pointer' onClick={() => setIsModalOpen(true)} />
@@ -88,14 +88,14 @@ export const NotificationsTable: React.FC = () => {
           searchKey="firstName"
           columns={columns}
           data={filteredData.slice((pageNo - 1) * limit, pageNo * limit)} // Use filteredData instead of data while api integration
-          // onSearch={(searchValue) => {
-          //     const filtered = data.filter((item) =>
-          //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())
-          //     );
-          //     setData(filtered);
-          // }}
-          // filters={filters}
-          //   onFilterChange={handleFilterChange}
+        // onSearch={(searchValue) => {
+        //     const filtered = data.filter((item) =>
+        //         item.firstName.toLowerCase().includes(searchValue.toLowerCase())
+        //     );
+        //     setData(filtered);
+        // }}
+        // filters={filters}
+        //   onFilterChange={handleFilterChange}
         />
       )}
       <div className="flex justify-end space-x-2 px-3 py-2">

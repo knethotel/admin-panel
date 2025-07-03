@@ -152,7 +152,7 @@ const SpaServiceRequestDetail: React.FC<Props> = ({ serviceID }) => {
           <div className="space-y-6 w-full lg:w-1/2">
             <div className="space-y-2">
               <span className="text-sm text-gray-500">Effective Cost</span>
-              <ToggleButton />
+              {/* <ToggleButton /> */}
               <div className="bg-[#F6EEE0] px-6 py-1 rounded-md w-fit">
                 ₹{service.amount.finalAmount}
               </div>

@@ -297,7 +297,7 @@ export const SwimmingpoolServiceDataTable: React.FC = () => {
           <h2 className="text-coffee text-xl font-bold">Swimming Pool</h2>
           <div className="flex items-center gap-2">
             <h2 className="text-[0.8rem] font-semibold">AUTO ACCEPT REQUESTS</h2>
-            <ToggleButton />
+            {/* <ToggleButton /> */}
           </div>
         </div>
         <Settings className="cursor-pointer" onClick={() => setIsModalOpen(true)} />

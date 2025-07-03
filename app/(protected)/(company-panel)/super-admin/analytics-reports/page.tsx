@@ -37,7 +37,7 @@ const AnalyticsReportsPage = () => {
               >
                 Sales
               </h2>
-              <ToggleButton />
+              {/* <ToggleButton /> */}
             </div>
           </div>
           <div
@@ -61,7 +61,7 @@ const AnalyticsReportsPage = () => {
               >
                 HOUSEKEEPING REPORTS
               </h2>
-              <ToggleButton />
+              {/* <ToggleButton /> */}
             </div>
           </div>
           <div
@@ -85,7 +85,7 @@ const AnalyticsReportsPage = () => {
               >
                 FINANCIAL REPORTS
               </h2>
-              <ToggleButton />
+              {/* <ToggleButton /> */}
             </div>
           </div>
           <div
@@ -109,7 +109,7 @@ const AnalyticsReportsPage = () => {
               >
                 CUSTOMER ANALYTICS
               </h2>
-              <ToggleButton />
+              {/* <ToggleButton /> */}
             </div>
           </div>
         </div>

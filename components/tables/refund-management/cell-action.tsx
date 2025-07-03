@@ -26,7 +26,7 @@ const CellAction = (props: any) => {
         >
           <Edit className=" w-4 text-button-dark group-hover:text-white" />
         </Button>
-        <ToggleButton />
+        {/* <ToggleButton /> */}
       </div>
     </>
   );

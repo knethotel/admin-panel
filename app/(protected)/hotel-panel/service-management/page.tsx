@@ -1,4 +1,6 @@
+
 'use client';
+
 import React, { useEffect, useState } from 'react';
 import {
   serviceManagementHomePageData,
@@ -9,15 +11,23 @@ import ToggleButton from '@/components/ui/toggleButton';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import { Heading } from '@/components/ui/heading';
+
 const ServiceManagementPage = () => {
   const router = useRouter();
-  const [highlightedServiceId, setHighlightedServiceId] = useState<
-    number | null
-  >(null);
+  const [highlightedServiceId, setHighlightedServiceId] = useState<number | null>(null);
+  const [serviceToggleStatus, setServiceToggleStatus] = useState<{ [key: string]: boolean }>({});
 
-  const handleNavigation = (path: string, serviceId: number) => {
-    localStorage.setItem('lastClickedService', serviceId.toString());
+  const handleNavigation = (path: string, serviceName: string) => {
+    localStorage.setItem('lastClickedService', serviceName);
     router.push(path);
+  };
+
+
+  const handleToggleService = (serviceName: string, newState: boolean) => {
+    setServiceToggleStatus(prevState => ({
+      ...prevState,
+      [serviceName]: newState,
+    }));
   };
 
   useEffect(() => {
@@ -29,47 +39,68 @@ const ServiceManagementPage = () => {
         localStorage.removeItem('lastClickedService');
       }, 10000);
     }
+
+    // Initialize the toggle status based on the services data
+    const initialServiceStatus = serviceManagementHomePageData.reduce((acc: any, service) => {
+      acc[service.name] = true;
+      return acc;
+    }, {});
+
+
+    const blurredServices = ['ServiceName1', 'ServiceName2'];
+    blurredServices.forEach(serviceName => {
+      initialServiceStatus[serviceName] = false;
+    });
+
+    setServiceToggleStatus(initialServiceStatus);
   }, []);
+
 
   return (
     <div className="flex flex-col w-full">
       <Navbar />
       <div className="overflow-hidden flex flex-col justify-evenly py-4 gap-6 mt-14">
-        <Heading title="Service Management" className='px-6 mb-0 md:mb-0' />
+        <Heading title="Service Management" className="px-6 mb-0 md:mb-0" />
         <div className="w-full grid grid-cols-4 gap-8 px-6">
-          {/* Carousel of services */}
-          {serviceManagementHomePageData.map(
-            (item: ServiceManagementHomePageDataType) => (
+          {serviceManagementHomePageData.map((item: ServiceManagementHomePageDataType) => {
+            const isServiceEnabled = serviceToggleStatus[item.name] ?? true;
+
+            // Add a subtle blur effect if the service is disabled
+            const serviceClass = isServiceEnabled ? '' : 'subtle-blur opacity-80 cursor-not-allowed';
+
+            return (
               <div
                 key={item.id}
-                className={`flex flex-col gap-2 group cursor-pointer ${highlightedServiceId === item.id
-                  ? 'shadow-sm bg-gray-100 rounded-md'
-                  : ''
-                  }`}
+                className={`flex flex-col gap-2 group cursor-pointer ${highlightedServiceId === item.id ? 'shadow-sm bg-gray-100 rounded-md' : ''} ${serviceClass}`}
               >
-                {/* image */}
-                <div onClick={() => handleNavigation(item.href, item.id)}>
+                {/* Image */}
+                <div onClick={() => isServiceEnabled && handleNavigation(item.href, item.name)}>
                   <Image
                     src={item.imgSrc}
-                    alt={`${item.name} image`}
+                    alt={`${item.displayName} image`}
                     height={1000}
                     width={1000}
                     quality={100}
+                    className={isServiceEnabled ? '' : 'opacity-50'}
                   />
                 </div>
-                {/* title and toggle button*/}
+                {/* Title and toggle button */}
                 <div className="w-full flex justify-between items-center">
                   <h2
-                    onClick={() => handleNavigation(item.href, item.id)}
-                    className={`px-2 py-1 text-sm rounded-lg group-hover:bg-[#453519] group-hover:text-white transition-all duration-300 ${highlightedServiceId === item.id ? 'bg-[#453519] text-white' : 'bg-[#EFE9DF] '}`}
+                    onClick={() => isServiceEnabled && handleNavigation(item.href, item.name)}
+                    className={`px-2 py-1 text-sm rounded-lg group-hover:bg-[#453519] group-hover:text-white transition-all duration-300 ${highlightedServiceId === item.id ? 'bg-[#453519] text-white' : 'bg-[#EFE9DF]'}`}
                   >
                     {item.name}
                   </h2>
-                  <ToggleButton />
+                  <ToggleButton
+                    serviceName={item.name}
+                    enabled={isServiceEnabled}
+                    onCheckedChange={(newState) => handleToggleService(item.name, newState)}
+                  />
                 </div>
               </div>
-            )
-          )}
+            );
+          })}
         </div>
       </div>
     </div>

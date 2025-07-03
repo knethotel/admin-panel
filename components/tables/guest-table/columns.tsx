@@ -1,127 +1,26 @@
-// import { ColumnDef } from '@tanstack/react-table';
-// import CellAction from './cell-action';
-// import { GuestDataType } from 'app/static/GuestData';
-
-
-// // Update type to match guestDataType for better type safety
-// export const columns: ColumnDef<GuestDataType>[] = [
-//   {
-//     accessorKey: 'guestId',
-//     header: 'Guest ID'
-//   },
-//   {
-//     accessorKey: 'checkInCheckOutDetails',
-//     header: 'Check-In & Check-Out Details',
-//     cell: ({ row }) => {
-//       const details = row.original.checkInCheckOutDetails;
-//       return (
-//         <div>
-//           {details.checkInDate} {details.checkInTime} - {details.checkOutDate}{' '}
-//           {details.CheckOutTime}
-//         </div>
-//       );
-//     }
-//   },
-//   {
-//     accessorKey: 'guestDetails',
-//     header: 'Guest Details',
-//     cell: ({ row }) => {
-//       const details = row.original.guestDetails;
-//       return (
-//         <div>
-//           {details.name}, Room {details.roomNo}
-//         </div>
-//       );
-//     }
-//   },
-//   {
-//     accessorKey: 'contactDetails',
-//     header: 'Contact Details',
-//     cell: ({ row }) => {
-//       const details = row.original.contactDetails;
-//       return (
-//         <div>
-//           {details.email} / {details.mobileNo}
-//         </div>
-//       );
-//     }
-//   },
-//   {
-//     accessorKey: 'paymentStatus',
-//     header: 'Payment Status',
-//     cell: ({ row }) => {
-//       const status = row.original.paymentStatus || 'N/A';
-//       switch (status) {
-//         case 'pending':
-//           return <div className="text-blue-500">{status}</div>;
-//         case 'paid':
-//           return <div className="text-green-500">{status}</div>;
-//         default:
-//           return <div className="text-gray-500">{status}</div>;
-//       }
-//     }
-//   },
-//   {
-//     accessorKey: 'actions',
-//     id: 'actions',
-//     header: 'Actions',
-//     cell: ({ row }) => (
-//       <div className="flex items-center justify-center">
-//         <CellAction data={row.original} />
-//       </div>
-//     )
-//   }
-// ];
-
-// // Assuming guestDataType is imported or defined elsewhere
-// type TrackingStatusType = 'underReview' | 'pending' | 'submitted';
-// type PaymentStatusType = 'pending' | 'paid';
-
-// type guestDataType = {
-//   guestId: string;
-//   checkInCheckOutDetails: {
-//     checkInDate: string;
-//     checkInTime: string;
-//     CheckOutTime: string;
-//     checkOutDate: string;
-//   };
-//   guestDetails: {
-//     name: string;
-//     phoneNo: string;
-//     roomNo: string;
-//   };
-//   contactDetails: {
-//     email: string;
-//     mobileNo: string;
-//   };
-//   trackingStatus: TrackingStatusType;
-//   paymentStatus: PaymentStatusType;
-// };
 
 
 import { ColumnDef } from '@tanstack/react-table';
 import CellAction from './cell-action';
+import { format, parseISO } from 'date-fns';
 
 export interface GuestDataType {
   guestId: string;
   _id: string;
-
-  // Flattened Check-In/Out details
   checkInDate: string;
   checkInTime: string;
   checkOutDate: string;
   checkOutTime: string;
-
-  // Flattened Guest details
   guestName: string;
   roomNo: string;
-
-  // Flattened Contact details
+  assignedRoomNumber?: number;
+  paymentMode: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phoneNumber: string;
-
-  // Payment Status
-  paymentStatus: 'pending' | 'paid' | string;
+  paymentStatus: 'Pending' | 'Confirmed' | 'Cancelled' | string;
+  status: 'Pending' | 'Confirmed' | 'Checked-In' | 'Checked-Out' | 'Cancelled' | string;
 }
 
 
@@ -141,21 +40,37 @@ export const columns: ColumnDef<GuestDataType>[] = [
         checkOutTime,
       } = row.original;
 
+      const checkIn = checkInDate && checkInTime
+        ? parseISO(`${checkInDate}T${checkInTime}`)
+        : null;
+
+      const checkOut = checkOutDate && checkOutTime
+        ? parseISO(`${checkOutDate}T${checkOutTime}`)
+        : null;
+
       return (
-        <div>
-          {checkInDate} {checkInTime} - {checkOutDate} {checkOutTime}
+        <div className="flex flex-col text-xs opacity-70 leading-tight">
+          <span>
+            {checkInDate ? format(checkInDate, 'dd MMM yyyy, hh:mm a') : 'N/A'}
+          </span>
+          <span className="text-[12px] text-gray-700">
+            {checkOutDate ? format(checkOutDate, 'dd MMM yyyy, hh:mm a') : 'N/A'}
+          </span>
         </div>
       );
     },
   },
+
   {
     accessorKey: 'guestName',
     header: 'Guest Details',
     cell: ({ row }) => {
-      const { guestName, roomNo } = row.original;
+      const { firstName, lastName, assignedRoomNumber } = row.original;
+
       return (
         <div>
-          {guestName}, Room {roomNo}
+          {firstName} {lastName}<br />
+          {assignedRoomNumber}
         </div>
       );
     },
@@ -167,11 +82,34 @@ export const columns: ColumnDef<GuestDataType>[] = [
       const { email, phoneNumber } = row.original;
       return (
         <div>
-          {email} / {phoneNumber}
+          {email} <br />
+          {phoneNumber}
         </div>
       );
     },
   },
+  {
+    accessorKey: 'paymentMode',
+    header: 'Payment Mode',
+    cell: ({ row }) => {
+      const paymentModeRaw = row.original.paymentMode || 'Unknown';
+      const paymentMode = paymentModeRaw.toLowerCase();
+
+      const paymentModeMap: Record<string, { label: string; className: string }> = {
+        cash: { label: 'Cash', className: 'text-yellow-500' },
+        upi: { label: 'UPI', className: 'text-blue-500' },
+        card: { label: 'Card', className: 'text-green-600' },
+      };
+
+      const paymentModeData = paymentModeMap[paymentMode] || {
+        label: paymentModeRaw,
+        className: 'text-gray-400',
+      };
+
+      return <span className={paymentModeData.className}>{paymentModeData.label}</span>;
+    },
+  }
+  ,
   {
     accessorKey: 'paymentStatus',
     header: 'Payment Status',
@@ -189,6 +127,30 @@ export const columns: ColumnDef<GuestDataType>[] = [
     },
 
   },
+  {
+    accessorKey: 'status',
+    header: 'Booking Status',
+    cell: ({ row }) => {
+      const statusRaw = row.original.status || 'Unknown';
+      const status = statusRaw.toLowerCase();
+
+      const statusMap: Record<string, { label: string; className: string }> = {
+        pending: { label: 'Pending', className: 'text-yellow-500' },
+        confirmed: { label: 'Confirmed', className: 'text-green-600' },
+        'checked-in': { label: 'Checked-In', className: 'text-blue-500' },
+        'checked-out': { label: 'Checked-Out', className: 'text-indigo-500' },
+        cancelled: { label: 'Cancelled', className: 'text-red-500' },
+      };
+
+      const statusData = statusMap[status] || {
+        label: statusRaw,
+        className: 'text-gray-400',
+      };
+
+      return <span className={statusData.className}>{statusData.label}</span>;
+    },
+  },
+
   {
     id: 'actions',
     header: 'Actions',
