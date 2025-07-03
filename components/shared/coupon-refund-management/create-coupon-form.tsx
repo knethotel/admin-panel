@@ -96,6 +96,15 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
     };
   }, [preview]);
 
+  useEffect(() => {
+    if (form.watch('category') === 'Percentage Coupons') {
+      form.setValue('discountType', 'percentage');
+    } else {
+      form.setValue('discountType', 'fixed');
+    }
+  }, [form.watch('category')]);
+
+
   // Fetch coupon data for edit mode
   useEffect(() => {
     if ((isEditMode || isViewMode) && couponId) {
@@ -180,7 +189,9 @@ const CreateCouponForm: React.FC<CreateCouponFormProps> = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit, (errors) => {
-            // ToastAtTopRight.fire('Please fix the errors in the form.', 'error');
+
+            console.log('Validation Errors:', errors);
+            ToastAtTopRight.fire('Please fix the errors in the form.', 'error');
 
           })}
           className="w-full relative h-full max-w-4xl mx-auto rounded-lg"
