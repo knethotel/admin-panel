@@ -120,7 +120,7 @@ export const GymServiceTable: React.FC = () => {
         <h2 className="text-xl font-bold text-coffee">GYM / COMMUNITY / CONFERENCE HALL</h2>
         <div className="flex items-center gap-2">
           <h2 className="text-sm font-semibold">AUTO ACCEPT REQUESTS</h2>
-          <ToggleButton />
+          {/* <ToggleButton /> */}
         </div>
       </div>
 

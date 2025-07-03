@@ -51,7 +51,7 @@ const CellAction: React.FC<CellActionProps> = ({ data, onStatusChange }) => {
         >
           <Edit className=" w-4 text-button-dark group-hover:text-white" />
         </Button>
-        <ToggleButton enabled={status} onToggle={handleToggle} />
+        {/* <ToggleButton enabled={status} onToggle={handleToggle} /> */}
       </div>
     </>
   );

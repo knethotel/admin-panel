@@ -269,7 +269,7 @@ export const OrderManagementDataTable: React.FC = () => {
           <h2 className="text-coffee text-xl font-bold">Order management</h2>
           <div className="flex items-center gap-3">
             <h2 className="text-[0.8rem] xl:text-sm font-semibold">AUTO ACCEPT REQUESTS</h2>
-            <ToggleButton />
+            {/* <ToggleButton /> */}
           </div>
         </div>
         <div className="flex gap-2">

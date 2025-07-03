@@ -428,7 +428,7 @@ export const HousekeepingServiceTable: React.FC = () => {
             <h2 className="text-[0.8rem] font-semibold">
               AUTO ACCEPT REQUESTS
             </h2>
-            <ToggleButton />
+            {/* <ToggleButton /> */}
           </div>
         </div>
         <Settings className="cursor-pointer" onClick={() => setIsModalOpen(true)} />

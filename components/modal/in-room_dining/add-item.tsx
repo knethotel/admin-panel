@@ -216,10 +216,10 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                     <FormItem className="flex items-center gap-[87px]">
                       <FormLabel>Visibility</FormLabel>
                       <FormControl>
-                        <ToggleButton
+                        {/* <ToggleButton
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                        />
+                        /> */}
                       </FormControl>
                     </FormItem>
                   )}

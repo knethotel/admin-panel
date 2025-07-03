@@ -65,10 +65,13 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
               source: guest.sources,
               receivedAmt: guest.receivedAmt || 0,
               dueAmt: guest.dueAmt || 0,
+              assignedRoomNumber: guest.assignedRoomNumber || 0,
               paymentMode: guest.paymentMode || '',
               roomCategory: guest.roomCategory || '',
-              checkIn: guest.checkInDate || '',
-              checkOut: guest.checkOutDate || '',
+              checkInDate: guest.checkInDate || '',
+              checkOutDate: guest.checkOutDate || '',
+              status: guest.status || 'Pending',
+              paymentStatus: guest.paymentStatus || 'Pending',
             });
 
             if (guest.images) {
@@ -90,20 +93,24 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
   const addGuestForm = useForm<guestSchemaType>({
     resolver: zodResolver(guestSchema),
     defaultValues: {
-      firstName: guest?.guestDetails?.name?.split(' ')[0] || '',
-      lastName: guest?.guestDetails?.name?.split(' ')[1] || '',
-      phoneNo: guest?.guestDetails?.phoneNo || '',
-      address: guest?.guestDetails?.address || '',
-      city: guest?.guestDetails?.city || '',
-      state: guest?.guestDetails?.state || '',
-      pinCode: guest?.guestDetails?.pinCode || '',
-      email: guest?.contactDetails?.email || '',
+      firstName: guest?.guestDetails?.name?.split(' ')[0] ?? '',
+      lastName: guest?.guestDetails?.name?.split(' ')[1] ?? '',
+      phoneNo: guest?.guestDetails?.phoneNo ?? '',
+      address: guest?.guestDetails?.address ?? '',
+      city: guest?.guestDetails?.city ?? '',
+      state: guest?.guestDetails?.state ?? '',
+      pinCode: guest?.guestDetails?.pinCode ?? '',
+      email: guest?.contactDetails?.email ?? '',
+      assignedRoomNumber: (guest as any)?.assignedRoomNumber ?? 0,
       source: '',
-      receivedAmt: guest?.paymentDetails?.receivedAmt || 0,
-      dueAmt: guest?.paymentDetails?.dueAmt || 0,
-      paymentMode: guest?.paymentDetails?.paymentMode || '',
-      roomCategory: guest?.roomDetails?.roomCategory || ''
+      receivedAmt: guest?.paymentDetails?.receivedAmt ?? 0,
+      dueAmt: guest?.paymentDetails?.dueAmt ?? 0,
+      paymentMode: guest?.paymentDetails?.paymentMode ?? '',
+      roomCategory: guest?.roomDetails?.roomCategory ?? '',
+      status: (guest as any)?.status ?? 'Pending',
+      paymentStatus: (guest as any)?.paymentStatus ?? 'Pending',
     }
+
   });
 
 
@@ -120,10 +127,13 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
           phoneNo: guestData.phoneNumber || '',
           email: guestData.email || '',
           address: guestData.address || '',
+          assignedRoomNumber: guestData.assignedRoomNumber || 0,
           city: guestData.city || '',
           state: guestData.state || '',
           pinCode: guestData.pincode || '',
-          source: guestData.sources || ''
+          source: guestData.sources || '',
+          status: guestData.status || 'Pending',
+          paymentStatus: guestData.paymentStatus || 'Pending',
         });
 
       } else {
@@ -154,7 +164,7 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
     if (id && mode === 'edit') {
       try {
         setLoading(true);
-        const res = await apiCall('PUT', `/api/booking/hotel/${id}`);
+        const res = await apiCall('GET', `/api/booking/hotel/${id}`);
         const guest = res.booking;
 
         if (guest) {
@@ -167,13 +177,16 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
             city: guest.city || '',
             state: guest.state || '',
             pinCode: guest.pincode || '',
+            assignedRoomNumber: guest.assignedRoomNumber || 0,
             source: guest.sources || '',
             receivedAmt: guest.receivedAmt || 0,
             dueAmt: guest.dueAmt || 0,
             paymentMode: guest.paymentMode || '',
             roomCategory: guest.roomCategory || '',
-            checkIn: guest.checkInDate || '',
-            checkOut: guest.checkOutDate || ''
+            checkInDate: guest.checkInDate || '',
+            checkOutDate: guest.checkOutDate || '',
+            status: guest.status || 'Pending',
+            paymentStatus: guest.paymentStatus || 'Pending',
           });
         }
       } catch (err) {
@@ -202,18 +215,18 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
         state: data.state,
         city: data.city,
         sources: data.source,
+        assignedRoomNumber: data.assignedRoomNumber,
         pincode: data.pinCode,
-        checkIn: toUtcIso(data.checkIn),
-        checkOut: toUtcIso(data.checkOut),
-        status: 'Pending',
+        checkIn: toUtcIso(data.checkInDate),
+        checkOut: toUtcIso(data.checkOutDate),
+        status: data.status,
         guestsCount: 1,
         preCheckIn: false,
-        paymentStatus: 'Pending',
+        paymentStatus: data.paymentStatus,
         receivedAmt: data.receivedAmt || 0,
         dueAmt: data.dueAmt || 0,
         paymentMode: data.paymentMode || '',
         roomCategory: data.roomCategory || '',
-        roomNumber: data.roomNumber || '',
         roomTariff: data.roomTariff || '',
       };
 
@@ -222,6 +235,7 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
         const payload = {
           updates: baseData
         };
+        console.log('Base data:', baseData);
 
         const res = await apiCall('PUT', `/api/booking/hotel/${id}`, payload);
         console.log('Booking Updated:', res.booking);
@@ -237,21 +251,23 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
           address: data.address,
           state: data.state,
           city: data.city,
+          assignedRoomNumber: data.assignedRoomNumber,
           sources: data.source,
           pincode: data.pinCode,
-          checkIn: toUtcIso(data.checkIn),
-          checkOut: toUtcIso(data.checkOut),
-          status: 'Pending',
+          checkIn: toUtcIso(data.checkInDate),
+          checkOut: toUtcIso(data.checkOutDate),
+          status: data.status,
           guestsCount: 1,
           preCheckIn: false,
-          paymentStatus: 'Pending',
+          paymentStatus: data.paymentStatus,
           receivedAmt: data.receivedAmt || 0,
           dueAmt: data.dueAmt || 0,
           paymentMode: data.paymentMode || '',
           roomCategory: data.roomCategory || '',
-          roomNumber: data.roomNumber || '',  // Add room number here
+          roomNumber: data.roomNumber || '',
           roomTariff: data.roomTariff || '',
         };
+
 
         const res = await apiCall('POST', '/api/booking/addBooking', payload);
         console.log('Booking Added:', res.data);
@@ -618,18 +634,65 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-black text-[0.8rem]">
-                        Payment mode
+                        Payment Mode
                       </FormLabel>
                       <FormControl>
-                        <div className="flex gap-1">
-                          <Input
-                            disabled={!isEnabled}
-                            type="text"
-                            placeholder="Payment Mode"
-                            {...field}
-                            className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                          />
-                        </div>
+                        <select
+                          {...field}
+                          disabled={!isEnabled}
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border border-gray-300 outline-none focus:ring-0 text-xs 2xl:text-sm w-full"
+                        >
+                          <option value="">Select Payment Mode</option>
+                          <option value="cash">Cash</option>
+                          <option value="upi">UPI</option>
+                          <option value="card">Card</option>
+                        </select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex flex-col md:flex-row gap-3">
+                <FormField
+                  control={addGuestForm.control}
+                  name="paymentStatus"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-black text-[0.8rem]">Payment Status</FormLabel>
+                      <FormControl>
+                        <select
+                          {...field}
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border border-gray-300 outline-none focus:ring-0 text-xs 2xl:text-sm w-full"
+                        >
+                          <option value="Pending">Pending</option>
+                          <option value="Confirmed">Confirmed</option>
+                          <option value="Cancelled">Cancelled</option>
+                        </select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={addGuestForm.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-black text-[0.8rem]">Booking Status</FormLabel>
+                      <FormControl>
+                        <select
+                          {...field}
+                          disabled={!isEnabled}
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border border-gray-300 outline-none focus:ring-0 text-xs 2xl:text-sm w-full"
+                        >
+                          <option value="Pending">Pending</option>
+                          <option value="Confirmed">Confirmed</option>
+                          <option value="Checked-In">Checked-In</option>
+                          <option value="Checked-Out">Checked-Out</option>
+                          <option value="Cancelled">Cancelled</option>
+                        </select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -640,18 +703,28 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
             {/* {(mode === 'add' || mode === 'pending') && ( */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-10 border-t border-dashed border-gray-400 pt-4 mt-4">
               <div className="flex flex-col gap-4">
-                <FormItem>
-                  <FormLabel className="text-black text-[0.8rem]">
-                    Assign Room Number
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Room Number"
-                      className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
-                    />
-                  </FormControl>
-                </FormItem>
+                <FormField
+                  control={addGuestForm.control}
+                  name="assignedRoomNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-black text-[0.8rem]">
+                        Assign Room Number
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Room Number"
+                          {...field}
+                          disabled={!isEnabled}
+                          className="bg-[#F6EEE0] text-gray-700 p-2 rounded-md border-none outline-none focus:ring-0 text-xs 2xl:text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
               </div>
               <div className="flex flex-col gap-4">
                 <FormItem>
@@ -697,7 +770,7 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
               </div> */}
               <FormField
                 control={addGuestForm.control}
-                name="checkIn"
+                name="checkInDate"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-black text-[0.8rem]">Check-in Time</FormLabel>
@@ -718,7 +791,7 @@ const GuestForm: React.FC<Props> = ({ guestId, isEnabled, mode }) => {
 
               <FormField
                 control={addGuestForm.control}
-                name="checkOut"
+                name="checkOutDate"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-black text-[0.8rem]">Check-out Time</FormLabel>

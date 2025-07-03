@@ -18,7 +18,7 @@ const CellAction = (props: any) => {
     <>
       {/* Action Buttons */}
       <div className="flex items-center space-x-4">
-        <ToggleButton />
+        {/* <ToggleButton /> */}
         <button
           onClick={() => handleViewUser()}
           className="p-1 rounded-md group bg-[#A07D3D1A]"

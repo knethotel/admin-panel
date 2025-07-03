@@ -54,15 +54,20 @@ export const guestSchema = z.object({
   paymentMode: z.string().optional(),
 
   roomCategory: z.string().optional(),
+  assignedRoomNumber: z
+  .preprocess((val) => (val === '' ? undefined : Number(val)), z.number().optional()),
+  status: z.enum(["Pending", "Confirmed", "Checked-In", "Checked-Out", "Cancelled"]).optional(),
+paymentStatus: z.enum(["Pending", "Confirmed", "Cancelled"]).optional(),
+
   roomNumber: z.string().optional(),
   roomTariff: z.preprocess(val => val === '' ? 0 : Number(val), z.number()).optional(),
 
-  checkIn: z.preprocess(
+  checkInDate: z.preprocess(
     (val) => typeof val === 'string' && val.trim() !== '' ? val : null,
     z.union([z.string(), z.null()])
   ).optional(),
 
-  checkOut: z.preprocess(
+  checkOutDate: z.preprocess(
     (val) => typeof val === 'string' && val.trim() !== '' ? val : null,
     z.union([z.string(), z.null()])
   ).optional()
