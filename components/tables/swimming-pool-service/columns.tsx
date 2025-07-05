@@ -3,7 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import CellAction from './cell-action';
 import apiCall from '@/lib/axios';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 export type SwimmingpoolServiceDataType = {
   requestID: string;
@@ -98,21 +98,33 @@ export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      const [updating, setUpdating] = useState(false);
-      const validStatuses = ['Pending', 'In-Progress', 'Completed'] as const;
-      type ValidStatus = typeof validStatuses[number];
-
-      const getSafeStatus = (status: string): ValidStatus =>
-        validStatuses.includes(status as ValidStatus) ? (status as ValidStatus) : 'Pending';
-
-      const [status, setStatus] = useState<ValidStatus>(getSafeStatus(row.original.status));
       const serviceId = row.original.serviceID;
 
+      // Map UI display values to backend values
       const statusMap = {
         Pending: 'pending',
         'In-Progress': 'in-progress',
-        Completed: 'completed'
+        Completed: 'completed',
       } as const;
+
+      // Normalize backend value to match UI expected values
+      const normalizeStatus = (statusFromBackend: string): keyof typeof statusMap => {
+        switch (statusFromBackend.toLowerCase()) {
+          case 'pending':
+            return 'Pending';
+          case 'in-progress':
+            return 'In-Progress';
+          case 'completed':
+            return 'Completed';
+          default:
+            return 'Pending';
+        }
+      };
+
+      const [updating, setUpdating] = React.useState(false);
+      const [status, setStatus] = React.useState<keyof typeof statusMap>(
+        normalizeStatus(row.original.status)
+      );
 
       const statusOptions: Array<keyof typeof statusMap> = ['Pending', 'In-Progress', 'Completed'];
 
@@ -122,7 +134,7 @@ export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
 
         try {
           const data = await apiCall('PATCH', `/api/services/status/${serviceId}`, {
-            status: statusMap[newStatus]
+            status: statusMap[newStatus], // Send lowercase value to backend
           });
 
           if (
@@ -130,7 +142,8 @@ export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
             data.status === 'ok' ||
             data.message?.toLowerCase().includes('status updated')
           ) {
-            setStatus(newStatus); // or router.refresh();
+            setStatus(newStatus);
+            // ✅ No need to reload, UI is already in sync
           } else {
             console.error('Failed to update status:', data.message || data);
           }
@@ -140,7 +153,6 @@ export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
           setUpdating(false);
         }
       };
-
 
       return (
         <select
@@ -163,8 +175,9 @@ export const columns: ColumnDef<SwimmingpoolServiceDataType>[] = [
           ))}
         </select>
       );
-    }
-  },
+    },
+  }
+  ,
   {
     accessorKey: 'paymentStatus',
     header: 'Payment Status',

@@ -9,13 +9,13 @@ import { Eye, EyeOff, CircleX } from 'lucide-react';
 import { setSessionStorageItem, getLocalStorageItem, setLocalStorageItem } from 'utils/localstorage';
 import apiCall from '@/lib/axios';
 import { loginSchema, loginSchemaType } from 'schema';
-import { 
-  Form, 
-  FormItem, 
-  FormLabel, 
-  FormControl, 
-  FormMessage, 
-  FormField 
+import {
+  Form,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  FormField
 } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -50,7 +50,7 @@ const LoginForm = () => {
     ) {
       const email = (savedCredentials as { email: string; password: string }).email || '';
       const password = (savedCredentials as { email: string; password: string }).password || '';
-      
+
       if (email) form.setValue('email', email);
       if (password) form.setValue('password', password);
       form.setValue('rememberMe', true);
@@ -74,8 +74,8 @@ const LoginForm = () => {
 
     try {
       const response = await apiCall<LoginResponse>(
-        'POST', 
-        'http://13.127.80.211:5001/api/superAdmin/login', 
+        'POST',
+        'http://13.127.80.211:5001/api/superAdmin/login',
         {
           email: data.email,
           password: data.password
@@ -144,7 +144,7 @@ const LoginForm = () => {
   const clearEmail = () => {
     form.setValue('email', '');
   };
-  
+
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
@@ -157,7 +157,7 @@ const LoginForm = () => {
         incorrectPasswordMessage={null}
       >
         <Form {...form}>
-          <form 
+          <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-8 text-black"
           >
@@ -274,26 +274,26 @@ const LoginForm = () => {
             </div>
 
             {/* Submit Button */}
-            <Button 
-              type="submit" 
-              className="w-full btn-primary" 
+            <Button
+              type="submit"
+              className="w-full btn-primary"
               disabled={isLoading}
             >
               {isLoading ? 'Signing in...' : 'Sign in'}
             </Button>
           </form>
         </Form>
-        
+
         {/* Material UI Snackbar for Error Messages */}
-        <Snackbar 
-          open={snackbarOpen} 
-          autoHideDuration={6000} 
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
           onClose={handleSnackbarClose}
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
-          <Alert 
-            onClose={handleSnackbarClose} 
-            severity="error" 
+          <Alert
+            onClose={handleSnackbarClose}
+            severity="error"
             variant="filled"
             sx={{ width: '100%' }}
           >

@@ -1,90 +1,4 @@
 
-// import { ColumnDef } from '@tanstack/react-table';
-// import { InRoomControlDataType } from '@/components/tables/In_Room_Control-Service/client';
-// import CellAction from './cell-action';
-
-// export const columns: ColumnDef<InRoomControlDataType, any>[] = [
-//   {
-//     accessorKey: 'orderID',
-//     header: 'Request ID'
-//   },
-//   {
-//     accessorKey: 'requestTime',
-//     header: 'Request Time',
-//     cell: ({ row }) => {
-//       const { date, time } = row.original.requestTime;
-//       return (
-//         <div className="flex flex-col justify-center">
-//           <p className="text-xs 2xl:text-sm opacity-50">{date}</p>
-//           <p className="text-xs 2xl:text-sm opacity-50">{time}</p>
-//         </div>
-//       );
-//     }
-//   },
-//   {
-//     accessorKey: 'guestDetails',
-//     header: 'Guest Details',
-//     cell: ({ row }) => {
-//       const details = row.original.guestDetails;
-//       return (
-//         <div className="flex justify-center items-center">
-//           <div className="flex flex-col w-1/2 justify-center items-start gap-1">
-//             <p className="text-sm text-gray-900">{details.name}</p>
-//             <p className="text-xs text-gray-600">{details.guestID}</p>
-//             <p className="text-xs text-gray-600">{details.roomNo}</p>
-//           </div>
-//         </div>
-//       );
-//     }
-//   },
-//   {
-//     accessorKey: 'requestType',
-//     header: 'Request Type',
-//     cell: ({ row }) => {
-//       const type = row.original.requestType;
-//       return <div className="text-sm">{type}</div>;
-//     }
-//   },
-//   {
-//     accessorKey: 'status',
-//     header: 'Status',
-//     cell: ({ row }) => {
-//       const status = row.original.status;
-//       switch (status) {
-//         case 'Pending':
-//           return <div className="text-sm text-[#3787E3]">{status}</div>;
-//         case 'In-Progress':
-//           return <div className="text-sm text-[#FC690E]">{status}</div>;
-//         case 'Completed':
-//           return <div className="text-sm text-[#78B150]">{status}</div>;
-//         default:
-//           return <div className="text-sm text-gray-500">{status}</div>;
-//       }
-//     }
-//   },
-//   {
-//     accessorKey: 'issueType',
-//     header: 'Issue Type'
-//   },
-//   {
-//     accessorKey: 'assignedTo',
-//     header: 'Assigned to',
-//     cell: ({ row }) => {
-//       const assignedTo = row.original.assignedTo;
-//       return <div className="text-sm">{assignedTo}</div>;
-//     }
-//   },
-//   {
-//     accessorKey: 'actions',
-//     id: 'actions',
-//     header: 'Actions',
-//     cell: ({ row }) => (
-//       <div className="flex items-center justify-center">
-//         <CellAction data={row.original} />
-//       </div>
-//     )
-//   }
-// ];
 
 
 'use client';
@@ -93,7 +7,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { InRoomControlDataType } from '@/components/tables/In_Room_Control-Service/client';
 import CellAction from './cell-action';
 import apiCall from '@/lib/axios';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 export const columns: ColumnDef<InRoomControlDataType, any>[] = [
   {
@@ -160,24 +74,33 @@ export const columns: ColumnDef<InRoomControlDataType, any>[] = [
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      const [updating, setUpdating] = useState(false);
-      const validStatuses = ['Pending', 'In-Progress', 'Completed'] as const;
-
-      type ValidStatus = typeof validStatuses[number];
-
-      const getSafeStatus = (value: string): ValidStatus => {
-        return validStatuses.includes(value as ValidStatus) ? (value as ValidStatus) : 'Pending';
-      };
-
-      const [status, setStatus] = useState<ValidStatus>(getSafeStatus(row.original.status));
-
       const serviceId = row.original.requestID;
 
+      // Map UI display values to backend values
       const statusMap = {
         Pending: 'pending',
         'In-Progress': 'in-progress',
-        Completed: 'completed'
+        Completed: 'completed',
       } as const;
+
+      // Normalize backend value to match UI expected values
+      const normalizeStatus = (statusFromBackend: string): keyof typeof statusMap => {
+        switch (statusFromBackend.toLowerCase()) {
+          case 'pending':
+            return 'Pending';
+          case 'in-progress':
+            return 'In-Progress';
+          case 'completed':
+            return 'Completed';
+          default:
+            return 'Pending';
+        }
+      };
+
+      const [updating, setUpdating] = React.useState(false);
+      const [status, setStatus] = React.useState<keyof typeof statusMap>(
+        normalizeStatus(row.original.status)
+      );
 
       const statusOptions: Array<keyof typeof statusMap> = ['Pending', 'In-Progress', 'Completed'];
 
@@ -187,7 +110,7 @@ export const columns: ColumnDef<InRoomControlDataType, any>[] = [
 
         try {
           const data = await apiCall('PATCH', `/api/services/status/${serviceId}`, {
-            status: statusMap[newStatus]
+            status: statusMap[newStatus], // Send lowercase value to backend
           });
 
           if (
@@ -196,7 +119,7 @@ export const columns: ColumnDef<InRoomControlDataType, any>[] = [
             data.message?.toLowerCase().includes('status updated')
           ) {
             setStatus(newStatus);
-            window.location.reload(); // or router.refresh();
+            // ✅ No need to reload, UI is already in sync
           } else {
             console.error('Failed to update status:', data.message || data);
           }
@@ -207,19 +130,18 @@ export const columns: ColumnDef<InRoomControlDataType, any>[] = [
         }
       };
 
-
       return (
         <select
           value={status}
           onChange={handleStatusChange}
           disabled={updating}
           className={`text-sm px-2 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring ${status === 'Pending'
-            ? 'text-[#3787E3]'
-            : status === 'In-Progress'
-              ? 'text-[#FC690E]'
-              : status === 'Completed'
-                ? 'text-[#78B150]'
-                : 'text-gray-500'
+              ? 'text-[#3787E3]'
+              : status === 'In-Progress'
+                ? 'text-[#FC690E]'
+                : status === 'Completed'
+                  ? 'text-[#78B150]'
+                  : 'text-gray-500'
             }`}
         >
           {statusOptions.map(option => (
@@ -229,8 +151,9 @@ export const columns: ColumnDef<InRoomControlDataType, any>[] = [
           ))}
         </select>
       );
-    }
+    },
   }
+
   ,
   {
     accessorKey: 'paymentStatus',

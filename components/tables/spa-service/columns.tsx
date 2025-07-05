@@ -3,7 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import CellAction from './cell-action';
 import apiCall from '@/lib/axios';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 export type SpaServiceDataType = {
   serviceID: string;
@@ -85,21 +85,33 @@ export const columns: ColumnDef<SpaServiceDataType>[] = [
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      const [updating, setUpdating] = useState(false);
-      const validStatuses = ['Pending', 'In-Progress', 'Completed'] as const;
-      type ValidStatus = typeof validStatuses[number];
-
-      const getSafeStatus = (status: string): ValidStatus =>
-        validStatuses.includes(status as ValidStatus) ? (status as ValidStatus) : 'Pending';
-
-      const [status, setStatus] = useState<ValidStatus>(getSafeStatus(row.original.status));
       const serviceId = row.original.serviceID;
 
+      // Map UI display values to backend values
       const statusMap = {
         Pending: 'pending',
         'In-Progress': 'in-progress',
-        Completed: 'completed'
+        Completed: 'completed',
       } as const;
+
+      // Normalize backend value to match UI expected values
+      const normalizeStatus = (statusFromBackend: string): keyof typeof statusMap => {
+        switch (statusFromBackend.toLowerCase()) {
+          case 'pending':
+            return 'Pending';
+          case 'in-progress':
+            return 'In-Progress';
+          case 'completed':
+            return 'Completed';
+          default:
+            return 'Pending';
+        }
+      };
+
+      const [updating, setUpdating] = React.useState(false);
+      const [status, setStatus] = React.useState<keyof typeof statusMap>(
+        normalizeStatus(row.original.status)
+      );
 
       const statusOptions: Array<keyof typeof statusMap> = ['Pending', 'In-Progress', 'Completed'];
 
@@ -109,7 +121,7 @@ export const columns: ColumnDef<SpaServiceDataType>[] = [
 
         try {
           const data = await apiCall('PATCH', `/api/services/status/${serviceId}`, {
-            status: statusMap[newStatus]
+            status: statusMap[newStatus], // Send lowercase value to backend
           });
 
           if (
@@ -117,7 +129,8 @@ export const columns: ColumnDef<SpaServiceDataType>[] = [
             data.status === 'ok' ||
             data.message?.toLowerCase().includes('status updated')
           ) {
-            setStatus(newStatus); // or router.refresh();
+            setStatus(newStatus);
+            // ✅ No need to reload, UI is already in sync
           } else {
             console.error('Failed to update status:', data.message || data);
           }
@@ -128,19 +141,18 @@ export const columns: ColumnDef<SpaServiceDataType>[] = [
         }
       };
 
-
       return (
         <select
           value={status}
           onChange={handleStatusChange}
           disabled={updating}
           className={`text-sm px-2 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring ${status === 'Pending'
-            ? 'text-[#3787E3]'
-            : status === 'In-Progress'
-              ? 'text-[#FC690E]'
-              : status === 'Completed'
-                ? 'text-[#78B150]'
-                : 'text-gray-500'
+              ? 'text-[#3787E3]'
+              : status === 'In-Progress'
+                ? 'text-[#FC690E]'
+                : status === 'Completed'
+                  ? 'text-[#78B150]'
+                  : 'text-gray-500'
             }`}
         >
           {statusOptions.map(option => (
@@ -150,8 +162,9 @@ export const columns: ColumnDef<SpaServiceDataType>[] = [
           ))}
         </select>
       );
-    }
-  },
+    },
+  }
+  ,
   {
     accessorKey: 'paymentStatus',
     header: 'Payment',

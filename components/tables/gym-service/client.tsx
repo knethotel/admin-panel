@@ -30,8 +30,8 @@ export const GymServiceTable: React.FC = () => {
         if (response.success && Array.isArray(response.data)) {
 
           const mapped = response.data.map((item: any) => ({
-            requestID: item.uniqueId || 'N/A',
-            serviceID: item._id || 'N/A',
+            serviceID: item.uniqueId || 'N/A',
+            requestID: item._id || 'N/A',
 
             requestTime: {
               date: item.requestTime ? new Date(item.requestTime).toLocaleDateString() : 'N/A',

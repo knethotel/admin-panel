@@ -17,6 +17,7 @@ import { Button } from '../../ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { X } from 'lucide-react';
 import ToggleButton from '@/components/ui/toggleButton';
+import apiCall from '@/lib/axios';
 
 interface ModalProps {
   isOpen: boolean;
@@ -35,21 +36,47 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const addItemForm = useForm<AddItemsSchemaType>({
     resolver: zodResolver(AddItemsSchema),
     defaultValues: {
-      newProductType: '',
+      productType: '',
       productName: '',
       description: '',
       cost: 0,
-      type: 'Vegetarian',
+      foodType: 'vegetarian',
       visibility: false,
       itemImage: undefined
     }
   });
 
-  const onSubmit = (data: AddItemsSchemaType) => {
-    console.log('Submitted Data:', data);
-    addItemForm.reset();
-    setPreview(null);
+  const onSubmit = async (data: AddItemsSchemaType) => {
+    try {
+      const payload = {
+        productType: data.productType,
+        productName: data.productName,
+        description: data.description,
+        cost: data.cost,
+        foodType: data.foodType,
+        visibility: data.visibility,
+        HotelId: localStorage.getItem('hotelId') || '',
+        image: data.itemImage || null // optional image
+      };
+
+      const response = await apiCall('POST', '/api/services/inroomdining/products', payload);
+
+      if (response?.success) {
+        alert('✅ Product added successfully!');
+        addItemForm.reset();
+        setPreview(null);
+        onClose();
+      } else {
+        alert(`❌ Failed: ${response?.message || 'Something went wrong'}`);
+      }
+    } catch (error) {
+      console.error('Error submitting product:', error);
+      alert('❌ Network or server error.');
+    }
   };
+
+
+
 
   if (!isOpen) return null;
 
@@ -70,7 +97,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             <div className="flex w-full md:w-[80%] lg:w-[75%] 2xl:w-[70%] gap-6 px-10">
               <FormField
                 control={addItemForm.control}
-                name="newProductType"
+                name="productType"
                 render={({ field }) => (
                   <FormItem className="flex flex-col justify-start">
                     <div className="flex items-center gap-4">
@@ -169,7 +196,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 {/* Type */}
                 <FormField
                   control={addItemForm.control}
-                  name="type"
+                  name="foodType"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <div className="flex items-start gap-4">
@@ -182,20 +209,18 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                             defaultValue={field.value}
                             className="flex flex-col space-y-1"
                           >
-                            {['Vegetarian', 'Non-Vegetarian'].map((value) => (
-                              <div
-                                key={value}
-                                className="flex items-center space-x-2"
-                              >
-                                <RadioGroupItem value={value} id={value} />
+                            {['vegetarian', 'nonvegetarian'].map((val) => (
+                              <div key={val} className="flex items-center space-x-2">
+                                <RadioGroupItem value={val} id={val} />
                                 <label
-                                  htmlFor={value}
+                                  htmlFor={val}
                                   className="text-xs 2xl:text-sm text-gray-700 capitalize"
                                 >
-                                  {value}
+                                  {val === 'vegetarian' ? 'Vegetarian' : 'Non-Vegetarian'}
                                 </label>
                               </div>
                             ))}
+
                           </RadioGroup>
                         </FormControl>
                       </div>
@@ -203,6 +228,7 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                     </FormItem>
                   )}
                 />
+
 
                 {/* Visibility */}
                 {/* <div className="flex gap-[87px]">
@@ -216,15 +242,28 @@ const AddItemModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                     <FormItem className="flex items-center gap-[87px]">
                       <FormLabel>Visibility</FormLabel>
                       <FormControl>
-                        {/* <ToggleButton
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        /> */}
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => field.onChange(true)}
+                            className={`px-4 py-1 rounded-md text-sm font-medium border 
+              ${field.value ? 'bg-green-500 text-white border-green-500' : 'bg-[#F6EEE0] text-gray-700 border-gray-300'}`}
+                          >
+                            ON
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => field.onChange(false)}
+                            className={`px-4 py-1 rounded-md text-sm font-medium border 
+              ${!field.value ? 'bg-red-500 text-white border-red-500' : 'bg-[#F6EEE0] text-gray-700 border-gray-300'}`}
+                          >
+                            OFF
+                          </button>
+                        </div>
                       </FormControl>
                     </FormItem>
                   )}
                 />
-
 
               </div>
 

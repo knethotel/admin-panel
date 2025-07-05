@@ -135,6 +135,7 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   });
 
   const onSubmit = async (data: SpaManageProductsModalFormSchemaType) => {
+    console.log("✅ Form submitted successfully", data);
     try {
       const payload = {
         serviceType: data.selectService === 'SPA SERVICE' ? 'Spa' : 'Salon',
@@ -154,6 +155,7 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       };
 
       const response = await apiCall('POST', 'api/services/spasalon/products', payload);
+      console.log(response)
 
       if (response?.success) {
         alert('Product added successfully');
@@ -169,6 +171,11 @@ const ManageProducts: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       alert('Submission failed. Please try again.');
     }
   };
+
+  useEffect(() => {
+    console.log("❌ Form Errors:", form.formState.errors);
+  }, [form.formState.errors]);
+
 
 
 

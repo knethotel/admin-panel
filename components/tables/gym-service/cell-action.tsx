@@ -22,7 +22,7 @@ const CellAction = (props: any) => {
   };
 
   const handleViewUser = () => {
-    router.push(`/hotel-panel/service-management/gym/details/${data.serviceID}`);
+    router.push(`/hotel-panel/service-management/gym/details/${data.requestID}`);
   };
 
   return (
