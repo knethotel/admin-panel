@@ -623,35 +623,25 @@ export type SpaSalonServiceSchemaType = z.infer<typeof spaSalonServiceSchema>;
 //Add item schema
 
 export const AddItemsSchema = z.object({
-  newProductType: z.string().min(1, 'Enter valid input'),
+  productType: z.string().min(1, 'Enter valid input'),
   productName: z.string().min(1, 'Enter valid input'),
   description: z.string().min(1, 'Enter valid input'),
-  cost: z
-    .string()
-    .refine((val) => val === '' || /^\d+(\.\d{1,2})?$/.test(val), {
-      message: 'Invalid price format (e.g., 10 or 10.99)'
-    })
-    .transform((val) => (val === '' ? 0 : parseFloat(val)))
-    .refine((val) => val > 0, { message: 'Price must be greater than 0' })
-    .or(z.number().min(1, { message: 'Price must be greater than 0' })),
-  type: z.enum(['Vegetarian', 'Non-Vegetarian']),
+  cost: z.coerce.number().min(1, 'Price must be greater than 0'),
+  foodType: z.enum(['vegetarian', 'nonvegetarian']),
   visibility: z.boolean(),
   itemImage: z
-    .custom<File | undefined>(
-      (file) => file instanceof File || typeof file === 'undefined',
-      { message: 'Invalid file format' }
-    )
+    .custom<File | undefined>((file) => file instanceof File || typeof file === 'undefined', {
+      message: 'Invalid file format',
+    })
     .refine(
       (file) =>
         !file ||
-        ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(
-          file.type
-        ),
+        ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type),
       { message: 'Only JPG, PNG, GIF, and WEBP formats are allowed.' }
     )
     .refine((file) => !file || file.size <= 5 * 1024 * 1024, {
-      message: 'Image size must be 5MB or less.'
-    })
+      message: 'Image size must be 5MB or less.',
+    }),
 });
 
 export type AddItemsSchemaType = z.infer<typeof AddItemsSchema>;
@@ -697,11 +687,7 @@ export const SpaManageProductsModalFormSchema = z.object({
     errorMap: () => ({ message: 'Invalid Category' })
   }),
   name: z.string().min(1, 'Input field must have at least 1 character.'),
-  distance: z
-  .string()
-  .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
-    message: 'Distance must be a positive number'
-  }),
+
 
   description: z.string().min(1, 'Input field must have at least 1 character.'),
   productImage: z
@@ -726,7 +712,7 @@ export const SpaManageProductsModalFormSchema = z.object({
     .optional()
     .refine((file) => file !== '', {
       message: 'Logo image must not be an empty value'
-    })
+    }),
 });
 
 export type SpaManageProductsModalFormSchemaType = z.infer<

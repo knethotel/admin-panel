@@ -98,73 +98,68 @@ const SpaServiceRequestDetail: React.FC<Props> = ({ serviceID }) => {
 
 
   return (
-    <div className="bg-[#FAF6EF] rounded-xl shadow-md px-8 py-10 w-full space-y-12 font-medium text-gray-800">
-      {/* Header */}
-      <div className="flex flex-wrap gap-6 text-sm text-gray-500">
-        <p>👤 Guest ID: <span className="text-gray-700">{service.guest._id}</span></p>
-        <p>🛎️ Service ID: <span className="text-gray-700">{service._id}</span></p>
-        <p>⏰ Booking Time: <span className="text-gray-700">{service.bookingTime}</span></p>
+    <div className="bg-white rounded-xl shadow-md px-6 md:px-10 py-8 max-w-5xl mx-auto text-gray-800 space-y-10">
+      {/* Header Info */}
+      <div className="grid md:grid-cols-3 gap-4 text-sm text-gray-600">
+        <span><strong>👤 Guest ID:</strong> {service.guest._id}</span>
+        <span><strong>🛎️ Service ID:</strong> {service.uniqueId}</span>
+        <span><strong>⏰ Booking Time:</strong> {service.bookingTime}</span>
       </div>
 
-      {/* Details Section */}
-      <div className="space-y-10">
-        {/* Top Row */}
-        <div className="flex flex-wrap gap-6">
-          {[
-            { label: "Guest Name", value: `${service.guest.firstName} ${service.guest.lastName}` },
-            { label: "Booking Date", value: new Date(service.bookingDate).toLocaleDateString() },
-            { label: "Payment Status", value: service.paymentStatus }
-          ].map(({ label, value }) => (
-            <div key={label} className="flex items-center gap-2 text-sm">
-              <span className="text-gray-500">{label}</span>
-              <span className="bg-[#F6EEE0] rounded-md px-4 py-1">{value}</span>
-            </div>
-          ))}
+      {/* Booking Details */}
+      <section className="border-t pt-6 space-y-4">
+        <h3 className="text-lg font-semibold text-gray-700">Booking Overview</h3>
+        <div className="grid sm:grid-cols-2 gap-6">
+          <InfoRow label="Guest Name" value={`${service.guest.firstName} ${service.guest.lastName}`} />
+          <InfoRow label="Booking Date" value={new Date(service.bookingDate).toLocaleDateString()} />
+          <InfoRow
+            label="Payment Status"
+            value={service.paymentStatus}
+            className={service.paymentStatus === 'paid' ? 'text-green-600' : 'text-red-500'}
+          />
+        </div>
+      </section>
+
+      {/* Description & Amount */}
+      <section className="flex flex-col lg:flex-row gap-10 border-t pt-6">
+        {/* Left */}
+        <div className="flex-1 space-y-6">
+          <div className="space-y-3">
+            <InfoRow label="Full Date & Time" value={new Date(service.bookingDate).toLocaleString()} />
+            <InfoRow label="Payment Status" value={service.paymentStatus} className={service.paymentStatus === 'paid' ? 'text-green-700' : 'text-red-600'} />
+          </div>
+
+          <div className="bg-gray-50 p-4 rounded-md shadow-inner space-y-2">
+            <h4 className="text-sm text-gray-500 font-medium">Amount Details</h4>
+            <LabelValue label="Subtotal" value={`₹${service.amount.subtotal}`} />
+            <LabelValue label="Discount" value={`₹${service.amount.discount}`} />
+            <LabelValue label="Final Amount" value={`₹${service.amount.finalAmount}`} bold />
+          </div>
+
+          <div className="space-y-1">
+            <h4 className="text-sm text-gray-500">Service Description</h4>
+            <p className="bg-[#FFF9F0] px-4 py-2 rounded-md text-sm leading-relaxed">
+              {service.spaSalonProduct.description}
+            </p>
+          </div>
         </div>
 
-        {/* Two Column Layout */}
-        <div className="flex flex-col lg:flex-row gap-12">
-          {/* Left Column */}
-          <div className="space-y-6 w-full lg:w-1/2">
-            <InfoRow label="Date" value={new Date(service.bookingDate).toLocaleString()} />
-            <InfoRow label="Booking Date" value={new Date(service.bookingDate).toLocaleDateString()} />
-            <InfoRow
-              label="Payment Status"
-              value={service.paymentStatus}
-              className={service.paymentStatus === "paid" ? "text-green-700" : "text-red-600"}
-            />
-
-            <div className="space-y-2">
-              <LabelValue label="Subtotal" value={`₹${service.amount.subtotal ?? 0}`} />
-              <LabelValue label="Discount" value={`₹${service.amount.discount ?? 0}`} />
-              <LabelValue label="Total" value={`₹${service.amount.finalAmount ?? 0}`} bold />
-            </div>
-
-            <div className="space-y-2">
-              <span className="text-sm text-gray-500">Description</span>
-              <p className="bg-[#F6EEE0] px-4 py-2 rounded-md text-sm">
-                {service.spaSalonProduct.description}
-              </p>
+        {/* Right */}
+        <div className="flex-1 space-y-6">
+          <div>
+            <h4 className="text-sm text-gray-500 mb-1">Effective Cost</h4>
+            <div className="bg-[#F6EEE0] text-lg px-6 py-2 font-semibold rounded-md w-fit">
+              ₹{service.amount.finalAmount}
             </div>
           </div>
 
-          {/* Right Column */}
-          <div className="space-y-6 w-full lg:w-1/2">
-            <div className="space-y-2">
-              <span className="text-sm text-gray-500">Effective Cost</span>
-              {/* <ToggleButton /> */}
-              <div className="bg-[#F6EEE0] px-6 py-1 rounded-md w-fit">
-                ₹{service.amount.finalAmount}
-              </div>
-            </div>
-
+          <div className="space-y-2">
             <InfoRow label="Request Time" value={new Date(service.requestTime).toLocaleString()} />
             <InfoRow label="Transaction ID" value={service.transaction} />
           </div>
         </div>
-      </div>
+      </section>
     </div>
-
   );
 };
 

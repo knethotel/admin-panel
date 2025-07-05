@@ -267,7 +267,7 @@ const SwimmingPoolRequestDetail: React.FC<Props> = ({ serviceID }) => {
         </div>
 
         <div className="flex gap-8">
-          <TextBlock label="Request Detail" value={data.requestDetail} />
+          {/* <TextBlock label="Request Detail" value={data.requestDetail} /> */}
           <TextBlock label="Request Status" value={data.status} />
         </div>
 
